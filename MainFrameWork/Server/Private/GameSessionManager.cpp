@@ -19,7 +19,6 @@ void CGameSessionManager::Remove(GameSessionRef session)
 
 void CGameSessionManager::Broadcast(SendBufferRef sendBuffer)
 {
-	WRITE_LOCK;
 	for (GameSessionRef session : _sessions)
 	{
 		session->Send(sendBuffer);
@@ -28,7 +27,6 @@ void CGameSessionManager::Broadcast(SendBufferRef sendBuffer)
 
 void CGameSessionManager::Broadcast_Others(SendBufferRef sendBuffer, uint32 _ID)
 {
-	WRITE_LOCK;
 	for (GameSessionRef session : _sessions)
 	{
 		if (session->GetSessionID() != _ID)
