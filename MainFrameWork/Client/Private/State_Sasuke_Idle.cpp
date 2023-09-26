@@ -20,6 +20,7 @@ CState_Sasuke_Idle::CState_Sasuke_Idle(const CState& rhs, class CStateMachine* p
 HRESULT CState_Sasuke_Idle::Initialize()
 {
 	m_iIdle_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Idle_Loop", 1.0f);
+	m_pPlayer->Get_ModelCom()->Set_CurrAnim(m_iIdle_Loop);
 	if (m_iIdle_Loop == -1)
 		return E_FAIL;
 

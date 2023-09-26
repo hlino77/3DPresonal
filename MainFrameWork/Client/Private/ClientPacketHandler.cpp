@@ -98,7 +98,11 @@ bool Handel_S_MATRIX_Client(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 
 	if (pObject == nullptr)
-		return;
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+		
 
 	CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
 
@@ -121,7 +125,11 @@ bool Handel_S_ANIMATION_Client(PacketSessionRef& session, Protocol::S_ANIMATION&
 	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 
 	if (pObject == nullptr)
-		return;
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+		
 
 	CModel* pModel = dynamic_cast<CModel*>(pObject->Get_Component(L"Com_Model"));
 

@@ -20,6 +20,7 @@ CState_Naruto_Idle::CState_Naruto_Idle(const CState& rhs, class CStateMachine* p
 HRESULT CState_Naruto_Idle::Initialize()
 {
 	m_iIdle_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Idle_Loop", 1.0f);
+	m_pPlayer->Get_ModelCom()->Set_CurrAnim(m_iIdle_Loop);
 	if (m_iIdle_Loop == -1)
 		return E_FAIL;
 
