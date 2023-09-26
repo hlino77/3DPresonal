@@ -76,19 +76,19 @@ bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
 
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	//CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	//Safe_AddRef(pGameInstance);
 
-	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
-	CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
+	//CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+	//CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
 
-	Matrix matWorld;
+	//Matrix matWorld;
 
-	memcpy(&matWorld.m[0], &pkt.matrix()[0], sizeof(_float) * 16);
+	//memcpy(&matWorld.m[0], &pkt.matrix()[0], sizeof(_float) * 16);
 
 
-	pTransform->Set_WorldMatrix(matWorld);
-	Safe_Release(pGameInstance);
+	//pTransform->Set_WorldMatrix(matWorld);
+	//Safe_Release(pGameInstance);
 	return true;
 }
 
