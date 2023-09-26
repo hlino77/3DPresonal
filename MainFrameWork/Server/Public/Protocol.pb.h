@@ -1085,11 +1085,12 @@ class S_MATRIX final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMatrixFieldNumber = 3,
+    kMatrixFieldNumber = 4,
     kIObjectIDFieldNumber = 1,
-    kILayerFieldNumber = 2,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
   };
-  // repeated float Matrix = 3 [packed = true];
+  // repeated float Matrix = 4 [packed = true];
   int matrix_size() const;
   private:
   int _internal_matrix_size() const;
@@ -1120,7 +1121,16 @@ class S_MATRIX final :
   void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 iLayer = 2;
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
   void clear_ilayer();
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
   void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -1138,6 +1148,7 @@ class S_MATRIX final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > matrix_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
@@ -1253,11 +1264,12 @@ class S_ANIMATION final :
 
   enum : int {
     kIObjectIDFieldNumber = 1,
-    kILayerFieldNumber = 2,
-    kIAnimIndexFieldNumber = 3,
-    kFChangeTimeFieldNumber = 4,
-    kIStartFrameFieldNumber = 5,
-    kIChangeFrameFieldNumber = 6,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kIAnimIndexFieldNumber = 4,
+    kFChangeTimeFieldNumber = 5,
+    kIStartFrameFieldNumber = 6,
+    kIChangeFrameFieldNumber = 7,
   };
   // int32 iObjectID = 1;
   void clear_iobjectid();
@@ -1268,7 +1280,16 @@ class S_ANIMATION final :
   void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 iLayer = 2;
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
   void clear_ilayer();
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
   void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -1277,7 +1298,7 @@ class S_ANIMATION final :
   void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 iAnimIndex = 3;
+  // int32 iAnimIndex = 4;
   void clear_ianimindex();
   ::PROTOBUF_NAMESPACE_ID::int32 ianimindex() const;
   void set_ianimindex(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -1286,7 +1307,7 @@ class S_ANIMATION final :
   void _internal_set_ianimindex(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // float fChangeTime = 4;
+  // float fChangeTime = 5;
   void clear_fchangetime();
   float fchangetime() const;
   void set_fchangetime(float value);
@@ -1295,7 +1316,7 @@ class S_ANIMATION final :
   void _internal_set_fchangetime(float value);
   public:
 
-  // int32 iStartFrame = 5;
+  // int32 iStartFrame = 6;
   void clear_istartframe();
   ::PROTOBUF_NAMESPACE_ID::int32 istartframe() const;
   void set_istartframe(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -1304,7 +1325,7 @@ class S_ANIMATION final :
   void _internal_set_istartframe(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 iChangeFrame = 6;
+  // int32 iChangeFrame = 7;
   void clear_ichangeframe();
   ::PROTOBUF_NAMESPACE_ID::int32 ichangeframe() const;
   void set_ichangeframe(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -1321,6 +1342,7 @@ class S_ANIMATION final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   ::PROTOBUF_NAMESPACE_ID::int32 ianimindex_;
   float fchangetime_;
@@ -1719,7 +1741,27 @@ inline void S_MATRIX::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_MATRIX.iObjectID)
 }
 
-// int32 iLayer = 2;
+// int32 iLevel = 2;
+inline void S_MATRIX::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_MATRIX::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_MATRIX::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_MATRIX.iLevel)
+  return _internal_ilevel();
+}
+inline void S_MATRIX::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_MATRIX::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_MATRIX.iLevel)
+}
+
+// int32 iLayer = 3;
 inline void S_MATRIX::clear_ilayer() {
   ilayer_ = 0;
 }
@@ -1739,7 +1781,7 @@ inline void S_MATRIX::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_MATRIX.iLayer)
 }
 
-// repeated float Matrix = 3 [packed = true];
+// repeated float Matrix = 4 [packed = true];
 inline int S_MATRIX::_internal_matrix_size() const {
   return matrix_.size();
 }
@@ -1810,7 +1852,27 @@ inline void S_ANIMATION::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.iObjectID)
 }
 
-// int32 iLayer = 2;
+// int32 iLevel = 2;
+inline void S_ANIMATION::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_ANIMATION::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_ANIMATION::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_ANIMATION.iLevel)
+  return _internal_ilevel();
+}
+inline void S_ANIMATION::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_ANIMATION::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.iLevel)
+}
+
+// int32 iLayer = 3;
 inline void S_ANIMATION::clear_ilayer() {
   ilayer_ = 0;
 }
@@ -1830,7 +1892,7 @@ inline void S_ANIMATION::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.iLayer)
 }
 
-// int32 iAnimIndex = 3;
+// int32 iAnimIndex = 4;
 inline void S_ANIMATION::clear_ianimindex() {
   ianimindex_ = 0;
 }
@@ -1850,7 +1912,7 @@ inline void S_ANIMATION::set_ianimindex(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.iAnimIndex)
 }
 
-// float fChangeTime = 4;
+// float fChangeTime = 5;
 inline void S_ANIMATION::clear_fchangetime() {
   fchangetime_ = 0;
 }
@@ -1870,7 +1932,7 @@ inline void S_ANIMATION::set_fchangetime(float value) {
   // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.fChangeTime)
 }
 
-// int32 iStartFrame = 5;
+// int32 iStartFrame = 6;
 inline void S_ANIMATION::clear_istartframe() {
   istartframe_ = 0;
 }
@@ -1890,7 +1952,7 @@ inline void S_ANIMATION::set_istartframe(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_ANIMATION.iStartFrame)
 }
 
-// int32 iChangeFrame = 6;
+// int32 iChangeFrame = 7;
 inline void S_ANIMATION::clear_ichangeframe() {
   ichangeframe_ = 0;
 }

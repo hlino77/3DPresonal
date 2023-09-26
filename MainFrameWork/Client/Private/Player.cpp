@@ -212,8 +212,12 @@ HRESULT CPlayer::Ready_Components()
 
 void CPlayer::Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	Protocol::S_ANIMATION pkt;
 	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
 	pkt.set_ilayer((int32)LAYER_TYPE::LAYER_PLAYER);
 	pkt.set_ianimindex(iAnimIndex);
 	pkt.set_fchangetime(fChangeTime);
@@ -222,18 +226,26 @@ void CPlayer::Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartF
 
 	SendBufferRef pBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(pBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::Send_WorldMatrix()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	Protocol::S_MATRIX pkt;
 	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
 	pkt.set_ilayer((int32)LAYER_TYPE::LAYER_PLAYER);
 	Make_WorldMatrix_Packet(pkt);
 
 
 	SendBufferRef pBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(pBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::Set_State(const wstring& szName)

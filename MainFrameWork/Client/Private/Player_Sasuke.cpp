@@ -27,8 +27,10 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
-	if(m_bControl)
+	if (m_bControl)
 		Ready_State();
+	else
+		Ready_AnimationSpeed();
 	return S_OK;
 }
 
@@ -64,6 +66,16 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Normal", new CState_Sasuke_Attack_Normal(L"Attack_Normal", this));
 
 	m_pStateMachine->Change_State(L"Idle");
+
+	return S_OK;
+}
+
+HRESULT CPlayer_Sasuke::Ready_AnimationSpeed()
+{
+	CState_Sasuke_Idle(L"Idle", this).Initialize();
+	CState_Sasuke_Move(L"Move", this).Initialize();
+	CState_Sasuke_Attack_Normal(L"Attack_Normal", this).Initialize();
+
 
 	return S_OK;
 }

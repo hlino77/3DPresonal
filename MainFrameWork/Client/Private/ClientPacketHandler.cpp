@@ -95,7 +95,7 @@ bool Handel_S_MATRIX_Client(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CGameObject* pObject = pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), pkt.ilayer(), pkt.iobjectid());
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 	CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
 
 	Matrix matWorld;
@@ -114,7 +114,7 @@ bool Handel_S_ANIMATION_Client(PacketSessionRef& session, Protocol::S_ANIMATION&
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CGameObject* pObject = pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), pkt.ilayer(), pkt.iobjectid());
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 	CModel* pModel = dynamic_cast<CModel*>(pObject->Get_Component(L"Com_Model"));
 
 	pModel->Reserve_NextAnimation(pkt.ianimindex(), pkt.fchangetime(), pkt.istartframe(), pkt.ichangeframe());

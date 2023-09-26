@@ -100,6 +100,7 @@ constexpr S_MATRIX::S_MATRIX(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : matrix_()
   , iobjectid_(0)
+  , ilevel_(0)
   , ilayer_(0){}
 struct S_MATRIXDefaultTypeInternal {
   constexpr S_MATRIXDefaultTypeInternal()
@@ -113,6 +114,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_MATRIXDefaultTypeInternal _S_
 constexpr S_ANIMATION::S_ANIMATION(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : iobjectid_(0)
+  , ilevel_(0)
   , ilayer_(0)
   , ianimindex_(0)
   , fchangetime_(0)
@@ -182,6 +184,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_MATRIX, iobjectid_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_MATRIX, ilevel_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_MATRIX, ilayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_MATRIX, matrix_),
   ~0u,  // no _has_bits_
@@ -190,6 +193,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_ANIMATION, iobjectid_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_ANIMATION, ilevel_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_ANIMATION, ilayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_ANIMATION, ianimindex_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_ANIMATION, fchangetime_),
@@ -204,7 +208,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 26, -1, sizeof(::Protocol::S_CREATE_OBJCECT)},
   { 37, -1, sizeof(::Protocol::S_CHARACTER_NAME)},
   { 43, -1, sizeof(::Protocol::S_MATRIX)},
-  { 51, -1, sizeof(::Protocol::S_ANIMATION)},
+  { 52, -1, sizeof(::Protocol::S_ANIMATION)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -228,12 +232,13 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\022\023\n\013iObjectType\030\002 \001(\r\022\016\n\006iLevel\030\003 \001(\r\022\016\n"
   "\006iLayer\030\004 \001(\r\022\017\n\007strName\030\005 \001(\t\022\021\n\tbContr"
   "oll\030\006 \001(\010\"#\n\020S_CHARACTER_NAME\022\017\n\007strName"
-  "\030\001 \001(\t\"A\n\010S_MATRIX\022\021\n\tiObjectID\030\001 \001(\005\022\016\n"
-  "\006iLayer\030\002 \001(\005\022\022\n\006Matrix\030\003 \003(\002B\002\020\001\"\204\001\n\013S_"
-  "ANIMATION\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iLayer\030\002"
-  " \001(\005\022\022\n\niAnimIndex\030\003 \001(\005\022\023\n\013fChangeTime\030"
-  "\004 \001(\002\022\023\n\013iStartFrame\030\005 \001(\005\022\024\n\014iChangeFra"
-  "me\030\006 \001(\005b\006proto3"
+  "\030\001 \001(\t\"Q\n\010S_MATRIX\022\021\n\tiObjectID\030\001 \001(\005\022\016\n"
+  "\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\022\n\006Matrix\030"
+  "\004 \003(\002B\002\020\001\"\224\001\n\013S_ANIMATION\022\021\n\tiObjectID\030\001"
+  " \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\022\n\n"
+  "iAnimIndex\030\004 \001(\005\022\023\n\013fChangeTime\030\005 \001(\002\022\023\n"
+  "\013iStartFrame\030\006 \001(\005\022\024\n\014iChangeFrame\030\007 \001(\005"
+  "b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -241,7 +246,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 576, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  false, false, 608, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
   &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 8,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
@@ -1693,19 +1698,26 @@ const char* S_MATRIX::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::i
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // int32 iLayer = 2;
+      // int32 iLevel = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ilevel_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 iLayer = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           ilayer_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated float Matrix = 3 [packed = true];
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+      // repeated float Matrix = 4 [packed = true];
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_matrix(), ptr, ctx);
           CHK_(ptr);
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29) {
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37) {
           _internal_add_matrix(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
           ptr += sizeof(float);
         } else goto handle_unusual;
@@ -1745,15 +1757,21 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_iobjectid(), target);
   }
 
-  // int32 iLayer = 2;
-  if (this->ilayer() != 0) {
+  // int32 iLevel = 2;
+  if (this->ilevel() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_ilayer(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_ilevel(), target);
   }
 
-  // repeated float Matrix = 3 [packed = true];
+  // int32 iLayer = 3;
+  if (this->ilayer() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_ilayer(), target);
+  }
+
+  // repeated float Matrix = 4 [packed = true];
   if (this->_internal_matrix_size() > 0) {
-    target = stream->WriteFixedPacked(3, _internal_matrix(), target);
+    target = stream->WriteFixedPacked(4, _internal_matrix(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1772,7 +1790,7 @@ size_t S_MATRIX::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated float Matrix = 3 [packed = true];
+  // repeated float Matrix = 4 [packed = true];
   {
     unsigned int count = static_cast<unsigned int>(this->_internal_matrix_size());
     size_t data_size = 4UL * count;
@@ -1791,7 +1809,14 @@ size_t S_MATRIX::ByteSizeLong() const {
         this->_internal_iobjectid());
   }
 
-  // int32 iLayer = 2;
+  // int32 iLevel = 2;
+  if (this->ilevel() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_ilevel());
+  }
+
+  // int32 iLayer = 3;
   if (this->ilayer() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
@@ -1832,6 +1857,9 @@ void S_MATRIX::MergeFrom(const S_MATRIX& from) {
   matrix_.MergeFrom(from.matrix_);
   if (from.iobjectid() != 0) {
     _internal_set_iobjectid(from._internal_iobjectid());
+  }
+  if (from.ilevel() != 0) {
+    _internal_set_ilevel(from._internal_ilevel());
   }
   if (from.ilayer() != 0) {
     _internal_set_ilayer(from._internal_ilayer());
@@ -1947,37 +1975,44 @@ const char* S_ANIMATION::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // int32 iLayer = 2;
+      // int32 iLevel = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ilevel_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 iLayer = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           ilayer_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // int32 iAnimIndex = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+      // int32 iAnimIndex = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           ianimindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // float fChangeTime = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37)) {
+      // float fChangeTime = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 45)) {
           fchangetime_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // int32 iStartFrame = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
+      // int32 iStartFrame = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
           istartframe_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // int32 iChangeFrame = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
+      // int32 iChangeFrame = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 56)) {
           ichangeframe_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
@@ -2017,34 +2052,40 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_iobjectid(), target);
   }
 
-  // int32 iLayer = 2;
+  // int32 iLevel = 2;
+  if (this->ilevel() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_ilevel(), target);
+  }
+
+  // int32 iLayer = 3;
   if (this->ilayer() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_ilayer(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_ilayer(), target);
   }
 
-  // int32 iAnimIndex = 3;
+  // int32 iAnimIndex = 4;
   if (this->ianimindex() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_ianimindex(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_ianimindex(), target);
   }
 
-  // float fChangeTime = 4;
+  // float fChangeTime = 5;
   if (!(this->fchangetime() <= 0 && this->fchangetime() >= 0)) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(4, this->_internal_fchangetime(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_fchangetime(), target);
   }
 
-  // int32 iStartFrame = 5;
+  // int32 iStartFrame = 6;
   if (this->istartframe() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(5, this->_internal_istartframe(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_istartframe(), target);
   }
 
-  // int32 iChangeFrame = 6;
+  // int32 iChangeFrame = 7;
   if (this->ichangeframe() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_ichangeframe(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_ichangeframe(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2070,33 +2111,40 @@ size_t S_ANIMATION::ByteSizeLong() const {
         this->_internal_iobjectid());
   }
 
-  // int32 iLayer = 2;
+  // int32 iLevel = 2;
+  if (this->ilevel() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_ilevel());
+  }
+
+  // int32 iLayer = 3;
   if (this->ilayer() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_ilayer());
   }
 
-  // int32 iAnimIndex = 3;
+  // int32 iAnimIndex = 4;
   if (this->ianimindex() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_ianimindex());
   }
 
-  // float fChangeTime = 4;
+  // float fChangeTime = 5;
   if (!(this->fchangetime() <= 0 && this->fchangetime() >= 0)) {
     total_size += 1 + 4;
   }
 
-  // int32 iStartFrame = 5;
+  // int32 iStartFrame = 6;
   if (this->istartframe() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_istartframe());
   }
 
-  // int32 iChangeFrame = 6;
+  // int32 iChangeFrame = 7;
   if (this->ichangeframe() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
@@ -2136,6 +2184,9 @@ void S_ANIMATION::MergeFrom(const S_ANIMATION& from) {
 
   if (from.iobjectid() != 0) {
     _internal_set_iobjectid(from._internal_iobjectid());
+  }
+  if (from.ilevel() != 0) {
+    _internal_set_ilevel(from._internal_ilevel());
   }
   if (from.ilayer() != 0) {
     _internal_set_ilayer(from._internal_ilayer());

@@ -49,9 +49,11 @@ public:
 	void	Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
 	class CCamera_Player* Get_Camera() { return m_pCamera; }
 
-
+	//Send Packet
 	void			Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void			Send_WorldMatrix();
+
+
 	void			Set_State(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
