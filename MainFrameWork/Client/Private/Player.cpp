@@ -215,9 +215,16 @@ void CPlayer::Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartF
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	_uint iCurrLevel = pGameInstance->Get_CurrLevelIndex();
+	if (iCurrLevel >= LEVELID::LEVEL_LOADING)
+	{
+		Safe_Release(pGameInstance);
+		return;
+	}
+	
 	Protocol::S_ANIMATION pkt;
 	pkt.set_iobjectid(m_iObjectID);
-	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilevel(iCurrLevel);
 	pkt.set_ilayer((int32)LAYER_TYPE::LAYER_PLAYER);
 	pkt.set_ianimindex(iAnimIndex);
 	pkt.set_fchangetime(fChangeTime);
@@ -235,9 +242,16 @@ void CPlayer::Send_WorldMatrix()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	_uint iCurrLevel = pGameInstance->Get_CurrLevelIndex();
+	if (iCurrLevel >= LEVELID::LEVEL_LOADING)
+	{
+		Safe_Release(pGameInstance);
+		return;
+	}
+
 	Protocol::S_MATRIX pkt;
 	pkt.set_iobjectid(m_iObjectID);
-	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilevel(iCurrLevel);
 	pkt.set_ilayer((int32)LAYER_TYPE::LAYER_PLAYER);
 	Make_WorldMatrix_Packet(pkt);
 
