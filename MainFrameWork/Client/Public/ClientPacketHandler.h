@@ -6,7 +6,7 @@ extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
 //TODO
 enum : uint16
 {
-	PKT_S_TEST = 1,
+	PKT_S_TIME = 1,
 	PKT_S_LOGIN = 2,
 	PKT_S_OPENLEVEL = 3,
 	PKT_S_LEVELSTATE = 4,
@@ -18,7 +18,7 @@ enum : uint16
 
 // TODO
 bool Handle_INVALID_Client(PacketSessionRef& session, BYTE* buffer, int32 len);
-bool Handle_S_TEST_Client(PacketSessionRef& session, Protocol::S_TEST& pkt);
+bool Handel_S_TIME_Client(PacketSessionRef& session, Protocol::S_TIME& pkt);
 bool Handel_S_OPENLEVEL_Client(PacketSessionRef& session, Protocol::S_OPEN_LEVEL& pkt);
 bool Handel_S_LEVELSTATE_Client(PacketSessionRef& session, Protocol::S_LEVEL_STATE& pkt);
 bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_OBJCECT& pkt);
@@ -36,7 +36,7 @@ public:
 		for (int32 i = 0; i < UINT16_MAX; i++)
 			GPacketHandler[i] = Handle_INVALID_Client;
 
-		GPacketHandler[PKT_S_TEST] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_TEST>(Handle_S_TEST_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_TIME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_TIME>(Handel_S_TIME_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_OPENLEVEL] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_OPEN_LEVEL>(Handel_S_OPENLEVEL_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_LEVELSTATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_LEVEL_STATE>(Handel_S_LEVELSTATE_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_CREATEOBJECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CREATE_OBJCECT>(Handel_S_CREATEOBJECT_Client, session, buffer, len); };
@@ -54,7 +54,7 @@ public:
 
 
 	// TODO
-	static SendBufferRef MakeSendBuffer(Protocol::S_TEST& pkt) { return MakeSendBuffer(pkt, PKT_S_TEST); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_TIME& pkt) { return MakeSendBuffer(pkt, PKT_S_TIME); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_OPEN_LEVEL& pkt) { return MakeSendBuffer(pkt, PKT_S_OPENLEVEL); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_LEVEL_STATE& pkt) { return MakeSendBuffer(pkt, PKT_S_LEVELSTATE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_CREATE_OBJCECT& pkt) { return MakeSendBuffer(pkt, PKT_S_CREATEOBJECT); }

@@ -77,9 +77,9 @@ extern S_MATRIXDefaultTypeInternal _S_MATRIX_default_instance_;
 class S_OPEN_LEVEL;
 struct S_OPEN_LEVELDefaultTypeInternal;
 extern S_OPEN_LEVELDefaultTypeInternal _S_OPEN_LEVEL_default_instance_;
-class S_TEST;
-struct S_TESTDefaultTypeInternal;
-extern S_TESTDefaultTypeInternal _S_TEST_default_instance_;
+class S_TIME;
+struct S_TIMEDefaultTypeInternal;
+extern S_TIMEDefaultTypeInternal _S_TIME_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::S_ANIMATION* Arena::CreateMaybeMessage<::Protocol::S_ANIMATION>(Arena*);
@@ -89,30 +89,30 @@ template<> ::Protocol::S_LEVEL_STATE* Arena::CreateMaybeMessage<::Protocol::S_LE
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
 template<> ::Protocol::S_MATRIX* Arena::CreateMaybeMessage<::Protocol::S_MATRIX>(Arena*);
 template<> ::Protocol::S_OPEN_LEVEL* Arena::CreateMaybeMessage<::Protocol::S_OPEN_LEVEL>(Arena*);
-template<> ::Protocol::S_TEST* Arena::CreateMaybeMessage<::Protocol::S_TEST>(Arena*);
+template<> ::Protocol::S_TIME* Arena::CreateMaybeMessage<::Protocol::S_TIME>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
 // ===================================================================
 
-class S_TEST final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_TEST) */ {
+class S_TIME final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_TIME) */ {
  public:
-  inline S_TEST() : S_TEST(nullptr) {}
-  ~S_TEST() override;
-  explicit constexpr S_TEST(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline S_TIME() : S_TIME(nullptr) {}
+  ~S_TIME() override;
+  explicit constexpr S_TIME(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  S_TEST(const S_TEST& from);
-  S_TEST(S_TEST&& from) noexcept
-    : S_TEST() {
+  S_TIME(const S_TIME& from);
+  S_TIME(S_TIME&& from) noexcept
+    : S_TIME() {
     *this = ::std::move(from);
   }
 
-  inline S_TEST& operator=(const S_TEST& from) {
+  inline S_TIME& operator=(const S_TIME& from) {
     CopyFrom(from);
     return *this;
   }
-  inline S_TEST& operator=(S_TEST&& from) noexcept {
+  inline S_TIME& operator=(S_TIME&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()) {
       InternalSwap(&from);
@@ -131,20 +131,20 @@ class S_TEST final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const S_TEST& default_instance() {
+  static const S_TIME& default_instance() {
     return *internal_default_instance();
   }
-  static inline const S_TEST* internal_default_instance() {
-    return reinterpret_cast<const S_TEST*>(
-               &_S_TEST_default_instance_);
+  static inline const S_TIME* internal_default_instance() {
+    return reinterpret_cast<const S_TIME*>(
+               &_S_TIME_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  friend void swap(S_TEST& a, S_TEST& b) {
+  friend void swap(S_TIME& a, S_TIME& b) {
     a.Swap(&b);
   }
-  inline void Swap(S_TEST* other) {
+  inline void Swap(S_TIME* other) {
     if (other == this) return;
     if (GetOwningArena() == other->GetOwningArena()) {
       InternalSwap(other);
@@ -152,7 +152,7 @@ class S_TEST final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(S_TEST* other) {
+  void UnsafeArenaSwap(S_TIME* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -160,17 +160,17 @@ class S_TEST final :
 
   // implements Message ----------------------------------------------
 
-  inline S_TEST* New() const final {
-    return new S_TEST();
+  inline S_TIME* New() const final {
+    return new S_TIME();
   }
 
-  S_TEST* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<S_TEST>(arena);
+  S_TIME* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_TIME>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const S_TEST& from);
-  void MergeFrom(const S_TEST& from);
+  void CopyFrom(const S_TIME& from);
+  void MergeFrom(const S_TIME& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -184,13 +184,13 @@ class S_TEST final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(S_TEST* other);
+  void InternalSwap(S_TIME* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "Protocol.S_TEST";
+    return "Protocol.S_TIME";
   }
   protected:
-  explicit S_TEST(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  explicit S_TIME(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   private:
   static void ArenaDtor(void* object);
   inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -203,63 +203,47 @@ class S_TEST final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kStrFieldNumber = 4,
-    kIdFieldNumber = 1,
-    kFTempFieldNumber = 2,
-    kFTemp2FieldNumber = 3,
+    kISendTickFieldNumber = 1,
+    kIServerMinuteFieldNumber = 2,
+    kFServerSecondFieldNumber = 3,
   };
-  // string str = 4;
-  void clear_str();
-  const std::string& str() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_str(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_str();
-  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_str();
-  void set_allocated_str(std::string* str);
+  // uint64 iSendTick = 1;
+  void clear_isendtick();
+  ::PROTOBUF_NAMESPACE_ID::uint64 isendtick() const;
+  void set_isendtick(::PROTOBUF_NAMESPACE_ID::uint64 value);
   private:
-  const std::string& _internal_str() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_str(const std::string& value);
-  std::string* _internal_mutable_str();
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_isendtick() const;
+  void _internal_set_isendtick(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // uint64 id = 1;
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::uint64 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  // uint32 iServerMinute = 2;
+  void clear_iserverminute();
+  ::PROTOBUF_NAMESPACE_ID::uint32 iserverminute() const;
+  void set_iserverminute(::PROTOBUF_NAMESPACE_ID::uint32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_iserverminute() const;
+  void _internal_set_iserverminute(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
-  // float fTemp = 2;
-  void clear_ftemp();
-  float ftemp() const;
-  void set_ftemp(float value);
+  // float fServerSecond = 3;
+  void clear_fserversecond();
+  float fserversecond() const;
+  void set_fserversecond(float value);
   private:
-  float _internal_ftemp() const;
-  void _internal_set_ftemp(float value);
+  float _internal_fserversecond() const;
+  void _internal_set_fserversecond(float value);
   public:
 
-  // float fTemp2 = 3;
-  void clear_ftemp2();
-  float ftemp2() const;
-  void set_ftemp2(float value);
-  private:
-  float _internal_ftemp2() const;
-  void _internal_set_ftemp2(float value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:Protocol.S_TEST)
+  // @@protoc_insertion_point(class_scope:Protocol.S_TIME)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr str_;
-  ::PROTOBUF_NAMESPACE_ID::uint64 id_;
-  float ftemp_;
-  float ftemp2_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 isendtick_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 iserverminute_;
+  float fserversecond_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -1360,111 +1344,66 @@ class S_ANIMATION final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// S_TEST
+// S_TIME
 
-// uint64 id = 1;
-inline void S_TEST::clear_id() {
-  id_ = uint64_t{0u};
+// uint64 iSendTick = 1;
+inline void S_TIME::clear_isendtick() {
+  isendtick_ = uint64_t{0u};
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 S_TEST::_internal_id() const {
-  return id_;
+inline ::PROTOBUF_NAMESPACE_ID::uint64 S_TIME::_internal_isendtick() const {
+  return isendtick_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 S_TEST::id() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_TEST.id)
-  return _internal_id();
+inline ::PROTOBUF_NAMESPACE_ID::uint64 S_TIME::isendtick() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_TIME.iSendTick)
+  return _internal_isendtick();
 }
-inline void S_TEST::_internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void S_TIME::_internal_set_isendtick(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   
-  id_ = value;
+  isendtick_ = value;
 }
-inline void S_TEST::set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_TEST.id)
-}
-
-// float fTemp = 2;
-inline void S_TEST::clear_ftemp() {
-  ftemp_ = 0;
-}
-inline float S_TEST::_internal_ftemp() const {
-  return ftemp_;
-}
-inline float S_TEST::ftemp() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_TEST.fTemp)
-  return _internal_ftemp();
-}
-inline void S_TEST::_internal_set_ftemp(float value) {
-  
-  ftemp_ = value;
-}
-inline void S_TEST::set_ftemp(float value) {
-  _internal_set_ftemp(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_TEST.fTemp)
+inline void S_TIME::set_isendtick(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_isendtick(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_TIME.iSendTick)
 }
 
-// float fTemp2 = 3;
-inline void S_TEST::clear_ftemp2() {
-  ftemp2_ = 0;
+// uint32 iServerMinute = 2;
+inline void S_TIME::clear_iserverminute() {
+  iserverminute_ = 0u;
 }
-inline float S_TEST::_internal_ftemp2() const {
-  return ftemp2_;
+inline ::PROTOBUF_NAMESPACE_ID::uint32 S_TIME::_internal_iserverminute() const {
+  return iserverminute_;
 }
-inline float S_TEST::ftemp2() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_TEST.fTemp2)
-  return _internal_ftemp2();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 S_TIME::iserverminute() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_TIME.iServerMinute)
+  return _internal_iserverminute();
 }
-inline void S_TEST::_internal_set_ftemp2(float value) {
+inline void S_TIME::_internal_set_iserverminute(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  ftemp2_ = value;
+  iserverminute_ = value;
 }
-inline void S_TEST::set_ftemp2(float value) {
-  _internal_set_ftemp2(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_TEST.fTemp2)
+inline void S_TIME::set_iserverminute(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_iserverminute(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_TIME.iServerMinute)
 }
 
-// string str = 4;
-inline void S_TEST::clear_str() {
-  str_.ClearToEmpty();
+// float fServerSecond = 3;
+inline void S_TIME::clear_fserversecond() {
+  fserversecond_ = 0;
 }
-inline const std::string& S_TEST::str() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_TEST.str)
-  return _internal_str();
+inline float S_TIME::_internal_fserversecond() const {
+  return fserversecond_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void S_TEST::set_str(ArgT0&& arg0, ArgT... args) {
- 
- str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:Protocol.S_TEST.str)
+inline float S_TIME::fserversecond() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_TIME.fServerSecond)
+  return _internal_fserversecond();
 }
-inline std::string* S_TEST::mutable_str() {
-  // @@protoc_insertion_point(field_mutable:Protocol.S_TEST.str)
-  return _internal_mutable_str();
-}
-inline const std::string& S_TEST::_internal_str() const {
-  return str_.Get();
-}
-inline void S_TEST::_internal_set_str(const std::string& value) {
+inline void S_TIME::_internal_set_fserversecond(float value) {
   
-  str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  fserversecond_ = value;
 }
-inline std::string* S_TEST::_internal_mutable_str() {
-  
-  return str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* S_TEST::release_str() {
-  // @@protoc_insertion_point(field_release:Protocol.S_TEST.str)
-  return str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void S_TEST::set_allocated_str(std::string* str) {
-  if (str != nullptr) {
-    
-  } else {
-    
-  }
-  str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), str,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:Protocol.S_TEST.str)
+inline void S_TIME::set_fserversecond(float value) {
+  _internal_set_fserversecond(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_TIME.fServerSecond)
 }
 
 // -------------------------------------------------------------------

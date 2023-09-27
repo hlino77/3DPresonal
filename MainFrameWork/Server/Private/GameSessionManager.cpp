@@ -4,6 +4,16 @@
 
 CGameSessionManager GSessionManager;
 
+void CGameSessionManager::Tick(_float fTimeDelta)
+{
+	m_tServerTime.fSecond += fTimeDelta;
+	if (m_tServerTime.fSecond >= 60.0f)
+	{
+		m_tServerTime.fSecond -= 60.0f;
+		m_tServerTime.iMinute += 1;
+	}
+}
+
 void CGameSessionManager::Add(GameSessionRef session)
 {
 	WRITE_LOCK;

@@ -17,14 +17,36 @@ bool Handle_INVALID_Client(PacketSessionRef& session, BYTE* buffer, int32 len)
 	return false;
 }
 
-bool Handle_S_TEST_Client(PacketSessionRef& session, Protocol::S_TEST& pkt)
+bool Handel_S_TIME_Client(PacketSessionRef& session, Protocol::S_TIME& pkt)
 {
-	// TODO
-	cout << pkt.id() << endl;
-	cout << pkt.str() << endl;
+	CServerSessionManager::TIME tServerTime, tClientTime;
+	CServerSessionManager::GetInstance()->Get_ClientTime();
+
+
+	LARGE_INTEGER iSendTick, iRecvTick, iCpu;
+	
+	iSendTick.QuadPart = pkt.isendtick();
+
+	tServerTime.iMinute = pkt.iserverminute();
+	tServerTime.fSecond = pkt.fserversecond();
+
+	QueryPerformanceCounter(&iRecvTick);
+	QueryPerformanceFrequency(&iCpu);
+
+	uint64 iDelayTick = iRecvTick.QuadPart - iSendTick.QuadPart;
+	_float fDelayTime = _float(iDelayTick) / iCpu.QuadPart;
+
+	fDelayTime /= 2.0f;
+
+	tClientTime = tServerTime;
+	tClientTime.fSecond += fDelayTime;
+
+	CServerSessionManager::GetInstance()->Set_ClientTime(tClientTime);
+	CServerSessionManager::GetInstance()->Set_NetworkDelay(fDelayTime);
 
 	return true;
 }
+
 
 bool Handel_S_OPENLEVEL_Client(PacketSessionRef& session, Protocol::S_OPEN_LEVEL& pkt)
 {

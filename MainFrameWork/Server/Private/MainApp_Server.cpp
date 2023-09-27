@@ -24,7 +24,7 @@ HRESULT CMainApp_Server::Initialize()
 	CServerPacketHandler::Init();
 
 	ServerServiceRef service = MakeShared<ServerService>(
-		NetAddress(L"192.168.1.31", 7777),
+		NetAddress(L"192.168.200.155", 7777),
 		MakeShared<IocpCore>(),
 		MakeShared<CGameSession>, // TODO : SessionManager µî
 		100);
@@ -63,6 +63,8 @@ HRESULT CMainApp_Server::Initialize()
 
 void CMainApp_Server::Tick(_float fTimeDelta)
 {
+	GSessionManager.Tick(fTimeDelta);
+
 	m_pGameInstance->Tick_Server(fTimeDelta);
 
 }

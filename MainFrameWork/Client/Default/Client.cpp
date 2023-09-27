@@ -7,6 +7,7 @@
 
 #include "MainApp.h"
 #include "GameInstance.h"
+#include "ServerSessionManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -74,6 +75,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_float		fTimeAcc = 0.f;
     _float      fTimeFPS = 0.f;
     _uint       iFrameCount = 0;
+    _float      fNetDelay = 0;
 
     // 기본 메시지 루프입니다.
 	/* 내 게임(CMainApp)의 갱신(Tick)과. 렌더(Render)를 반복적으로 수행한다. */
@@ -106,8 +108,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (fTimeFPS >= 1.0f)
         {
+            fNetDelay = CServerSessionManager::GetInstance()->Get_NetworkDelay();
             fTimeFPS = 0.0f;
-            wstring szFPS = L"FPS : " + to_wstring(iFrameCount);
+            wstring szFPS = L"FPS : " + to_wstring(iFrameCount) + L"    NetWorkDelay : " + to_wstring(fNetDelay);
             SetWindowText(g_hWnd, szFPS.c_str());
             iFrameCount = 0;
         }

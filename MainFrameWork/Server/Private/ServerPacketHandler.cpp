@@ -15,10 +15,15 @@ bool Handle_INVALID_Server(PacketSessionRef& session, BYTE* buffer, int32 len)
 	return false;
 }
 
-bool Handle_S_TEST_Server(PacketSessionRef& session, Protocol::S_TEST& pkt)
+bool Handle_S_TIME_Server(PacketSessionRef& session, Protocol::S_TIME& pkt)
 {
-	SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast_Others(sendBuffer, session->GetSessionID());
+	CGameSessionManager::TIME tServerTime = GSessionManager.Get_ServerTime();
+
+	pkt.set_iserverminute(tServerTime.iMinute);
+	pkt.set_fserversecond(tServerTime.fSecond);
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+
+	session->Send(pSendBuffer);
 
 	return true;
 }
@@ -76,19 +81,24 @@ bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
 
 
-	//CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	//Safe_AddRef(pGameInstance);
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
-	//CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
-	//CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+	CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(L"Com_Transform"));
 
-	//Matrix matWorld;
+	Matrix matWorld;
 
-	//memcpy(&matWorld.m[0], &pkt.matrix()[0], sizeof(_float) * 16);
+	memcpy(&matWorld.m[0], &pkt.matrix()[0], sizeof(_float) * 16);
 
 
-	//pTransform->Set_WorldMatrix(matWorld);
-	//Safe_Release(pGameInstance);
+	pTransform->Set_WorldMatrix(matWorld);
+	Safe_Release(pGameInstance);
+
+	GSessionManager.Add_SendCount();
+
+	cout << GSessionManager.Get_SendCount() << endl;
+
 	return true;
 }
 

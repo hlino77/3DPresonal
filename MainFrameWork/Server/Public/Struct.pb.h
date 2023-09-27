@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[1]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[2]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -58,9 +58,13 @@ namespace Protocol {
 class BuffData;
 struct BuffDataDefaultTypeInternal;
 extern BuffDataDefaultTypeInternal _BuffData_default_instance_;
+class Time;
+struct TimeDefaultTypeInternal;
+extern TimeDefaultTypeInternal _Time_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::BuffData* Arena::CreateMaybeMessage<::Protocol::BuffData>(Arena*);
+template<> ::Protocol::Time* Arena::CreateMaybeMessage<::Protocol::Time>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
@@ -232,6 +236,149 @@ class BuffData final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
+// -------------------------------------------------------------------
+
+class Time final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.Time) */ {
+ public:
+  inline Time() : Time(nullptr) {}
+  ~Time() override;
+  explicit constexpr Time(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Time(const Time& from);
+  Time(Time&& from) noexcept
+    : Time() {
+    *this = ::std::move(from);
+  }
+
+  inline Time& operator=(const Time& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Time& operator=(Time&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Time& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Time* internal_default_instance() {
+    return reinterpret_cast<const Time*>(
+               &_Time_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(Time& a, Time& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Time* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Time* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Time* New() const final {
+    return new Time();
+  }
+
+  Time* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Time>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Time& from);
+  void MergeFrom(const Time& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Time* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.Time";
+  }
+  protected:
+  explicit Time(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIMinuteFieldNumber = 1,
+    kFSecondFieldNumber = 2,
+  };
+  // uint32 iMinute = 1;
+  void clear_iminute();
+  ::PROTOBUF_NAMESPACE_ID::uint32 iminute() const;
+  void set_iminute(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_iminute() const;
+  void _internal_set_iminute(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // float fSecond = 2;
+  void clear_fsecond();
+  float fsecond() const;
+  void set_fsecond(float value);
+  private:
+  float _internal_fsecond() const;
+  void _internal_set_fsecond(float value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.Time)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 iminute_;
+  float fsecond_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
 // ===================================================================
 
 
@@ -330,9 +477,55 @@ BuffData::mutable_victims() {
   return _internal_mutable_victims();
 }
 
+// -------------------------------------------------------------------
+
+// Time
+
+// uint32 iMinute = 1;
+inline void Time::clear_iminute() {
+  iminute_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 Time::_internal_iminute() const {
+  return iminute_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 Time::iminute() const {
+  // @@protoc_insertion_point(field_get:Protocol.Time.iMinute)
+  return _internal_iminute();
+}
+inline void Time::_internal_set_iminute(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  iminute_ = value;
+}
+inline void Time::set_iminute(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_iminute(value);
+  // @@protoc_insertion_point(field_set:Protocol.Time.iMinute)
+}
+
+// float fSecond = 2;
+inline void Time::clear_fsecond() {
+  fsecond_ = 0;
+}
+inline float Time::_internal_fsecond() const {
+  return fsecond_;
+}
+inline float Time::fsecond() const {
+  // @@protoc_insertion_point(field_get:Protocol.Time.fSecond)
+  return _internal_fsecond();
+}
+inline void Time::_internal_set_fsecond(float value) {
+  
+  fsecond_ = value;
+}
+inline void Time::set_fsecond(float value) {
+  _internal_set_fsecond(value);
+  // @@protoc_insertion_point(field_set:Protocol.Time.fSecond)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 

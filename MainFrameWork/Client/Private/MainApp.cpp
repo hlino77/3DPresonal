@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "StateMachine.h"
+#include "ServerSessionManager.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -47,7 +48,7 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_float fTimeDelta)
 {
-	
+	CServerSessionManager::GetInstance()->Tick(fTimeDelta);
 
 	/* 게임내에 존재하는 여러 객체들의 갱신. */
 	/* 레벨의 갱신 */
