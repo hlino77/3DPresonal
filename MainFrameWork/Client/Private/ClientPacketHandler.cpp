@@ -161,3 +161,33 @@ bool Handel_S_ANIMATION_Client(PacketSessionRef& session, Protocol::S_ANIMATION&
 
 	return true;
 }
+
+bool Handel_S_PLAYERINFO_Client(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	_uint iUserPlayerID = CServerSessionManager::GetInstance()->Get_Player()->Get_ObjectID();
+
+
+	for (_uint i = 0; i < pkt.tplayer_size(); ++i)
+	{
+		auto tPlayer = pkt.mutable_tplayer(i);
+
+		_uint iPlayerID = tPlayer->iplayerid();
+		if (iPlayerID == iUserPlayerID)
+			continue;
+
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Find_GameObejct(tPlayer->ilevel(), tPlayer->ilayer(), iPlayerID));
+		if (pPlayer == nullptr)
+			continue;
+
+		pPlayer->Set_TargetPos(Vec3(tPlayer->mutable_vtargetpos()->mutable_data()));
+		pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
+	}
+
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}

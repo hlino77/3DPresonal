@@ -43,11 +43,18 @@ public:
 	virtual HRESULT Render();
 
 public:
-	CShader* Get_ShaderCom() { return m_pShaderCom; }
-	CTransform* Get_TransformCom() { return m_pTransformCom; }
-	CModel* Get_ModelCom() { return m_pModelCom; }
-	void	Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
-	class CCamera_Player* Get_Camera() { return m_pCamera; }
+	CShader*				Get_ShaderCom() { return m_pShaderCom; }
+	CTransform*				Get_TransformCom() { return m_pTransformCom; }
+	CModel*					Get_ModelCom() { return m_pModelCom; }
+
+	void					Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
+	class CCamera_Player*	Get_Camera() { return m_pCamera; }
+
+	void					Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos = vTargetPos; }
+	Vec3					Get_TargetPos() { return m_vTargetPos; }
+
+public:
+
 
 	//Send Packet
 	void			Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
@@ -60,20 +67,21 @@ public:
 
 
 
-	Vec3	Make_StraightDir();
-	Vec3	Make_RightDir();
-	Vec3	Make_BackDir();
-	Vec3	Make_LeftDir();
-	void	Go_Straight(_float fSpeed, _float fTimeDelta);
-	void	Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
+	Vec3			Make_StraightDir();
+	Vec3			Make_RightDir();
+	Vec3			Make_BackDir();
+	Vec3			Make_LeftDir();
+	void			Go_Straight(_float fSpeed, _float fTimeDelta);
+	void			Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 protected:
 	virtual HRESULT Ready_Components();
 
 
 
 protected:
-
 	class CCamera_Player* m_pCamera = nullptr;
+
+	Vec3		m_vTargetPos;
 
 private:
 	void			Make_WorldMatrix_Packet(Protocol::S_MATRIX& pkt);
@@ -88,6 +96,7 @@ private:
 	vector<CGameObject*>				m_Parts;
 	typedef vector<CGameObject*>		PARTS;
 
+private:
 	
 	
 private:

@@ -58,6 +58,13 @@ HRESULT CLevel_GamePlay_Server::Tick(_float fTimeDelta)
 
 HRESULT CLevel_GamePlay_Server::LateTick(_float fTimeDelta)
 {
+	m_fBroadcastTime += fTimeDelta;
+	if (m_fBroadcastTime >= 0.1f)
+	{
+		Broadcast_PlayerInfo();
+		m_fBroadcastTime = 0.0f;
+	}
+
 	return S_OK;
 }
 
@@ -165,6 +172,48 @@ void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
 		if (iReadyCount == GSessionManager.Get_SessionCount())
 			break;
 	}
+}
+
+HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
+{
+	auto& ObjectList = CGameInstance::GetInstance()->Find_GameObjects(LEVELID::LEVEL_GAMEPLAY, (_uint)LAYER_TYPE::LAYER_PLAYER);
+
+	if (ObjectList.size() == 0)
+		return S_OK;
+
+	Protocol::S_PLAYERINFO pkt;
+
+	for (auto& Player : ObjectList)
+	{
+		CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(Player);
+
+		if (pPlayer == nullptr)
+			continue;
+
+		auto tPlayer = pkt.add_tplayer();
+		tPlayer->set_iplayerid(Player->Get_ObjectID());
+		tPlayer->set_ilevel(LEVELID::LEVEL_GAMEPLAY);
+		tPlayer->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+
+
+		auto vTargetPos = tPlayer->mutable_vtargetpos();
+		vTargetPos->Resize(3, 0.0f);
+		Vec3 vPlayerTargetPos = pPlayer->Get_TargetPos();
+		memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
+
+
+		auto matWorld = tPlayer->mutable_matworld();
+		matWorld->Resize(16, 0.0f);
+		Matrix matPlayerWorld = pPlayer->Get_TransformCom()->Get_WorldMatrix();
+		memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
+	}
+
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	GSessionManager.Broadcast(pSendBuffer);
+
+
+	return S_OK;
 }
 
 CLevel_GamePlay_Server* CLevel_GamePlay_Server::Create()

@@ -6,7 +6,8 @@
 #include "Camera_Player.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
+	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
+	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
 {
 }
 
@@ -63,6 +64,9 @@ void CPlayer::LateTick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, pPart);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+
+	
 }
 
 HRESULT CPlayer::Render()
@@ -153,14 +157,12 @@ Vec3 CPlayer::Make_LeftDir()
 void CPlayer::Go_Straight(_float fSpeed, _float fTimeDelta)
 {
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
-	Send_WorldMatrix();
 }
 
 void CPlayer::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 {
 	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
-	Send_WorldMatrix();
 }
 
 HRESULT CPlayer::Ready_Components()

@@ -27,12 +27,17 @@ private:
 
 
 private:
-	HRESULT	Broadcast_Character();
-	void	Broadcast_LevelState(LEVELSTATE eState);
-	void	Wait_ClientLevelState(LEVELSTATE eState);
+	HRESULT			Broadcast_Character();
+	void			Broadcast_LevelState(LEVELSTATE eState);
+	void			Wait_ClientLevelState(LEVELSTATE eState);
+	HRESULT			Broadcast_PlayerInfo();
 public:
 	static class CLevel_GamePlay_Server* Create();
 	virtual void Free() override;
+
+
+private:
+	_float m_fBroadcastTime = 0.0f;
 };
 
 END

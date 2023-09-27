@@ -20,6 +20,7 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void	Send_PlayerInfo();
 
 
 protected:
@@ -28,7 +29,7 @@ protected:
 	HRESULT Ready_AnimationSpeed();
 
 private:
-
+	_float	m_fSendInfoTime = 0.0f;
 
 public:
 	static CPlayer_Sasuke* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

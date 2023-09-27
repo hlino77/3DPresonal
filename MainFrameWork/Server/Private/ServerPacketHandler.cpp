@@ -5,6 +5,8 @@
 #include "GameInstance.h"
 #include "Player_Server.h"
 #include "AsUtils.h"
+#include "Struct.pb.h"
+#include "Protocol.pb.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -95,10 +97,6 @@ bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 	pTransform->Set_WorldMatrix(matWorld);
 	Safe_Release(pGameInstance);
 
-	GSessionManager.Add_SendCount();
-
-	cout << GSessionManager.Get_SendCount() << endl;
-
 	return true;
 }
 
@@ -106,5 +104,30 @@ bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION&
 {
 	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
+	return true;
+}
+
+bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	auto tPlayer = pkt.mutable_tplayer(0);
+
+
+	CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(pGameInstance->Find_GameObejct(tPlayer->ilevel(), tPlayer->ilayer(), tPlayer->iplayerid()));
+	if (pPlayer == nullptr)
+		return true;
+
+
+	pPlayer->Set_TargetPos(Vec3(tPlayer->mutable_vtargetpos()->mutable_data()));
+	pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
+
+
+	GSessionManager.Add_SendCount();
+	cout << GSessionManager.Get_SendCount() << endl;
+
+	Safe_Release(pGameInstance);
+
 	return true;
 }

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "ServerSessionManager.h"
+#include "Engine_Defines.h"
 #include "Client_Defines.h"
 #include "ServerSession.h"
 #include "Struct.pb.h"
 #include "ClientPacketHandler.h"
+
 
 IMPLEMENT_SINGLETON(CServerSessionManager)
 

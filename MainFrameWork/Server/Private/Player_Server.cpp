@@ -5,7 +5,8 @@
 
 
 CPlayer_Server::CPlayer_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
+	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
+	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
 {
 }
 

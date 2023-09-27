@@ -6,6 +6,7 @@
 #include "State_Sasuke_Idle.h"
 #include "State_Sasuke_Move.h"
 #include "State_Sasuke_Attack_Normal.h"
+#include "ServerSessionManager.h"
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -44,12 +45,49 @@ void CPlayer_Sasuke::Tick(_float fTimeDelta)
 void CPlayer_Sasuke::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
+
+	if (m_bControl)
+	{
+		m_fSendInfoTime += fTimeDelta;
+		if (m_fSendInfoTime >= 0.1f)
+		{
+			m_fSendInfoTime = 0.0f;
+			Send_PlayerInfo();
+		}
+	}
 }
 
 HRESULT CPlayer_Sasuke::Render()
 {
 	__super::Render();
 	return S_OK;
+}
+
+void CPlayer_Sasuke::Send_PlayerInfo()
+{
+
+	Protocol::S_PLAYERINFO pkt;
+
+	auto tPlayerInfo = pkt.add_tplayer();
+
+	tPlayerInfo->set_iplayerid(m_iObjectID);
+	tPlayerInfo->set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	tPlayerInfo->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+
+	
+	auto vTargetPos = tPlayerInfo->mutable_vtargetpos();
+	vTargetPos->Resize(3, 0.0f);
+	memcpy(vTargetPos->mutable_data(), &m_vTargetPos, sizeof(Vec3));
+
+
+	auto matWorld = tPlayerInfo->mutable_matworld();
+	matWorld->Resize(16, 0.0f);
+	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
+	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
 
