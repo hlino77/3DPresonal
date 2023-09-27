@@ -1,13 +1,18 @@
 #include "stdafx.h"
+#include "Client_Defines.h"
 #include "GameInstance.h"
 #include "Player_Sasuke.h"
 #include "Key_Manager.h"
 #include "Camera_Player.h"
 #include "State_Sasuke_Idle.h"
-#include "State_Sasuke_Move.h"
-#include "State_Sasuke_Attack_Normal.h"
+#include "State_Sasuke_RunLoop.h"
+#include "State_Sasuke_RunEnd.h"
+#include "State_Sasuke_Attack_cmb01.h"
+#include "State_Sasuke_Attack_cmb03.h"
+#include "State_Sasuke_Attack_cmb06.h"
+#include "State_Sasuke_Attack_cmb08.h"
 #include "ServerSessionManager.h"
-
+#include "Engine_Defines.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -100,8 +105,13 @@ HRESULT CPlayer_Sasuke::Ready_Components()
 HRESULT CPlayer_Sasuke::Ready_State()
 {
 	m_pStateMachine->Add_State(L"Idle", new CState_Sasuke_Idle(L"Idle", this));
-	m_pStateMachine->Add_State(L"Move", new CState_Sasuke_Move(L"Move", this));
-	m_pStateMachine->Add_State(L"Attack_Normal", new CState_Sasuke_Attack_Normal(L"Attack_Normal", this));
+	m_pStateMachine->Add_State(L"Run_Loop", new CState_Sasuke_RunLoop(L"Run_Loop", this));
+	m_pStateMachine->Add_State(L"Run_End", new CState_Sasuke_RunEnd(L"Run_End", this));
+
+	m_pStateMachine->Add_State(L"Attack_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_cmb01", this));
+	m_pStateMachine->Add_State(L"Attack_cmb03", new CState_Sasuke_Attack_cmb03(L"Attack_cmb03", this));
+	m_pStateMachine->Add_State(L"Attack_cmb06", new CState_Sasuke_Attack_cmb06(L"Attack_cmb06", this));
+	m_pStateMachine->Add_State(L"Attack_cmb08", new CState_Sasuke_Attack_cmb08(L"Attack_cmb08", this));
 
 	m_pStateMachine->Change_State(L"Idle");
 
@@ -110,9 +120,9 @@ HRESULT CPlayer_Sasuke::Ready_State()
 
 HRESULT CPlayer_Sasuke::Ready_AnimationSpeed()
 {
-	CState_Sasuke_Idle(L"Idle", this).Initialize();
-	CState_Sasuke_Move(L"Move", this).Initialize();
-	CState_Sasuke_Attack_Normal(L"Attack_Normal", this).Initialize();
+	//CState_Sasuke_Idle(L"Idle", this).Initialize();
+	//CState_Sasuke_Move(L"Move", this).Initialize();
+	//CState_Sasuke_Attack_Normal(L"Attack_Normal", this).Initialize();
 
 
 	return S_OK;

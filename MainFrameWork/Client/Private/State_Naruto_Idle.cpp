@@ -6,13 +6,13 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 
-CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, class CPlayer_Naruto* pPlayer)
+CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
 	, m_pPlayer(pPlayer)
 {
 }
 
-CState_Naruto_Idle::CState_Naruto_Idle(const CState& rhs, class CStateMachine* pMachine)
+CState_Naruto_Idle::CState_Naruto_Idle(const CState& rhs, CStateMachine* pMachine)
 	:CState(rhs, pMachine)
 {
 }
@@ -36,11 +36,11 @@ void CState_Naruto_Idle::Tick_State(_float fTimeDelta)
 {
 	if (KEY_HOLD(KEY::W) || KEY_HOLD(KEY::S) || KEY_HOLD(KEY::D) || KEY_HOLD(KEY::A))
 	{
-		m_pPlayer->Set_State(L"Move");
+		m_pPlayer->Set_State(L"Run_Loop");
 	}
 
 	if (KEY_TAP(KEY::LBTN))
-		m_pPlayer->Set_State(L"Attack_Normal");
+		m_pPlayer->Set_State(L"Attack_Punch_Left");
 }
 
 void CState_Naruto_Idle::Exit_State()

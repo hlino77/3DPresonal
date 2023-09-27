@@ -1,11 +1,16 @@
 #include "stdafx.h"
+#include "Client_Defines.h"
 #include "GameInstance.h"
 #include "Player_Naruto.h"
 #include "Key_Manager.h"
 #include "Camera_Player.h"
 #include "State_Naruto_Idle.h"
-#include "State_Naruto_Move.h"
-#include "State_Naruto_Attack_Normal.h"
+#include "State_Naruto_RunLoop.h"
+#include "State_Naruto_RunEnd.h"
+#include "State_Naruto_Attack_Punch_Left.h"
+#include "State_Naruto_Attack_Punch_Right.h"
+#include "State_Naruto_Attack_ElbowStrike.h"
+#include "State_Naruto_Attack_JumpDoubleKick.h"
 #include "ServerSessionManager.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -101,8 +106,14 @@ HRESULT CPlayer_Naruto::Ready_Components()
 HRESULT CPlayer_Naruto::Ready_State()
 {
 	m_pStateMachine->Add_State(L"Idle", new CState_Naruto_Idle(L"Idle", this));
-	m_pStateMachine->Add_State(L"Move", new CState_Naruto_Move(L"Move", this));
-	m_pStateMachine->Add_State(L"Attack_Normal", new CState_Naruto_Attack_Normal(L"Attack_Normal", this));
+	m_pStateMachine->Add_State(L"Run_Loop", new CState_Naruto_RunLoop(L"Run_Loop", this));
+	m_pStateMachine->Add_State(L"Run_End", new CState_Naruto_RunEnd(L"Run_End", this));
+
+	m_pStateMachine->Add_State(L"Attack_Punch_Left", new CState_Naruto_Attack_Punch_Left(L"Attack_Punch_Left", this));
+	m_pStateMachine->Add_State(L"Attack_Punch_Right", new CState_Naruto_Attack_Punch_Right(L"Attack_Punch_Right", this));
+	m_pStateMachine->Add_State(L"Attack_ElbowStrike", new CState_Naruto_Attack_ElbowStrike(L"Attack_ElbowStrike", this));
+	m_pStateMachine->Add_State(L"Attack_JumpDoubleKick", new CState_Naruto_Attack_JumpDoubleKick(L"Attack_JumpDoubleKick", this));
+	
 
 	m_pStateMachine->Change_State(L"Idle");
 
@@ -111,9 +122,7 @@ HRESULT CPlayer_Naruto::Ready_State()
 
 HRESULT CPlayer_Naruto::Ready_AnimationSpeed()
 {
-	CState_Naruto_Idle(L"Idle", this).Initialize();
-	CState_Naruto_Move(L"Move", this).Initialize();
-	CState_Naruto_Attack_Normal(L"Attack_Normal", this).Initialize();
+	//CState_Naruto_Idle(L"Idle", this).Initialize();
 
 	return S_OK;
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.h"
 
+BEGIN(Client)
+
 class CPlayer_Sasuke : public CPlayer
 {
 public:
@@ -39,3 +41,4 @@ public:
 
 };
 
+END

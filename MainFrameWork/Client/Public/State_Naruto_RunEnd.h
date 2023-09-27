@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CState_Naruto_Idle : public CState
+class CState_Naruto_RunEnd : public CState
 {
 public:
-	CState_Naruto_Idle(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
-	CState_Naruto_Idle(const CState& rhs, class CStateMachine* pMachine);
-	virtual ~CState_Naruto_Idle() = default;
+	CState_Naruto_RunEnd(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
+	CState_Naruto_RunEnd(const CState& rhs, class CStateMachine* pMachine);
+	virtual ~CState_Naruto_RunEnd() = default;
 
 
 public:
@@ -24,7 +24,8 @@ private:
 
 private:
 	//Animation
-	_int m_iIdle_Loop = 0;
+	_int m_iRun_End = -1;
+	DirectX::SimpleMath::Vector3 m_vStopPos;
 
 public:
 	virtual void Free() override;

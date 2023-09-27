@@ -12,12 +12,14 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CGameObject(rhs)
+	: CGameObject(rhs),
+	m_matTargetWorld(rhs.m_matTargetWorld)
 {
 }
 
 HRESULT CPlayer::Initialize_Prototype()
 {
+	m_matTargetWorld = XMMatrixIdentity();
     return S_OK;
 }
 

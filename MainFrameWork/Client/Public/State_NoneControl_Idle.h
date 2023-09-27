@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CState_Sasuke_Idle : public CState
+class CState_NoneControl_Idle : public CState
 {
 public:
-	CState_Sasuke_Idle(const wstring& strStateName, class CPlayer_Sasuke* pPlayer);
-	CState_Sasuke_Idle(const CState& rhs, class CStateMachine* pMachine);
-	virtual ~CState_Sasuke_Idle() = default;
+	CState_NoneControl_Idle(const wstring& strStateName, class CPlayer* pPlayer);
+	CState_NoneControl_Idle(const CState& rhs, class CStateMachine* pMachine);
+	virtual ~CState_NoneControl_Idle() = default;
 
 
 public:
@@ -20,11 +20,10 @@ public:
 
 
 private:
-	class CPlayer_Sasuke* m_pPlayer = nullptr;
+	class CPlayer* m_pPlayer = nullptr;
 
 private:
-	//Animation
-	_int m_iIdle_Loop = 0;
+
 
 public:
 	virtual void Free() override;
