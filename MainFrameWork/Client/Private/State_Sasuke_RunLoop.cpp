@@ -97,7 +97,7 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
-	Set_TargetPos();
+	Set_TargetPos(vDir);
 
 
 	if (KEY_NONE(KEY::W) && KEY_NONE(KEY::A) && KEY_NONE(KEY::S) && KEY_NONE(KEY::D))
@@ -133,13 +133,11 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 }
 
-void CState_Sasuke_RunLoop::Set_TargetPos()
+void CState_Sasuke_RunLoop::Set_TargetPos(Vec3 vDir)
 {
 	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
-	vLook.Normalize();
 
-	Vec3 vTargetPos = vPos + vLook * 20.0f;
+	Vec3 vTargetPos = vPos + vDir * 1.5f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
