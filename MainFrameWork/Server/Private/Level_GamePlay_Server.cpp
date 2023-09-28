@@ -207,7 +207,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 		Matrix matPlayerWorld = pPlayer->Get_TransformCom()->Get_WorldMatrix();
 		memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
-		if (pPlayer->Get_ObjectTag() == L"Sasuke")
+		if (pPlayer->Get_ObjectTag() == L"Naruto")
 			cout << vPlayerTargetPos.x << " " << vPlayerTargetPos.y << " " << vPlayerTargetPos.z << endl;
 	}
 

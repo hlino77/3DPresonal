@@ -80,7 +80,8 @@ void CPlayer_Naruto::Send_PlayerInfo()
 
 	auto vTargetPos = tPlayerInfo->mutable_vtargetpos();
 	vTargetPos->Resize(3, 0.0f);
-	memcpy(vTargetPos->mutable_data(), &m_vTargetPos, sizeof(Vec3));
+	Vec3 vPlayerTargetPos = m_vTargetPos.load();
+	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
 	auto matWorld = tPlayerInfo->mutable_matworld();

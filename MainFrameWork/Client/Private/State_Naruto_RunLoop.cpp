@@ -111,6 +111,8 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
 
+	cout << vTargetPos.x << " " << vTargetPos.y << " " << vTargetPos.z << endl;
+
 	/*if ((vServerPos - vCurrPos).Length() > 0.5f)
 	{
 		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
