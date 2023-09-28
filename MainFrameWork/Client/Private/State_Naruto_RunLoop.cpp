@@ -50,7 +50,16 @@ void CState_Naruto_RunLoop::Enter_State()
 		Set_TargetPos(vDir);
 	}
 	else
-		Set_BezierPos();
+	{
+		Push_Spline();
+		Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+		vLook.Normalize();
+		Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+
+		m_vPrevPos = vPos - vLook;
+		m_Spline.front().vPos += vLook * 0.5f;
+	}
+		
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)
@@ -105,25 +114,32 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
 		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 	}
-
-	if (m_vLastPos != m_pPlayer->Get_TargetPos())
-		Set_BezierPos();
 	
+	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
 
-	m_fBezierRatio += fCurrSpeed * fTimeDelta;
+	if (m_Spline.back().vPos != vServerPos)
+		Push_Spline();
 	
-	Vec3 vBezier1, vBezier2, vResultPos;
+	m_fSplineRatio += fCurrSpeed * fTimeDelta;
 
-	vBezier1 = Vec3::Lerp(m_vStartPos, m_vMiddlePos, m_fBezierRatio);
-	vBezier2 = Vec3::Lerp(m_vMiddlePos, m_vLastPos, m_fBezierRatio);
-	vResultPos = Vec3::Lerp(vBezier1, vBezier2, m_fBezierRatio);
+	if (m_fSplineRatio >= 1.0f)
+	{
+		m_fSplineRatio -= 1.0f;
+		m_Spline.pop_front();
+	}
 
 	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
 
-	Vec3 vDir = vResultPos - vCurrPos;
-	vDir.Normalize();
+	Vec3 vResult =  XMVectorCatmullRom(m_vPrevPos, vCurrPos, m_Spline.front().vPos, m_Spline.front().vTargetPos, m_fSplineRatio);
+	m_vPrevPos = vResult;
 
-	m_pPlayer->Move_Dir(vDir, fCurrSpeed ,fTimeDelta);
+	pTransform->Set_State(CTransform::STATE::STATE_POSITION, vResult);
+	
+	Vec3 vDir = vResult - vCurrPos;
+	vDir.Normalize();
+	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+
+
 }
 
 Vec3 CState_Naruto_RunLoop::Make_MoveDir()
@@ -158,12 +174,13 @@ void CState_Naruto_RunLoop::Set_TargetPos(Vec3 vDir)
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
-void CState_Naruto_RunLoop::Set_BezierPos()
+void CState_Naruto_RunLoop::Push_Spline()
 {
-	m_vStartPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-	m_vMiddlePos = Vec3(m_pPlayer->Get_TargetMatrix().m[3]);
-	m_vLastPos = m_pPlayer->Get_TargetPos();
-	m_fBezierRatio = 0.0f;
+	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
+	SplinePos Spline;
+	Spline.vPos = vServerPos;
+	Spline.vTargetPos = m_pPlayer->Get_TargetPos();
+	m_Spline.push_back(Spline);
 }
 
 void CState_Naruto_RunLoop::Free()

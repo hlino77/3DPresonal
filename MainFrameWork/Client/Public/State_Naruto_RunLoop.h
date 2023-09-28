@@ -6,6 +6,12 @@ BEGIN(Client)
 class CState_Naruto_RunLoop : public CState
 {
 public:
+	struct SplinePos
+	{
+		Vec3 vPos, vTargetPos;
+	};
+
+public:
 	CState_Naruto_RunLoop(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
 	CState_Naruto_RunLoop(const CState& rhs, class CStateMachine* pMachine);
 	virtual ~CState_Naruto_RunLoop() = default;
@@ -42,13 +48,13 @@ private:
 
 
 	//NoneControl
-	Vec3 m_vStartPos;
-	_float m_fBezierRatio = 0.0f;
-	Vec3 m_vMiddlePos;
-	Vec3 m_vLastPos;
+	Vec3 m_vPrevPos;
 
 
-	void	Set_BezierPos();
+	_float m_fSplineRatio;
+	deque<SplinePos> m_Spline;
+
+	void	Push_Spline();
 public:
 	virtual void Free() override;
 };
