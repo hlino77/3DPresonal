@@ -82,7 +82,8 @@ void CPlayer_Sasuke::Send_PlayerInfo()
 	
 	auto vTargetPos = tPlayerInfo->mutable_vtargetpos();
 	vTargetPos->Resize(3, 0.0f);
-	memcpy(vTargetPos->mutable_data(), &m_vTargetPos, sizeof(Vec3));
+	Vec3 vPlayerTargetPos = m_vTargetPos.load();
+	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
 	auto matWorld = tPlayerInfo->mutable_matworld();
@@ -108,10 +109,11 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Run_Loop", new CState_Sasuke_RunLoop(L"Run_Loop", this));
 	m_pStateMachine->Add_State(L"Run_End", new CState_Sasuke_RunEnd(L"Run_End", this));
 
-	m_pStateMachine->Add_State(L"Attack_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_cmb01", this));
-	m_pStateMachine->Add_State(L"Attack_cmb03", new CState_Sasuke_Attack_cmb03(L"Attack_cmb03", this));
-	m_pStateMachine->Add_State(L"Attack_cmb06", new CState_Sasuke_Attack_cmb06(L"Attack_cmb06", this));
-	m_pStateMachine->Add_State(L"Attack_cmb08", new CState_Sasuke_Attack_cmb08(L"Attack_cmb08", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Sasuke_Attack_cmb03(L"Attack_Normal_cmb02", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb03", new CState_Sasuke_Attack_cmb08(L"Attack_Normal_cmb03", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb04", new CState_Sasuke_Attack_cmb06(L"Attack_Normal_cmb04", this));
+	
 
 	m_pStateMachine->Change_State(L"Idle");
 

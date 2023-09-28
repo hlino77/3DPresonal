@@ -191,3 +191,26 @@ bool Handel_S_PLAYERINFO_Client(PacketSessionRef& session, Protocol::S_PLAYERINF
 
 	return true;
 }
+
+bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.tplayer().ilayer(), pkt.tplayer().iplayerid()));
+	if (pPlayer == nullptr || pPlayer->Is_Control() == true)
+		return true;
+
+	Vec3 vTargetPos(pkt.tplayer().vtargetpos().data());
+	Matrix matTargetWorld(pkt.tplayer().matworld().data());
+
+
+	pPlayer->Set_TargetPos(vTargetPos);
+	pPlayer->Set_TargetMatrix(matTargetWorld);
+
+	wstring strState = CAsUtils::ToWString(pkt.strstate());
+	pPlayer->Set_NoneControlState(strState);
+
+	return true;
+}

@@ -131,3 +131,25 @@ bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINF
 
 	return true;
 }
+
+bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	auto tPlayer = pkt.tplayer();
+	
+	CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(pGameInstance->Find_GameObejct(tPlayer.ilevel(), tPlayer.ilayer(), tPlayer.iplayerid()));
+	if (pPlayer == nullptr)
+		return true;
+
+	pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer.matworld().data()));
+	pPlayer->Set_TargetPos(Vec3(tPlayer.vtargetpos().data()));
+
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}

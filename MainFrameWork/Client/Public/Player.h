@@ -50,22 +50,27 @@ public:
 	void					Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
 	class CCamera_Player*	Get_Camera() { return m_pCamera; }
 
-	void											Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos = vTargetPos; }
-	DirectX::SimpleMath::Vector3					Get_TargetPos() { return m_vTargetPos; }
+	void					Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
+	Vec3					Get_TargetPos() { return m_vTargetPos.load(); }
 
-	void											Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
-	_float											Get_MoveSpeed() { return m_fMoveSpeed; }
-	void											Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
+	void					Set_TargetMatrix(Matrix matTargetWorld) { m_matTargetWorld.store(matTargetWorld); }
+	Matrix					Get_TargetMatrix() { return m_matTargetWorld.load(); }
 
+
+	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
+	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
+	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
+
+	_bool					Is_Control() { return m_bControl; }
 public:
 
 
 	//Send Packet
 	void			Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
-	void			Send_WorldMatrix();
-
+	void			Send_State(const wstring& szName);
 
 	void			Set_State(const wstring& szName);
+	void			Set_NoneControlState(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 
@@ -83,14 +88,12 @@ protected:
 
 
 protected:
-	class CCamera_Player*	m_pCamera = nullptr;
+	class CCamera_Player*			m_pCamera = nullptr;
 
-	DirectX::SimpleMath::Vector3					m_vTargetPos;
-	DirectX::SimpleMath::Matrix						m_matTargetWorld;
+	atomic<Vec3>					m_vTargetPos;
+	atomic<Matrix>					m_matTargetWorld;
 
-	_float					m_fMoveSpeed = 0.0f;
-private:
-	void			Make_WorldMatrix_Packet(Protocol::S_MATRIX& pkt);
+	_float							m_fMoveSpeed = 0.0f;
 
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;

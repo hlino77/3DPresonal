@@ -27,6 +27,11 @@ HRESULT CState_Naruto_RunEnd::Initialize()
 
 	m_vStopPos = Vec3(0.0f, 0.0f, 0.0f);
 
+	if(m_pPlayer->Is_Control())
+		m_TickFunc = &CState_Naruto_RunEnd::Tick_State_Control;
+	else
+		m_TickFunc = &CState_Naruto_RunEnd::Tick_State_NoneControl;
+
 	return S_OK;
 }
 
@@ -34,14 +39,31 @@ void CState_Naruto_RunEnd::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iRun_End, 0.1f, 0, 0);
 
-	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
-	vLook.Normalize();
+	if (m_pPlayer->Is_Control())
+	{
+		Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+		Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+		vLook.Normalize();
 
-	m_vStopPos = vPos + vLook * 1.0f;
+		m_vStopPos = vPos + vLook * 1.0f;
+		m_pPlayer->Set_TargetPos(m_vStopPos);
+	}
+	else
+		m_vStopPos = m_pPlayer->Get_TargetPos();
 }
 
 void CState_Naruto_RunEnd::Tick_State(_float fTimeDelta)
+{
+	m_TickFunc(*this, fTimeDelta);
+}
+
+void CState_Naruto_RunEnd::Exit_State()
+{
+	m_vStopPos = Vec3(0.0f, 0.0f, 0.0f);
+	m_pPlayer->Set_MoveSpeed(0.0f);
+}
+
+void CState_Naruto_RunEnd::Tick_State_Control(_float fTimeDelta)
 {
 	if (m_pPlayer->Get_ModelCom()->Is_AnimationEnd(m_iRun_End))
 	{
@@ -62,9 +84,17 @@ void CState_Naruto_RunEnd::Tick_State(_float fTimeDelta)
 	}
 }
 
-void CState_Naruto_RunEnd::Exit_State()
+void CState_Naruto_RunEnd::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_vStopPos = Vec3(0.0f, 0.0f, 0.0f);
+	CTransform* pTransform = m_pPlayer->Get_TransformCom();
+	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+	Vec3 vDir(m_pPlayer->Get_TargetMatrix().m[2]);
+
+	vDir.Normalize();
+
+	vCurrPos = Vec3::Lerp(vCurrPos, vTargetPos, 0.1f);
+	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 }
 
 

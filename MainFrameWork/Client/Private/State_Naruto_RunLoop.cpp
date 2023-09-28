@@ -30,6 +30,12 @@ HRESULT CState_Naruto_RunLoop::Initialize()
 	if (m_iRun_Loop == -1)
 		return E_FAIL;
 
+
+	if (m_pPlayer->Is_Control())
+		m_TickFunc = &CState_Naruto_RunLoop::Tick_State_Control;
+	else
+		m_TickFunc = &CState_Naruto_RunLoop::Tick_State_NoneControl;
+
 	return S_OK;
 }
 
@@ -39,6 +45,16 @@ void CState_Naruto_RunLoop::Enter_State()
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)
+{
+	m_TickFunc(*this, fTimeDelta);
+}
+
+void CState_Naruto_RunLoop::Exit_State()
+{
+
+}
+
+void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 {
 	Vec3 vDir(0.0f, 0.0f, 0.0f);
 
@@ -83,8 +99,31 @@ void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)
 	}
 }
 
-void CState_Naruto_RunLoop::Exit_State()
+void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 {
+	CTransform* pTransform = m_pPlayer->Get_TransformCom();
+	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
+
+	if ((vServerPos - vCurrPos).Length() > 0.5f)
+	{
+		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
+	}
+
+	Vec3 vDir = vTargetPos - vCurrPos;
+	vDir.Normalize();
+
+	_float fCurrSpeed = m_pPlayer->Get_MoveSpeed();
+
+	if (fCurrSpeed < m_fMaxSpeed)
+	{
+		fCurrSpeed += m_fAccel;
+		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
+		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
+	}
+
+	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 }
 
 void CState_Naruto_RunLoop::Free()

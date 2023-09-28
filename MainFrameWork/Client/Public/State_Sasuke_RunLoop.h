@@ -18,10 +18,17 @@ public:
 	virtual void Tick_State(_float fTimeDelta) override;
 	virtual void Exit_State() override;
 
+	void	Tick_State_Control(_float fTimeDelta);
+	void	Tick_State_NoneControl(_float fTimeDelta);
 
+
+private:
+	void	Set_TargetPos();
 private:
 	class CPlayer_Sasuke* m_pPlayer = nullptr;
 
+
+	std::function<void(CState_Sasuke_RunLoop&, _float)> m_TickFunc;
 private:
 	_float m_fMaxSpeed = 0.f;
 	_float m_fAccel = 0.f;

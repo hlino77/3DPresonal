@@ -19,9 +19,12 @@ public:
 	virtual void Exit_State() override;
 
 
+	void	Tick_State_Control(_float fTimeDelta);
+	void	Tick_State_NoneControl(_float fTimeDelta);
 private:
 	class CPlayer_Sasuke* m_pPlayer = nullptr;
 
+	std::function<void(CState_Sasuke_Attack_cmb03&, _float)> m_TickFunc;
 private:
 	_int	m_iAnimIndex = 0;
 	_uint	m_iChangeFrame = 0;

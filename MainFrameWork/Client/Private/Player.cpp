@@ -4,6 +4,7 @@
 #include "ServerSessionManager.h"
 #include "ServerSession.h"
 #include "Camera_Player.h"
+#include "AsUtils.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
@@ -13,7 +14,7 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CGameObject(rhs),
-	m_matTargetWorld(rhs.m_matTargetWorld)
+	m_matTargetWorld(rhs.m_matTargetWorld.load())
 {
 }
 
@@ -241,54 +242,55 @@ void CPlayer::Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartF
 	Safe_Release(pGameInstance);
 }
 
-void CPlayer::Send_WorldMatrix()
+void CPlayer::Send_State(const wstring& szName)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	_uint iCurrLevel = pGameInstance->Get_CurrLevelIndex();
-	if (iCurrLevel >= LEVELID::LEVEL_LOADING)
-	{
-		Safe_Release(pGameInstance);
-		return;
-	}
+	Protocol::S_STATE pkt;
+	pkt.set_strstate(CAsUtils::ToString(szName));
 
-	Protocol::S_MATRIX pkt;
-	pkt.set_iobjectid(m_iObjectID);
-	pkt.set_ilevel(iCurrLevel);
-	pkt.set_ilayer((int32)LAYER_TYPE::LAYER_PLAYER);
-	Make_WorldMatrix_Packet(pkt);
+	auto tPlayer = pkt.mutable_tplayer();
+
+	tPlayer->set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	tPlayer->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	tPlayer->set_iplayerid(m_iObjectID);
+
+	auto vTargetPos = tPlayer->mutable_vtargetpos();
+	vTargetPos->Resize(3, 0.0f);
+	Vec3 vPlayerTargetPos = m_vTargetPos.load();
+	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
-	SendBufferRef pBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
-	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(pBuffer);
+	auto matWorld = tPlayer->mutable_matworld();
+	matWorld->Resize(16, 0.0f);
+	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
+	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 
 	Safe_Release(pGameInstance);
 }
 
+
 void CPlayer::Set_State(const wstring& szName)
+{
+	m_pStateMachine->Change_State(szName);
+	Send_State(szName);
+}
+
+void CPlayer::Set_NoneControlState(const wstring& szName)
 {
 	m_pStateMachine->Change_State(szName);
 }
 
 void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {
-	Send_Animation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 	m_pModelCom->Reserve_NextAnimation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 }
 
-void CPlayer::Make_WorldMatrix_Packet(Protocol::S_MATRIX& pkt)
-{
-	Matrix matWorld = m_pTransformCom->Get_WorldMatrix();
-
-	for (_uint i = 0; i < 4; ++i)
-	{
-		for (_uint k = 0; k < 4; ++k)
-		{
-			pkt.add_matrix(matWorld.m[i][k]);
-		}
-	}
-}
 
 HRESULT CPlayer::Ready_Sockets()
 {

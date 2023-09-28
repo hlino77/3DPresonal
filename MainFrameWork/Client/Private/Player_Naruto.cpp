@@ -109,10 +109,10 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Run_Loop", new CState_Naruto_RunLoop(L"Run_Loop", this));
 	m_pStateMachine->Add_State(L"Run_End", new CState_Naruto_RunEnd(L"Run_End", this));
 
-	m_pStateMachine->Add_State(L"Attack_Punch_Left", new CState_Naruto_Attack_Punch_Left(L"Attack_Punch_Left", this));
-	m_pStateMachine->Add_State(L"Attack_Punch_Right", new CState_Naruto_Attack_Punch_Right(L"Attack_Punch_Right", this));
-	m_pStateMachine->Add_State(L"Attack_ElbowStrike", new CState_Naruto_Attack_ElbowStrike(L"Attack_ElbowStrike", this));
-	m_pStateMachine->Add_State(L"Attack_JumpDoubleKick", new CState_Naruto_Attack_JumpDoubleKick(L"Attack_JumpDoubleKick", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Naruto_Attack_Punch_Left(L"Attack_Normal_cmb01", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Naruto_Attack_Punch_Right(L"Attack_Normal_cmb02", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb03", new CState_Naruto_Attack_ElbowStrike(L"Attack_Normal_cmb03", this));
+	m_pStateMachine->Add_State(L"Attack_Normal_cmb04", new CState_Naruto_Attack_JumpDoubleKick(L"Attack_Normal_cmb04", this));
 	
 
 	m_pStateMachine->Change_State(L"Idle");

@@ -47,7 +47,6 @@ public:
 	Vec3	Get_TargetPos() { return m_vTargetPos; }
 	void	Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos = vTargetPos; }
 
-
 protected:
 	virtual HRESULT Ready_Components() override;
 

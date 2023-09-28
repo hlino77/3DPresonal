@@ -33,6 +33,12 @@ HRESULT CState_Sasuke_Attack_cmb06::Initialize()
 	m_iInputNext = 0;
 	m_iStartFrame = 4;
 
+
+	if (m_pPlayer->Is_Control())
+		m_TickFunc = &CState_Sasuke_Attack_cmb06::Tick_State_Control;
+	else
+		m_TickFunc = &CState_Sasuke_Attack_cmb06::Tick_State_NoneControl;
+
 	return S_OK;
 }
 
@@ -43,6 +49,15 @@ void CState_Sasuke_Attack_cmb06::Enter_State()
 
 void CState_Sasuke_Attack_cmb06::Tick_State(_float fTimeDelta)
 {
+	m_TickFunc(*this, fTimeDelta);
+}
+
+void CState_Sasuke_Attack_cmb06::Exit_State()
+{
+}
+
+void CState_Sasuke_Attack_cmb06::Tick_State_Control(_float fTimeDelta)
+{
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
@@ -51,7 +66,7 @@ void CState_Sasuke_Attack_cmb06::Tick_State(_float fTimeDelta)
 		m_pPlayer->Set_State(L"Idle");
 }
 
-void CState_Sasuke_Attack_cmb06::Exit_State()
+void CState_Sasuke_Attack_cmb06::Tick_State_NoneControl(_float fTimeDelta)
 {
 }
 

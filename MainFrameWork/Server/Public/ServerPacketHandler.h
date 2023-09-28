@@ -16,6 +16,7 @@ enum : uint16
 	PKT_S_MATRIX = 7,
 	PKT_S_ANIMATION = 8,
 	PKT_S_PLAYERINFO = 9,
+	PKT_S_STATE = 10,
 };
 
 //TODO
@@ -28,6 +29,7 @@ bool Handel_S_CHARACTERNAME_Server(PacketSessionRef& session, Protocol::S_CHARAC
 bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt);
 bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION& pkt);
 bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt);
+bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt);
 
 
 class CServerPacketHandler
@@ -47,6 +49,7 @@ public:
 		GPacketHandler[PKT_S_MATRIX] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_MATRIX>(Handel_S_MATRIX_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_ANIMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_ANIMATION>(Handel_S_ANIMATION_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_PLAYERINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_PLAYERINFO>(Handel_S_PLAYERINFO_Server, session, buffer, len); };
+		GPacketHandler[PKT_S_STATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_STATE>(Handel_S_STATE_Server, session, buffer, len); };
 		
 
 	}
@@ -66,6 +69,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_MATRIX& pkt) { return MakeSendBuffer(pkt, PKT_S_MATRIX); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_ANIMATION& pkt) { return MakeSendBuffer(pkt, PKT_S_ANIMATION); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_PLAYERINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_PLAYERINFO); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_STATE& pkt) { return MakeSendBuffer(pkt, PKT_S_STATE); }
 
 
 private:

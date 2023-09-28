@@ -30,6 +30,14 @@ HRESULT CState_Naruto_Attack_JumpDoubleKick::Initialize()
 	m_iInputNext = m_iNextFrame - 5;
 	m_iStartFrame = 0;
 
+
+	if (m_pPlayer->Is_Control())
+		m_TickFunc = &CState_Naruto_Attack_JumpDoubleKick::Tick_State_Control;
+	else
+		m_TickFunc = &CState_Naruto_Attack_JumpDoubleKick::Tick_State_NoneControl;
+
+
+
 	return S_OK;
 }
 
@@ -40,6 +48,15 @@ void CState_Naruto_Attack_JumpDoubleKick::Enter_State()
 
 void CState_Naruto_Attack_JumpDoubleKick::Tick_State(_float fTimeDelta)
 {
+	m_TickFunc(*this, fTimeDelta);
+}
+
+void CState_Naruto_Attack_JumpDoubleKick::Exit_State()
+{
+}
+
+void CState_Naruto_Attack_JumpDoubleKick::Tick_State_Control(_float fTimeDelta)
+{
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
@@ -48,7 +65,7 @@ void CState_Naruto_Attack_JumpDoubleKick::Tick_State(_float fTimeDelta)
 		m_pPlayer->Set_State(L"Idle");
 }
 
-void CState_Naruto_Attack_JumpDoubleKick::Exit_State()
+void CState_Naruto_Attack_JumpDoubleKick::Tick_State_NoneControl(_float fTimeDelta)
 {
 }
 

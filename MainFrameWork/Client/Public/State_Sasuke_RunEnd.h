@@ -18,9 +18,13 @@ public:
 	virtual void Tick_State(_float fTimeDelta) override;
 	virtual void Exit_State() override;
 
+	void	Tick_State_Control(_float fTimeDelta);
+	void	Tick_State_NoneControl(_float fTimeDelta);
 
 private:
 	class CPlayer_Sasuke* m_pPlayer = nullptr;
+
+	std::function<void(CState_Sasuke_RunEnd&, _float)> m_TickFunc;
 
 private:
 	//Animation

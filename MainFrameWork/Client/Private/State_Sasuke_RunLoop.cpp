@@ -30,15 +30,35 @@ HRESULT CState_Sasuke_RunLoop::Initialize()
 	if (m_iRun_Loop == -1)
 		return E_FAIL;
 
+
+	if (m_pPlayer->Is_Control())
+		m_TickFunc = &CState_Sasuke_RunLoop::Tick_State_Control;
+	else
+		m_TickFunc = &CState_Sasuke_RunLoop::Tick_State_NoneControl;
+
+
+
 	return S_OK;
 }
 
 void CState_Sasuke_RunLoop::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iRun_Loop, 0.2f, 0, 0);
+
+	if (m_pPlayer->Is_Control())
+		Set_TargetPos();
 }
 
 void CState_Sasuke_RunLoop::Tick_State(_float fTimeDelta)
+{
+	m_TickFunc(*this, fTimeDelta);
+}
+
+void CState_Sasuke_RunLoop::Exit_State()
+{
+}
+
+void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 {
 	Vec3 vDir(0.0f, 0.0f, 0.0f);
 
@@ -77,14 +97,50 @@ void CState_Sasuke_RunLoop::Tick_State(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
+	Set_TargetPos();
+
+
 	if (KEY_NONE(KEY::W) && KEY_NONE(KEY::A) && KEY_NONE(KEY::S) && KEY_NONE(KEY::D))
 	{
 		m_pPlayer->Set_State(L"Run_End");
 	}
 }
 
-void CState_Sasuke_RunLoop::Exit_State()
+void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 {
+	CTransform* pTransform = m_pPlayer->Get_TransformCom();
+	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
+
+	if ((vServerPos - vCurrPos).Length() > 0.5f)
+	{
+		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
+	}
+
+	Vec3 vDir = vTargetPos - vCurrPos;
+	vDir.Normalize();
+
+	_float fCurrSpeed = m_pPlayer->Get_MoveSpeed();
+
+	if (fCurrSpeed < m_fMaxSpeed)
+	{
+		fCurrSpeed += m_fAccel;
+		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
+		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
+	}
+
+	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
+}
+
+void CState_Sasuke_RunLoop::Set_TargetPos()
+{
+	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+	vLook.Normalize();
+
+	Vec3 vTargetPos = vPos + vLook * 1.0f;
+	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
 void CState_Sasuke_RunLoop::Free()

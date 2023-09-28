@@ -19,8 +19,15 @@ public:
 	virtual void Exit_State() override;
 
 
+	void	Tick_State_Control(_float fTimeDelta);
+	void	Tick_State_NoneControl(_float fTimeDelta);
+
 private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
+
+	std::function<void(CState_Naruto_Idle&, _float)> m_TickFunc;
+
+	
 
 private:
 	//Animation
