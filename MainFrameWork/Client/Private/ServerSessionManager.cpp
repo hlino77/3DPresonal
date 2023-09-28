@@ -24,11 +24,14 @@ void CServerSessionManager::Tick(_float fTimeDelta)
 		m_tClientTime.iMinute += 1;
 	}
 
-	m_fTimesync -= fTimeDelta;
-	if (m_fTimesync <= 0.0f)
+	if (m_bConnected)
 	{
-		m_fTimesync = 3.0f;
-		Send_TimeSync();
+		m_fTimesync -= fTimeDelta;
+		if (m_fTimesync <= 0.0f)
+		{
+			m_fTimesync = 3.0f;
+			Send_TimeSync();
+		}
 	}
 }
 
