@@ -14,12 +14,42 @@ CTransform::CTransform(const CTransform & rhs)
 
 }
 
+Vec3 CTransform::Get_State(STATE eState)
+{
+	READ_LOCK
+	return Vec3(m_WorldMatrix.m[eState][0], m_WorldMatrix.m[eState][1], m_WorldMatrix.m[eState][2]);
+}
+
+Matrix CTransform::Get_WorldMatrix()
+{
+	READ_LOCK
+	return m_WorldMatrix;
+}
+
+Matrix CTransform::Get_WorldMatrix_TP()
+{
+	READ_LOCK
+	return m_WorldMatrix.Transpose();
+}
+
+Matrix CTransform::Get_WorldMatrixInverse()
+{
+	READ_LOCK
+	return m_WorldMatrix.Invert();
+}
+
 void CTransform::Set_State(STATE eState, Vec3 vState)
 {
 	WRITE_LOCK
 	m_WorldMatrix.m[eState][0] = vState.x;
 	m_WorldMatrix.m[eState][1] = vState.y;
 	m_WorldMatrix.m[eState][2] = vState.z;
+}
+
+void CTransform::Set_WorldMatrix(Matrix matWorld)
+{
+	WRITE_LOCK
+	m_WorldMatrix = matWorld;
 }
 
 HRESULT CTransform::Initialize_Prototype()
@@ -325,4 +355,27 @@ void CTransform::Turn_Speed(Vec3 vAxis, _float fSpeed, _float fTimeDelta)
 	Set_State(CTransform::STATE_RIGHT, Vec3(matWorld.m[0]));
 	Set_State(CTransform::STATE_UP, Vec3(matWorld.m[1]));
 	Set_State(CTransform::STATE_LOOK, Vec3(matWorld.m[2]));
+}
+
+void CTransform::LookAt_Dir(Vec3 vDir)
+{
+	Vec3		vUp = Get_State(STATE::STATE_UP);
+	Vec3		vLook = vDir;
+	Vec3		vRight = vUp.Cross(vLook);
+
+
+	vLook = vRight.Cross(vUp);
+
+	vUp.Normalize();
+	vLook.Normalize();
+	vRight.Normalize();
+
+
+	Vec3		vScale = Get_Scale();
+
+
+	WRITE_LOCK
+	Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(CTransform::STATE_UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * vScale.z);
 }

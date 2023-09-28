@@ -41,12 +41,12 @@ public:
 	}
 
 
-	_int Find_AnimIndex(const wstring& szAnimName);
-	_bool Is_AnimationEnd(_uint iAnimation);
-	_float Get_Anim_MaxFrameRatio(_uint iAnimation);
-	_uint  Get_Anim_Frame(_uint iAnimation);
+	_int	Find_AnimIndex(const wstring& szAnimName);
+	_bool	Is_AnimationEnd(_uint iAnimation);
+	_float	Get_Anim_MaxFrameRatio(_uint iAnimation);
+	_uint	Get_Anim_Frame(_uint iAnimation);
 
-	_int Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed);
+	_int	Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed);
 public:
 	virtual HRESULT Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName);
 	virtual HRESULT Initialize(void* pArg);

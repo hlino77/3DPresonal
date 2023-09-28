@@ -26,32 +26,20 @@ private:
 
 	USE_LOCK
 public:
-	Vec3 Get_State(STATE eState) {
-		READ_LOCK
-		return Vec3(m_WorldMatrix.m[eState][0], m_WorldMatrix.m[eState][1], m_WorldMatrix.m[eState][2]);
-	}
+	Vec3 Get_State(STATE eState);
 
-	Matrix Get_WorldMatrix() {
-		READ_LOCK
-		return m_WorldMatrix;
-	}
+	Matrix Get_WorldMatrix();
 
 
-	Matrix Get_WorldMatrix_TP() {
-		READ_LOCK
-		return m_WorldMatrix.Transpose();
-	}
+	Matrix Get_WorldMatrix_TP();
 
-	Matrix Get_WorldMatrixInverse() {
-		READ_LOCK
-		return m_WorldMatrix.Invert();
-	}
+	Matrix Get_WorldMatrixInverse();
 
 	void Set_State(STATE eState, Vec3 vState);
-	void Set_WorldMatrix(Matrix matWorld) {
-		WRITE_LOCK
-		m_WorldMatrix = matWorld; 
-	}
+	void Set_WorldMatrix(Matrix matWorld);
+
+
+
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -74,6 +62,7 @@ public:
 
 	void LookAt(Vec3 vAt);
 	void LookAt_ForLandObject(Vec3 vAt);
+	void LookAt_Dir(Vec3 vDir);
 	void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f);
 	void Move_Dir(Vec3 vDir, _float fTimeDelta);
 	void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta);

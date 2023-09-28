@@ -45,6 +45,8 @@ void CState_Naruto_RunLoop::Enter_State()
 
 	if (m_pPlayer->Is_Control())
 		Set_TargetPos();
+	else
+		Set_BezierPos();
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)
@@ -107,30 +109,35 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 {
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
-	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
-	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
-
-	cout << vTargetPos.x << " " << vTargetPos.y << " " << vTargetPos.z << endl;
-
-	if ((vServerPos - vCurrPos).Length() > 0.5f)
-	{
-		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
-	}
-
-	Vec3 vDir = vTargetPos - vCurrPos;
-	vDir.Normalize();
 
 	_float fCurrSpeed = m_pPlayer->Get_MoveSpeed();
 
 	if (fCurrSpeed < m_fMaxSpeed)
 	{
-		fCurrSpeed += m_fAccel; 
+		fCurrSpeed += m_fAccel;
 		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
 		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 	}
 
-	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
+	if (m_vLastPos != m_pPlayer->Get_TargetPos())
+		Set_BezierPos();
+	
+
+	m_fBezierRatio += fCurrSpeed * fTimeDelta;
+	
+	Vec3 vBezier1, vBezier2, vResultPos;
+
+	vBezier1 = Vec3::Lerp(m_vStartPos, m_vMiddlePos, m_fBezierRatio);
+	vBezier2 = Vec3::Lerp(m_vMiddlePos, m_vLastPos, m_fBezierRatio);
+	vResultPos = Vec3::Lerp(vBezier1, vBezier2, m_fBezierRatio);
+
+	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
+
+	Vec3 vDir = vResultPos - vCurrPos;
+	vDir.Normalize();
+
+	pTransform->LookAt_Dir(vDir);
+	pTransform->Set_State(CTransform::STATE::STATE_POSITION, vResultPos);
 }
 
 void CState_Naruto_RunLoop::Set_TargetPos()
@@ -141,6 +148,14 @@ void CState_Naruto_RunLoop::Set_TargetPos()
 
 	Vec3 vTargetPos = vPos + vLook * 20.0f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
+}
+
+void CState_Naruto_RunLoop::Set_BezierPos()
+{
+	m_vStartPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+	m_vMiddlePos = Vec3(m_pPlayer->Get_TargetMatrix().m[3]);
+	m_vLastPos = m_pPlayer->Get_TargetPos();
+	m_fBezierRatio = 0.0f;
 }
 
 void CState_Naruto_RunLoop::Free()

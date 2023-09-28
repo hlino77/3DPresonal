@@ -38,9 +38,16 @@ private:
 	_int m_iRun_Loop = -1;
 	
 
-	//NoneControl
-	Vec3 vPrevPos;
 
+
+	//NoneControl
+	Vec3 m_vStartPos;
+	_float m_fBezierRatio = 0.0f;
+	Vec3 m_vMiddlePos;
+	Vec3 m_vLastPos;
+
+
+	void	Set_BezierPos();
 public:
 	virtual void Free() override;
 };
