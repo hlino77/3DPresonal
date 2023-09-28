@@ -21,7 +21,8 @@ public:
 
 	void				Tick_State_Control(_float fTimeDelta);
 	void				Tick_State_NoneControl(_float fTimeDelta);
-
+private:
+	void	Set_TargetPos();
 private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
 
