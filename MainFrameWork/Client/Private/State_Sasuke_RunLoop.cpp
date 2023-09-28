@@ -139,7 +139,7 @@ void CState_Sasuke_RunLoop::Set_TargetPos()
 	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 	vLook.Normalize();
 
-	Vec3 vTargetPos = vPos + vLook * 1.0f;
+	Vec3 vTargetPos = vPos + vLook * 20.0f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 

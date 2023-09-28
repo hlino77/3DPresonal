@@ -44,8 +44,8 @@ public:
 	CTransform* Get_TransformCom() { return m_pTransformCom; }
 	CModel* Get_ModelCom() { return m_pModelCom; }
 	
-	Vec3	Get_TargetPos() { return m_vTargetPos; }
-	void	Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos = vTargetPos; }
+	Vec3	Get_TargetPos() { return m_vTargetPos.load(); }
+	void	Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
 
 protected:
 	virtual HRESULT Ready_Components() override;
@@ -61,7 +61,7 @@ private:
 	typedef vector<CGameObject*>		PARTS;
 
 private:
-	Vec3 m_vTargetPos;
+	atomic<Vec3> m_vTargetPos;
 
 private:
 	HRESULT Ready_Sockets();

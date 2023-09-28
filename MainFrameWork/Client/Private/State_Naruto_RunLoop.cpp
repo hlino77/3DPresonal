@@ -123,7 +123,7 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	if (fCurrSpeed < m_fMaxSpeed)
 	{
-		fCurrSpeed += m_fAccel;
+		fCurrSpeed += m_fAccel; 
 		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
 		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 	}
@@ -137,7 +137,7 @@ void CState_Naruto_RunLoop::Set_TargetPos()
 	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 	vLook.Normalize();
 
-	Vec3 vTargetPos = vPos + vLook * 1.0f;
+	Vec3 vTargetPos = vPos + vLook * 20.0f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
