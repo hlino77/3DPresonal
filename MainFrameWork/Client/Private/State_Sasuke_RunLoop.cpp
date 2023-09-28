@@ -46,11 +46,7 @@ void CState_Sasuke_RunLoop::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iRun_Loop, 0.2f, 0, 0);
 
 	if (m_pPlayer->Is_Control())
-	{
-		Vec3 vDir = Make_MoveDir();
-		vDir.Normalize();
-		Set_TargetPos(vDir);
-	}
+		Set_TargetPos();
 }
 
 void CState_Sasuke_RunLoop::Tick_State(_float fTimeDelta)
@@ -64,7 +60,25 @@ void CState_Sasuke_RunLoop::Exit_State()
 
 void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 {
-	Vec3 vDir = Make_MoveDir();
+	Vec3 vDir(0.0f, 0.0f, 0.0f);
+
+
+	if (KEY_HOLD(KEY::W))
+	{
+		vDir += m_pPlayer->Make_StraightDir();
+	}
+	if (KEY_HOLD(KEY::S))
+	{
+		vDir += m_pPlayer->Make_BackDir();
+	}
+	if (KEY_HOLD(KEY::D))
+	{
+		vDir += m_pPlayer->Make_RightDir();
+	}
+	if (KEY_HOLD(KEY::A))
+	{
+		vDir += m_pPlayer->Make_LeftDir();
+	}
 
 	_float fCurrSpeed = m_pPlayer->Get_MoveSpeed();
 	if (vDir != Vec3(0.0f, 0.0f, 0.0f))
@@ -125,30 +139,6 @@ void CState_Sasuke_RunLoop::Set_TargetPos(Vec3 vDir)
 
 	Vec3 vTargetPos = vPos + vDir * 1.5f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
-}
-
-Vec3 CState_Sasuke_RunLoop::Make_MoveDir()
-{
-	Vec3 vDir(0.0f, 0.0f, 0.0f);
-
-	if (KEY_HOLD(KEY::W))
-	{
-		vDir += m_pPlayer->Make_StraightDir();
-	}
-	if (KEY_HOLD(KEY::S))
-	{
-		vDir += m_pPlayer->Make_BackDir();
-	}
-	if (KEY_HOLD(KEY::D))
-	{
-		vDir += m_pPlayer->Make_RightDir();
-	}
-	if (KEY_HOLD(KEY::A))
-	{
-		vDir += m_pPlayer->Make_LeftDir();
-	}
-
-	return vDir;
 }
 
 void CState_Sasuke_RunLoop::Free()
