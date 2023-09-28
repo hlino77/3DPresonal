@@ -23,7 +23,8 @@ public:
 
 
 private:
-	void	Set_TargetPos(Vec3 vDir);
+	void				Set_TargetPos(Vec3 vDir);
+	Vec3				Make_MoveDir();
 private:
 	class CPlayer_Sasuke* m_pPlayer = nullptr;
 

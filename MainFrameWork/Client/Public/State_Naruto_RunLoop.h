@@ -22,7 +22,8 @@ public:
 	void				Tick_State_Control(_float fTimeDelta);
 	void				Tick_State_NoneControl(_float fTimeDelta);
 private:
-	void	Set_TargetPos(Vec3 vDir);
+	Vec3				Make_MoveDir();
+	void				Set_TargetPos(Vec3 vDir);
 private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
 
