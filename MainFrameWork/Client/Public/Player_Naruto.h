@@ -27,7 +27,6 @@ public:
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();
-	HRESULT Ready_AnimationSpeed();
 
 private:
 	_float	m_fSendInfoTime = 0.0f;

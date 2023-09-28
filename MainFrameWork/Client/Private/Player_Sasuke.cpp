@@ -33,10 +33,8 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
-	if (m_bControl)
-		Ready_State();
-	else
-		Ready_AnimationSpeed();
+	Ready_State();
+
 	return S_OK;
 }
 
@@ -120,15 +118,6 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	return S_OK;
 }
 
-HRESULT CPlayer_Sasuke::Ready_AnimationSpeed()
-{
-	//CState_Sasuke_Idle(L"Idle", this).Initialize();
-	//CState_Sasuke_Move(L"Move", this).Initialize();
-	//CState_Sasuke_Attack_Normal(L"Attack_Normal", this).Initialize();
-
-
-	return S_OK;
-}
 
 CPlayer_Sasuke* CPlayer_Sasuke::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

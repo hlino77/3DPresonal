@@ -32,10 +32,7 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
-	if (m_bControl)
-		Ready_State();
-	else
-		Ready_AnimationSpeed();
+	Ready_State();
 
 
 	return S_OK;
@@ -120,12 +117,6 @@ HRESULT CPlayer_Naruto::Ready_State()
 	return S_OK;
 }
 
-HRESULT CPlayer_Naruto::Ready_AnimationSpeed()
-{
-	//CState_Naruto_Idle(L"Idle", this).Initialize();
-
-	return S_OK;
-}
 
 CPlayer_Naruto* CPlayer_Naruto::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
