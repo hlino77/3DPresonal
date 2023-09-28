@@ -53,7 +53,7 @@ void CPlayer_Naruto::LateTick(_float fTimeDelta)
 	if (m_bControl)
 	{
 		m_fSendInfoTime += fTimeDelta;
-		if (m_fSendInfoTime >= 0.1f)
+		if (m_fSendInfoTime >= 0.05f)
 		{
 			m_fSendInfoTime = 0.0f;
 			Send_PlayerInfo();

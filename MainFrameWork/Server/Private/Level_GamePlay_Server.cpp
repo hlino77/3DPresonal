@@ -59,7 +59,7 @@ HRESULT CLevel_GamePlay_Server::Tick(_float fTimeDelta)
 HRESULT CLevel_GamePlay_Server::LateTick(_float fTimeDelta)
 {
 	m_fBroadcastTime += fTimeDelta;
-	if (m_fBroadcastTime >= 0.1f)
+	if (m_fBroadcastTime >= 0.05f)
 	{
 		Broadcast_PlayerInfo();
 		m_fBroadcastTime = 0.0f;

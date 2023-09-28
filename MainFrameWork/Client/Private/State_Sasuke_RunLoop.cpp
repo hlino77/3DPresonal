@@ -46,7 +46,11 @@ void CState_Sasuke_RunLoop::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iRun_Loop, 0.2f, 0, 0);
 
 	if (m_pPlayer->Is_Control())
-		Set_TargetPos();
+	{
+		Vec3 vDir = Make_MoveDir();
+		vDir.Normalize();
+		Set_TargetPos(vDir);
+	}
 }
 
 void CState_Sasuke_RunLoop::Tick_State(_float fTimeDelta)
@@ -60,30 +64,14 @@ void CState_Sasuke_RunLoop::Exit_State()
 
 void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 {
-	Vec3 vDir(0.0f, 0.0f, 0.0f);
-
-
-	if (KEY_HOLD(KEY::W))
-	{
-		vDir += m_pPlayer->Make_StraightDir();
-	}
-	if (KEY_HOLD(KEY::S))
-	{
-		vDir += m_pPlayer->Make_BackDir();
-	}
-	if (KEY_HOLD(KEY::D))
-	{
-		vDir += m_pPlayer->Make_RightDir();
-	}
-	if (KEY_HOLD(KEY::A))
-	{
-		vDir += m_pPlayer->Make_LeftDir();
-	}
+	Vec3 vDir = Make_MoveDir();
 
 	_float fCurrSpeed = m_pPlayer->Get_MoveSpeed();
 	if (vDir != Vec3(0.0f, 0.0f, 0.0f))
 	{
 		vDir.Normalize();
+		Set_TargetPos(vDir);
+
 
 		if (fCurrSpeed < m_fMaxSpeed)
 		{
@@ -97,7 +85,7 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
-	Set_TargetPos(vDir);
+	
 
 
 	if (KEY_NONE(KEY::W) && KEY_NONE(KEY::A) && KEY_NONE(KEY::S) && KEY_NONE(KEY::D))
@@ -133,11 +121,36 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 }
 
+Vec3 CState_Sasuke_RunLoop::Make_MoveDir()
+{
+	Vec3 vDir(0.0f, 0.0f, 0.0f);
+
+
+	if (KEY_HOLD(KEY::W))
+	{
+		vDir += m_pPlayer->Make_StraightDir();
+	}
+	if (KEY_HOLD(KEY::S))
+	{
+		vDir += m_pPlayer->Make_BackDir();
+	}
+	if (KEY_HOLD(KEY::D))
+	{
+		vDir += m_pPlayer->Make_RightDir();
+	}
+	if (KEY_HOLD(KEY::A))
+	{
+		vDir += m_pPlayer->Make_LeftDir();
+	}
+
+	return vDir;
+}
+
 void CState_Sasuke_RunLoop::Set_TargetPos(Vec3 vDir)
 {
 	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 
-	Vec3 vTargetPos = vPos + vDir * 1.5f;
+	Vec3 vTargetPos = vPos + vDir * 0.1f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 

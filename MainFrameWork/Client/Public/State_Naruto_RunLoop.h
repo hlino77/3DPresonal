@@ -6,10 +6,11 @@ BEGIN(Client)
 class CState_Naruto_RunLoop : public CState
 {
 public:
-	struct SplinePos
+	typedef struct Bezier
 	{
-		Vec3 vPos, vTargetPos;
-	};
+		Vec3 vPos;
+		Vec3 vLook;
+	}BEZIER;
 
 public:
 	CState_Naruto_RunLoop(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
@@ -28,7 +29,7 @@ public:
 	void				Tick_State_Control(_float fTimeDelta);
 	void				Tick_State_NoneControl(_float fTimeDelta);
 private:
-	void	Set_TargetPos(Vec3 vDir);
+	void				Set_TargetPos(Vec3 vDir);
 private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
 
@@ -44,16 +45,13 @@ private:
 	_int m_iRun_Loop = -1;
 	
 
-
+	Vec3 Make_MoveDir();
 
 	//NoneControl
 	Vec3 m_vPrevPos;
 
-
-	_float m_fSplineRatio;
-	deque<SplinePos> m_Spline;
-
-	void	Push_Spline();
+	_float m_fBezierRatio;
+	deque<BEZIER> m_Bezier;
 public:
 	virtual void Free() override;
 };
