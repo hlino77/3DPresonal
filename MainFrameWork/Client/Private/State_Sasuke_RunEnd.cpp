@@ -61,6 +61,7 @@ void CState_Sasuke_RunEnd::Tick_State(_float fTimeDelta)
 void CState_Sasuke_RunEnd::Exit_State()
 {
 	m_vStopPos = Vec3(0.0f, 0.0f, 0.0f);
+	m_pPlayer->Set_MoveSpeed(0.0f);
 }
 
 void CState_Sasuke_RunEnd::Tick_State_Control(_float fTimeDelta)

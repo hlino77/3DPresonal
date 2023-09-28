@@ -113,10 +113,10 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	cout << vTargetPos.x << " " << vTargetPos.y << " " << vTargetPos.z << endl;
 
-	/*if ((vServerPos - vCurrPos).Length() > 0.5f)
+	if ((vServerPos - vCurrPos).Length() > 0.5f)
 	{
 		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
-	}*/
+	}
 
 	Vec3 vDir = vTargetPos - vCurrPos;
 	vDir.Normalize();

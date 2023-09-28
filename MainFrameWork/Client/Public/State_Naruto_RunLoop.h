@@ -38,6 +38,9 @@ private:
 	_int m_iRun_Loop = -1;
 	
 
+	//NoneControl
+	Vec3 vPrevPos;
+
 public:
 	virtual void Free() override;
 };

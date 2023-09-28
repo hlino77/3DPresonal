@@ -183,7 +183,7 @@ bool Handel_S_PLAYERINFO_Client(PacketSessionRef& session, Protocol::S_PLAYERINF
 			continue;
 
 		pPlayer->Set_TargetPos(Vec3(tPlayer->mutable_vtargetpos()->mutable_data()));
-		pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
+		pPlayer->Set_TargetMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
 	}
 
 
