@@ -50,7 +50,7 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 	m_fBreak = 0.1f;
 
 	
-	
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, pDesc->vInitPos);
 
 	return S_OK;
 }

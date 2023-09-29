@@ -94,7 +94,7 @@ void CState_Naruto_RunEnd::Tick_State_NoneControl(_float fTimeDelta)
 
 	vDir.Normalize();
 
-	vCurrPos = Vec3::Lerp(vCurrPos, vTargetPos, 0.1f);
+	vCurrPos = Vec3::Lerp(vCurrPos, vTargetPos, 0.05f);
 	pTransform->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
 	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 }

@@ -101,10 +101,10 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
 
-	//if ((vServerPos - vCurrPos).Length() > 0.5f)
-	//{
-	//	vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
-	//}
+	if ((vServerPos - vCurrPos).Length() > 0.2f)
+	{
+		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.01f);
+	}
 
 	Vec3 vDir = vTargetPos - vCurrPos;
 	vDir.Normalize();
