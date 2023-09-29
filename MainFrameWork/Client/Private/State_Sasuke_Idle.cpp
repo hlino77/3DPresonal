@@ -63,9 +63,11 @@ void CState_Sasuke_Idle::Tick_State_NoneControl(_float fTimeDelta)
 	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
 	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
 
-	if ((vServerPos - vCurrPos).Length() > 0.1f)
+	Vec3 vDistance = vServerPos - vCurrPos;
+	if (vDistance.Length() > 0.1f)
 	{
 		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
+		pTransform->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
 	}
 }
 

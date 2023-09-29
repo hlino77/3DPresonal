@@ -46,11 +46,13 @@ void CState_Sasuke_RunEnd::Enter_State()
 		Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 		vLook.Normalize();
 
-		m_vStopPos = vPos + vLook * 1.0f;
+		m_vStopPos = vPos + vLook * (m_pPlayer->Get_MoveSpeed() * 0.2f);
 		m_pPlayer->Set_TargetPos(m_vStopPos);
 	}
 	else
 		m_vStopPos = m_pPlayer->Get_TargetPos();
+
+	m_pPlayer->Set_MoveSpeed(0.0f);
 }
 
 void CState_Sasuke_RunEnd::Tick_State(_float fTimeDelta)
@@ -95,6 +97,7 @@ void CState_Sasuke_RunEnd::Tick_State_NoneControl(_float fTimeDelta)
 	vDir.Normalize();
 
 	vCurrPos = Vec3::Lerp(vCurrPos, vTargetPos, 0.1f);
+	pTransform->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
 	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 }
 

@@ -14,6 +14,7 @@ public:
 		_float fSensitive;
 		_float fSpeed;
 		CCamera::CAMERADESC tCameraDesc;
+		Vec3 vInitPos;
 	};
 
 private:

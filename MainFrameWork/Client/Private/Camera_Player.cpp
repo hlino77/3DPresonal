@@ -49,6 +49,9 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 
 	m_fBreak = 0.1f;
 
+	
+	
+
 	return S_OK;
 }
 

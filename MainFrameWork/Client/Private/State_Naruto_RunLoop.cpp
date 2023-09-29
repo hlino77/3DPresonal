@@ -50,8 +50,6 @@ void CState_Naruto_RunLoop::Enter_State()
 		Set_TargetPos(vDir);
 	}
 		
-
-		
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)

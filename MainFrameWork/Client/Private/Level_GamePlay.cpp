@@ -215,6 +215,7 @@ HRESULT CLevel_GamePlay::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 	CameraDesc.fSensitive = 0.1f;
 	CameraDesc.fSpeed = 0.07f;
 	CameraDesc.pPlayer = pPlayer;
+	CameraDesc.vInitPos = pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION) + Vec3(0.0f, 5.0f, -5.0f);
 
 	CGameObject* pCamera = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, _uint(eLayerType), TEXT("Prototype_GameObject_Camera_Player"), &CameraDesc);
 	if (pCamera == nullptr)
