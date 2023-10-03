@@ -46,8 +46,8 @@ void Lock::WriteUnlock(const char* name)
 #endif
 
 	// ReadLock 다 풀기 전에는 WriteUnlock 불가능.
-	if ((_lockFlag.load() & READ_COUNT_MASK) != 0)
-		CRASH("INVALID_UNLOCK_ORDER");
+	/*if ((_lockFlag.load() & READ_COUNT_MASK) != 0)
+		CRASH("INVALID_UNLOCK_ORDER");*/
 
 	const __int32 lockCount = --_writeCount;
 	if (lockCount == 0)
