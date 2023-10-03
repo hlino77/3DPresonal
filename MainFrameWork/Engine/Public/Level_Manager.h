@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Base.h"
-#include "CoreMacro.h"
 #include "Lock.h"
 /* Open_Level*/
 /* 현재 게임내에서 활용하고 있는 레벨객체의 주소를 보관한다. */

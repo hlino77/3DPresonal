@@ -6,6 +6,9 @@
 #include "StateMachine.h"
 #include "ServerSessionManager.h"
 #include "ColliderSphere.h"
+#include "ThreadManager.h"
+#include "DeadLockProfiler.h"
+#include "SocketUtils.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -27,6 +30,8 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.hWnd = g_hWnd;
 	GraphicDesc.iWinSizeX = g_iWinSizeX;
 	GraphicDesc.iWinSizeY = g_iWinSizeY;
+
+	SocketUtils::Init();
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, _uint(LAYER_TYPE::LAYER_END), GraphicDesc, &m_pDevice, &m_pContext, g_hWnd, g_hInstance)))
 		return E_FAIL;
@@ -156,4 +161,6 @@ void Client::CMainApp::Free()
 
 	Safe_Release(m_pGameInstance);
 	CGameInstance::Release_Engine();
+
+	SocketUtils::Clear();
 }

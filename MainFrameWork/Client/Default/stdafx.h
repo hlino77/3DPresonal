@@ -17,7 +17,6 @@
 #include <memory.h>
 #include <tchar.h>
 
-#include "CorePch.h"
 
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"

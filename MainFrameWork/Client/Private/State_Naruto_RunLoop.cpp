@@ -49,7 +49,10 @@ void CState_Naruto_RunLoop::Enter_State()
 		vDir.Normalize();
 		Set_TargetPos(vDir);
 	}
-		
+	else
+	{
+		m_matPrev = m_pPlayer->Get_TargetMatrix();
+	}
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)
@@ -95,11 +98,42 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 {
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
-	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
-	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
+	//Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	//Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
-	if ((vServerPos - vCurrPos).Length() > 0.2f)
+
+	Matrix matCurrWorld = pTransform->Get_WorldMatrix();
+	Matrix matTargetWorld = m_pPlayer->Get_TargetMatrix();
+
+	if (matTargetWorld != m_matPrev)
+	{
+		m_matPrev = matTargetWorld;
+		m_fCurrRatio = 0.0f;
+	}
+
+	m_fCurrRatio += fTimeDelta / 0.05f;
+
+
+	Vec3 vServerPos, vCurrPos, vResultPos, vServerScale, vCurrScale, vResultScale;
+	Quaternion vServerQuat, vCurrQuat, vResultQuat;
+
+
+	m_matPrev.Decompose(vServerScale, vServerQuat, vServerPos);
+	matCurrWorld.Decompose(vCurrScale, vCurrQuat, vCurrPos);
+
+	vResultPos = Vec3::Lerp(vCurrPos, vServerPos, m_fCurrRatio);
+	vResultScale = vCurrScale;
+	vResultQuat = Quaternion::Slerp(vCurrQuat, vServerQuat, m_fCurrRatio);
+
+
+	matCurrWorld = XMMatrixAffineTransformation(XMLoadFloat3(&vResultScale),
+		XMVectorSet(0.f, 0.f, 0.f, 1.f),
+		XMLoadFloat4(&vResultQuat),
+		XMVectorSetW(vResultPos, 1.f));
+
+	pTransform->Set_WorldMatrix(matCurrWorld);
+
+	/*if ((vServerPos - vCurrPos).Length() > 0.2f)
 	{
 		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.01f);
 	}
@@ -116,7 +150,7 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 	}
 
-	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
+	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);*/
 
 }
 

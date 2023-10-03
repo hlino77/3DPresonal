@@ -1,4 +1,6 @@
 #pragma once
+#include "Session.h"
+#include "SendBuffer.h"
 
 using PacketHandlerFunc = std::function<bool(PacketSessionRef&, BYTE*, int32)>;
 extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
@@ -95,7 +97,7 @@ private:
 		const uint16 dataSize = static_cast<uint16>(pkt.ByteSizeLong());
 		const uint16 packetSize = dataSize + sizeof(PacketHeader);
 
-		SendBufferRef sendBuffer = GSendBufferManager->Open(packetSize);
+		SendBufferRef sendBuffer = SendBufferManager::GetInstance()->Open(packetSize);
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
 		header->size = packetSize;
 		header->id = pktId;

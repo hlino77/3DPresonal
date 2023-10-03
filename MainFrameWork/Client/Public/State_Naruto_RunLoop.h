@@ -47,6 +47,10 @@ private:
 
 	Vec3 Make_MoveDir();
 
+	_float m_fCurrRatio = 0.0f;
+	Matrix m_matPrev;
+
+
 	//NoneControl
 	Vec3 m_vPrevPos;
 

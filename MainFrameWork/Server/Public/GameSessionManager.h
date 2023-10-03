@@ -1,5 +1,5 @@
 #pragma once
-
+#include <set>
 
 BEGIN(Server)
 
@@ -34,13 +34,13 @@ public:
 	TIME Get_ServerTime() { return m_tServerTime; }
 	uint32 Get_SessionCount();
 
-	Set<GameSessionRef>& Get_Sessions() { return _sessions; }
+	set<GameSessionRef>& Get_Sessions() { return _sessions; }
 
 	void				 Add_SendCount() { m_iSendCount.fetch_add(1); }
 	uint64				 Get_SendCount() { return m_iSendCount.load(); }
 private:
 	USE_LOCK;
-	Set<GameSessionRef> _sessions;
+	set<GameSessionRef> _sessions;
 
 private:
 	uint32 m_iSessionID = 0;

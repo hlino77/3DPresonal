@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Base.h"
-#include "CoreMacro.h"
 #include "Lock.h"
 
 /* 사본 객체들을 리스트에 보관한다. */

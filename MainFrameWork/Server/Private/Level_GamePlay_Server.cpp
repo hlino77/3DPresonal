@@ -127,7 +127,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 
 	Vec3 vPos(0.0f, 0.0f, 0.0f);
 
-	Set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
+	set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 	for (auto& OwnerSession : Sessions)
 	{
 		wstring strCharacter = OwnerSession->Get_CharacterName();
@@ -183,7 +183,7 @@ void CLevel_GamePlay_Server::Broadcast_LevelState(LEVELSTATE eState)
 
 void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
 {
-	Set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
+	set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 
 	while (true)
 	{
@@ -234,7 +234,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 		memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
 		if (pPlayer->Get_ObjectTag() == L"Naruto")
-			cout << vPlayerTargetPos.x << " " << vPlayerTargetPos.y << " " << vPlayerTargetPos.z << endl;
+			cout << matPlayerWorld.m[3][0] << " " << matPlayerWorld.m[3][1] << " " << matPlayerWorld.m[3][2] << endl;
 	}
 
 
@@ -295,7 +295,7 @@ void CLevel_GamePlay_Server::Start_Collision()
 
 	m_pCollisionThread = new thread([=]()
 		{
-			ThreadManager::InitTLS();
+			ThreadManager::GetInstance()->InitTLS();
 
 			CGameInstance* pGameInstance = CGameInstance::GetInstance();
 			Safe_AddRef(pGameInstance);
@@ -327,7 +327,7 @@ void CLevel_GamePlay_Server::Start_Collision()
 
 			Safe_Release(pGameInstance);
 
-			ThreadManager::DestroyTLS();
+			ThreadManager::GetInstance()->DestroyTLS();
 		});
 }
 

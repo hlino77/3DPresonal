@@ -2,7 +2,6 @@
 
 #include "Component.h"
 #include "AsTypes.h"
-#include "CoreMacro.h"
 #include "Lock.h"
 
 BEGIN(Engine)

@@ -15,6 +15,10 @@
 #include "StateMachine.h"
 #include "ColliderSphere.h"
 #include "CollisionManager.h"
+#include "DeadLockProfiler.h"
+#include "SocketUtils.h"
+
+
 
 CMainApp_Server::CMainApp_Server()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -24,19 +28,21 @@ CMainApp_Server::CMainApp_Server()
 
 HRESULT CMainApp_Server::Initialize()
 {
+	SocketUtils::Init();
+
 	CServerPacketHandler::Init();
 
-	ServerServiceRef service = MakeShared<ServerService>(
+	ServerServiceRef service = std::make_shared<ServerService>(
 		NetAddress(L"192.168.200.155", 7777),
-		MakeShared<IocpCore>(),
-		MakeShared<CGameSession>, // TODO : SessionManager µî
-		100);
+		std::make_shared<IocpCore>(),
+		std::make_shared<CGameSession>, // TODO : SessionManager µî
+		10);
 
  	ASSERT_CRASH(service->Start());
 
 	for (int32 i = 0; i < 5; i++)
 	{
-		GThreadManager->Launch([=]()
+		ThreadManager::GetInstance()->Launch([=]()
 			{
 				while (true)
 				{
@@ -140,5 +146,6 @@ void CMainApp_Server::Free()
 
 	CGameInstance::Release_Engine();
 
-	GThreadManager->Join();
+	ThreadManager::GetInstance()->Join();
+	SocketUtils::Clear();
 }

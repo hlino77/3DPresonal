@@ -24,17 +24,17 @@ HRESULT CLevel_Logo::Initialize()
 
 	this_thread::sleep_for(1s);
 
-	ClientServiceRef service = MakeShared<ClientService>(
+	ClientServiceRef service = make_shared<ClientService>(
 		NetAddress(SERVER_IP, SERVER_PORT),
-		MakeShared<IocpCore>(),
-		MakeShared<CServerSession>, // TODO : SessionManager µî
+		make_shared<IocpCore>(),
+		make_shared<CServerSession>, // TODO : SessionManager µî
 		1);
 
 	ASSERT_CRASH(service->Start());
 
 	for (int32 i = 0; i < 3; i++)
 	{
-		GThreadManager->Launch([=]()
+		ThreadManager::GetInstance()->Launch([=]()
 			{
 				while (true)
 				{
