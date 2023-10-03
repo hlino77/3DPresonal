@@ -19,6 +19,7 @@ public:
 	typedef struct ModelDesc
 	{
 		wstring strFileName;
+		_uint	iLayer;
 	}MODELDESC;
 
 public:

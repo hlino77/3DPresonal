@@ -46,9 +46,12 @@ public:
 	_float	Get_Anim_MaxFrameRatio(_uint iAnimation);
 	_uint	Get_Anim_Frame(_uint iAnimation);
 
+	_int	Find_BoneIndex(const wstring& szBoneName);
+	Matrix  Get_CurrBoneMatrix(_uint iIndex);
+
 	_int	Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed);
 public:
-	virtual HRESULT Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName);
+	virtual HRESULT Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient);
 	virtual HRESULT Initialize(void* pArg);
 
 
@@ -68,14 +71,14 @@ public:
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
 
-	HRESULT Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName);
+	HRESULT Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient);
 
 
 
 private:
-	HRESULT Load_ModelData_FromFile(Matrix PivotMatrix);
+	HRESULT Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient);
 	HRESULT Load_MaterialData_FromFile();
-	HRESULT Load_AnimationData_FromFile(Matrix PivotMatrix);
+	HRESULT Load_AnimationData_FromFile(Matrix PivotMatrix, _bool bClient);
 
 
 	void	Change_NextAnimation();
@@ -121,13 +124,13 @@ private:
 	vector<shared_ptr<ModelBone>>		m_ModelBones;
 	shared_ptr<ModelBone>				m_RootBone;
 
-
+	_bool								m_bClient = true;
 private:
 
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const wstring& strFilePath, const wstring& strFileName, Matrix PivotMatrix = XMMatrixIdentity());
-	virtual CComponent* Clone(void* pArg = nullptr);
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const wstring& strFilePath, const wstring& strFileName, _bool bClient ,Matrix PivotMatrix = XMMatrixIdentity());
+	virtual CComponent* Clone(CGameObject* pObject, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

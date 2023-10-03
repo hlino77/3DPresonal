@@ -5,6 +5,8 @@
 #include "ServerSession.h"
 #include "Camera_Player.h"
 #include "AsUtils.h"
+#include "ColliderSphere.h"
+
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
@@ -30,6 +32,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_strObjectTag = Desc->strFileName;
 	m_bControl = Desc->bControl;
 	m_iObjectID = Desc->iObjectID;
+	m_iLayer = Desc->iLayer;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -45,8 +48,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-
-	// Update_Weapon();
 
 	for (auto& pPart : m_Parts)
 		pPart->Tick(fTimeDelta);
@@ -106,6 +107,7 @@ HRESULT CPlayer::Render()
 	}
 
 	Safe_Release(pGameInstance);
+
 
     return S_OK;
 }
@@ -203,6 +205,22 @@ HRESULT CPlayer::Ready_Components()
 
 
 
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = true;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
+		tColliderInfo.pOwner = this;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+
+		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
+	}
+
+
+
+
 	Safe_Release(pGameInstance);
 
 	Vec3 vScale;
@@ -266,6 +284,33 @@ void CPlayer::Send_State(const wstring& szName)
 	matWorld->Resize(16, 0.0f);
 	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
 	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
+
+	Safe_Release(pGameInstance);
+}
+
+void CPlayer::Send_ColliderState(const _uint& iLayer)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CSphereCollider* pCollider = m_Coliders[iLayer];
+
+	Protocol::S_COLLIDERSTATE pkt;
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+
+	pkt.set_icollayer(pCollider->Get_ColLayer());
+	pkt.set_bactive(pCollider->IsActive());
+	pkt.set_fradius(pCollider->Get_Radius());
+
+	auto vPos = pkt.mutable_vcolliderpos();
+	vPos->Resize(3, 0.0f);
+	memcpy(vPos->mutable_data(), &pCollider->Get_Center(), sizeof(Vec3));
 
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);

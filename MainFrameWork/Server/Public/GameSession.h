@@ -2,6 +2,8 @@
 #include "Session.h"
 #include "Server_Defines.h"
 
+BEGIN(Server)
+
 class CGameSession : public PacketSession
 {
 public:
@@ -20,10 +22,15 @@ public:
 	LEVELSTATE	Get_LevelState();
 	void		Set_LevelState(LEVELSTATE eState);
 
+	_uint		Get_PlayerID();
+	void		Set_PlayerID(_uint iID);
+
 	const wstring	Get_CharacterName();
 	void			Set_CharacterName(const wstring& strName);
 private:
-	LEVELSTATE m_eLevelState;
-	wstring	   m_strCharacter;
+	LEVELSTATE	m_eLevelState;
+	wstring		m_strCharacter;
+	_uint		m_iPlayerID;
 };
 
+END

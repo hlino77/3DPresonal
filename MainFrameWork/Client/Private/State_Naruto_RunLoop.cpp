@@ -94,24 +94,6 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 {
-
-
-	//m_fBezierRatio += fCurrSpeed * fTimeDelta, 1.0f;
-	//if (m_fBezierRatio >= 1.0f)
-	//{
-	//	if (m_Bezier.size() > 1)
-	//	{
-	//		m_fBezierRatio -= 1.0f;
-	//		m_Bezier
-	//	}
-	//	else
-	//		m_fBezierRatio = 1.0f;
-	//}
-
-	//Vec3 vFirst, vSecond, vLast, vResult;
-
-
-	
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
 	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();

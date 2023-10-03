@@ -27,6 +27,7 @@ public:
 	list<CGameObject*>& Find_GameObjects(_uint iLevelIndex, const _uint iLayerType);
 	HRESULT Delete_GameObject(_uint iLevelIndex, const _uint iLayerType, const CGameObject* pGameObject);
 
+	vector<class CLayer*>* Get_Layers(_uint iLayer) { return &m_pLayers[iLayer]; }
 public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);

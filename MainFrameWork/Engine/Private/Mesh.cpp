@@ -225,9 +225,16 @@ CMesh * CMesh::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CM
 	return pInstance;
 }
 
-CComponent * CMesh::Clone(void * pArg)
+
+
+void CMesh::Free()
 {
-	CMesh*			pInstance = new CMesh(*this);
+	__super::Free();
+}
+
+CComponent* CMesh::Clone(CGameObject* pGameObject, void* pArg)
+{
+	CMesh* pInstance = new CMesh(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -236,9 +243,4 @@ CComponent * CMesh::Clone(void * pArg)
 	}
 
 	return pInstance;
-}
-
-void CMesh::Free()
-{
-	__super::Free();
 }

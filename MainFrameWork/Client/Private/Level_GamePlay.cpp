@@ -17,7 +17,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 HRESULT CLevel_GamePlay::Initialize()
 {
 	Protocol::S_CHARACTER_NAME pkt;
-	pkt.set_strname("Sasuke");
+	pkt.set_strname("Naruto");
 
 	SendBufferRef sendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(sendBuffer);
@@ -139,6 +139,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 	{
 		CStaticModel::MODELDESC Desc;
 		Desc.strFileName = CAsUtils::ToWString("SM_ENV_TCHEXA_ArenaGround_Aa");
+		Desc.iLayer = (_uint)eLayerType;
 
 		if (nullptr == pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, _uint(eLayerType), TEXT("Prototype_GameObject_StaticModel"), &Desc))
 			return E_FAIL;
@@ -202,6 +203,7 @@ HRESULT CLevel_GamePlay::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 
 	CCamera_Player::PlayerCameraDesc CameraDesc;
 
+	CameraDesc.tCameraDesc.iLayer = (_uint)eLayerType;
 	CameraDesc.tCameraDesc.vEye = Vec4(0.f, 10.f, -10.f, 1.f);
 	CameraDesc.tCameraDesc.vAt = Vec4(0.f, 0.f, 0.f, 1.f);
 	CameraDesc.tCameraDesc.fFovy = XMConvertToRadians(60.0f);

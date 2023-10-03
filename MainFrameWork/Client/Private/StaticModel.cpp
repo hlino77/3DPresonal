@@ -22,6 +22,8 @@ HRESULT CStaticModel::Initialize(void* pArg)
 {
 	MODELDESC* Desc = static_cast<MODELDESC*>(pArg);
 	m_strObjectTag = Desc->strFileName;
+	m_iLayer = Desc->iLayer;
+
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;

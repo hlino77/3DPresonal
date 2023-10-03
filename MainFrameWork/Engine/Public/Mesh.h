@@ -51,8 +51,8 @@ private:
 
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType , class CModel* pModel, Matrix PivotMatrix);
-	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 };
 
 END

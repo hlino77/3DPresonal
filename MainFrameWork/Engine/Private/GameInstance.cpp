@@ -204,6 +204,21 @@ _uint CGameInstance::Get_CurrLevelIndex()
 	return m_pLevel_Manager->Get_CurrLevelIndex();
 }
 
+void CGameInstance::Set_Loading(_bool bLoading)
+{
+	m_pLevel_Manager->Set_Loading(bLoading);
+}
+
+void CGameInstance::Set_LoadingNext(_uint iNextLevel)
+{
+	m_pLevel_Manager->Set_LoadingNext(iNextLevel);
+}
+
+CLevel* CGameInstance::Get_CurrLevel()
+{
+	return m_pLevel_Manager->Get_CurrLevel();
+}
+
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pObject_Manager)
@@ -264,12 +279,12 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strProtoT
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strProtoTypeTag, pPrototype);
 }
 
-CComponent* CGameInstance::Clone_Component(_uint iLevelIndex, const wstring& strProtoTypeTag, void* pArg)
+CComponent* CGameInstance::Clone_Component(CGameObject* pObject, _uint iLevelIndex, const wstring& strProtoTypeTag, void* pArg)
 {
 	if (nullptr == m_pComponent_Manager)
 		return nullptr;
 
-	return m_pComponent_Manager->Clone_Component(iLevelIndex, strProtoTypeTag, pArg);
+	return m_pComponent_Manager->Clone_Component(pObject, iLevelIndex, strProtoTypeTag, pArg);
 }
 
 HRESULT CGameInstance::Check_Prototype(_uint iLevelIndex, const wstring& strProtoTypeTag)

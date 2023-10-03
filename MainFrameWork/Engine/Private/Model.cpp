@@ -8,7 +8,6 @@
 #include <filesystem>
 #include "tinyxml2.h"
 
-
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -97,6 +96,25 @@ _uint CModel::Get_Anim_Frame(_uint iAnimation)
 	return m_Animations[iAnimation]->Get_Frame();
 }
 
+_int CModel::Find_BoneIndex(const wstring& szBoneName)
+{
+	_int iIndex = 0;
+
+	for (auto& Bone : m_ModelBones)
+	{
+		if (Bone->strName == szBoneName)
+			return iIndex;
+		++iIndex;
+	}
+
+	return -1;
+}
+
+Matrix CModel::Get_CurrBoneMatrix(_uint iIndex)
+{
+	return m_matCurrTransforms[iIndex];
+}
+
 _int CModel::Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed)
 {
 	_uint iAnimationIndex = Find_AnimIndex(szAnimName);
@@ -108,12 +126,13 @@ _int CModel::Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed)
 	return iAnimationIndex;
 }
 
-HRESULT CModel::Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName)
+HRESULT CModel::Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 
 
-	Load_AssetFile_FromBinary(strFilePath, strFileName);
+	if(FAILED(Load_AssetFile_FromBinary(strFilePath, strFileName, bClient)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -297,22 +316,27 @@ HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 }
 
 
-HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName)
+HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient)
 {
 	m_strFileName = pFileName;
 	m_strFilePath = pFilePath;
 
-	if (FAILED(Load_ModelData_FromFile(XMLoadFloat4x4(&m_PivotMatrix))))
+
+
+	if (FAILED(Load_ModelData_FromFile(XMLoadFloat4x4(&m_PivotMatrix), bClient)))
 		return E_FAIL;
 
 
-	if (FAILED(Load_MaterialData_FromFile()))
-		return E_FAIL;
+	if (bClient)
+	{
+		if (FAILED(Load_MaterialData_FromFile()))
+			return E_FAIL;
 
-	
+	}
+
 	if (m_eModelType == TYPE::TYPE_ANIM)
 	{
-		if (FAILED(Load_AnimationData_FromFile(XMLoadFloat4x4(&m_PivotMatrix))))
+		if (FAILED(Load_AnimationData_FromFile(XMLoadFloat4x4(&m_PivotMatrix), bClient)))
 			return E_FAIL;
 	}
 	
@@ -320,7 +344,7 @@ HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstrin
 	return S_OK;
 }
 
-HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix)
+HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient)
 {
 	wstring strfullPath = m_strFilePath + m_strFileName + L"/" + m_strFileName + L".mesh";
 
@@ -348,19 +372,21 @@ HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix)
 		m_ModelBones.push_back(tBone);
 	}
 
-	m_iNumMeshes = pFileUtils->Read<uint32>();
-
-	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	if (bClient)
 	{
-		CMesh* pMeshContainer = CMesh::Create(m_pDevice, m_pContext, m_eModelType, this, PivotMatrix);
-		if (nullptr == pMeshContainer)
-			return E_FAIL;
+		m_iNumMeshes = pFileUtils->Read<uint32>();
 
-		pMeshContainer->LoadData_FromMeshFile(m_eModelType , pFileUtils.get(), PivotMatrix);
+		for (_uint i = 0; i < m_iNumMeshes; ++i)
+		{
+			CMesh* pMeshContainer = CMesh::Create(m_pDevice, m_pContext, m_eModelType, this, PivotMatrix);
+			if (nullptr == pMeshContainer)
+				return E_FAIL;
 
-		m_Meshes.push_back(pMeshContainer);
+			pMeshContainer->LoadData_FromMeshFile(m_eModelType, pFileUtils.get(), PivotMatrix);
+
+			m_Meshes.push_back(pMeshContainer);
+		}
 	}
-
 
 	// Bone 계층 정보 채우기
 	if (m_RootBone == nullptr && m_ModelBones.size() > 0)
@@ -517,7 +543,7 @@ HRESULT CModel::Load_MaterialData_FromFile()
 	m_iNumMaterials = m_Materials.size();
 }
 
-HRESULT CModel::Load_AnimationData_FromFile(Matrix PivotMatrix)
+HRESULT CModel::Load_AnimationData_FromFile(Matrix PivotMatrix, _bool bClient)
 {
 	wstring szFullPath = m_strFilePath + m_strFileName + L"/" + m_strFileName + L".anim";
 
@@ -552,11 +578,11 @@ void CModel::Change_NextAnimation()
 }
 
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFilePath, const wstring& strFileName, Matrix PivotMatrix)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFilePath, const wstring& strFileName, _bool bClient, Matrix PivotMatrix)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(PivotMatrix, strFilePath, strFileName)))
+	if (FAILED(pInstance->Initialize_Prototype(PivotMatrix, strFilePath, strFileName, bClient)))
 	{
 		MSG_BOX("Failed To Created : CTexture");
 		Safe_Release(pInstance);
@@ -566,7 +592,7 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, con
 	return pInstance;
 }
 
-CComponent * CModel::Clone(void * pArg)
+CComponent * CModel::Clone(CGameObject* pObject, void * pArg)
 {
 	CModel*			pInstance = new CModel(*this);
 

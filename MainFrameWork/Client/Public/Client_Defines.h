@@ -27,6 +27,14 @@ namespace Client
 		LAYER_END
 	};
 
+	enum class LAYER_COLLIDER
+	{
+		LAYER_BODY,
+		LAYER_ATTACK,
+		LAYER_END
+	};
+
+
 	enum LEVELSTATE { LOADING, INITREADY, INITSTART, INITEND, STATEEND };
 }
 

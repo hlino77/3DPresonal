@@ -8,7 +8,7 @@ CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, wstring s
 
 CCamera::CCamera(const CCamera & rhs, CTransform::TRANSFORMDESC* pArg)
 	: CGameObject(rhs)
-	, m_pTransformCom((CTransform*)rhs.m_pTransformCom->Clone(pArg))
+	, m_pTransformCom((CTransform*)rhs.m_pTransformCom->Clone(this, pArg))
 {
 
 }
@@ -25,6 +25,8 @@ HRESULT CCamera::Initialize_Prototype()
 HRESULT CCamera::Initialize(void * pArg)
 {
 	memcpy(&m_CameraDesc, pArg, sizeof(CAMERADESC));
+
+	m_iLayer = m_CameraDesc.iLayer;
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_CameraDesc.vEye));
 	m_pTransformCom->LookAt(XMLoadFloat4(&m_CameraDesc.vAt));

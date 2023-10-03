@@ -27,7 +27,12 @@ public:
 	HRESULT Render_Debug();
 
 
-	_uint Get_CurrLevelIndex() { return m_iCurrentLevelIndex; }
+	void Set_Loading(_bool bLoading) { m_bLoading = bLoading; }
+	void Set_LoadingNext(_uint iNextLevel) { m_iLoadingNext = iNextLevel; }
+
+	class CLevel* Get_CurrLevel() { return m_pCurrentLevel; }
+
+	_uint Get_CurrLevelIndex();
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 
@@ -38,6 +43,9 @@ private:
 	class CLevel*				m_pCurrentLevel = { nullptr };
 	class CLevel*				m_pReserveLevel = { nullptr };
 
+
+	_bool						m_bLoading = false;
+	_uint						m_iLoadingNext = 0;
 public:
 	virtual void Free() override;
 };

@@ -7,6 +7,8 @@
 #include "ServerSession.h"
 #include "Player_Naruto.h"
 #include "AsUtils.h"
+#include "Monster.h"
+#include "ColliderSphere.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -89,6 +91,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
 		Desc.bControl = pkt.bcontroll();
 		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
 
 		wstring szProtoName = L"Prototype_GameObject_Player_" + Desc.strFileName;
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
@@ -96,10 +99,25 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			return E_FAIL;
 		if(Desc.bControl)
 			CServerSessionManager::GetInstance()->Set_Player(pPlayer);
+		
+		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
 		break;
 	}
 	case OBJ_TYPE::MONSTER:
+	{
+		CMonster::MODELDESC Desc;
+		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
+
+		wstring szProtoName = L"Prototype_GameObject_Monster_" + Desc.strFileName;
+		CMonster* pMonster = dynamic_cast<CMonster*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
+		if (nullptr == pMonster)
+			return E_FAIL;
+
+		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
 		break;
+	}
 	case OBJ_TYPE::PROP:
 		break;
 	}
@@ -211,6 +229,58 @@ bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
 
 	wstring strState = CAsUtils::ToWString(pkt.strstate());
 	pPlayer->Set_NoneControlState(strState);
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLIDERSTATE& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+	if (pObject == nullptr)
+		return true;
+
+
+	CSphereCollider* pCollider = pObject->Get_Colider(pkt.icollayer());
+
+	pCollider->SetActive(pkt.bactive());
+	pCollider->SetRadius(pkt.fradius());
+	pCollider->Set_Center(Vec3(pkt.vcolliderpos().data()));
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+	if (pObject == nullptr)
+		return true;
+
+	CGameObject* pOtherObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.iotherlayer(), pkt.iotherid());
+	if (pObject == nullptr)
+		return true;
+
+
+	CCollider* pOtherCollider = pOtherObject->Get_Colider(pkt.iothercollayer());
+
+	if (pkt.benter())
+		pObject->OnCollisionEnter(pkt.icollayer(), pOtherCollider);
+	else
+		pObject->OnCollisionExit(pkt.icollayer(), pOtherCollider);
+
+
+	Safe_Release(pGameInstance);
 
 	return true;
 }

@@ -14,6 +14,7 @@ public:
 	{
 		SimpleMath::Vector4		vEye, vAt;
 		_float					fFovy, fAspect, fNear, fFar;
+		_uint					iLayer;
 
 		CTransform::TRANSFORMDESC		TransformDesc;
 	}CAMERADESC;

@@ -1,11 +1,15 @@
 #pragma once
 
+
+BEGIN(Server)
+
 class CGameSession;
 
 using GameSessionRef = shared_ptr<CGameSession>;
 
-class CGameSessionManager
+class CGameSessionManager : public CBase
 {
+	DECLARE_SINGLETON(CGameSessionManager)
 public:
 	typedef struct SERVERTIME
 	{
@@ -13,6 +17,10 @@ public:
 		_float fSecond = 0.0f;
 	}TIME;
 
+
+private:
+	CGameSessionManager();
+	virtual ~CGameSessionManager() = default;
 
 public:
 	void Tick(_float fTimeDelta);
@@ -40,4 +48,5 @@ private:
 	TIME m_tServerTime;
 };
 
-extern CGameSessionManager GSessionManager;
+END
+

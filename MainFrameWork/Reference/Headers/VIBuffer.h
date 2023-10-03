@@ -45,7 +45,7 @@ protected:
 	HRESULT Create_IndexBuffer();
 
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual CComponent* Clone(CGameObject* pObject, void* pArg) = 0;
 	virtual void Free();
 };
 

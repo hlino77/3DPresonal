@@ -84,7 +84,7 @@ CStateMachine* CStateMachine::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 	return pInstance;
 }
 
-CComponent* CStateMachine::Clone(void* pArg)
+CComponent* CStateMachine::Clone(CGameObject* pObject, void* pArg)
 {
 	CStateMachine* pInstance = new CStateMachine(*this);
 

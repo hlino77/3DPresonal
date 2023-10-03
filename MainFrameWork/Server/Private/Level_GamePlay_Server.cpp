@@ -5,6 +5,8 @@
 #include "AsUtils.h"
 #include "Player_Server.h"
 #include "GameInstance.h"
+#include "Monster_WhiteZetsu_Server.h"
+#include "CollisionManager.h"
 
 CLevel_GamePlay_Server::CLevel_GamePlay_Server()
 	: CLevel(nullptr, nullptr)
@@ -48,6 +50,8 @@ HRESULT CLevel_GamePlay_Server::Initialize()
 	Wait_ClientLevelState(LEVELSTATE::INITEND);
 	Broadcast_LevelState(LEVELSTATE::INITEND);
 
+	Start_Collision();
+
 	return S_OK;
 }
 
@@ -65,6 +69,12 @@ HRESULT CLevel_GamePlay_Server::LateTick(_float fTimeDelta)
 		m_fBroadcastTime = 0.0f;
 	}
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay_Server::Exit()
+{
+	End_Collision();
 	return S_OK;
 }
 
@@ -93,6 +103,9 @@ HRESULT CLevel_GamePlay_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerTy
 
 HRESULT CLevel_GamePlay_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
+	if (FAILED(Broadcast_Monster(L"WhiteZetsu", Vec3(0.0f, 0.0f, 5.0f))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -111,7 +124,9 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	Set<GameSessionRef>& Sessions = GSessionManager.Get_Sessions();
+	Vec3 vPos(0.0f, 0.0f, 0.0f);
+
+	Set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 	for (auto& OwnerSession : Sessions)
 	{
 		wstring strCharacter = OwnerSession->Get_CharacterName();
@@ -121,6 +136,10 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 		pkt.set_ilevel((uint32)LEVELID::LEVEL_GAMEPLAY);
 		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_PLAYER);
 		pkt.set_iobjecttype((uint32)OBJ_TYPE::PLAYER);
+
+		auto vPacketPos = pkt.mutable_vpos();
+		vPacketPos->Resize(3, 0.0f);
+		memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
 
 		for (auto& Session : Sessions)
 		{
@@ -138,9 +157,15 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 		CPlayer_Server::MODELDESC Desc;
 		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
 		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
+		Desc.pGameSession = OwnerSession.get();
 
-		if (nullptr == pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), TEXT("Prototype_GameObject_Player"), &Desc))
+		CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), TEXT("Prototype_GameObject_Player"), &Desc));
+		if (nullptr == pPlayer)
 			return E_FAIL;
+		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+
+		vPos.x += 5.0f;
 	}
 
 	Safe_Release(pGameInstance);
@@ -152,12 +177,12 @@ void CLevel_GamePlay_Server::Broadcast_LevelState(LEVELSTATE eState)
 	pkt.set_ilevelstate((uint32)eState);
 
 	SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast(sendBuffer);
+	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 }
 
 void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
 {
-	Set<GameSessionRef>& Sessions = GSessionManager.Get_Sessions();
+	Set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 
 	while (true)
 	{
@@ -169,7 +194,7 @@ void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
 				++iReadyCount;
 		}
 
-		if (iReadyCount == GSessionManager.Get_SessionCount())
+		if (iReadyCount == CGameSessionManager::GetInstance()->Get_SessionCount())
 			break;
 	}
 }
@@ -213,11 +238,103 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast(pSendBuffer);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 
 
 	return S_OK;
 }
+
+HRESULT CLevel_GamePlay_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	Protocol::S_CREATE_OBJCECT pkt;
+	pkt.set_strname(CAsUtils::ToString(szName));
+	pkt.set_iobjectid(g_iObjectID++);
+	pkt.set_ilevel((uint32)LEVELID::LEVEL_GAMEPLAY);
+	pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_MONSTER);
+	pkt.set_iobjecttype((uint32)OBJ_TYPE::MONSTER);
+
+	auto vPacketPos = pkt.mutable_vpos();
+	vPacketPos->Resize(3, 0.0f);
+	memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+
+	CMonster_Server::MODELDESC Desc;
+	Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+	Desc.iObjectID = pkt.iobjectid();
+	Desc.iLayer = pkt.ilayer();
+
+	wstring szMonsterName = L"Prototype_GameObject_Monster_" + szName;
+	CMonster_Server* pMonster = dynamic_cast<CMonster_Server*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szMonsterName, &Desc));
+	if (pMonster == nullptr)
+		return E_FAIL;
+
+	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
+}
+
+void CLevel_GamePlay_Server::Set_CheckGruop()
+{
+	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_BODY);
+}
+
+void CLevel_GamePlay_Server::Start_Collision()
+{
+	Set_CheckGruop();
+
+	m_pCollisionThread = new thread([=]()
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+
+			CCollisionManager* pCollisionManager = CCollisionManager::GetInstance();
+			pCollisionManager->AddRef();
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Default"))))
+				return FALSE;
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60"))))
+				return FALSE;
+
+			_float		fTimeAcc = 0.f;
+
+
+			while (!pCollisionManager->Is_Stop())
+			{
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Default"));
+
+				if (fTimeAcc >= 1.f / 60.0f)
+				{
+					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60")));
+					fTimeAcc = 0.f;
+				}
+			}
+
+			Safe_Release(pCollisionManager);
+
+			Safe_Release(pGameInstance);
+
+		});
+}
+
+void CLevel_GamePlay_Server::End_Collision()
+{
+	CCollisionManager::GetInstance()->Set_Stop(true);
+	m_pCollisionThread->join();
+	CCollisionManager::GetInstance()->Reset();
+	Safe_Delete(m_pCollisionThread);
+}
+
 
 CLevel_GamePlay_Server* CLevel_GamePlay_Server::Create()
 {

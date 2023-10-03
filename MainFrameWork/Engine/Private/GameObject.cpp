@@ -1,6 +1,8 @@
 #include "..\Public\GameObject.h"
 #include "GameInstance.h"
 #include "Component.h"
+#include "ColliderBase.h"
+#include "ColliderSphere.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, wstring strObjectTag, _int iObjType)
 	: m_pDevice(pDevice)
@@ -64,7 +66,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& pPrototypeT
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	CComponent* pComponent = pGameInstance->Clone_Component(this, iLevelIndex, pPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 

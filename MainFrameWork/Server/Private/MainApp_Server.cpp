@@ -12,6 +12,9 @@
 #include "Protocol.pb.h"
 #include <iostream>
 #include "Level_Loading_Server.h"
+#include "StateMachine.h"
+#include "ColliderSphere.h"
+#include "CollisionManager.h"
 
 CMainApp_Server::CMainApp_Server()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -63,7 +66,7 @@ HRESULT CMainApp_Server::Initialize()
 
 void CMainApp_Server::Tick(_float fTimeDelta)
 {
-	GSessionManager.Tick(fTimeDelta);
+	CGameSessionManager::GetInstance()->Tick(fTimeDelta);
 
 	m_pGameInstance->Tick_Server(fTimeDelta);
 
@@ -77,6 +80,7 @@ HRESULT CMainApp_Server::Render()
 
 HRESULT CMainApp_Server::Initiailize_Server()
 {
+	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
 	return S_OK;
 }
 
@@ -88,6 +92,15 @@ HRESULT CMainApp_Server::Ready_Prototype_Component()
 	/* For.Prototype_Component_Transform */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		CTransform::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_State */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"),
+		CStateMachine::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"),
+		CSphereCollider::Create(nullptr, nullptr))))
 		return E_FAIL;
 
 

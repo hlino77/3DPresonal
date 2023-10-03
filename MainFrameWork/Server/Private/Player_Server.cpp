@@ -2,6 +2,10 @@
 #include "GameInstance.h"
 #include "Player_Server.h"
 #include "Key_Manager.h"
+#include "ColliderSphere.h"
+#include "CollisionManager.h"
+#include "ColliderSphere.h"
+#include "GameSession.h"
 
 
 CPlayer_Server::CPlayer_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,6 +29,8 @@ HRESULT CPlayer_Server::Initialize(void* pArg)
 	MODELDESC* Desc = static_cast<MODELDESC*>(pArg);
 	m_strObjectTag = Desc->strFileName;
 	m_iObjectID = Desc->iObjectID;
+	m_iLayer = Desc->iLayer;
+	m_pGameSession = Desc->pGameSession;
 
 
 	if (FAILED(Ready_Components()))
@@ -42,25 +48,13 @@ HRESULT CPlayer_Server::Initialize(void* pArg)
 
 void CPlayer_Server::Tick(_float fTimeDelta)
 {
-	for (auto& pPart : m_Parts)
-		pPart->Tick(fTimeDelta);
 }
 
 void CPlayer_Server::LateTick(_float fTimeDelta)
 {
-	if (nullptr == m_pRendererCom)
-		return;
+	//m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta);
-
-	for (auto& pPart : m_Parts)
-		pPart->LateTick(fTimeDelta);
-
-
-	for (auto& pPart : m_Parts)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, pPart);
-
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	Set_Colliders();
 }
 
 HRESULT CPlayer_Server::Render()
@@ -70,6 +64,72 @@ HRESULT CPlayer_Server::Render()
     return S_OK;
 }
 
+void CPlayer_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->AddRef();
+
+
+	Protocol::S_COLLISION pkt;
+
+	pkt.set_benter(true);
+
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_icollayer(iColLayer);
+
+
+	CGameObject* pOtherObject = pOther->Get_Owner();
+	pkt.set_iotherid(pOtherObject->Get_ObjectID());
+	pkt.set_iotherlayer(pOtherObject->Get_ObjectLayer());
+	pkt.set_iothercollayer(pOther->Get_ColLayer());
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	m_pGameSession->Send(pSendBuffer);
+
+	Safe_Release(pGameInstance);
+}
+
+void CPlayer_Server::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CPlayer_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->AddRef();
+
+
+	Protocol::S_COLLISION pkt;
+
+	pkt.set_benter(false);
+
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_icollayer(iColLayer);
+
+
+	CGameObject* pOtherObject = pOther->Get_Owner();
+	pkt.set_iotherid(pOtherObject->Get_ObjectID());
+	pkt.set_iotherlayer(pOtherObject->Get_ObjectLayer());
+	pkt.set_iothercollayer(pOther->Get_ColLayer());
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	m_pGameSession->Send(pSendBuffer);
+
+	Safe_Release(pGameInstance);
+}
+
+void CPlayer_Server::Set_Colliders()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+}
 
 HRESULT CPlayer_Server::Ready_Components()
 {
@@ -85,6 +145,21 @@ HRESULT CPlayer_Server::Ready_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
+
+
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = true;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
+		tColliderInfo.pOwner = this;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+
+		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
+		CCollisionManager::GetInstance()->Add_Colider(pCollider);
+	}
 
 
 	Safe_Release(pGameInstance);

@@ -2,7 +2,6 @@
 #include "GameSession.h"
 #include "GameSessionManager.h"
 
-
 CGameSession::CGameSession()
 	: m_eLevelState(LEVELSTATE::STATEEND)
 {
@@ -10,12 +9,12 @@ CGameSession::CGameSession()
 
 void CGameSession::OnConnected()
 {
-	GSessionManager.Add(static_pointer_cast<CGameSession>(shared_from_this()));
+	CGameSessionManager::GetInstance()->Add(static_pointer_cast<CGameSession>(shared_from_this()));
 }
 
 void CGameSession::OnDisconnected()
 {
-	GSessionManager.Remove(static_pointer_cast<CGameSession>(shared_from_this()));
+	CGameSessionManager::GetInstance()->Remove(static_pointer_cast<CGameSession>(shared_from_this()));
 }
 
 void CGameSession::OnRecvPacket(BYTE* buffer, int32 len)
@@ -41,6 +40,17 @@ void CGameSession::Set_LevelState(LEVELSTATE eState)
 {
 	WRITE_LOCK
 	m_eLevelState = eState;
+}
+
+_uint CGameSession::Get_PlayerID()
+{
+	return m_iPlayerID;
+}
+
+void CGameSession::Set_PlayerID(_uint iID)
+{
+	WRITE_LOCK
+	m_iPlayerID = iID;
 }
 
 const wstring CGameSession::Get_CharacterName()

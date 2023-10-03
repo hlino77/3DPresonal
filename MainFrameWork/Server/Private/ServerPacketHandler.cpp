@@ -7,6 +7,7 @@
 #include "AsUtils.h"
 #include "Struct.pb.h"
 #include "Protocol.pb.h"
+#include "ColliderSphere.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -19,7 +20,7 @@ bool Handle_INVALID_Server(PacketSessionRef& session, BYTE* buffer, int32 len)
 
 bool Handle_S_TIME_Server(PacketSessionRef& session, Protocol::S_TIME& pkt)
 {
-	CGameSessionManager::TIME tServerTime = GSessionManager.Get_ServerTime();
+	CGameSessionManager::TIME tServerTime = CGameSessionManager::GetInstance()->Get_ServerTime();
 
 	pkt.set_iserverminute(tServerTime.iMinute);
 	pkt.set_fserversecond(tServerTime.fSecond);
@@ -80,7 +81,7 @@ bool Handel_S_CHARACTERNAME_Server(PacketSessionRef& session, Protocol::S_CHARAC
 bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 {
 	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
 
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -103,7 +104,7 @@ bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION& pkt)
 {
 	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
 	return true;
 }
 
@@ -124,8 +125,8 @@ bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINF
 	pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
 
 
-	GSessionManager.Add_SendCount();
-	cout << GSessionManager.Get_SendCount() << endl;
+	CGameSessionManager::GetInstance()->Add_SendCount();
+	cout << CGameSessionManager::GetInstance()->Get_SendCount() << endl;
 
 	Safe_Release(pGameInstance);
 
@@ -147,9 +148,36 @@ bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt)
 	pPlayer->Set_TargetPos(Vec3(tPlayer.vtargetpos().data()));
 
 	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast_Others(pBuffer, session->GetSessionID());
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
 
 	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLIDERSTATE& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+	if (pObject == nullptr)
+		return true;
+
+
+	CSphereCollider* pCollider = pObject->Get_Colider(pkt.icollayer());
+
+	pCollider->SetActive(pkt.bactive());
+	pCollider->SetRadius(pkt.fradius());
+	pCollider->Set_Center(Vec3(pkt.vcolliderpos().data()));
+
+	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_COLLISION_Server(PacketSessionRef& session, Protocol::S_COLLISION& pkt)
+{
 
 	return true;
 }

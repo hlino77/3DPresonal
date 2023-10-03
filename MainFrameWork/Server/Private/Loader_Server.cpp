@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "GameSessionManager.h"
 #include "Player_Server.h"
+#include "Monster_Server.h"
+#include "Monster_WhiteZetsu_Server.h"
 
 CLoader_Server::CLoader_Server()
 {
@@ -89,12 +91,10 @@ HRESULT CLoader_Server::Loading_For_Level_GamePlay()
 	pkt.set_ilevelstate((uint32)LEVELSTATE::LOADING);
 
 	SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	GSessionManager.Broadcast(sendBuffer);
+	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
-		CPlayer_Server::Create(nullptr, nullptr))))
-		return E_FAIL;
+	Loading_Model_For_Level_GamePlay();
 
 
 	Safe_Release(pGameInstance);
@@ -106,7 +106,43 @@ HRESULT CLoader_Server::Loading_For_Level_GamePlay()
 
 HRESULT CLoader_Server::Loading_Model_For_Level_GamePlay()
 {
-	return E_NOTIMPL;
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
+		CPlayer_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+	{
+		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_WhiteZetsu"),
+		CMonster_WhiteZetsu_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+
+
+	Safe_Release(pGameInstance);
+
+
+
+	return S_OK;
 }
 
 CLoader_Server* CLoader_Server::Create(LEVELID eNextLevel)

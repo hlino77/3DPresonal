@@ -24,9 +24,9 @@ HRESULT CLevel_Ready_Server::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 {
-	_uint iUserCount = GSessionManager.Get_SessionCount();
+	_uint iUserCount = CGameSessionManager::GetInstance()->Get_SessionCount();
 
-	if (iUserCount == 2)
+	if (iUserCount == 1)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
@@ -38,7 +38,7 @@ HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 		pkt.set_ilevelid((uint64)LEVELID::LEVEL_GAMEPLAY);
 
 		SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-		GSessionManager.Broadcast(sendBuffer);
+		CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 		Safe_Release(pGameInstance);
 	}

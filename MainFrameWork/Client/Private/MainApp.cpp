@@ -5,6 +5,7 @@
 #include "Level_Loading.h"
 #include "StateMachine.h"
 #include "ServerSessionManager.h"
+#include "ColliderSphere.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -121,6 +122,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_State */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"),
 		CStateMachine::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"),
+		CSphereCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

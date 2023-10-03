@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[10]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -62,6 +62,12 @@ extern S_ANIMATIONDefaultTypeInternal _S_ANIMATION_default_instance_;
 class S_CHARACTER_NAME;
 struct S_CHARACTER_NAMEDefaultTypeInternal;
 extern S_CHARACTER_NAMEDefaultTypeInternal _S_CHARACTER_NAME_default_instance_;
+class S_COLLIDERSTATE;
+struct S_COLLIDERSTATEDefaultTypeInternal;
+extern S_COLLIDERSTATEDefaultTypeInternal _S_COLLIDERSTATE_default_instance_;
+class S_COLLISION;
+struct S_COLLISIONDefaultTypeInternal;
+extern S_COLLISIONDefaultTypeInternal _S_COLLISION_default_instance_;
 class S_CREATE_OBJCECT;
 struct S_CREATE_OBJCECTDefaultTypeInternal;
 extern S_CREATE_OBJCECTDefaultTypeInternal _S_CREATE_OBJCECT_default_instance_;
@@ -90,6 +96,8 @@ extern S_TIMEDefaultTypeInternal _S_TIME_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::S_ANIMATION* Arena::CreateMaybeMessage<::Protocol::S_ANIMATION>(Arena*);
 template<> ::Protocol::S_CHARACTER_NAME* Arena::CreateMaybeMessage<::Protocol::S_CHARACTER_NAME>(Arena*);
+template<> ::Protocol::S_COLLIDERSTATE* Arena::CreateMaybeMessage<::Protocol::S_COLLIDERSTATE>(Arena*);
+template<> ::Protocol::S_COLLISION* Arena::CreateMaybeMessage<::Protocol::S_COLLISION>(Arena*);
 template<> ::Protocol::S_CREATE_OBJCECT* Arena::CreateMaybeMessage<::Protocol::S_CREATE_OBJCECT>(Arena*);
 template<> ::Protocol::S_LEVEL_STATE* Arena::CreateMaybeMessage<::Protocol::S_LEVEL_STATE>(Arena*);
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
@@ -748,6 +756,7 @@ class S_CREATE_OBJCECT final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kVPosFieldNumber = 7,
     kStrNameFieldNumber = 5,
     kIObjectIDFieldNumber = 1,
     kIObjectTypeFieldNumber = 2,
@@ -755,6 +764,28 @@ class S_CREATE_OBJCECT final :
     kILayerFieldNumber = 4,
     kBControllFieldNumber = 6,
   };
+  // repeated float vPos = 7 [packed = true];
+  int vpos_size() const;
+  private:
+  int _internal_vpos_size() const;
+  public:
+  void clear_vpos();
+  private:
+  float _internal_vpos(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      _internal_vpos() const;
+  void _internal_add_vpos(float value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      _internal_mutable_vpos();
+  public:
+  float vpos(int index) const;
+  void set_vpos(int index, float value);
+  void add_vpos(float value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      vpos() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      mutable_vpos();
+
   // string strName = 5;
   void clear_strname();
   const std::string& strname() const;
@@ -821,6 +852,7 @@ class S_CREATE_OBJCECT final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > vpos_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strname_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
   ::PROTOBUF_NAMESPACE_ID::uint32 iobjecttype_;
@@ -1641,6 +1673,426 @@ class S_STATE final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_COLLIDERSTATE final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_COLLIDERSTATE) */ {
+ public:
+  inline S_COLLIDERSTATE() : S_COLLIDERSTATE(nullptr) {}
+  ~S_COLLIDERSTATE() override;
+  explicit constexpr S_COLLIDERSTATE(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_COLLIDERSTATE(const S_COLLIDERSTATE& from);
+  S_COLLIDERSTATE(S_COLLIDERSTATE&& from) noexcept
+    : S_COLLIDERSTATE() {
+    *this = ::std::move(from);
+  }
+
+  inline S_COLLIDERSTATE& operator=(const S_COLLIDERSTATE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_COLLIDERSTATE& operator=(S_COLLIDERSTATE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_COLLIDERSTATE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_COLLIDERSTATE* internal_default_instance() {
+    return reinterpret_cast<const S_COLLIDERSTATE*>(
+               &_S_COLLIDERSTATE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    10;
+
+  friend void swap(S_COLLIDERSTATE& a, S_COLLIDERSTATE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_COLLIDERSTATE* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_COLLIDERSTATE* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_COLLIDERSTATE* New() const final {
+    return new S_COLLIDERSTATE();
+  }
+
+  S_COLLIDERSTATE* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_COLLIDERSTATE>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_COLLIDERSTATE& from);
+  void MergeFrom(const S_COLLIDERSTATE& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_COLLIDERSTATE* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_COLLIDERSTATE";
+  }
+  protected:
+  explicit S_COLLIDERSTATE(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kVColliderPosFieldNumber = 6,
+    kIObjectIDFieldNumber = 1,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kIColLayerFieldNumber = 4,
+    kFRadiusFieldNumber = 5,
+    kBActiveFieldNumber = 7,
+  };
+  // repeated float vColliderPos = 6 [packed = true];
+  int vcolliderpos_size() const;
+  private:
+  int _internal_vcolliderpos_size() const;
+  public:
+  void clear_vcolliderpos();
+  private:
+  float _internal_vcolliderpos(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      _internal_vcolliderpos() const;
+  void _internal_add_vcolliderpos(float value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      _internal_mutable_vcolliderpos();
+  public:
+  float vcolliderpos(int index) const;
+  void set_vcolliderpos(int index, float value);
+  void add_vcolliderpos(float value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      vcolliderpos() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      mutable_vcolliderpos();
+
+  // int32 iObjectID = 1;
+  void clear_iobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
+  void set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iobjectid() const;
+  void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
+  void clear_ilayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
+  void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilayer() const;
+  void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iColLayer = 4;
+  void clear_icollayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 icollayer() const;
+  void set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_icollayer() const;
+  void _internal_set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // float fRadius = 5;
+  void clear_fradius();
+  float fradius() const;
+  void set_fradius(float value);
+  private:
+  float _internal_fradius() const;
+  void _internal_set_fradius(float value);
+  public:
+
+  // bool bActive = 7;
+  void clear_bactive();
+  bool bactive() const;
+  void set_bactive(bool value);
+  private:
+  bool _internal_bactive() const;
+  void _internal_set_bactive(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_COLLIDERSTATE)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > vcolliderpos_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 icollayer_;
+  float fradius_;
+  bool bactive_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S_COLLISION final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_COLLISION) */ {
+ public:
+  inline S_COLLISION() : S_COLLISION(nullptr) {}
+  ~S_COLLISION() override;
+  explicit constexpr S_COLLISION(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_COLLISION(const S_COLLISION& from);
+  S_COLLISION(S_COLLISION&& from) noexcept
+    : S_COLLISION() {
+    *this = ::std::move(from);
+  }
+
+  inline S_COLLISION& operator=(const S_COLLISION& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_COLLISION& operator=(S_COLLISION&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_COLLISION& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_COLLISION* internal_default_instance() {
+    return reinterpret_cast<const S_COLLISION*>(
+               &_S_COLLISION_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    11;
+
+  friend void swap(S_COLLISION& a, S_COLLISION& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_COLLISION* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_COLLISION* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_COLLISION* New() const final {
+    return new S_COLLISION();
+  }
+
+  S_COLLISION* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_COLLISION>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_COLLISION& from);
+  void MergeFrom(const S_COLLISION& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_COLLISION* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_COLLISION";
+  }
+  protected:
+  explicit S_COLLISION(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIObjectIDFieldNumber = 1,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kIColLayerFieldNumber = 4,
+    kIOtherIDFieldNumber = 5,
+    kIOtherLayerFieldNumber = 6,
+    kIOtherColLayerFieldNumber = 7,
+    kBEnterFieldNumber = 8,
+  };
+  // int32 iObjectID = 1;
+  void clear_iobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
+  void set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iobjectid() const;
+  void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
+  void clear_ilayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
+  void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilayer() const;
+  void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iColLayer = 4;
+  void clear_icollayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 icollayer() const;
+  void set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_icollayer() const;
+  void _internal_set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iOtherID = 5;
+  void clear_iotherid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iotherid() const;
+  void set_iotherid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iotherid() const;
+  void _internal_set_iotherid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iOtherLayer = 6;
+  void clear_iotherlayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 iotherlayer() const;
+  void set_iotherlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iotherlayer() const;
+  void _internal_set_iotherlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iOtherColLayer = 7;
+  void clear_iothercollayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 iothercollayer() const;
+  void set_iothercollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iothercollayer() const;
+  void _internal_set_iothercollayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // bool bEnter = 8;
+  void clear_benter();
+  bool benter() const;
+  void set_benter(bool value);
+  private:
+  bool _internal_benter() const;
+  void _internal_set_benter(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_COLLISION)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 icollayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iotherid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iotherlayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iothercollayer_;
+  bool benter_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -1911,6 +2363,53 @@ inline void S_CREATE_OBJCECT::_internal_set_bcontroll(bool value) {
 inline void S_CREATE_OBJCECT::set_bcontroll(bool value) {
   _internal_set_bcontroll(value);
   // @@protoc_insertion_point(field_set:Protocol.S_CREATE_OBJCECT.bControll)
+}
+
+// repeated float vPos = 7 [packed = true];
+inline int S_CREATE_OBJCECT::_internal_vpos_size() const {
+  return vpos_.size();
+}
+inline int S_CREATE_OBJCECT::vpos_size() const {
+  return _internal_vpos_size();
+}
+inline void S_CREATE_OBJCECT::clear_vpos() {
+  vpos_.Clear();
+}
+inline float S_CREATE_OBJCECT::_internal_vpos(int index) const {
+  return vpos_.Get(index);
+}
+inline float S_CREATE_OBJCECT::vpos(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_CREATE_OBJCECT.vPos)
+  return _internal_vpos(index);
+}
+inline void S_CREATE_OBJCECT::set_vpos(int index, float value) {
+  vpos_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protocol.S_CREATE_OBJCECT.vPos)
+}
+inline void S_CREATE_OBJCECT::_internal_add_vpos(float value) {
+  vpos_.Add(value);
+}
+inline void S_CREATE_OBJCECT::add_vpos(float value) {
+  _internal_add_vpos(value);
+  // @@protoc_insertion_point(field_add:Protocol.S_CREATE_OBJCECT.vPos)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_CREATE_OBJCECT::_internal_vpos() const {
+  return vpos_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_CREATE_OBJCECT::vpos() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_CREATE_OBJCECT.vPos)
+  return _internal_vpos();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_CREATE_OBJCECT::_internal_mutable_vpos() {
+  return &vpos_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_CREATE_OBJCECT::mutable_vpos() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_CREATE_OBJCECT.vPos)
+  return _internal_mutable_vpos();
 }
 
 // -------------------------------------------------------------------
@@ -2385,9 +2884,348 @@ inline void S_STATE::set_allocated_strstate(std::string* strstate) {
   // @@protoc_insertion_point(field_set_allocated:Protocol.S_STATE.strState)
 }
 
+// -------------------------------------------------------------------
+
+// S_COLLIDERSTATE
+
+// int32 iObjectID = 1;
+inline void S_COLLIDERSTATE::clear_iobjectid() {
+  iobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_iobjectid() const {
+  return iobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::iobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iObjectID)
+  return _internal_iobjectid();
+}
+inline void S_COLLIDERSTATE::_internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iobjectid_ = value;
+}
+inline void S_COLLIDERSTATE::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iObjectID)
+}
+
+// int32 iLevel = 2;
+inline void S_COLLIDERSTATE::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iLevel)
+  return _internal_ilevel();
+}
+inline void S_COLLIDERSTATE::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_COLLIDERSTATE::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iLevel)
+}
+
+// int32 iLayer = 3;
+inline void S_COLLIDERSTATE::clear_ilayer() {
+  ilayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_ilayer() const {
+  return ilayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::ilayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iLayer)
+  return _internal_ilayer();
+}
+inline void S_COLLIDERSTATE::_internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilayer_ = value;
+}
+inline void S_COLLIDERSTATE::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iLayer)
+}
+
+// int32 iColLayer = 4;
+inline void S_COLLIDERSTATE::clear_icollayer() {
+  icollayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_icollayer() const {
+  return icollayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::icollayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iColLayer)
+  return _internal_icollayer();
+}
+inline void S_COLLIDERSTATE::_internal_set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  icollayer_ = value;
+}
+inline void S_COLLIDERSTATE::set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_icollayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iColLayer)
+}
+
+// float fRadius = 5;
+inline void S_COLLIDERSTATE::clear_fradius() {
+  fradius_ = 0;
+}
+inline float S_COLLIDERSTATE::_internal_fradius() const {
+  return fradius_;
+}
+inline float S_COLLIDERSTATE::fradius() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.fRadius)
+  return _internal_fradius();
+}
+inline void S_COLLIDERSTATE::_internal_set_fradius(float value) {
+  
+  fradius_ = value;
+}
+inline void S_COLLIDERSTATE::set_fradius(float value) {
+  _internal_set_fradius(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.fRadius)
+}
+
+// repeated float vColliderPos = 6 [packed = true];
+inline int S_COLLIDERSTATE::_internal_vcolliderpos_size() const {
+  return vcolliderpos_.size();
+}
+inline int S_COLLIDERSTATE::vcolliderpos_size() const {
+  return _internal_vcolliderpos_size();
+}
+inline void S_COLLIDERSTATE::clear_vcolliderpos() {
+  vcolliderpos_.Clear();
+}
+inline float S_COLLIDERSTATE::_internal_vcolliderpos(int index) const {
+  return vcolliderpos_.Get(index);
+}
+inline float S_COLLIDERSTATE::vcolliderpos(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.vColliderPos)
+  return _internal_vcolliderpos(index);
+}
+inline void S_COLLIDERSTATE::set_vcolliderpos(int index, float value) {
+  vcolliderpos_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.vColliderPos)
+}
+inline void S_COLLIDERSTATE::_internal_add_vcolliderpos(float value) {
+  vcolliderpos_.Add(value);
+}
+inline void S_COLLIDERSTATE::add_vcolliderpos(float value) {
+  _internal_add_vcolliderpos(value);
+  // @@protoc_insertion_point(field_add:Protocol.S_COLLIDERSTATE.vColliderPos)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_COLLIDERSTATE::_internal_vcolliderpos() const {
+  return vcolliderpos_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_COLLIDERSTATE::vcolliderpos() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_COLLIDERSTATE.vColliderPos)
+  return _internal_vcolliderpos();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_COLLIDERSTATE::_internal_mutable_vcolliderpos() {
+  return &vcolliderpos_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_COLLIDERSTATE::mutable_vcolliderpos() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_COLLIDERSTATE.vColliderPos)
+  return _internal_mutable_vcolliderpos();
+}
+
+// bool bActive = 7;
+inline void S_COLLIDERSTATE::clear_bactive() {
+  bactive_ = false;
+}
+inline bool S_COLLIDERSTATE::_internal_bactive() const {
+  return bactive_;
+}
+inline bool S_COLLIDERSTATE::bactive() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.bActive)
+  return _internal_bactive();
+}
+inline void S_COLLIDERSTATE::_internal_set_bactive(bool value) {
+  
+  bactive_ = value;
+}
+inline void S_COLLIDERSTATE::set_bactive(bool value) {
+  _internal_set_bactive(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.bActive)
+}
+
+// -------------------------------------------------------------------
+
+// S_COLLISION
+
+// int32 iObjectID = 1;
+inline void S_COLLISION::clear_iobjectid() {
+  iobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_iobjectid() const {
+  return iobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::iobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iObjectID)
+  return _internal_iobjectid();
+}
+inline void S_COLLISION::_internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iobjectid_ = value;
+}
+inline void S_COLLISION::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iObjectID)
+}
+
+// int32 iLevel = 2;
+inline void S_COLLISION::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iLevel)
+  return _internal_ilevel();
+}
+inline void S_COLLISION::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_COLLISION::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iLevel)
+}
+
+// int32 iLayer = 3;
+inline void S_COLLISION::clear_ilayer() {
+  ilayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_ilayer() const {
+  return ilayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::ilayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iLayer)
+  return _internal_ilayer();
+}
+inline void S_COLLISION::_internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilayer_ = value;
+}
+inline void S_COLLISION::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iLayer)
+}
+
+// int32 iColLayer = 4;
+inline void S_COLLISION::clear_icollayer() {
+  icollayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_icollayer() const {
+  return icollayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::icollayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iColLayer)
+  return _internal_icollayer();
+}
+inline void S_COLLISION::_internal_set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  icollayer_ = value;
+}
+inline void S_COLLISION::set_icollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_icollayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iColLayer)
+}
+
+// int32 iOtherID = 5;
+inline void S_COLLISION::clear_iotherid() {
+  iotherid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_iotherid() const {
+  return iotherid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::iotherid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iOtherID)
+  return _internal_iotherid();
+}
+inline void S_COLLISION::_internal_set_iotherid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iotherid_ = value;
+}
+inline void S_COLLISION::set_iotherid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iotherid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iOtherID)
+}
+
+// int32 iOtherLayer = 6;
+inline void S_COLLISION::clear_iotherlayer() {
+  iotherlayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_iotherlayer() const {
+  return iotherlayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::iotherlayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iOtherLayer)
+  return _internal_iotherlayer();
+}
+inline void S_COLLISION::_internal_set_iotherlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iotherlayer_ = value;
+}
+inline void S_COLLISION::set_iotherlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iotherlayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iOtherLayer)
+}
+
+// int32 iOtherColLayer = 7;
+inline void S_COLLISION::clear_iothercollayer() {
+  iothercollayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::_internal_iothercollayer() const {
+  return iothercollayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLISION::iothercollayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.iOtherColLayer)
+  return _internal_iothercollayer();
+}
+inline void S_COLLISION::_internal_set_iothercollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iothercollayer_ = value;
+}
+inline void S_COLLISION::set_iothercollayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iothercollayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.iOtherColLayer)
+}
+
+// bool bEnter = 8;
+inline void S_COLLISION::clear_benter() {
+  benter_ = false;
+}
+inline bool S_COLLISION::_internal_benter() const {
+  return benter_;
+}
+inline bool S_COLLISION::benter() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLISION.bEnter)
+  return _internal_benter();
+}
+inline void S_COLLISION::_internal_set_benter(bool value) {
+  
+  benter_ = value;
+}
+inline void S_COLLISION::set_benter(bool value) {
+  _internal_set_benter(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.bEnter)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

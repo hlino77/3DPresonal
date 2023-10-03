@@ -19,6 +19,8 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta);
 	virtual HRESULT Render_Debug() { return S_OK; }
 
+	virtual HRESULT Exit() { return S_OK; };
+
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };

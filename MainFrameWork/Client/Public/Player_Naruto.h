@@ -5,10 +5,6 @@ BEGIN(Client)
 
 class CPlayer_Naruto : public CPlayer
 {
-public:
-	enum STATE { STATE_IDLE, STATE_WALK, STATE_RUN, STATE_JUMP, STATE_END };
-	enum PARTTYPE { PART_WEAPON, PART_END };
-
 private:
 	CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer_Naruto(const CPlayer_Naruto& rhs);
@@ -21,9 +17,15 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-public:
-	void	Send_PlayerInfo();
 
+
+	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
+public:
+	void				Send_PlayerInfo();
+
+	void				Set_Colliders();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();

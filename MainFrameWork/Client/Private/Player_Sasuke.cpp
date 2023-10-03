@@ -13,6 +13,8 @@
 #include "State_Sasuke_Attack_cmb08.h"
 #include "ServerSessionManager.h"
 #include "Engine_Defines.h"
+#include "ColliderSphere.h"
+#include "ColliderSphere.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -35,6 +37,9 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 
 	Ready_State();
 
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetRadius(2.0f);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
 	return S_OK;
 }
 
@@ -48,6 +53,9 @@ void CPlayer_Sasuke::Tick(_float fTimeDelta)
 void CPlayer_Sasuke::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
+
+
+	Set_Colliders();
 
 	if (m_bControl)
 	{
@@ -63,7 +71,32 @@ void CPlayer_Sasuke::LateTick(_float fTimeDelta)
 HRESULT CPlayer_Sasuke::Render()
 {
 	__super::Render();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
 	return S_OK;
+}
+
+void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+	int i = 0;
+}
+
+void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CPlayer_Sasuke::Set_Colliders()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
+
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
 }
 
 void CPlayer_Sasuke::Send_PlayerInfo()

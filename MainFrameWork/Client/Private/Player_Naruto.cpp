@@ -12,6 +12,7 @@
 #include "State_Naruto_Attack_ElbowStrike.h"
 #include "State_Naruto_Attack_JumpDoubleKick.h"
 #include "ServerSessionManager.h"
+#include "ColliderSphere.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -34,6 +35,8 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 
 	Ready_State();
 
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetRadius(2.0f);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	return S_OK;
 }
@@ -49,6 +52,7 @@ void CPlayer_Naruto::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 
+	Set_Colliders();
 
 	if (m_bControl)
 	{
@@ -64,7 +68,22 @@ void CPlayer_Naruto::LateTick(_float fTimeDelta)
 HRESULT CPlayer_Naruto::Render()
 {
 	__super::Render();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+
 	return S_OK;
+}
+
+void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
 }
 
 void CPlayer_Naruto::Send_PlayerInfo()
@@ -92,6 +111,16 @@ void CPlayer_Naruto::Send_PlayerInfo()
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
+}
+
+void CPlayer_Naruto::Set_Colliders()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
+
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
 }
 
 

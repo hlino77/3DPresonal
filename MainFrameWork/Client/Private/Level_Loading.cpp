@@ -17,6 +17,9 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevel)
 {
 	m_eNextLevel = eNextLevel;
 
+	CGameInstance::GetInstance()->Set_Loading(true);
+	CGameInstance::GetInstance()->Set_LoadingNext(eNextLevel);
+
 	/* m_eNextLevel 에 대한 로딩작업을 수행한다. */
 	/* 로딩을 겁나 하고있다. */
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevel);
@@ -61,6 +64,9 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 
 			if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
 				return E_FAIL;		
+
+			CGameInstance::GetInstance()->Set_Loading(false);
+			CGameInstance::GetInstance()->Set_LoadingNext(LEVELID::LEVEL_END);
 
 			Safe_Release(pGameInstance);
 		}

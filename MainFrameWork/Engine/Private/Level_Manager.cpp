@@ -51,6 +51,14 @@ HRESULT CLevel_Manager::Render_Debug()
 	return S_OK;
 }
 
+_uint CLevel_Manager::Get_CurrLevelIndex()
+{
+	if (m_bLoading)
+		return m_iLoadingNext;
+	else
+		return m_iCurrentLevelIndex;
+}
+
 HRESULT CLevel_Manager::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {		
 	WRITE_LOCK

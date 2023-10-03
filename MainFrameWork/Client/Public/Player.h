@@ -11,8 +11,9 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CPipeLine;
-
+class CSphereCollider;
 class CHierarchyNode;
+class CCollider;
 END
 
 
@@ -25,6 +26,7 @@ public:
 		wstring strFileName;
 		_bool	bControl;
 		_int	iObjectID;
+		_uint	iLayer;
 	}MODELDESC;
 
 public:
@@ -68,6 +70,7 @@ public:
 	//Send Packet
 	void			Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void			Send_State(const wstring& szName);
+	void			Send_ColliderState(const _uint& iLayer);
 
 	void			Set_State(const wstring& szName);
 	void			Set_NoneControlState(const wstring& szName);
@@ -95,18 +98,21 @@ protected:
 
 	_float							m_fMoveSpeed = 0.0f;
 
+
+	unordered_map<wstring, _uint>	m_BoneIndex;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
 	CModel* m_pModelCom = nullptr;
 	CStateMachine* m_pStateMachine = nullptr;
+
 private:
 	vector<CGameObject*>				m_Parts;
 	typedef vector<CGameObject*>		PARTS;
 
 private:
-	
+
 	
 private:
 	HRESULT Ready_Sockets();

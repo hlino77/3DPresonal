@@ -11,6 +11,7 @@
 #include "ServerSessionManager.h"
 #include "Camera_Player.h"
 #include "Player_Sasuke.h"
+#include "Monster_WhiteZetsu.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -137,6 +138,10 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 		CPlayer_Sasuke::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_WhiteZetsu"),
+		CMonster_WhiteZetsu::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticModel"),
 		CStaticModel::Create(m_pDevice, m_pContext, PROP))))
 		return E_FAIL;
@@ -180,7 +185,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName ,PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true ,PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -190,10 +195,20 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
 			return E_FAIL;
 	}
 
+
+	{
+		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
+			return E_FAIL;
+	}
 
 	
 	{
@@ -202,7 +217,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
 			return E_FAIL;
 	}
 

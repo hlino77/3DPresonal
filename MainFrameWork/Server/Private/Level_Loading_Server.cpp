@@ -12,7 +12,14 @@ CLevel_Loading_Server::CLevel_Loading_Server()
 
 HRESULT CLevel_Loading_Server::Initialize(LEVELID eNextLevel)
 {
+	CLevel* pLevel = CGameInstance::GetInstance()->Get_CurrLevel();
+	if(pLevel)
+		pLevel->Exit();
+
 	m_eNextLevel = eNextLevel;
+
+	CGameInstance::GetInstance()->Set_Loading(true);
+	CGameInstance::GetInstance()->Set_LoadingNext(eNextLevel);
 
 	/* m_eNextLevel 에 대한 로딩작업을 수행한다. */
 	/* 로딩을 겁나 하고있다. */
@@ -55,9 +62,14 @@ HRESULT CLevel_Loading_Server::LateTick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
 			return E_FAIL;
 
+		CGameInstance::GetInstance()->Set_Loading(false);
+		CGameInstance::GetInstance()->Set_LoadingNext(LEVELID::LEVEL_END);
+
 		Safe_Release(pGameInstance);
 	}
 
+
+	
 
 	return S_OK;
 }

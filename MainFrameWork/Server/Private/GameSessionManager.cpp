@@ -2,7 +2,12 @@
 #include "GameSessionManager.h"
 #include "GameSession.h"
 
-CGameSessionManager GSessionManager;
+
+IMPLEMENT_SINGLETON(CGameSessionManager)
+
+CGameSessionManager::CGameSessionManager()
+{
+}
 
 void CGameSessionManager::Tick(_float fTimeDelta)
 {

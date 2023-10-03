@@ -103,7 +103,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_HAS_STD_BYTE=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_HAS_STD_BYTE=0;_CLIENT</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../Reference/Headers/;../Public/;../../ThirdParty/;../../Reference/Include/;../Default/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -148,7 +148,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);_HAS_STD_BYTE=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);_HAS_STD_BYTE=0;_CLIENT</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../Reference/Headers/;../Public/;;../../Reference/Include/;../Default/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -177,6 +177,8 @@
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Monster_WhiteZetsu.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Player_Naruto.h" />
     <ClInclude Include="..\Public\Player_Sasuke.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="..\Public\State_Sasuke_Idle.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunEnd.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunLoop.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_Idle.h" />
     <ClInclude Include="..\Public\StaticModel.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
     <ClInclude Include="Client.h" />
@@ -219,6 +222,8 @@
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Monster_WhiteZetsu.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Player_Naruto.cpp" />
     <ClCompile Include="..\Private\Player_Sasuke.cpp" />
@@ -243,6 +248,7 @@
     <ClCompile Include="..\Private\State_Sasuke_Idle.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunEnd.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunLoop.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_Idle.cpp" />
     <ClCompile Include="..\Private\StaticModel.cpp" />
     <ClCompile Include="..\Private\Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

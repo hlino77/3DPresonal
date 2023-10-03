@@ -24,6 +24,7 @@
 
 #include "Base.h"
 
+#define _CLIENT
 
 #ifdef UNICODE                                                                                      
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
