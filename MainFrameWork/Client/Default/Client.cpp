@@ -8,6 +8,7 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "ServerSessionManager.h"
+#include "ThreadManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -59,6 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
     MSG msg;
+
 
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);

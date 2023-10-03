@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "MainApp_Server.h"
 #include "GameInstance.h"
+#include "ThreadManager.h"
 
 atomic<_uint> g_iObjectID = 0;
 

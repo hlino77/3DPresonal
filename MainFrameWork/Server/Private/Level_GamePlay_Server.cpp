@@ -7,6 +7,7 @@
 #include "GameInstance.h"
 #include "Monster_WhiteZetsu_Server.h"
 #include "CollisionManager.h"
+#include "ThreadManager.h"
 
 CLevel_GamePlay_Server::CLevel_GamePlay_Server()
 	: CLevel(nullptr, nullptr)
@@ -294,6 +295,8 @@ void CLevel_GamePlay_Server::Start_Collision()
 
 	m_pCollisionThread = new thread([=]()
 		{
+			ThreadManager::InitTLS();
+
 			CGameInstance* pGameInstance = CGameInstance::GetInstance();
 			Safe_AddRef(pGameInstance);
 
@@ -324,6 +327,7 @@ void CLevel_GamePlay_Server::Start_Collision()
 
 			Safe_Release(pGameInstance);
 
+			ThreadManager::DestroyTLS();
 		});
 }
 
