@@ -192,7 +192,6 @@
     <ClInclude Include="..\Public\State_Naruto_Idle.h" />
     <ClInclude Include="..\Public\State_Naruto_RunEnd.h" />
     <ClInclude Include="..\Public\State_Naruto_RunLoop.h" />
-    <ClInclude Include="..\Public\State_NoneControl_Idle.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb01.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb03.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb06.h" />
@@ -240,7 +239,6 @@
     <ClCompile Include="..\Private\State_Naruto_Idle.cpp" />
     <ClCompile Include="..\Private\State_Naruto_RunEnd.cpp" />
     <ClCompile Include="..\Private\State_Naruto_RunLoop.cpp" />
-    <ClCompile Include="..\Private\State_NoneControl_Idle.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb01.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb03.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb06.cpp" />
