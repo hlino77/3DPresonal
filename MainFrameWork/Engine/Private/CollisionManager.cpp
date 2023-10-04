@@ -155,7 +155,7 @@ void CCollisionManager::CheckDynamicCollision(_uint iLayerLeft, _uint iLayerRigh
 						continue;
 
 					IDInfo tID;
-					tID.bCheck = false;
+					tID.bCheck = true;
 					tID.bCollsion = false;
 
 					m_hashColInfo.insert(make_pair(ID.ID, tID));
@@ -204,11 +204,32 @@ void CCollisionManager::CheckDynamicCollision(_uint iLayerLeft, _uint iLayerRigh
 			}
 			else	// Z비교 결과 무시해도 된다면
 			{
-				if (iter->second.bCollsion)	// 이전에는 충돌하고 있었다면
+				COLLIDER_ID ID;
+				ID.Left_id = min(iterL->GetID(), iterR->GetID());
+				ID.Right_id = max(iterL->GetID(), iterR->GetID());
+
+				iter = m_hashColInfo.find(ID.ID);
+
+				if (m_hashColInfo.end() == iter)
 				{
-					iterL->OnCollisionExit(iterR);
-					iterR->OnCollisionExit(iterL);
-					iter->second.bCollsion = false;
+					if (!iterL->IsActive() || !iterR->IsActive())
+						continue;
+
+					IDInfo tID;
+					tID.bCheck = true;
+					tID.bCollsion = false;
+
+					m_hashColInfo.insert(make_pair(ID.ID, tID));
+					iter = m_hashColInfo.find(ID.ID);
+				}
+				else
+				{
+					if (iter->second.bCollsion)	// 이전에는 충돌하고 있었다면
+					{
+						iterL->OnCollisionExit(iterR);
+						iterR->OnCollisionExit(iterL);
+						iter->second.bCollsion = false;
+					}
 				}
 			}
 		}

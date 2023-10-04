@@ -159,7 +159,7 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 {
 	m_BoneIndex.emplace(L"RightHand", m_pModelCom->Find_BoneIndex(L"RightHandMiddle3_end"));
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
