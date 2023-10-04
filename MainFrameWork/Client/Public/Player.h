@@ -62,8 +62,6 @@ public:
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
-
-	_bool					Is_Control() { return m_bControl; }
 public:
 
 

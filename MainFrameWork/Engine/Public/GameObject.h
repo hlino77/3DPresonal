@@ -36,13 +36,15 @@ public:
 
 
 public:
-	void			Set_ObjectTag(const wstring& strName) { m_strObjectTag = strName; }
-	const wstring&	Get_ObjectTag() { return m_strObjectTag; }
+	void					Set_ObjectTag(const wstring& strName) { m_strObjectTag = strName; }
+	const wstring&			Get_ObjectTag() { return m_strObjectTag; }
 
-	_uint			Get_ObjectID() { return m_iObjectID; }
-	_uint			Get_ObjectLayer() { return m_iLayer; }
+	_uint					Get_ObjectID() { return m_iObjectID; }
+	_uint					Get_ObjectLayer() { return m_iLayer; }
 
-	class CSphereCollider* Get_Colider(const _uint& iLayer) { return m_Coliders[iLayer]; }
+	class CSphereCollider*	Get_Colider(const _uint& iLayer) { return m_Coliders[iLayer]; }
+
+	_bool					Is_Control() { return m_bControl; }
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
