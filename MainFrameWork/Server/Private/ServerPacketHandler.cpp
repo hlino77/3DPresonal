@@ -103,8 +103,25 @@ bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt)
 
 bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION& pkt)
 {
-	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	CModel* pModel = dynamic_cast<CModel*>(pObject->Get_Component(L"Com_Model"));
+
+	pModel->Reserve_NextAnimation(pkt.ianimindex(), pkt.fchangetime(), pkt.istartframe(), pkt.ichangeframe());
+
+	Safe_Release(pGameInstance);
+
+
 	return true;
 }
 
@@ -169,8 +186,8 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	CSphereCollider* pCollider = pObject->Get_Colider(pkt.icollayer());
 
 	pCollider->SetActive(pkt.bactive());
-	pCollider->SetRadius(pkt.fradius());
-	pCollider->Set_Center(Vec3(pkt.vcolliderpos().data()));
+	pCollider->Set_Radius(pkt.fradius());
+	pCollider->Set_BoneIndex(pkt.iboneindex());
 
 	Safe_Release(pGameInstance);
 	return true;

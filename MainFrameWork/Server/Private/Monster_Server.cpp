@@ -32,14 +32,14 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 	m_iObjectID = Desc->iObjectID;
 	m_iLayer = Desc->iLayer;
 
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Sockets()))
+
+	if (FAILED(Ready_Coliders()))
 		return E_FAIL;
 
-	if (FAILED(Ready_PlayerParts()))
-		return E_FAIL;
 
     return S_OK;
 }
@@ -176,6 +176,30 @@ void CMonster_Server::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _u
 	m_pModelCom->Reserve_NextAnimation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 }
 
+void CMonster_Server::Send_ColliderState(const _uint& iLayer)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CSphereCollider* pCollider = m_Coliders[iLayer];
+
+	Protocol::S_COLLIDERSTATE pkt;
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer(m_iLayer);
+
+	pkt.set_icollayer(pCollider->Get_ColLayer());
+	pkt.set_bactive(pCollider->IsActive());
+	pkt.set_fradius(pCollider->Get_Radius());
+	pkt.set_iboneindex(pCollider->Get_BoneIndex());
+
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+	Safe_Release(pGameInstance);
+}
+
 void CMonster_Server::Set_Colliders()
 {
 	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
@@ -185,59 +209,15 @@ void CMonster_Server::Set_Colliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
 }
 
-
-
-HRESULT CMonster_Server::Ready_Sockets()
+HRESULT CMonster_Server::Ready_Coliders()
 {
-	/*if (nullptr == m_pModelCom)
-		return E_FAIL;
-
-	CHierarchyNode* pWeaponSocket = m_pModelCom->Get_HierarchyNode("SWORD");
-	if (nullptr == pWeaponSocket)
-		return E_FAIL;
-
-	m_Sockets.push_back(pWeaponSocket);*/
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	return S_OK;
 }
 
-HRESULT CMonster_Server::Ready_PlayerParts()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	/* For.Sword */
-	//CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Sword"));
-
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-
-	//m_Parts.push_back(pGameObject);
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CMonster_Server::Update_Weapon()
-{
-	//if (nullptr == m_Sockets[PART_WEAPON])
-	//	return E_FAIL;
-
-	///* 행렬. */
-	///*_matrix			WeaponMatrix = 뼈의 스페이스 변환(OffsetMatrix)
-	//	* 뼈의 행렬(CombinedTransformation)
-	//	* 모델의 PivotMatrix * 프렐이어의월드행렬. ;*/
-
-	//_matrix WeaponMatrix = m_Sockets[PART_WEAPON]->Get_OffSetMatrix()
-	//	* m_Sockets[PART_WEAPON]->Get_CombinedTransformation()
-	//	* m_pModelCom->Get_PivotMatrix()
-	//	* m_pTransformCom->Get_WorldMatrix();
-
-	//m_Parts[PART_WEAPON]->SetUp_State(WeaponMatrix);
-
-	return S_OK;
-}
 
 
 CGameObject* CMonster_Server::Clone(void* pArg)

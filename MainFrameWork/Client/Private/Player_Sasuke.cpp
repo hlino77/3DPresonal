@@ -37,8 +37,8 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetRadius(2.0f);
-	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+	Ready_Coliders();
+
 
 	return S_OK;
 }
@@ -72,7 +72,12 @@ HRESULT CPlayer_Sasuke::Render()
 {
 	__super::Render();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+	if(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
+
 	return S_OK;
 }
 
@@ -83,10 +88,12 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 {
+
 }
 
 void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
+	int i = 0;
 }
 
 void CPlayer_Sasuke::Set_Colliders()
@@ -97,6 +104,9 @@ void CPlayer_Sasuke::Set_Colliders()
 
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center_ToBone();
 }
 
 void CPlayer_Sasuke::Send_PlayerInfo()
@@ -147,6 +157,25 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	
 
 	m_pStateMachine->Change_State(L"Idle");
+
+	return S_OK;
+}
+
+HRESULT CPlayer_Sasuke::Ready_Coliders()
+{
+	m_BoneIndex.emplace(L"RightHand", m_pModelCom->Find_BoneIndex(L"RightHandMiddle3_end"));
+	
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(true);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_BoneIndex(m_BoneIndex[L"RightHand"]);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+
+
 
 	return S_OK;
 }

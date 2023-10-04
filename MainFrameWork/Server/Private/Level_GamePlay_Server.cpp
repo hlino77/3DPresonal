@@ -287,6 +287,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Monster(const wstring& szName, Vec3 vP
 void CLevel_GamePlay_Server::Set_CheckGruop()
 {
 	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_BODY);
+	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_ATTACK);
 }
 
 void CLevel_GamePlay_Server::Start_Collision()

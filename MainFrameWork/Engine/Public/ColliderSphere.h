@@ -23,19 +23,24 @@ public:
 
 	
 	void			Set_Center(Vec3 vPos) { m_tBoundingSphere.Center = vPos; }
-	void			Set_Center_ToBone(Matrix matBone);
+	void			Set_Center_ToBone();
 	Vec3			Get_Center() { return m_tBoundingSphere.Center; }
-	void			SetRadius(_float radius) { m_fRadius = radius; m_tBoundingSphere.Radius - m_fRadius; }
+	void			Set_Radius(_float fRadius) { m_tBoundingSphere.Radius = fRadius; }
 	_float			Get_Radius() { return m_tBoundingSphere.Radius; }
+
+
+
 
 	BoundingSphere&	GetBoundingSphere()		{ return m_tBoundingSphere; }
 
 private:
-	_float			m_fRadius = 1.f;
 	BoundingSphere	m_tBoundingSphere;
 
+
+	
 private:
 	CTransform*		m_pOwnerTransform = nullptr;
+	class CModel*	m_pOwnerModel = nullptr;
 
 
 public:

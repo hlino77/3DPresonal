@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-
+#include "Lock.h"
 
 BEGIN(Engine)
 
@@ -11,6 +11,8 @@ private:
 	CStateMachine(const CStateMachine& rhs);
 	virtual ~CStateMachine() = default;
 
+
+	USE_LOCK
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

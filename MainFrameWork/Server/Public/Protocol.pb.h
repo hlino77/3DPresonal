@@ -1783,36 +1783,14 @@ class S_COLLIDERSTATE final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kVColliderPosFieldNumber = 6,
     kIObjectIDFieldNumber = 1,
     kILevelFieldNumber = 2,
     kILayerFieldNumber = 3,
     kIColLayerFieldNumber = 4,
     kFRadiusFieldNumber = 5,
+    kIBoneIndexFieldNumber = 6,
     kBActiveFieldNumber = 7,
   };
-  // repeated float vColliderPos = 6 [packed = true];
-  int vcolliderpos_size() const;
-  private:
-  int _internal_vcolliderpos_size() const;
-  public:
-  void clear_vcolliderpos();
-  private:
-  float _internal_vcolliderpos(int index) const;
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
-      _internal_vcolliderpos() const;
-  void _internal_add_vcolliderpos(float value);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
-      _internal_mutable_vcolliderpos();
-  public:
-  float vcolliderpos(int index) const;
-  void set_vcolliderpos(int index, float value);
-  void add_vcolliderpos(float value);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
-      vcolliderpos() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
-      mutable_vcolliderpos();
-
   // int32 iObjectID = 1;
   void clear_iobjectid();
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
@@ -1858,6 +1836,15 @@ class S_COLLIDERSTATE final :
   void _internal_set_fradius(float value);
   public:
 
+  // int32 iBoneIndex = 6;
+  void clear_iboneindex();
+  ::PROTOBUF_NAMESPACE_ID::int32 iboneindex() const;
+  void set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iboneindex() const;
+  void _internal_set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // bool bActive = 7;
   void clear_bactive();
   bool bactive() const;
@@ -1874,12 +1861,12 @@ class S_COLLIDERSTATE final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > vcolliderpos_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   ::PROTOBUF_NAMESPACE_ID::int32 icollayer_;
   float fradius_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iboneindex_;
   bool bactive_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
@@ -2988,51 +2975,24 @@ inline void S_COLLIDERSTATE::set_fradius(float value) {
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.fRadius)
 }
 
-// repeated float vColliderPos = 6 [packed = true];
-inline int S_COLLIDERSTATE::_internal_vcolliderpos_size() const {
-  return vcolliderpos_.size();
+// int32 iBoneIndex = 6;
+inline void S_COLLIDERSTATE::clear_iboneindex() {
+  iboneindex_ = 0;
 }
-inline int S_COLLIDERSTATE::vcolliderpos_size() const {
-  return _internal_vcolliderpos_size();
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_iboneindex() const {
+  return iboneindex_;
 }
-inline void S_COLLIDERSTATE::clear_vcolliderpos() {
-  vcolliderpos_.Clear();
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::iboneindex() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iBoneIndex)
+  return _internal_iboneindex();
 }
-inline float S_COLLIDERSTATE::_internal_vcolliderpos(int index) const {
-  return vcolliderpos_.Get(index);
+inline void S_COLLIDERSTATE::_internal_set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iboneindex_ = value;
 }
-inline float S_COLLIDERSTATE::vcolliderpos(int index) const {
-  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.vColliderPos)
-  return _internal_vcolliderpos(index);
-}
-inline void S_COLLIDERSTATE::set_vcolliderpos(int index, float value) {
-  vcolliderpos_.Set(index, value);
-  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.vColliderPos)
-}
-inline void S_COLLIDERSTATE::_internal_add_vcolliderpos(float value) {
-  vcolliderpos_.Add(value);
-}
-inline void S_COLLIDERSTATE::add_vcolliderpos(float value) {
-  _internal_add_vcolliderpos(value);
-  // @@protoc_insertion_point(field_add:Protocol.S_COLLIDERSTATE.vColliderPos)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
-S_COLLIDERSTATE::_internal_vcolliderpos() const {
-  return vcolliderpos_;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
-S_COLLIDERSTATE::vcolliderpos() const {
-  // @@protoc_insertion_point(field_list:Protocol.S_COLLIDERSTATE.vColliderPos)
-  return _internal_vcolliderpos();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
-S_COLLIDERSTATE::_internal_mutable_vcolliderpos() {
-  return &vcolliderpos_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
-S_COLLIDERSTATE::mutable_vcolliderpos() {
-  // @@protoc_insertion_point(field_mutable_list:Protocol.S_COLLIDERSTATE.vColliderPos)
-  return _internal_mutable_vcolliderpos();
+inline void S_COLLIDERSTATE::set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iboneindex(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iBoneIndex)
 }
 
 // bool bActive = 7;

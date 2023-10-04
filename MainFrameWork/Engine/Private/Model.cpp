@@ -171,6 +171,8 @@ HRESULT CModel::SetUpAnimation_OnShader(CShader* pShader)
 
 HRESULT CModel::Reserve_NextAnimation(_int iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {
+	WRITE_LOCK
+
 	if (iAnimIndex >= m_iNumAnimations || iAnimIndex < 0)
 		return E_FAIL;
 
@@ -189,6 +191,8 @@ HRESULT CModel::Reserve_NextAnimation(_int iAnimIndex, _float fChangeTime, _uint
 
 HRESULT CModel::Set_NextAnimation()
 {
+	WRITE_LOCK
+
 	m_PrevKeyFrameDatas = m_CurrKeyFrameDatas;
 
 	m_bNext = true;

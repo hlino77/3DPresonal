@@ -30,8 +30,6 @@ HRESULT CMonster_WhiteZetsu::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetRadius(2.0f);
-
 
 	return S_OK;
 }

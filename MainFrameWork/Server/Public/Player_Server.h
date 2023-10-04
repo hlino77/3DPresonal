@@ -52,6 +52,12 @@ public:
 public:
 	void				Set_Colliders();
 
+
+private:
+	HRESULT				Ready_Animations();
+	HRESULT				Ready_SasukeAnimation();
+	HRESULT				Ready_NarutoAnimation();
+
 protected:
 	virtual HRESULT Ready_Components() override;
 
@@ -69,11 +75,6 @@ private:
 
 private:
 	atomic<Vec3> m_vTargetPos;
-
-private:
-	HRESULT Ready_Sockets();
-	HRESULT Ready_PlayerParts();
-	HRESULT Update_Weapon();
 
 public:
 	static CPlayer_Server* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

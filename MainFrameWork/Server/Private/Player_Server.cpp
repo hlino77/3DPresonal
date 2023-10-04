@@ -36,10 +36,8 @@ HRESULT CPlayer_Server::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Sockets()))
-		return E_FAIL;
 
-	if (FAILED(Ready_PlayerParts()))
+	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
 
@@ -52,7 +50,7 @@ void CPlayer_Server::Tick(_float fTimeDelta)
 
 void CPlayer_Server::LateTick(_float fTimeDelta)
 {
-	//m_pModelCom->Play_Animation(fTimeDelta);
+	m_pModelCom->Play_Animation(fTimeDelta);
 
 	Set_Colliders();
 }
@@ -129,7 +127,47 @@ void CPlayer_Server::Set_Colliders()
 	vUp.Normalize();
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center_ToBone();
 }
+
+HRESULT CPlayer_Server::Ready_Animations()
+{
+	if (m_strObjectTag == L"Naruto")
+		Ready_NarutoAnimation();
+	else if (m_strObjectTag == L"Sasuke")
+		Ready_SasukeAnimation();
+
+	return S_OK;
+}
+
+HRESULT CPlayer_Server::Ready_SasukeAnimation()
+{
+	m_pModelCom->Initailize_FindAnimation(L"Idle_Loop", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Run_End", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Run_Loop", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_cmb01", 1.3f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_cmb03", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_cmb06", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_cmb08", 1.0f);
+
+	return S_OK;
+}
+
+HRESULT CPlayer_Server::Ready_NarutoAnimation()
+{
+	m_pModelCom->Initailize_FindAnimation(L"Idle_Loop", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Run_End", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Run_Loop", 1.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_ElbowStrike", 2.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_JumpDoubleKick", 2.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_Punch_Left", 2.0f);
+	m_pModelCom->Initailize_FindAnimation(L"Attack_Punch_Right", 2.0f);
+
+	return S_OK;
+}
+
 
 HRESULT CPlayer_Server::Ready_Components()
 {
@@ -147,17 +185,36 @@ HRESULT CPlayer_Server::Ready_Components()
 		return E_FAIL;
 
 
+	///* For.Com_Model */
+	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
 	{
 		CCollider::ColliderInfo tColliderInfo;
-		tColliderInfo.m_bActive = true;
+		tColliderInfo.m_bActive = false;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
 		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderBody"), (CComponent**)&pCollider, &tColliderInfo)))
 			return E_FAIL;
 
 		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
+		CCollisionManager::GetInstance()->Add_Colider(pCollider);
+	}
+
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = false;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
+		tColliderInfo.pOwner = this;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+
+		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_ATTACK, pCollider);
 		CCollisionManager::GetInstance()->Add_Colider(pCollider);
 	}
 
@@ -172,58 +229,6 @@ HRESULT CPlayer_Server::Ready_Components()
 	m_pTransformCom->Set_Scale(vScale);
 
     return S_OK;
-}
-
-HRESULT CPlayer_Server::Ready_Sockets()
-{
-	/*if (nullptr == m_pModelCom)
-		return E_FAIL;
-
-	CHierarchyNode* pWeaponSocket = m_pModelCom->Get_HierarchyNode("SWORD");
-	if (nullptr == pWeaponSocket)
-		return E_FAIL;
-
-	m_Sockets.push_back(pWeaponSocket);*/
-
-	return S_OK;
-}
-
-HRESULT CPlayer_Server::Ready_PlayerParts()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	/* For.Sword */
-	//CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Sword"));
-
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-
-	//m_Parts.push_back(pGameObject);
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CPlayer_Server::Update_Weapon()
-{
-	//if (nullptr == m_Sockets[PART_WEAPON])
-	//	return E_FAIL;
-
-	///* 행렬. */
-	///*_matrix			WeaponMatrix = 뼈의 스페이스 변환(OffsetMatrix)
-	//	* 뼈의 행렬(CombinedTransformation)
-	//	* 모델의 PivotMatrix * 프렐이어의월드행렬. ;*/
-
-	//_matrix WeaponMatrix = m_Sockets[PART_WEAPON]->Get_OffSetMatrix()
-	//	* m_Sockets[PART_WEAPON]->Get_CombinedTransformation()
-	//	* m_pModelCom->Get_PivotMatrix()
-	//	* m_pTransformCom->Get_WorldMatrix();
-
-	//m_Parts[PART_WEAPON]->SetUp_State(WeaponMatrix);
-
-	return S_OK;
 }
 
 CPlayer_Server* CPlayer_Server::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -2,6 +2,8 @@
 
 #include "Component.h"
 #include "AsTypes.h"
+#include "Lock.h"
+
 
 BEGIN(Engine)
 
@@ -23,6 +25,7 @@ private:
 	CModel(const CModel& rhs);
 	virtual ~CModel() = default;
 
+	USE_LOCK
 public:
 
 	_uint Get_NumMeshes() const {

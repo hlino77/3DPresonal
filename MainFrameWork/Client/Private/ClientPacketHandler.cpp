@@ -249,8 +249,8 @@ bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLID
 	CSphereCollider* pCollider = pObject->Get_Colider(pkt.icollayer());
 
 	pCollider->SetActive(pkt.bactive());
-	pCollider->SetRadius(pkt.fradius());
-	pCollider->Set_Center(Vec3(pkt.vcolliderpos().data()));
+	pCollider->Set_Radius(pkt.fradius());
+	pCollider->Set_BoneIndex(pkt.iboneindex());
 
 	Safe_Release(pGameInstance);
 

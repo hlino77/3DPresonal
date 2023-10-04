@@ -51,15 +51,19 @@ public:
 	_bool			IsActive()					{ return m_bActive; }
 	void			SetActive(_bool bActive)	{ m_bActive = bActive; }
 
+	void			Set_BoneIndex(_uint iBoneIndex) { m_iBoneIndex = iBoneIndex; }
+	_uint			Get_BoneIndex() { return m_iBoneIndex; }
 
-	void	OnCollisionEnter(CCollider* pOther);
-	void	OnCollisionExit(CCollider* pOther);
+	void			OnCollisionEnter(CCollider* pOther);
+	void			OnCollisionExit(CCollider* pOther);
 protected:
 	CRigidBody*				m_pRigidBody;
 	CGameObject*			m_pOwner = nullptr;
 
 	_uint					m_iColLayer;
 	_bool					m_bActive = false;
+
+	_uint					m_iBoneIndex = 0;
 private:
 	ColliderType			m_eColliderType;
 	_bool					m_IsTrigger;

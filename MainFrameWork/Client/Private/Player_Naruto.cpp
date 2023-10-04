@@ -35,8 +35,7 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetRadius(2.0f);
-	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+	Ready_Coliders();
 
 	return S_OK;
 }
@@ -69,13 +68,18 @@ HRESULT CPlayer_Naruto::Render()
 {
 	__super::Render();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
 
 	return S_OK;
 }
 
 void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
+	int i = 0;
 }
 
 void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -84,6 +88,7 @@ void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
+	int i = 0;
 }
 
 void CPlayer_Naruto::Send_PlayerInfo()
@@ -143,6 +148,25 @@ HRESULT CPlayer_Naruto::Ready_State()
 	
 
 	m_pStateMachine->Change_State(L"Idle");
+
+	return S_OK;
+}
+
+HRESULT CPlayer_Naruto::Ready_Coliders()
+{
+	m_BoneIndex.emplace(L"RightHand", m_pModelCom->Find_BoneIndex(L"RightHandMiddle3_end"));
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(true);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_BoneIndex(m_BoneIndex[L"RightHand"]);
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+
+
 
 	return S_OK;
 }

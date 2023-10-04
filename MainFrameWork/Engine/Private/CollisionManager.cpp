@@ -131,6 +131,9 @@ void CCollisionManager::CheckDynamicCollision(_uint iLayerLeft, _uint iLayerRigh
 			if (nullptr == iterR || iterL == iterR)
 				continue;
 
+			if (iterL->Get_Owner() == iterR->Get_Owner())
+				continue;
+
 			if (!bIgnoreRest)
 			{
 				_float fRightMinZ = iterR->GetBoundingSphere().Center.z - iterR->GetBoundingSphere().Radius;

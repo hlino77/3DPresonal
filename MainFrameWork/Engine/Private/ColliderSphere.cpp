@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "ColliderSphere.h"
 #include "DebugDraw.h"
+#include "Model.h"
 
 CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext, ColliderType::Sphere)
@@ -11,7 +12,6 @@ CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CSphereCollider::CSphereCollider(const CSphereCollider& rhs)
 	:Super(rhs)
-	, m_fRadius(rhs.m_fRadius)
 	, m_tBoundingSphere(rhs.m_tBoundingSphere)
 {
 
@@ -29,8 +29,9 @@ HRESULT CSphereCollider::Initialize(void* pArg)
 	//m_pRigidBody = m_pGameObject->GetRigidBody();
 
 	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pGameObject->Get_Component(L"Com_Transform"));
+	m_pOwnerModel = dynamic_cast<CModel*>(m_pGameObject->Get_Component(L"Com_Model"));
 	m_tBoundingSphere.Center = m_pOwnerTransform->Get_State(CTransform::STATE::STATE_POSITION);
-	m_tBoundingSphere.Radius = m_fRadius;
+	m_tBoundingSphere.Radius = 1.0f;
 
 	if (pArg == nullptr)
 		return E_FAIL;
@@ -93,9 +94,11 @@ _bool CSphereCollider::Intersects(Super* other)
 	return false;
 }
 
-void CSphereCollider::Set_Center_ToBone(Matrix matBone)
+void CSphereCollider::Set_Center_ToBone()
 {
 	Matrix matOwnerWolrd = m_pOwnerTransform->Get_WorldMatrix();
+
+	Matrix matBone = m_pOwnerModel->Get_CurrBoneMatrix(m_iBoneIndex);
 
 	Matrix matResult = matBone * matOwnerWolrd;
 

@@ -48,6 +48,8 @@ HRESULT CStateMachine::Add_State(const wstring& strStateTag, CState* pState)
 
 HRESULT CStateMachine::Change_State(const wstring& strStateTag)
 {
+	WRITE_LOCK
+
 	CState* pState = Find_State(strStateTag);
 	if (nullptr == pState)
 		return E_FAIL;

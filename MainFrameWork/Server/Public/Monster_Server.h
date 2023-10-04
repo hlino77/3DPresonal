@@ -69,8 +69,10 @@ public:
 	void				Set_State(const wstring& szName);
 	void				Set_NoneControlState(const wstring& szName);
 	void				Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
+	void				Send_ColliderState(const _uint& iLayer);
 
 	void				Set_Colliders();
+	HRESULT				Ready_Coliders();
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -89,15 +91,6 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CStateMachine* m_pStateMachine = nullptr;
 	CSphereCollider* m_pBodySphere = nullptr;
 
-
-	
-private:
-
-	
-private:
-	HRESULT Ready_Sockets();
-	HRESULT Ready_PlayerParts();
-	HRESULT Update_Weapon();
 
 public:
 	virtual CGameObject* Clone(void* pArg);

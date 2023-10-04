@@ -28,8 +28,8 @@ public:
 	void				Set_Colliders();
 protected:
 	virtual HRESULT Ready_Components() override;
-	HRESULT Ready_State();
-
+	HRESULT			Ready_State();
+	HRESULT			Ready_Coliders();
 private:
 	_float	m_fSendInfoTime = 0.0f;
 

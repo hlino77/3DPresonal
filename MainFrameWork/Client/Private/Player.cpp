@@ -37,20 +37,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Sockets()))
-		return E_FAIL;
-
-	if (FAILED(Ready_PlayerParts()))
-		return E_FAIL;
-
     return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
 
-	for (auto& pPart : m_Parts)
-		pPart->Tick(fTimeDelta);
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
@@ -60,12 +52,6 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	for (auto& pPart : m_Parts)
-		pPart->LateTick(fTimeDelta);
-
-
-	for (auto& pPart : m_Parts)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, pPart);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
@@ -212,12 +198,25 @@ HRESULT CPlayer::Ready_Components()
 		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderBody"), (CComponent**)&pCollider, &tColliderInfo)))
 			return E_FAIL;
-
-		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
+		if(pCollider)
+			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 	}
 
+
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = false;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
+		tColliderInfo.pOwner = this;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+		if(pCollider)
+			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_ATTACK, pCollider);
+	}
 
 
 
@@ -307,10 +306,7 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	pkt.set_icollayer(pCollider->Get_ColLayer());
 	pkt.set_bactive(pCollider->IsActive());
 	pkt.set_fradius(pCollider->Get_Radius());
-
-	auto vPos = pkt.mutable_vcolliderpos();
-	vPos->Resize(3, 0.0f);
-	memcpy(vPos->mutable_data(), &pCollider->Get_Center(), sizeof(Vec3));
+	pkt.set_iboneindex(pCollider->Get_BoneIndex());
 
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
@@ -334,60 +330,13 @@ void CPlayer::Set_NoneControlState(const wstring& szName)
 void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {
 	m_pModelCom->Reserve_NextAnimation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
+
+	if (m_bControl)
+		Send_Animation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 }
 
 
-HRESULT CPlayer::Ready_Sockets()
-{
-	/*if (nullptr == m_pModelCom)
-		return E_FAIL;
 
-	CHierarchyNode* pWeaponSocket = m_pModelCom->Get_HierarchyNode("SWORD");
-	if (nullptr == pWeaponSocket)
-		return E_FAIL;
-
-	m_Sockets.push_back(pWeaponSocket);*/
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Ready_PlayerParts()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	/* For.Sword */
-	//CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Sword"));
-
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-
-	//m_Parts.push_back(pGameObject);
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Update_Weapon()
-{
-	//if (nullptr == m_Sockets[PART_WEAPON])
-	//	return E_FAIL;
-
-	///* 행렬. */
-	///*_matrix			WeaponMatrix = 뼈의 스페이스 변환(OffsetMatrix)
-	//	* 뼈의 행렬(CombinedTransformation)
-	//	* 모델의 PivotMatrix * 프렐이어의월드행렬. ;*/
-
-	//_matrix WeaponMatrix = m_Sockets[PART_WEAPON]->Get_OffSetMatrix()
-	//	* m_Sockets[PART_WEAPON]->Get_CombinedTransformation()
-	//	* m_pModelCom->Get_PivotMatrix()
-	//	* m_pTransformCom->Get_WorldMatrix();
-
-	//m_Parts[PART_WEAPON]->SetUp_State(WeaponMatrix);
-
-	return S_OK;
-}
 
 
 CGameObject* CPlayer::Clone(void* pArg)
@@ -406,11 +355,6 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-
-	for (auto& pPart : m_Parts)
-		Safe_Release(pPart);
-
-	m_Parts.clear();
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

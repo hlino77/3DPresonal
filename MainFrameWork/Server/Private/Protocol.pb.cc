@@ -156,12 +156,12 @@ struct S_STATEDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_STATEDefaultTypeInternal _S_STATE_default_instance_;
 constexpr S_COLLIDERSTATE::S_COLLIDERSTATE(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : vcolliderpos_()
-  , iobjectid_(0)
+  : iobjectid_(0)
   , ilevel_(0)
   , ilayer_(0)
   , icollayer_(0)
   , fradius_(0)
+  , iboneindex_(0)
   , bactive_(false){}
 struct S_COLLIDERSTATEDefaultTypeInternal {
   constexpr S_COLLIDERSTATEDefaultTypeInternal()
@@ -284,7 +284,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, ilayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, icollayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, fradius_),
-  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, vcolliderpos_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, iboneindex_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, bactive_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLISION, _internal_metadata_),
@@ -349,15 +349,15 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\030\006 \001(\005\022\024\n\014iChangeFrame\030\007 \001(\005\"5\n\014S_PLAYER"
   "INFO\022%\n\007tPlayer\030\001 \003(\0132\024.Protocol.PlayerI"
   "nfo\"B\n\007S_STATE\022%\n\007tPlayer\030\001 \001(\0132\024.Protoc"
-  "ol.PlayerInfo\022\020\n\010strState\030\002 \001(\t\"\223\001\n\017S_CO"
+  "ol.PlayerInfo\022\020\n\010strState\030\002 \001(\t\"\215\001\n\017S_CO"
   "LLIDERSTATE\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iLevel"
   "\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n\tiColLayer\030\004 \001("
-  "\005\022\017\n\007fRadius\030\005 \001(\002\022\030\n\014vColliderPos\030\006 \003(\002"
-  "B\002\020\001\022\017\n\007bActive\030\007 \001(\010\"\242\001\n\013S_COLLISION\022\021\n"
-  "\tiObjectID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLay"
-  "er\030\003 \001(\005\022\021\n\tiColLayer\030\004 \001(\005\022\020\n\010iOtherID\030"
-  "\005 \001(\005\022\023\n\013iOtherLayer\030\006 \001(\005\022\026\n\016iOtherColL"
-  "ayer\030\007 \001(\005\022\016\n\006bEnter\030\010 \001(\010b\006proto3"
+  "\005\022\017\n\007fRadius\030\005 \001(\002\022\022\n\niBoneIndex\030\006 \001(\005\022\017"
+  "\n\007bActive\030\007 \001(\010\"\242\001\n\013S_COLLISION\022\021\n\tiObje"
+  "ctID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001"
+  "(\005\022\021\n\tiColLayer\030\004 \001(\005\022\020\n\010iOtherID\030\005 \001(\005\022"
+  "\023\n\013iOtherLayer\030\006 \001(\005\022\026\n\016iOtherColLayer\030\007"
+  " \001(\005\022\016\n\006bEnter\030\010 \001(\010b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -365,7 +365,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 1074, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  false, false, 1068, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
   &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 12,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
@@ -2809,15 +2809,13 @@ class S_COLLIDERSTATE::_Internal {
 };
 
 S_COLLIDERSTATE::S_COLLIDERSTATE(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  vcolliderpos_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
   SharedCtor();
   RegisterArenaDtor(arena);
   // @@protoc_insertion_point(arena_constructor:Protocol.S_COLLIDERSTATE)
 }
 S_COLLIDERSTATE::S_COLLIDERSTATE(const S_COLLIDERSTATE& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      vcolliderpos_(from.vcolliderpos_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&iobjectid_, &from.iobjectid_,
     static_cast<size_t>(reinterpret_cast<char*>(&bactive_) -
@@ -2858,7 +2856,6 @@ void S_COLLIDERSTATE::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  vcolliderpos_.Clear();
   ::memset(&iobjectid_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&bactive_) -
       reinterpret_cast<char*>(&iobjectid_)) + sizeof(bactive_));
@@ -2906,14 +2903,11 @@ const char* S_COLLIDERSTATE::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // repeated float vColliderPos = 6 [packed = true];
+      // int32 iBoneIndex = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_vcolliderpos(), ptr, ctx);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
+          iboneindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 53) {
-          _internal_add_vcolliderpos(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
-          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
       // bool bActive = 7;
@@ -2982,9 +2976,10 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_fradius(), target);
   }
 
-  // repeated float vColliderPos = 6 [packed = true];
-  if (this->_internal_vcolliderpos_size() > 0) {
-    target = stream->WriteFixedPacked(6, _internal_vcolliderpos(), target);
+  // int32 iBoneIndex = 6;
+  if (this->iboneindex() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_iboneindex(), target);
   }
 
   // bool bActive = 7;
@@ -3008,18 +3003,6 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
-
-  // repeated float vColliderPos = 6 [packed = true];
-  {
-    unsigned int count = static_cast<unsigned int>(this->_internal_vcolliderpos_size());
-    size_t data_size = 4UL * count;
-    if (data_size > 0) {
-      total_size += 1 +
-        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
-    }
-    total_size += data_size;
-  }
 
   // int32 iObjectID = 1;
   if (this->iobjectid() != 0) {
@@ -3052,6 +3035,13 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
   // float fRadius = 5;
   if (!(this->fradius() <= 0 && this->fradius() >= 0)) {
     total_size += 1 + 4;
+  }
+
+  // int32 iBoneIndex = 6;
+  if (this->iboneindex() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_iboneindex());
   }
 
   // bool bActive = 7;
@@ -3090,7 +3080,6 @@ void S_COLLIDERSTATE::MergeFrom(const S_COLLIDERSTATE& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  vcolliderpos_.MergeFrom(from.vcolliderpos_);
   if (from.iobjectid() != 0) {
     _internal_set_iobjectid(from._internal_iobjectid());
   }
@@ -3105,6 +3094,9 @@ void S_COLLIDERSTATE::MergeFrom(const S_COLLIDERSTATE& from) {
   }
   if (!(from.fradius() <= 0 && from.fradius() >= 0)) {
     _internal_set_fradius(from._internal_fradius());
+  }
+  if (from.iboneindex() != 0) {
+    _internal_set_iboneindex(from._internal_iboneindex());
   }
   if (from.bactive() != 0) {
     _internal_set_bactive(from._internal_bactive());
@@ -3132,7 +3124,6 @@ bool S_COLLIDERSTATE::IsInitialized() const {
 void S_COLLIDERSTATE::InternalSwap(S_COLLIDERSTATE* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  vcolliderpos_.InternalSwap(&other->vcolliderpos_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, bactive_)
       + sizeof(S_COLLIDERSTATE::bactive_)

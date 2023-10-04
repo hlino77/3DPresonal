@@ -107,18 +107,6 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CModel* m_pModelCom = nullptr;
 	CStateMachine* m_pStateMachine = nullptr;
 
-private:
-	vector<CGameObject*>				m_Parts;
-	typedef vector<CGameObject*>		PARTS;
-
-private:
-
-	
-private:
-	HRESULT Ready_Sockets();
-	HRESULT Ready_PlayerParts();
-	HRESULT Update_Weapon();
-
 public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free();
