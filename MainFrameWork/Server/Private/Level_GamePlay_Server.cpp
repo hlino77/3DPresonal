@@ -233,8 +233,8 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 		Matrix matPlayerWorld = pPlayer->Get_TransformCom()->Get_WorldMatrix();
 		memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
-		if (pPlayer->Get_ObjectTag() == L"Naruto")
-			cout << matPlayerWorld.m[3][0] << " " << matPlayerWorld.m[3][1] << " " << matPlayerWorld.m[3][2] << endl;
+		/*if (pPlayer->Get_ObjectTag() == L"Naruto")
+			cout << matPlayerWorld.m[3][0] << " " << matPlayerWorld.m[3][1] << " " << matPlayerWorld.m[3][2] << endl;*/
 	}
 
 

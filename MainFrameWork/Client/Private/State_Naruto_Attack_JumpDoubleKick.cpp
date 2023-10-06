@@ -111,7 +111,9 @@ void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _ui
 
 	CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= iColliderFrame)
+	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
+
+	if (iFrame >= iColliderFrame && iFrame < iColliderFrame + 5)
 	{
 		if (pCollider->IsActive() == false)
 		{
@@ -121,7 +123,7 @@ void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _ui
 		}
 	}
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) > iColliderFrame + 5)
+	if (iFrame >= iColliderFrame + 5)
 	{
 		if (pCollider->IsActive() == true)
 		{

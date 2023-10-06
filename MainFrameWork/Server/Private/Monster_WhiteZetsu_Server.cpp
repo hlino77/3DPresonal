@@ -63,6 +63,7 @@ void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollid
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
 		Set_State(L"Hit_Middle");
+		cout << "Hit" << endl;
 	}
 }
 

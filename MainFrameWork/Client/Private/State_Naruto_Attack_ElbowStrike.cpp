@@ -120,7 +120,9 @@ void CState_Naruto_Attack_ElbowStrike::Update_Collider(_float fTimeDelta, _uint 
 
 	CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= iColliderFrame)
+	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
+
+	if (iFrame >= iColliderFrame && iFrame < iColliderFrame + 5)
 	{
 		if (pCollider->IsActive() == false)
 		{
@@ -130,7 +132,7 @@ void CState_Naruto_Attack_ElbowStrike::Update_Collider(_float fTimeDelta, _uint 
 		}
 	}
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) > iColliderFrame + 5)
+	if (iFrame >= iColliderFrame + 5)
 	{
 		if (pCollider->IsActive() == true)
 		{

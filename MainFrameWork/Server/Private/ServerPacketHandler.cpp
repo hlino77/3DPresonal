@@ -145,8 +145,8 @@ bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINF
 	pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
 
 
-	CGameSessionManager::GetInstance()->Add_SendCount();
-	cout << CGameSessionManager::GetInstance()->Get_SendCount() << endl;
+	//CGameSessionManager::GetInstance()->Add_SendCount();
+	//cout << CGameSessionManager::GetInstance()->Get_SendCount() << endl;
 
 	Safe_Release(pGameInstance);
 	return true;
@@ -217,6 +217,8 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->Set_Radius(pkt.fradius());
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
 	pCollider->Set_AttackType(pkt.iattacktype());
+
+	cout << "Recv" << endl;
 
 	Safe_Release(pGameInstance);
 	return true;
