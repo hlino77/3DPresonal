@@ -160,7 +160,7 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(true);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.7f, 1.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 

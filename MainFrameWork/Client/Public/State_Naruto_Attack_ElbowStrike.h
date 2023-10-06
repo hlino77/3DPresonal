@@ -19,8 +19,14 @@ public:
 	virtual void Exit_State() override;
 
 
-	void				Tick_State_Control(_float fTimeDelta);
-	void				Tick_State_NoneControl(_float fTimeDelta);
+	void		Tick_State_Control(_float fTimeDelta);
+	void		Tick_State_NoneControl(_float fTimeDelta);
+
+	void		Update_Collider(_float fTimeDelta, _uint iColliderFrame);
+
+	void		Follow_TargetObject(_float fTimeDelta);
+	void		Follow_TargetPos(_float fTimeDelta);
+	void		Set_TargetPos();
 private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
 
@@ -31,7 +37,10 @@ private:
 	_uint	m_iInputNext = 0;
 	_uint	m_iStartFrame = 0;
 	_uint	m_iNextFrame = 0;
+	_uint	m_iColliderFrame1 = 0;
+	_uint	m_iColliderFrame2 = 0;
 
+	_float	m_fMoveSpeed = 0.0f;
 public:
 	virtual void Free() override;
 };

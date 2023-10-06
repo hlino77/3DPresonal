@@ -6,6 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Client_Defines.h"
+#include "ColliderSphere.h"
 
 CState_Naruto_Attack_Punch_Right::CState_Naruto_Attack_Punch_Right(const wstring& strStateName, class CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -29,6 +30,9 @@ HRESULT CState_Naruto_Attack_Punch_Right::Initialize()
 	m_iChangeFrame = 16;
 	m_iInputNext = m_iNextFrame - 5;
 	m_iStartFrame = 0;
+	m_iColliderFrame = 7;
+
+	m_fMoveSpeed = 5.0f;
 
 	if (m_pPlayer->Is_Control())
 		m_TickFunc = &CState_Naruto_Attack_Punch_Right::Tick_State_Control;
@@ -41,6 +45,11 @@ HRESULT CState_Naruto_Attack_Punch_Right::Initialize()
 void CState_Naruto_Attack_Punch_Right::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, m_iStartFrame, m_iChangeFrame);
+	if (m_pPlayer->Is_Control())
+	{
+		if (m_pPlayer->Get_NearTarget() == nullptr)
+			Set_TargetPos();
+	}
 }
 
 void CState_Naruto_Attack_Punch_Right::Tick_State(_float fTimeDelta)
@@ -50,6 +59,13 @@ void CState_Naruto_Attack_Punch_Right::Tick_State(_float fTimeDelta)
 
 void CState_Naruto_Attack_Punch_Right::Exit_State()
 {
+	if (m_pPlayer->Is_Control())
+	{
+		CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+		pCollider->SetActive(false);
+		pCollider->Set_AttackType(0);
+		m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+	}
 }
 
 void CState_Naruto_Attack_Punch_Right::Tick_State_Control(_float fTimeDelta)
@@ -57,6 +73,11 @@ void CState_Naruto_Attack_Punch_Right::Tick_State_Control(_float fTimeDelta)
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
+
+	if (m_pPlayer->Get_NearTarget() == nullptr)
+		Follow_TargetPos(fTimeDelta);
+	else
+		Follow_TargetObject(fTimeDelta);
 
 	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= m_iInputNext)
 	{
@@ -68,12 +89,106 @@ void CState_Naruto_Attack_Punch_Right::Tick_State_Control(_float fTimeDelta)
 
 	}
 
+	Update_Collider(fTimeDelta);
+
 	if (pPlayerModel->Is_AnimationEnd(m_iAnimIndex))
 		m_pPlayer->Set_State(L"Idle");
 }
 
 void CState_Naruto_Attack_Punch_Right::Tick_State_NoneControl(_float fTimeDelta)
 {
+	if (m_pPlayer->Get_NearTarget() == nullptr)
+		Follow_TargetPos(fTimeDelta);
+	else
+		Follow_TargetObject(fTimeDelta);
+}
+
+void CState_Naruto_Attack_Punch_Right::Update_Collider(_float fTimeDelta)
+{
+	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
+	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
+		return;
+
+	CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= m_iColliderFrame)
+	{
+		if (pCollider->IsActive() == false)
+		{
+			pCollider->SetActive(true);
+			pCollider->Set_AttackType((_uint)COLLIDER_ATTACK::MIDDLE);
+			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+		}
+	}
+
+	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) > m_iNextFrame)
+	{
+		if (pCollider->IsActive() == true)
+		{
+			pCollider->SetActive(false);
+			pCollider->Set_AttackType(0);
+			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+		}
+	}
+}
+
+void CState_Naruto_Attack_Punch_Right::Follow_TargetObject(_float fTimeDelta)
+{
+	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vTargetObjectPos = m_pPlayer->Get_NearTarget()->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+
+
+	Vec3 vDir = vTargetObjectPos - vPlayerPos;
+	vDir.Normalize();
+
+	Vec3 vTargetPos = vTargetObjectPos + vDir * -0.8f;
+	Vec3 vTargetDistance = vTargetPos - vPlayerPos;
+	Vec3 vMove = vDir;
+	vMove.Normalize();
+	vMove *= m_fMoveSpeed * fTimeDelta;
+
+	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+
+	if (vTargetDistance.Length() > vMove.Length())
+	{
+		vPlayerPos += vMove;
+		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
+	}
+	else
+		vPlayerPos = vTargetPos;
+}
+
+void CState_Naruto_Attack_Punch_Right::Follow_TargetPos(_float fTimeDelta)
+{
+	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+
+	Vec3 vDir = vTargetPos - vPlayerPos;
+	Vec3 vMove = vDir;
+	vMove.Normalize();
+	vMove *= m_fMoveSpeed * fTimeDelta;
+
+	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+
+	if (vDir.Length() > vMove.Length())
+	{
+		vPlayerPos += vMove;
+		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
+	}
+	else
+		vPlayerPos = vTargetPos;
+}
+
+void CState_Naruto_Attack_Punch_Right::Set_TargetPos()
+{
+	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+
+	vLook.Normalize();
+	vLook *= 1.0f;
+
+	Vec3 vTargetPos = vPlayerPos + vLook;
+	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
 void CState_Naruto_Attack_Punch_Right::Free()
