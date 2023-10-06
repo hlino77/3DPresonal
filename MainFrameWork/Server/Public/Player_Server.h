@@ -43,11 +43,7 @@ public:
 
 public:
 	CShader* Get_ShaderCom() { return m_pShaderCom; }
-	CTransform* Get_TransformCom() { return m_pTransformCom; }
-	CModel* Get_ModelCom() { return m_pModelCom; }
-	
-	Vec3	Get_TargetPos() { return m_vTargetPos.load(); }
-	void	Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
+
 
 public:
 	void				Set_Colliders();
@@ -64,17 +60,12 @@ protected:
 private: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CModel* m_pModelCom = nullptr;
 
 
 	class CGameSession* m_pGameSession = nullptr;
 private:
 	vector<CGameObject*>				m_Parts;
 	typedef vector<CGameObject*>		PARTS;
-
-private:
-	atomic<Vec3> m_vTargetPos;
 
 public:
 	static CPlayer_Server* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

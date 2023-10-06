@@ -3,12 +3,14 @@
 #include "Component.h"
 #include "ColliderBase.h"
 #include "ColliderSphere.h"
+#include "StateMachine.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, wstring strObjectTag, _int iObjType)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 	, m_strObjectTag(strObjectTag)
 	, m_iObjType(iObjType)
+	, m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -19,6 +21,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_strObjectTag(rhs.m_strObjectTag)
 	, m_iObjType(rhs.m_iObjType)
+	, m_matTargetWorld(rhs.m_matTargetWorld.load())
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -26,6 +29,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 
 HRESULT CGameObject::Initialize_Prototype()
 {
+	m_matTargetWorld = XMMatrixIdentity();
 	return S_OK;
 }
 
@@ -57,6 +61,12 @@ CComponent* CGameObject::Get_Component(const wstring& strComponentTag)
 	return iter->second;
 
 }
+
+void CGameObject::Set_NoneControlState(const wstring& szName)
+{
+	m_pStateMachine->Change_State(szName);
+}
+
 
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg)
 {

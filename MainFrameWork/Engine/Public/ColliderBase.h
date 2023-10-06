@@ -54,6 +54,12 @@ public:
 	void			Set_BoneIndex(_uint iBoneIndex) { m_iBoneIndex = iBoneIndex; }
 	_uint			Get_BoneIndex() { return m_iBoneIndex; }
 
+	Vec3			Get_Offset() { return m_vOffset; }
+	void			Set_Offset(Vec3 vOffset) { m_vOffset = vOffset; }
+
+	_uint			Get_AttackType() { return m_iAttackType; }
+	void			Set_AttackType(_uint iAttackType) { m_iAttackType = iAttackType; }
+
 	void			OnCollisionEnter(CCollider* pOther);
 	void			OnCollisionExit(CCollider* pOther);
 protected:
@@ -64,6 +70,7 @@ protected:
 	_bool					m_bActive = false;
 
 	_uint					m_iBoneIndex = 0;
+	Vec3					m_vOffset;
 private:
 	ColliderType			m_eColliderType;
 	_bool					m_IsTrigger;
@@ -71,6 +78,7 @@ private:
 	_uint					m_iID;
 	static atomic<_uint>	g_iNextID;
 	
+	_uint					m_iAttackType = 0;
 	//_int			m_iCol;
 
 

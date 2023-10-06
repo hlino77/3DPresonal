@@ -94,6 +94,25 @@ _bool CSphereCollider::Intersects(Super* other)
 	return false;
 }
 
+void CSphereCollider::Set_Center()
+{
+	Matrix matObjectWorld = m_pOwnerTransform->Get_WorldMatrix();
+
+	if (m_vOffset != Vec3(0.0f, 0.0f, 0.0f))
+	{
+		Vec3 vPos(0.0f, 0.0f, 0.0f);
+		vPos = XMVector3TransformNormal(m_vOffset, matObjectWorld);
+		vPos.Normalize();
+		vPos *= m_vOffset.Length();
+		vPos += Vec3(matObjectWorld.m[3]);
+		m_tBoundingSphere.Center = vPos;
+	}
+	else
+	{
+		m_tBoundingSphere.Center = Vec3(matObjectWorld.m[3]);
+	}
+}
+
 void CSphereCollider::Set_Center_ToBone()
 {
 	Matrix matOwnerWolrd = m_pOwnerTransform->Get_WorldMatrix();

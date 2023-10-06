@@ -250,6 +250,11 @@ CGameObject* CGameInstance::Find_GameObejct(_uint iLevelIndex, const _uint iLaye
 	return m_pObject_Manager->Find_GameObejct(iLevelIndex, iLayerType, iObjectID);
 }
 
+CGameObject* CGameInstance::Find_NearGameObject(_uint iLevelIndex, const _uint iLayerType, CGameObject* pObject)
+{
+	return m_pObject_Manager->Find_NearGameObject(iLevelIndex, iLayerType, pObject);
+}
+
 list<CGameObject*>& CGameInstance::Find_GameObjects(_uint iLevelIndex, const _uint iLayerType)
 {
 	return m_pObject_Manager->Find_GameObjects(iLevelIndex, iLayerType);

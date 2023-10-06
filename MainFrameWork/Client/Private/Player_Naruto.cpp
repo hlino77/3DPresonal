@@ -120,15 +120,10 @@ void CPlayer_Naruto::Send_PlayerInfo()
 
 void CPlayer_Naruto::Set_Colliders()
 {
-	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
-	vUp.Normalize();
-
-
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center_ToBone();
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
 }
 
 
@@ -161,13 +156,13 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(true);
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_BoneIndex(m_BoneIndex[L"RightHand"]);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.7f, 1.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
-
 
 
 

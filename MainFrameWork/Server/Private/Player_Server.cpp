@@ -9,8 +9,7 @@
 
 
 CPlayer_Server::CPlayer_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
-	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
+	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
 {
 }
 
@@ -122,14 +121,10 @@ void CPlayer_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Server::Set_Colliders()
 {
-	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
-	vUp.Normalize();
-
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center_ToBone();
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
 }
 
 HRESULT CPlayer_Server::Ready_Animations()

@@ -1,6 +1,7 @@
 #include "..\Public\Object_Manager.h"
 #include "Layer.h"
 #include "GameObject.h"
+#include "Transform.h"
 
 IMPLEMENT_SINGLETON(CObject_Manager)
 
@@ -111,6 +112,40 @@ list<CGameObject*>& CObject_Manager::Find_GameObjects(_uint iLevelIndex, const _
 	}
 
 	return m_pLayers[iLevelIndex][iLayerType]->Find_GameObjects();
+}
+
+CGameObject* CObject_Manager::Find_NearGameObject(_uint iLevelIndex, const _uint iLayerType, CGameObject* pCallObject)
+{
+	list<CGameObject*>& ObjectList = Find_Layer(iLevelIndex, iLayerType)->Find_GameObjects();
+
+	CGameObject* pFindObject = nullptr;
+	Vec3 vDistance(0.0f, 0.0f, 0.0f);
+
+	if (ObjectList.empty())
+		return nullptr;
+
+
+	for (auto& Object : ObjectList)
+	{
+		if (pFindObject == nullptr)
+		{
+			pFindObject = Object;
+			continue;
+		}
+			
+		Vec3 vCallObjectPos = pCallObject->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+		Vec3 vObjectPos = Object->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+
+		Vec3 vNewDistance = vObjectPos - vCallObjectPos;
+		
+		if (vNewDistance.Length() < vDistance.Length())
+		{
+			pFindObject = Object;
+			vDistance = vNewDistance;
+		}
+	}
+
+	return pFindObject;
 }
 
 HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const _uint iLayerType, const CGameObject* pGameObject)

@@ -8,6 +8,7 @@
 #include "Engine_Defines.h"
 #include "ColliderSphere.h"
 #include "State_WhiteZetsu_Idle.h"
+#include "State_WhiteZetsu_HitMiddle.h"
 
 CMonster_WhiteZetsu::CMonster_WhiteZetsu(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -63,7 +64,7 @@ void CMonster_WhiteZetsu::Set_Colliders()
 	vUp.Normalize();
 
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 }
 
 
@@ -76,7 +77,8 @@ HRESULT CMonster_WhiteZetsu::Ready_Components()
 
 HRESULT CMonster_WhiteZetsu::Ready_State()
 {
-	m_pStateMachine->Add_State(L"Idle_Loop", new CState_WhiteZetsu_Idle(L"Idle_Loop", this));
+	m_pStateMachine->Add_State(L"Idle", new CState_WhiteZetsu_Idle(L"Idle", this));
+	m_pStateMachine->Add_State(L"Hit_Middle", new CState_WhiteZetsu_HitMiddle(L"Hit_Middle", this));
 	return S_OK;
 }
 

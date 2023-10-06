@@ -199,6 +199,7 @@
     <ClInclude Include="..\Public\State_Sasuke_Idle.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunEnd.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunLoop.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_HitMiddle.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Idle.h" />
     <ClInclude Include="..\Public\StaticModel.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="..\Private\State_Sasuke_Idle.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunEnd.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunLoop.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_HitMiddle.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Idle.cpp" />
     <ClCompile Include="..\Private\StaticModel.cpp" />
     <ClCompile Include="..\Private\Struct.pb.cc">

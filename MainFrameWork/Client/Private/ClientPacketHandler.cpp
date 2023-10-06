@@ -60,8 +60,10 @@ bool Handel_S_OPENLEVEL_Client(PacketSessionRef& session, Protocol::S_OPEN_LEVEL
 		if ((_uint)LEVELID::LEVEL_LOADING != pGameInstance->Get_CurrLevelIndex())
 		{
 			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(pGameInstance->Get_Device(), pGameInstance->Get_Context(), (LEVELID)pkt.ilevelid()))))
-				return E_FAIL;
-
+			{
+				Safe_Release(pGameInstance);
+				return true;
+			}
 			break;
 		}
 	}
@@ -96,7 +98,11 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 		wstring szProtoName = L"Prototype_GameObject_Player_" + Desc.strFileName;
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
 		if (nullptr == pPlayer)
-			return E_FAIL;
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+			
 		if(Desc.bControl)
 			CServerSessionManager::GetInstance()->Set_Player(pPlayer);
 		
@@ -113,8 +119,10 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 		wstring szProtoName = L"Prototype_GameObject_Monster_" + Desc.strFileName;
 		CMonster* pMonster = dynamic_cast<CMonster*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
 		if (nullptr == pMonster)
-			return E_FAIL;
-
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
 		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
 		break;
 	}
@@ -216,19 +224,37 @@ bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
 	Safe_AddRef(pGameInstance);
 
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.tplayer().ilayer(), pkt.tplayer().iplayerid()));
-	if (pPlayer == nullptr || pPlayer->Is_Control() == true)
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.tplayer().ilayer(), pkt.tplayer().iplayerid());
+	if (pObject == nullptr || pObject->Is_Control() == true)
+	{
+		Safe_Release(pGameInstance);
 		return true;
+	}
+		
 
 	Vec3 vTargetPos(pkt.tplayer().vtargetpos().data());
 	Matrix matTargetWorld(pkt.tplayer().matworld().data());
 
 
-	pPlayer->Set_TargetPos(vTargetPos);
-	pPlayer->Set_TargetMatrix(matTargetWorld);
+	pObject->Set_TargetPos(vTargetPos);
+	pObject->Set_TargetMatrix(matTargetWorld);
+
+	if (pkt.itargetobjectid() == -1)
+		pObject->Reset_NearTarget();
+	else
+	{
+		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
+		if (pNearTarget == nullptr)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pObject->Set_NearTarget(pNearTarget);
+	}
+
 
 	wstring strState = CAsUtils::ToWString(pkt.strstate());
-	pPlayer->Set_NoneControlState(strState);
+	pObject->Set_NoneControlState(strState);
 
 	Safe_Release(pGameInstance);
 
@@ -243,14 +269,17 @@ bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLID
 
 	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
 		return true;
-
+	}
 
 	CSphereCollider* pCollider = pObject->Get_Colider(pkt.icollayer());
 
 	pCollider->SetActive(pkt.bactive());
 	pCollider->Set_Radius(pkt.fradius());
-	pCollider->Set_BoneIndex(pkt.iboneindex());
+	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
+	pCollider->Set_AttackType(pkt.iattacktype());
 
 	Safe_Release(pGameInstance);
 
@@ -265,11 +294,17 @@ bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION&
 
 	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
 		return true;
+	}
 
 	CGameObject* pOtherObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.iotherlayer(), pkt.iotherid());
 	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
 		return true;
+	}
 
 
 	CCollider* pOtherCollider = pOtherObject->Get_Colider(pkt.iothercollayer());

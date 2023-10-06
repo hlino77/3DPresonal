@@ -19,6 +19,11 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+
+	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther);
+	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther);
+	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther);
+
 public:
 	void				Send_MonsterInfo();
 

@@ -9,20 +9,18 @@
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER),
-	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
+	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CGameObject(rhs),
-	m_matTargetWorld(rhs.m_matTargetWorld.load())
+	: CGameObject(rhs)
 {
 }
 
 HRESULT CPlayer::Initialize_Prototype()
 {
-	m_matTargetWorld = XMMatrixIdentity();
+	
     return S_OK;
 }
 
@@ -100,6 +98,12 @@ HRESULT CPlayer::Render()
 
 
 
+
+void CPlayer::Find_NearTarget()
+{
+	m_pNearTarget = nullptr;
+	m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_MONSTER, this);
+}
 
 Vec3 CPlayer::Make_StraightDir()
 {
@@ -284,6 +288,14 @@ void CPlayer::Send_State(const wstring& szName)
 	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
 	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
+	if (m_pNearTarget == nullptr)
+		pkt.set_itargetobjectid(-1);
+	else
+	{
+		pkt.set_itargetobjectid(m_pNearTarget->Get_ObjectID());
+		pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
+	}
+		
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
@@ -301,13 +313,17 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	Protocol::S_COLLIDERSTATE pkt;
 	pkt.set_iobjectid(m_iObjectID);
 	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
-	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	pkt.set_ilayer(m_iLayer);
 
 	pkt.set_icollayer(pCollider->Get_ColLayer());
 	pkt.set_bactive(pCollider->IsActive());
 	pkt.set_fradius(pCollider->Get_Radius());
-	pkt.set_iboneindex(pCollider->Get_BoneIndex());
-
+	pkt.set_iattacktype(pCollider->Get_AttackType());
+	
+	auto vOffset = pkt.mutable_voffset();
+	vOffset->Resize(3, 0.0f);
+	Vec3 vColliderOffset = pCollider->Get_Offset();
+	memcpy(vOffset->mutable_data(), &vColliderOffset, sizeof(Vec3));
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
@@ -322,10 +338,6 @@ void CPlayer::Set_State(const wstring& szName)
 	Send_State(szName);
 }
 
-void CPlayer::Set_NoneControlState(const wstring& szName)
-{
-	m_pStateMachine->Change_State(szName);
-}
 
 void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {
@@ -334,6 +346,7 @@ void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iSta
 	if (m_bControl)
 		Send_Animation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 }
+
 
 
 

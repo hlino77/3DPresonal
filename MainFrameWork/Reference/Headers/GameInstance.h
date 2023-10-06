@@ -58,9 +58,10 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
 	CGameObject* Add_GameObject(_uint iLevelIndex, _uint iNumLayerType, const wstring& strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Clone_GameObject(const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Find_GameObejct(_uint iLevelIndex, const _uint iLayerType, const wstring & strObjectTag);
-	class CGameObject* Find_GameObejct(_uint iLevelIndex, const _uint iLayerType, _int iObjectID);
+	CGameObject* Clone_GameObject(const wstring & strPrototypeTag, void* pArg = nullptr);
+	CGameObject* Find_GameObejct(_uint iLevelIndex, const _uint iLayerType, const wstring & strObjectTag);
+	CGameObject* Find_GameObejct(_uint iLevelIndex, const _uint iLayerType, _int iObjectID);
+	CGameObject* Find_NearGameObject(_uint iLevelIndex, const _uint iLayerType, CGameObject * pObject);
 	list<CGameObject*>& Find_GameObjects(_uint iLevelIndex, const _uint iLayerType);
 	HRESULT Delete_GameObject(_uint iLevelIndex, const _uint iLayerType, const CGameObject* pGameObject);
 

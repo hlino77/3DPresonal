@@ -5,6 +5,7 @@
 #include "ColliderSphere.h"
 #include "GameSessionManager.h"
 #include "State_WhiteZetsu_Idle_Server.h"
+#include "State_WhiteZetsu_HitMiddle_Server.h"
 
 
 CMonster_WhiteZetsu_Server::CMonster_WhiteZetsu_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -35,6 +36,8 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 void CMonster_WhiteZetsu_Server::Tick(_float fTimeDelta)
 {
+	m_pStateMachine->Tick_State(fTimeDelta);
+
 	__super::Tick(fTimeDelta);
 }
 
@@ -53,6 +56,22 @@ void CMonster_WhiteZetsu_Server::LateTick(_float fTimeDelta)
 HRESULT CMonster_WhiteZetsu_Server::Render()
 {
 	return S_OK;
+}
+
+void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		Set_State(L"Hit_Middle");
+	}
+}
+
+void CMonster_WhiteZetsu_Server::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
 }
 
 void CMonster_WhiteZetsu_Server::Send_MonsterInfo()
@@ -94,7 +113,8 @@ HRESULT CMonster_WhiteZetsu_Server::Ready_Components()
 
 void CMonster_WhiteZetsu_Server::Ready_State()
 {
-	m_pStateMachine->Add_State(L"Idle_Loop", new CState_WhiteZetsu_Idle_Server(L"Idle_Loop", this));
+	m_pStateMachine->Add_State(L"Idle", new CState_WhiteZetsu_Idle_Server(L"Idle", this));
+	m_pStateMachine->Add_State(L"Hit_Middle", new CState_WhiteZetsu_HitMiddle_Server(L"Hit_Middle", this));
 }
 
 CMonster_WhiteZetsu_Server* CMonster_WhiteZetsu_Server::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

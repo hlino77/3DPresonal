@@ -8,20 +8,17 @@
 
 
 CMonster_Server::CMonster_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER),
-	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
+	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
 {
 }
 
 CMonster_Server::CMonster_Server(const CMonster_Server& rhs)
-	: CGameObject(rhs),
-	m_matTargetWorld(rhs.m_matTargetWorld.load())
+	: CGameObject(rhs)
 {
 }
 
 HRESULT CMonster_Server::Initialize_Prototype()
 {
-	m_matTargetWorld = XMMatrixIdentity();
     return S_OK;
 }
 
@@ -138,7 +135,7 @@ void CMonster_Server::Send_State(const wstring& szName)
 	auto tPlayer = pkt.mutable_tplayer();
 
 	tPlayer->set_ilevel(pGameInstance->Get_CurrLevelIndex());
-	tPlayer->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	tPlayer->set_ilayer(m_iLayer);
 	tPlayer->set_iplayerid(m_iObjectID);
 
 	auto vTargetPos = tPlayer->mutable_vtargetpos();
@@ -152,6 +149,14 @@ void CMonster_Server::Send_State(const wstring& szName)
 	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
 	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
+	if (m_pNearTarget == nullptr)
+		pkt.set_itargetobjectid(-1);
+	else
+	{
+		pkt.set_itargetobjectid(m_pNearTarget->Get_ObjectID());
+		pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
+	}
+
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
@@ -164,11 +169,6 @@ void CMonster_Server::Set_State(const wstring& szName)
 {
 	m_pStateMachine->Change_State(szName);
 	Send_State(szName);
-}
-
-void CMonster_Server::Set_NoneControlState(const wstring& szName)
-{
-	m_pStateMachine->Change_State(szName);
 }
 
 void CMonster_Server::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
@@ -191,8 +191,13 @@ void CMonster_Server::Send_ColliderState(const _uint& iLayer)
 	pkt.set_icollayer(pCollider->Get_ColLayer());
 	pkt.set_bactive(pCollider->IsActive());
 	pkt.set_fradius(pCollider->Get_Radius());
-	pkt.set_iboneindex(pCollider->Get_BoneIndex());
+	pkt.set_iattacktype(pCollider->Get_AttackType());
 
+
+	auto vOffset = pkt.mutable_voffset();
+	vOffset->Resize(3, 0.0f);
+	Vec3 vColliderOffset = pCollider->Get_Offset();
+	memcpy(vOffset->mutable_data(), &vColliderOffset, sizeof(Vec3));
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
@@ -202,17 +207,14 @@ void CMonster_Server::Send_ColliderState(const _uint& iLayer)
 
 void CMonster_Server::Set_Colliders()
 {
-	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
-	vUp.Normalize();
-
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center(vPos + vUp * 0.7f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 }
 
 HRESULT CMonster_Server::Ready_Coliders()
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	return S_OK;

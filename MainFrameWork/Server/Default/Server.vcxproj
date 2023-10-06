@@ -170,6 +170,7 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\ServerPacketHandler.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_HitMiddle_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Idle_Server.cpp" />
     <ClCompile Include="..\Private\Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -196,6 +197,7 @@
     <ClInclude Include="..\Public\Protocol.pb.h" />
     <ClInclude Include="..\Public\ServerPacketHandler.h" />
     <ClInclude Include="..\Public\Server_Defines.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_HitMiddle_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Idle_Server.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
     <ClInclude Include="stdafx.h" />

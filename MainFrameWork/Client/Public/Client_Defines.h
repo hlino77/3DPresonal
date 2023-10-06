@@ -8,7 +8,7 @@ namespace Client
 {
 	enum LEVELID { LEVEL_STATIC, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_LOADING, LEVEL_END };
 
-	enum OBJ_TYPE { PLAYER, MONSTER, PROP, OBJ_END };
+	enum OBJ_TYPE { PLAYER, MONSTER, TERRAIN, PROP, OBJ_END };
 
 	const unsigned int		g_iWinSizeX = 1280;
 	const unsigned int		g_iWinSizeY = 720;
@@ -34,6 +34,14 @@ namespace Client
 		LAYER_END
 	};
 
+
+	enum class COLLIDER_ATTACK
+	{
+		MIDDLE,
+		LEFT,
+		RIGHT,
+		ATTACK_END
+	};
 
 	enum LEVELSTATE { LOADING, INITREADY, INITSTART, INITEND, STATEEND };
 }

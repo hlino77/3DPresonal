@@ -1628,6 +1628,8 @@ class S_STATE final :
   enum : int {
     kStrStateFieldNumber = 2,
     kTPlayerFieldNumber = 1,
+    kITargetObjectLayerFieldNumber = 3,
+    kITargetObjectIDFieldNumber = 4,
   };
   // string strState = 2;
   void clear_strstate();
@@ -1661,6 +1663,24 @@ class S_STATE final :
       ::Protocol::PlayerInfo* tplayer);
   ::Protocol::PlayerInfo* unsafe_arena_release_tplayer();
 
+  // int32 iTargetObjectLayer = 3;
+  void clear_itargetobjectlayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectlayer() const;
+  void set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_itargetobjectlayer() const;
+  void _internal_set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iTargetObjectID = 4;
+  void clear_itargetobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectid() const;
+  void set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_itargetobjectid() const;
+  void _internal_set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_STATE)
  private:
   class _Internal;
@@ -1670,6 +1690,8 @@ class S_STATE final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strstate_;
   ::Protocol::PlayerInfo* tplayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectlayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -1783,14 +1805,37 @@ class S_COLLIDERSTATE final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kVOffsetFieldNumber = 6,
     kIObjectIDFieldNumber = 1,
     kILevelFieldNumber = 2,
     kILayerFieldNumber = 3,
     kIColLayerFieldNumber = 4,
     kFRadiusFieldNumber = 5,
-    kIBoneIndexFieldNumber = 6,
     kBActiveFieldNumber = 7,
+    kIAttackTypeFieldNumber = 8,
   };
+  // repeated float vOffset = 6 [packed = true];
+  int voffset_size() const;
+  private:
+  int _internal_voffset_size() const;
+  public:
+  void clear_voffset();
+  private:
+  float _internal_voffset(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      _internal_voffset() const;
+  void _internal_add_voffset(float value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      _internal_mutable_voffset();
+  public:
+  float voffset(int index) const;
+  void set_voffset(int index, float value);
+  void add_voffset(float value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      voffset() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      mutable_voffset();
+
   // int32 iObjectID = 1;
   void clear_iobjectid();
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
@@ -1836,15 +1881,6 @@ class S_COLLIDERSTATE final :
   void _internal_set_fradius(float value);
   public:
 
-  // int32 iBoneIndex = 6;
-  void clear_iboneindex();
-  ::PROTOBUF_NAMESPACE_ID::int32 iboneindex() const;
-  void set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iboneindex() const;
-  void _internal_set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
   // bool bActive = 7;
   void clear_bactive();
   bool bactive() const;
@@ -1854,6 +1890,15 @@ class S_COLLIDERSTATE final :
   void _internal_set_bactive(bool value);
   public:
 
+  // int32 iAttackType = 8;
+  void clear_iattacktype();
+  ::PROTOBUF_NAMESPACE_ID::int32 iattacktype() const;
+  void set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iattacktype() const;
+  void _internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_COLLIDERSTATE)
  private:
   class _Internal;
@@ -1861,13 +1906,14 @@ class S_COLLIDERSTATE final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > voffset_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   ::PROTOBUF_NAMESPACE_ID::int32 icollayer_;
   float fradius_;
-  ::PROTOBUF_NAMESPACE_ID::int32 iboneindex_;
   bool bactive_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iattacktype_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -2871,6 +2917,46 @@ inline void S_STATE::set_allocated_strstate(std::string* strstate) {
   // @@protoc_insertion_point(field_set_allocated:Protocol.S_STATE.strState)
 }
 
+// int32 iTargetObjectLayer = 3;
+inline void S_STATE::clear_itargetobjectlayer() {
+  itargetobjectlayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_STATE::_internal_itargetobjectlayer() const {
+  return itargetobjectlayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_STATE::itargetobjectlayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_STATE.iTargetObjectLayer)
+  return _internal_itargetobjectlayer();
+}
+inline void S_STATE::_internal_set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  itargetobjectlayer_ = value;
+}
+inline void S_STATE::set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_itargetobjectlayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_STATE.iTargetObjectLayer)
+}
+
+// int32 iTargetObjectID = 4;
+inline void S_STATE::clear_itargetobjectid() {
+  itargetobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_STATE::_internal_itargetobjectid() const {
+  return itargetobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_STATE::itargetobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_STATE.iTargetObjectID)
+  return _internal_itargetobjectid();
+}
+inline void S_STATE::_internal_set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  itargetobjectid_ = value;
+}
+inline void S_STATE::set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_itargetobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_STATE.iTargetObjectID)
+}
+
 // -------------------------------------------------------------------
 
 // S_COLLIDERSTATE
@@ -2975,24 +3061,51 @@ inline void S_COLLIDERSTATE::set_fradius(float value) {
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.fRadius)
 }
 
-// int32 iBoneIndex = 6;
-inline void S_COLLIDERSTATE::clear_iboneindex() {
-  iboneindex_ = 0;
+// repeated float vOffset = 6 [packed = true];
+inline int S_COLLIDERSTATE::_internal_voffset_size() const {
+  return voffset_.size();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_iboneindex() const {
-  return iboneindex_;
+inline int S_COLLIDERSTATE::voffset_size() const {
+  return _internal_voffset_size();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::iboneindex() const {
-  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iBoneIndex)
-  return _internal_iboneindex();
+inline void S_COLLIDERSTATE::clear_voffset() {
+  voffset_.Clear();
 }
-inline void S_COLLIDERSTATE::_internal_set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  iboneindex_ = value;
+inline float S_COLLIDERSTATE::_internal_voffset(int index) const {
+  return voffset_.Get(index);
 }
-inline void S_COLLIDERSTATE::set_iboneindex(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_iboneindex(value);
-  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iBoneIndex)
+inline float S_COLLIDERSTATE::voffset(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.vOffset)
+  return _internal_voffset(index);
+}
+inline void S_COLLIDERSTATE::set_voffset(int index, float value) {
+  voffset_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.vOffset)
+}
+inline void S_COLLIDERSTATE::_internal_add_voffset(float value) {
+  voffset_.Add(value);
+}
+inline void S_COLLIDERSTATE::add_voffset(float value) {
+  _internal_add_voffset(value);
+  // @@protoc_insertion_point(field_add:Protocol.S_COLLIDERSTATE.vOffset)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_COLLIDERSTATE::_internal_voffset() const {
+  return voffset_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+S_COLLIDERSTATE::voffset() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_COLLIDERSTATE.vOffset)
+  return _internal_voffset();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_COLLIDERSTATE::_internal_mutable_voffset() {
+  return &voffset_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+S_COLLIDERSTATE::mutable_voffset() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_COLLIDERSTATE.vOffset)
+  return _internal_mutable_voffset();
 }
 
 // bool bActive = 7;
@@ -3013,6 +3126,26 @@ inline void S_COLLIDERSTATE::_internal_set_bactive(bool value) {
 inline void S_COLLIDERSTATE::set_bactive(bool value) {
   _internal_set_bactive(value);
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.bActive)
+}
+
+// int32 iAttackType = 8;
+inline void S_COLLIDERSTATE::clear_iattacktype() {
+  iattacktype_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_iattacktype() const {
+  return iattacktype_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::iattacktype() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iAttackType)
+  return _internal_iattacktype();
+}
+inline void S_COLLIDERSTATE::_internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iattacktype_ = value;
+}
+inline void S_COLLIDERSTATE::set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iattacktype(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iAttackType)
 }
 
 // -------------------------------------------------------------------

@@ -46,17 +46,11 @@ public:
 
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
-	CTransform*				Get_TransformCom() { return m_pTransformCom; }
-	CModel*					Get_ModelCom() { return m_pModelCom; }
 
 	void					Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
 	class CCamera_Player*	Get_Camera() { return m_pCamera; }
 
-	void					Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
-	Vec3					Get_TargetPos() { return m_vTargetPos.load(); }
-
-	void					Set_TargetMatrix(Matrix matTargetWorld) { m_matTargetWorld.store(matTargetWorld); }
-	Matrix					Get_TargetMatrix() { return m_matTargetWorld.load(); }
+	
 
 
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
@@ -71,11 +65,10 @@ public:
 	void			Send_ColliderState(const _uint& iLayer);
 
 	void			Set_State(const wstring& szName);
-	void			Set_NoneControlState(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 
-
+	void					Find_NearTarget();
 
 	Vec3			Make_StraightDir();
 	Vec3			Make_RightDir();
@@ -91,19 +84,19 @@ protected:
 protected:
 	class CCamera_Player*			m_pCamera = nullptr;
 
-	atomic<Vec3>					m_vTargetPos;
-	atomic<Matrix>					m_matTargetWorld;
+	
 
 	_float							m_fMoveSpeed = 0.0f;
 
 
 	unordered_map<wstring, _uint>	m_BoneIndex;
+
+
+	
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CModel* m_pModelCom = nullptr;
-	CStateMachine* m_pStateMachine = nullptr;
+	
 
 public:
 	virtual CGameObject* Clone(void* pArg);

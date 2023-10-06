@@ -11,6 +11,7 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, Colli
 	, m_iID(g_iNextID++)
 	, m_eColliderType(eColliderType)
 	, m_IsTrigger(false)
+	, m_vOffset(Vec3(0.0f, 0.0f, 0.0f))
 	//, m_iCol(0)
 {
 }

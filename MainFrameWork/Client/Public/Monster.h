@@ -46,14 +46,7 @@ public:
 
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
-	CTransform*				Get_TransformCom() { return m_pTransformCom; }
-	CModel*					Get_ModelCom() { return m_pModelCom; }
 
-	void					Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
-	Vec3					Get_TargetPos() { return m_vTargetPos.load(); }
-
-	void					Set_TargetMatrix(Matrix matTargetWorld) { m_matTargetWorld.store(matTargetWorld); }
-	Matrix					Get_TargetMatrix() { return m_matTargetWorld.load(); }
 
 
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
@@ -62,7 +55,6 @@ public:
 
 	_bool					Is_Control() { return m_bControl; }
 public:
-	void			Set_NoneControlState(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 protected:
@@ -71,8 +63,6 @@ protected:
 
 
 protected:
-	atomic<Vec3>					m_vTargetPos;
-	atomic<Matrix>					m_matTargetWorld;
 
 	_float							m_fMoveSpeed = 0.0f;
 
@@ -81,9 +71,6 @@ protected:
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CModel* m_pModelCom = nullptr;
-	CStateMachine* m_pStateMachine = nullptr;
 
 public:
 	virtual CGameObject* Clone(void* pArg);

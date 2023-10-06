@@ -144,7 +144,9 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_PLAYERINFODefaultTypeInternal
 constexpr S_STATE::S_STATE(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : strstate_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
-  , tplayer_(nullptr){}
+  , tplayer_(nullptr)
+  , itargetobjectlayer_(0)
+  , itargetobjectid_(0){}
 struct S_STATEDefaultTypeInternal {
   constexpr S_STATEDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -156,13 +158,14 @@ struct S_STATEDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_STATEDefaultTypeInternal _S_STATE_default_instance_;
 constexpr S_COLLIDERSTATE::S_COLLIDERSTATE(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : iobjectid_(0)
+  : voffset_()
+  , iobjectid_(0)
   , ilevel_(0)
   , ilayer_(0)
   , icollayer_(0)
   , fradius_(0)
-  , iboneindex_(0)
-  , bactive_(false){}
+  , bactive_(false)
+  , iattacktype_(0){}
 struct S_COLLIDERSTATEDefaultTypeInternal {
   constexpr S_COLLIDERSTATEDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -274,6 +277,8 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_STATE, tplayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_STATE, strstate_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_STATE, itargetobjectlayer_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_STATE, itargetobjectid_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -284,8 +289,9 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, ilayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, icollayer_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, fradius_),
-  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, iboneindex_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, voffset_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, bactive_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, iattacktype_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLISION, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -311,8 +317,8 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 52, -1, sizeof(::Protocol::S_ANIMATION)},
   { 64, -1, sizeof(::Protocol::S_PLAYERINFO)},
   { 70, -1, sizeof(::Protocol::S_STATE)},
-  { 77, -1, sizeof(::Protocol::S_COLLIDERSTATE)},
-  { 89, -1, sizeof(::Protocol::S_COLLISION)},
+  { 79, -1, sizeof(::Protocol::S_COLLIDERSTATE)},
+  { 92, -1, sizeof(::Protocol::S_COLLISION)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -348,16 +354,18 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   " \001(\005\022\023\n\013fChangeTime\030\005 \001(\002\022\023\n\013iStartFrame"
   "\030\006 \001(\005\022\024\n\014iChangeFrame\030\007 \001(\005\"5\n\014S_PLAYER"
   "INFO\022%\n\007tPlayer\030\001 \003(\0132\024.Protocol.PlayerI"
-  "nfo\"B\n\007S_STATE\022%\n\007tPlayer\030\001 \001(\0132\024.Protoc"
-  "ol.PlayerInfo\022\020\n\010strState\030\002 \001(\t\"\215\001\n\017S_CO"
-  "LLIDERSTATE\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iLevel"
-  "\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n\tiColLayer\030\004 \001("
-  "\005\022\017\n\007fRadius\030\005 \001(\002\022\022\n\niBoneIndex\030\006 \001(\005\022\017"
-  "\n\007bActive\030\007 \001(\010\"\242\001\n\013S_COLLISION\022\021\n\tiObje"
-  "ctID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001"
-  "(\005\022\021\n\tiColLayer\030\004 \001(\005\022\020\n\010iOtherID\030\005 \001(\005\022"
-  "\023\n\013iOtherLayer\030\006 \001(\005\022\026\n\016iOtherColLayer\030\007"
-  " \001(\005\022\016\n\006bEnter\030\010 \001(\010b\006proto3"
+  "nfo\"w\n\007S_STATE\022%\n\007tPlayer\030\001 \001(\0132\024.Protoc"
+  "ol.PlayerInfo\022\020\n\010strState\030\002 \001(\t\022\032\n\022iTarg"
+  "etObjectLayer\030\003 \001(\005\022\027\n\017iTargetObjectID\030\004"
+  " \001(\005\"\243\001\n\017S_COLLIDERSTATE\022\021\n\tiObjectID\030\001 "
+  "\001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n\ti"
+  "ColLayer\030\004 \001(\005\022\017\n\007fRadius\030\005 \001(\002\022\023\n\007vOffs"
+  "et\030\006 \003(\002B\002\020\001\022\017\n\007bActive\030\007 \001(\010\022\023\n\013iAttack"
+  "Type\030\010 \001(\005\"\242\001\n\013S_COLLISION\022\021\n\tiObjectID\030"
+  "\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n"
+  "\tiColLayer\030\004 \001(\005\022\020\n\010iOtherID\030\005 \001(\005\022\023\n\013iO"
+  "therLayer\030\006 \001(\005\022\026\n\016iOtherColLayer\030\007 \001(\005\022"
+  "\016\n\006bEnter\030\010 \001(\010b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -365,7 +373,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 1068, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  false, false, 1143, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
   &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 12,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
@@ -2585,12 +2593,18 @@ S_STATE::S_STATE(const S_STATE& from)
   } else {
     tplayer_ = nullptr;
   }
+  ::memcpy(&itargetobjectlayer_, &from.itargetobjectlayer_,
+    static_cast<size_t>(reinterpret_cast<char*>(&itargetobjectid_) -
+    reinterpret_cast<char*>(&itargetobjectlayer_)) + sizeof(itargetobjectid_));
   // @@protoc_insertion_point(copy_constructor:Protocol.S_STATE)
 }
 
 void S_STATE::SharedCtor() {
 strstate_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-tplayer_ = nullptr;
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&tplayer_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&itargetobjectid_) -
+    reinterpret_cast<char*>(&tplayer_)) + sizeof(itargetobjectid_));
 }
 
 S_STATE::~S_STATE() {
@@ -2626,6 +2640,9 @@ void S_STATE::Clear() {
     delete tplayer_;
   }
   tplayer_ = nullptr;
+  ::memset(&itargetobjectlayer_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&itargetobjectid_) -
+      reinterpret_cast<char*>(&itargetobjectlayer_)) + sizeof(itargetobjectid_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2648,6 +2665,20 @@ const char* S_STATE::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
           auto str = _internal_mutable_strstate();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "Protocol.S_STATE.strState"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 iTargetObjectLayer = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          itargetobjectlayer_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 iTargetObjectID = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
+          itargetobjectid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2698,6 +2729,18 @@ failure:
         2, this->_internal_strstate(), target);
   }
 
+  // int32 iTargetObjectLayer = 3;
+  if (this->itargetobjectlayer() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_itargetobjectlayer(), target);
+  }
+
+  // int32 iTargetObjectID = 4;
+  if (this->itargetobjectid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_itargetobjectid(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -2726,6 +2769,20 @@ size_t S_STATE::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *tplayer_);
+  }
+
+  // int32 iTargetObjectLayer = 3;
+  if (this->itargetobjectlayer() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_itargetobjectlayer());
+  }
+
+  // int32 iTargetObjectID = 4;
+  if (this->itargetobjectid() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_itargetobjectid());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2765,6 +2822,12 @@ void S_STATE::MergeFrom(const S_STATE& from) {
   if (from.has_tplayer()) {
     _internal_mutable_tplayer()->::Protocol::PlayerInfo::MergeFrom(from._internal_tplayer());
   }
+  if (from.itargetobjectlayer() != 0) {
+    _internal_set_itargetobjectlayer(from._internal_itargetobjectlayer());
+  }
+  if (from.itargetobjectid() != 0) {
+    _internal_set_itargetobjectid(from._internal_itargetobjectid());
+  }
 }
 
 void S_STATE::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -2793,7 +2856,12 @@ void S_STATE::InternalSwap(S_STATE* other) {
       &strstate_, GetArenaForAllocation(),
       &other->strstate_, other->GetArenaForAllocation()
   );
-  swap(tplayer_, other->tplayer_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(S_STATE, itargetobjectid_)
+      + sizeof(S_STATE::itargetobjectid_)
+      - PROTOBUF_FIELD_OFFSET(S_STATE, tplayer_)>(
+          reinterpret_cast<char*>(&tplayer_),
+          reinterpret_cast<char*>(&other->tplayer_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata S_STATE::GetMetadata() const {
@@ -2809,25 +2877,27 @@ class S_COLLIDERSTATE::_Internal {
 };
 
 S_COLLIDERSTATE::S_COLLIDERSTATE(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
+  voffset_(arena) {
   SharedCtor();
   RegisterArenaDtor(arena);
   // @@protoc_insertion_point(arena_constructor:Protocol.S_COLLIDERSTATE)
 }
 S_COLLIDERSTATE::S_COLLIDERSTATE(const S_COLLIDERSTATE& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      voffset_(from.voffset_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&iobjectid_, &from.iobjectid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&bactive_) -
-    reinterpret_cast<char*>(&iobjectid_)) + sizeof(bactive_));
+    static_cast<size_t>(reinterpret_cast<char*>(&iattacktype_) -
+    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
   // @@protoc_insertion_point(copy_constructor:Protocol.S_COLLIDERSTATE)
 }
 
 void S_COLLIDERSTATE::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&iobjectid_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&bactive_) -
-    reinterpret_cast<char*>(&iobjectid_)) + sizeof(bactive_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&iattacktype_) -
+    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
 }
 
 S_COLLIDERSTATE::~S_COLLIDERSTATE() {
@@ -2856,9 +2926,10 @@ void S_COLLIDERSTATE::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  voffset_.Clear();
   ::memset(&iobjectid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&bactive_) -
-      reinterpret_cast<char*>(&iobjectid_)) + sizeof(bactive_));
+      reinterpret_cast<char*>(&iattacktype_) -
+      reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2903,17 +2974,27 @@ const char* S_COLLIDERSTATE::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // int32 iBoneIndex = 6;
+      // repeated float vOffset = 6 [packed = true];
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
-          iboneindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_voffset(), ptr, ctx);
           CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 53) {
+          _internal_add_voffset(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
       // bool bActive = 7;
       case 7:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 56)) {
           bactive_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 iAttackType = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 64)) {
+          iattacktype_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2976,16 +3057,21 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_fradius(), target);
   }
 
-  // int32 iBoneIndex = 6;
-  if (this->iboneindex() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_iboneindex(), target);
+  // repeated float vOffset = 6 [packed = true];
+  if (this->_internal_voffset_size() > 0) {
+    target = stream->WriteFixedPacked(6, _internal_voffset(), target);
   }
 
   // bool bActive = 7;
   if (this->bactive() != 0) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(7, this->_internal_bactive(), target);
+  }
+
+  // int32 iAttackType = 8;
+  if (this->iattacktype() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(8, this->_internal_iattacktype(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3003,6 +3089,18 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated float vOffset = 6 [packed = true];
+  {
+    unsigned int count = static_cast<unsigned int>(this->_internal_voffset_size());
+    size_t data_size = 4UL * count;
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    total_size += data_size;
+  }
 
   // int32 iObjectID = 1;
   if (this->iobjectid() != 0) {
@@ -3037,16 +3135,16 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
     total_size += 1 + 4;
   }
 
-  // int32 iBoneIndex = 6;
-  if (this->iboneindex() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_iboneindex());
-  }
-
   // bool bActive = 7;
   if (this->bactive() != 0) {
     total_size += 1 + 1;
+  }
+
+  // int32 iAttackType = 8;
+  if (this->iattacktype() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_iattacktype());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3080,6 +3178,7 @@ void S_COLLIDERSTATE::MergeFrom(const S_COLLIDERSTATE& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  voffset_.MergeFrom(from.voffset_);
   if (from.iobjectid() != 0) {
     _internal_set_iobjectid(from._internal_iobjectid());
   }
@@ -3095,11 +3194,11 @@ void S_COLLIDERSTATE::MergeFrom(const S_COLLIDERSTATE& from) {
   if (!(from.fradius() <= 0 && from.fradius() >= 0)) {
     _internal_set_fradius(from._internal_fradius());
   }
-  if (from.iboneindex() != 0) {
-    _internal_set_iboneindex(from._internal_iboneindex());
-  }
   if (from.bactive() != 0) {
     _internal_set_bactive(from._internal_bactive());
+  }
+  if (from.iattacktype() != 0) {
+    _internal_set_iattacktype(from._internal_iattacktype());
   }
 }
 
@@ -3124,9 +3223,10 @@ bool S_COLLIDERSTATE::IsInitialized() const {
 void S_COLLIDERSTATE::InternalSwap(S_COLLIDERSTATE* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  voffset_.InternalSwap(&other->voffset_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, bactive_)
-      + sizeof(S_COLLIDERSTATE::bactive_)
+      PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, iattacktype_)
+      + sizeof(S_COLLIDERSTATE::iattacktype_)
       - PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, iobjectid_)>(
           reinterpret_cast<char*>(&iobjectid_),
           reinterpret_cast<char*>(&other->iobjectid_));

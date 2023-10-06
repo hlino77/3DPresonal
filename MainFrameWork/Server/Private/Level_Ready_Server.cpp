@@ -26,7 +26,7 @@ HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 {
 	_uint iUserCount = CGameSessionManager::GetInstance()->Get_SessionCount();
 
-	if (iUserCount == 2)
+	if (iUserCount == 1)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);

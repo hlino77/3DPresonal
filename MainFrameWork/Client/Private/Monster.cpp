@@ -9,20 +9,17 @@
 
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER),
-	m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
+	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
 {
 }
 
 CMonster::CMonster(const CMonster& rhs)
-	: CGameObject(rhs),
-	m_matTargetWorld(rhs.m_matTargetWorld.load())
+	: CGameObject(rhs)
 {
 }
 
 HRESULT CMonster::Initialize_Prototype()
 {
-	m_matTargetWorld = XMMatrixIdentity();
     return S_OK;
 }
 
@@ -155,12 +152,6 @@ HRESULT CMonster::Ready_Components()
 	m_pTransformCom->Set_Scale(vScale);
 
     return S_OK;
-}
-
-
-void CMonster::Set_NoneControlState(const wstring& szName)
-{
-	m_pStateMachine->Change_State(szName);
 }
 
 void CMonster::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
