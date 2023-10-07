@@ -190,7 +190,10 @@ void CState_Sasuke_Attack_cmb01::Follow_TargetPos(_float fTimeDelta)
 		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
 	}
 	else
+	{
 		vPlayerPos = vTargetPos;
+		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
+	}
 }
 
 void CState_Sasuke_Attack_cmb01::Free()
