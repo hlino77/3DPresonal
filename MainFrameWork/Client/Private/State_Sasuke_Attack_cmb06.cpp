@@ -137,6 +137,9 @@ void CState_Sasuke_Attack_cmb06::Follow_TargetPos(_float fTimeDelta)
 	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
+	if (vPlayerPos == vTargetPos)
+		return;
+
 	Vec3 vDir = vTargetPos - vPlayerPos;
 	Vec3 vMove = vDir;
 	vMove.Normalize();

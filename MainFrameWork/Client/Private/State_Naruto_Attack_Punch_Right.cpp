@@ -144,6 +144,10 @@ void CState_Naruto_Attack_Punch_Right::Follow_TargetPos(_float fTimeDelta)
 	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
+
+	if (vPlayerPos == vTargetPos)
+		return;
+
 	Vec3 vDir = vTargetPos - vPlayerPos;
 	Vec3 vMove = vDir;
 	vMove.Normalize();
