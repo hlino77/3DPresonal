@@ -188,7 +188,7 @@ bool Handel_S_ANIMATION_Client(PacketSessionRef& session, Protocol::S_ANIMATION&
 	return true;
 }
 
-bool Handel_S_PLAYERINFO_Client(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt)
+bool Handel_S_OBJECTINFO_Client(PacketSessionRef& session, Protocol::S_OBJECTINFO& pkt)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -196,20 +196,20 @@ bool Handel_S_PLAYERINFO_Client(PacketSessionRef& session, Protocol::S_PLAYERINF
 	_uint iUserPlayerID = CServerSessionManager::GetInstance()->Get_Player()->Get_ObjectID();
 
 
-	for (_uint i = 0; i < pkt.tplayer_size(); ++i)
+	for (_uint i = 0; i < pkt.tobject_size(); ++i)
 	{
-		auto tPlayer = pkt.mutable_tplayer(i);
+		auto tObject = pkt.mutable_tobject(i);
 
-		_uint iPlayerID = tPlayer->iplayerid();
-		if (iPlayerID == iUserPlayerID)
+		_uint iObjectID = tObject->iobjectid();
+		if (iObjectID == iUserPlayerID)
 			continue;
 
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Find_GameObejct(tPlayer->ilevel(), tPlayer->ilayer(), iPlayerID));
-		if (pPlayer == nullptr)
+		CGameObject* pObject = pGameInstance->Find_GameObejct(tObject->ilevel(), tObject->ilayer(), iObjectID);
+		if (pObject == nullptr)
 			continue;
 
-		pPlayer->Set_TargetPos(Vec3(tPlayer->mutable_vtargetpos()->mutable_data()));
-		pPlayer->Set_TargetMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
+		pObject->Set_TargetPos(Vec3(tObject->mutable_vtargetpos()->mutable_data()));
+		pObject->Set_TargetMatrix(Matrix(tObject->mutable_matworld()->mutable_data()));
 	}
 
 
@@ -223,8 +223,9 @@ bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	auto tObject = pkt.tobject();
 
-	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.tplayer().ilayer(), pkt.tplayer().iplayerid());
+	CGameObject* pObject = pGameInstance->Find_GameObejct(tObject.ilevel(), tObject.ilayer(), tObject.iobjectid());
 	if (pObject == nullptr || pObject->Is_Control() == true)
 	{
 		Safe_Release(pGameInstance);
@@ -232,8 +233,8 @@ bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
 	}
 		
 
-	Vec3 vTargetPos(pkt.tplayer().vtargetpos().data());
-	Matrix matTargetWorld(pkt.tplayer().matworld().data());
+	Vec3 vTargetPos(tObject.vtargetpos().data());
+	Matrix matTargetWorld(tObject.matworld().data());
 
 
 	pObject->Set_TargetPos(vTargetPos);
@@ -243,13 +244,27 @@ bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt)
 		pObject->Reset_NearTarget();
 	else
 	{
-		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
+		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(tObject.ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
 		if (pNearTarget == nullptr)
 		{
 			Safe_Release(pGameInstance);
 			return true;
 		}
 		pObject->Set_NearTarget(pNearTarget);
+	}
+
+
+	if (pkt.ihitobjectid() == -1)
+		pObject->Reset_HitObject();
+	else
+	{
+		CGameObject* pHitObject = pGameInstance->Find_GameObejct(tObject.ilevel(), pkt.ihitobjectlayer(), pkt.ihitobjectid());
+		if (pHitObject == nullptr)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pObject->Set_HitObject(pHitObject);
 	}
 
 
@@ -280,6 +295,7 @@ bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->Set_Radius(pkt.fradius());
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
 	pCollider->Set_AttackType(pkt.iattacktype());
+	pCollider->Set_Center();
 
 	Safe_Release(pGameInstance);
 

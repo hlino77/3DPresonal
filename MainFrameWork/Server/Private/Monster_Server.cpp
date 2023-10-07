@@ -5,6 +5,7 @@
 #include "ColliderSphere.h"
 #include "GameSessionManager.h"
 #include "CollisionManager.h"
+#include "RigidBody.h"
 
 
 CMonster_Server::CMonster_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -43,6 +44,7 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 
 void CMonster_Server::Tick(_float fTimeDelta)
 {
+	m_pRigidBody->Tick(fTimeDelta);
 }
 
 void CMonster_Server::LateTick(_float fTimeDelta)
@@ -88,6 +90,9 @@ HRESULT CMonster_Server::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"), TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachine)))
 		return E_FAIL;
 
+	///* For.Com_RigidBody */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RigidBody"), (CComponent**)&m_pRigidBody)))
+		return E_FAIL;
 
 	///* For.Com_Model */
 	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
@@ -100,7 +105,6 @@ HRESULT CMonster_Server::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = true;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))
@@ -132,19 +136,19 @@ void CMonster_Server::Send_State(const wstring& szName)
 	Protocol::S_STATE pkt;
 	pkt.set_strstate(CAsUtils::ToString(szName));
 
-	auto tPlayer = pkt.mutable_tplayer();
+	auto tObject = pkt.mutable_tobject();
 
-	tPlayer->set_ilevel(pGameInstance->Get_CurrLevelIndex());
-	tPlayer->set_ilayer(m_iLayer);
-	tPlayer->set_iplayerid(m_iObjectID);
+	tObject->set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	tObject->set_ilayer(m_iLayer);
+	tObject->set_iobjectid(m_iObjectID);
 
-	auto vTargetPos = tPlayer->mutable_vtargetpos();
+	auto vTargetPos = tObject->mutable_vtargetpos();
 	vTargetPos->Resize(3, 0.0f);
 	Vec3 vPlayerTargetPos = m_vTargetPos.load();
 	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
-	auto matWorld = tPlayer->mutable_matworld();
+	auto matWorld = tObject->mutable_matworld();
 	matWorld->Resize(16, 0.0f);
 	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
 	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
@@ -157,6 +161,13 @@ void CMonster_Server::Send_State(const wstring& szName)
 		pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
 	}
 
+	if (m_pHitObject == nullptr)
+		pkt.set_ihitobjectid(-1);
+	else
+	{
+		pkt.set_ihitobjectid(m_pHitObject->Get_ObjectID());
+		pkt.set_ihitobjectlayer(m_pHitObject->Get_ObjectLayer());
+	}
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);

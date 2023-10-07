@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "StateMachine.h"
 #include "GameInstance.h"
+#include "RigidBody.h"
 
 CState_WhiteZetsu_HitMiddle_Server::CState_WhiteZetsu_HitMiddle_Server(const wstring& strStateName, class CMonster_WhiteZetsu_Server* pMonster)
 	:CState(strStateName)
@@ -29,6 +30,7 @@ HRESULT CState_WhiteZetsu_HitMiddle_Server::Initialize()
 void CState_WhiteZetsu_HitMiddle_Server::Enter_State()
 {
 	m_pMonster->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
+	Knock_Back();
 }
 
 void CState_WhiteZetsu_HitMiddle_Server::Tick_State(_float fTimeDelta)
@@ -37,13 +39,38 @@ void CState_WhiteZetsu_HitMiddle_Server::Tick_State(_float fTimeDelta)
 	if (pModel == nullptr || pModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
 
+	LookAt_HitObject(fTimeDelta);
+
+
 	if (pModel->Is_AnimationEnd(m_iAnimIndex))
 		m_pMonster->Set_State(L"Idle");
 }
 
 void CState_WhiteZetsu_HitMiddle_Server::Exit_State()
 {
+	m_vHitPos = Vec3(0.0f, 0.0f, 0.0f);
+}
 
+void CState_WhiteZetsu_HitMiddle_Server::Knock_Back()
+{
+	m_vHitPos = m_pMonster->Get_HitObject()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	Vec3 vOwnerPos = m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	Vec3 vDir = vOwnerPos - m_vHitPos;
+
+	vDir.Normalize();
+
+	m_pMonster->Get_RigidBody()->AddForce(vDir * 300.f, ForceMode::FORCE);
+}
+
+void CState_WhiteZetsu_HitMiddle_Server::LookAt_HitObject(_float fTimeDelta)
+{
+	CTransform* pTransform = m_pMonster->Get_TransformCom();
+
+	Vec3 vOwnerPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	Vec3 vDir = m_vHitPos - vOwnerPos;
+	vDir.Normalize();
+
+	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 }
 
 

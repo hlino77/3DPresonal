@@ -113,6 +113,7 @@ void CCamera_Player::Tick(_float fTimeDelta)
 			matLocal *= Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(Vec3(matLocal.m[0]), m_fCurrSpeedY));
 		if(m_fCurrSpeedX)
 			matLocal *= Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), m_fCurrSpeedX));
+
 	}
 	matLocal *= m_pPlayer->Get_TransformCom()->Get_WorldMatrix();
 
@@ -121,15 +122,41 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	
 	Vec3 vTargetLook = vPlayerPos - vCamPos;
 	vTargetLook.Normalize();
-	Vec3 vTargetPos = vPlayerPos + (vTargetLook * -m_fCameraLength);
-	vTargetPos.y = matLocal.m[3][1];
+
+	Vec3 vUp(0.0f, 1.0f, 0.0f);
+
+	_float fAngle = acosf(vTargetLook.Dot(vUp));
+	fAngle = XMConvertToDegrees(fAngle);
+
+	Vec3 vTargetPos;
+
+	if (fAngle < 80.0f)
+	{
+		Vec3 vRight = vUp.Cross(vTargetLook);
+		Quaternion vQuat = Quaternion::CreateFromAxisAngle(vRight, XMConvertToRadians(80.0f));
+		vTargetLook = XMVector3Rotate(vUp, vQuat);
+		vTargetLook.Normalize();
+		vTargetPos = vPlayerPos + (vTargetLook * -m_fCameraLength);
+	}
+	else if (fAngle > 150.f)
+	{
+		Vec3 vRight = vUp.Cross(vTargetLook);
+		Quaternion vQuat = Quaternion::CreateFromAxisAngle(vRight, XMConvertToRadians(150.f));
+		vTargetLook = XMVector3Rotate(vUp, vQuat);
+		vTargetLook.Normalize();
+		vTargetPos = vPlayerPos + (vTargetLook * -m_fCameraLength);
+	}
+	else
+	{
+		vTargetPos = vPlayerPos + (vTargetLook * -m_fCameraLength);
+		vTargetPos.y = matLocal.m[3][1];
+	}
+
 
 	Vec3 vPos = Vec3::Lerp(vCamPos, vTargetPos, m_fCameraSpeed);
 
 	Vec3 vLook = Vec3::Lerp(Vec3(matLocal.m[2]), vTargetLook, m_fCameraSpeed);
 	vLook.Normalize();
-
-
 
 
 	matWorld = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));

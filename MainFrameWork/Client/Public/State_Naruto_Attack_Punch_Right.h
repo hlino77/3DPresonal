@@ -22,7 +22,7 @@ public:
 	void		Tick_State_NoneControl(_float fTimeDelta);
 
 	void		Update_Collider(_float fTimeDelta);
-	void		Follow_TargetObject(_float fTimeDelta);
+
 	void		Follow_TargetPos(_float fTimeDelta);
 	void		Set_TargetPos();
 private:
@@ -42,6 +42,7 @@ private:
 
 	_float	m_fMoveSpeed = 0.0f;
 
+	_bool	m_bSetTargetPos = false;
 public:
 	virtual void Free() override;
 };

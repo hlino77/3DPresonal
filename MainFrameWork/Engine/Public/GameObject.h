@@ -34,7 +34,7 @@ public:
 
 	class CTransform*	Get_TransformCom() { return m_pTransformCom; }
 	class CModel*		Get_ModelCom() { return m_pModelCom; }
-
+	class CRigidBody*	Get_RigidBody() { return m_pRigidBody; }
 public:
 	virtual HRESULT			SetUp_State(Matrix StateMatrix) { return S_OK; }
 	void					Set_NoneControlState(const wstring& szName);
@@ -60,6 +60,10 @@ public:
 	CGameObject*			Get_NearTarget() { return m_pNearTarget; }
 	void					Reset_NearTarget() { m_pNearTarget = nullptr; }
 	void					Set_NearTarget(CGameObject* pObject) { m_pNearTarget = pObject; }
+
+	CGameObject*			Get_HitObject() { return m_pHitObject; }
+	void					Reset_HitObject() { m_pHitObject = nullptr; }
+	void					Set_HitObject(CGameObject* pObject) { m_pHitObject = pObject; }
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -76,6 +80,8 @@ protected:
 	class CTransform* m_pTransformCom = nullptr;
 	class CModel* m_pModelCom = nullptr;
 	class CStateMachine* m_pStateMachine = nullptr;
+	class CRigidBody* m_pRigidBody = nullptr;
+
 
 	unordered_map<_uint, class CSphereCollider*> m_Coliders;
 protected:
@@ -93,7 +99,7 @@ protected:
 	atomic<Matrix>					m_matTargetWorld;
 
 	CGameObject* m_pNearTarget = nullptr;
-
+	CGameObject* m_pHitObject = nullptr;
 private:
 	CComponent* Find_Component(const wstring & strComponentTag);
 

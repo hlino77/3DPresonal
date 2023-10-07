@@ -24,7 +24,6 @@ public:
 
 	void		Update_Collider(_float fTimeDelta);
 
-	void		Follow_TargetObject(_float fTimeDelta);
 	void		Set_TargetPos();
 	void		Follow_TargetPos(_float fTimeDelta);
 private:

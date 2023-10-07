@@ -202,6 +202,7 @@
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\RecvBuffer.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\Public\RigidBody.h" />
     <ClInclude Include="..\Public\SendBuffer.h" />
     <ClInclude Include="..\Public\ServerMemory.h" />
     <ClInclude Include="..\Public\Service.h" />
@@ -262,6 +263,7 @@
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\RecvBuffer.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RigidBody.cpp" />
     <ClCompile Include="..\Private\SendBuffer.cpp" />
     <ClCompile Include="..\Private\ServerMemory.cpp" />
     <ClCompile Include="..\Private\Service.cpp" />

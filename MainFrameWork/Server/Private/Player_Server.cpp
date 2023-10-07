@@ -189,7 +189,6 @@ HRESULT CPlayer_Server::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = false;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderBody"), (CComponent**)&pCollider, &tColliderInfo)))
@@ -203,7 +202,6 @@ HRESULT CPlayer_Server::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = false;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))

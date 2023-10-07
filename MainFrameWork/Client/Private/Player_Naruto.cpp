@@ -93,11 +93,11 @@ void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Naruto::Send_PlayerInfo()
 {
-	Protocol::S_PLAYERINFO pkt;
+	Protocol::S_OBJECTINFO pkt;
 
-	auto tPlayerInfo = pkt.add_tplayer();
+	auto tPlayerInfo = pkt.add_tobject();
 
-	tPlayerInfo->set_iplayerid(m_iObjectID);
+	tPlayerInfo->set_iobjectid(m_iObjectID);
 	tPlayerInfo->set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
 	tPlayerInfo->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
 

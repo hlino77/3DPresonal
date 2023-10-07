@@ -51,8 +51,7 @@ public:
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
 
 
-	CGameObject*			Get_HitObject() { return m_pHitObject; }
-	void					Reset_HitObject() { m_pHitObject = nullptr; }
+
 	
 public:
 
@@ -76,7 +75,7 @@ protected:
 	unordered_map<wstring, _uint>	m_BoneIndex;
 
 
-	CGameObject*					m_pHitObject = nullptr;
+
 
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 

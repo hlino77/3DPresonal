@@ -6,7 +6,7 @@
 #include "Camera_Player.h"
 #include "AsUtils.h"
 #include "ColliderSphere.h"
-
+#include "RigidBody.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
@@ -38,7 +38,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-
+	m_pRigidBody->Tick(fTimeDelta);
 }
 
 void CMonster::LateTick(_float fTimeDelta)
@@ -94,6 +94,20 @@ HRESULT CMonster::Render()
 
 
 
+void CMonster::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
+{
+	Vec3 vCurrPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Matrix matTargetWorld = m_matTargetWorld;
+	Vec3 vServerPos(matTargetWorld.m[3]);
+
+	Vec3 vDistance = vServerPos - vCurrPos;
+	if (vDistance.Length() > fDistance)
+	{
+		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, fLerpSpeed);
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
+	}
+}
+
 HRESULT CMonster::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -121,6 +135,9 @@ HRESULT CMonster::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"), TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachine)))
 		return E_FAIL;
 
+	///* For.Com_RigidBody */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RigidBody"), (CComponent**)&m_pRigidBody)))
+		return E_FAIL;
 
 	///* For.Com_Model */
 	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
@@ -132,7 +149,6 @@ HRESULT CMonster::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = true;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_SphereColider"), (CComponent**)&pCollider, &tColliderInfo)))

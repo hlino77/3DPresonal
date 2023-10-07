@@ -48,11 +48,11 @@ HRESULT CState_Sasuke_Attack_cmb08::Initialize()
 void CState_Sasuke_Attack_cmb08::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, m_iStartFrame, m_iChangeFrame);
+	m_bSetTargetPos = false;
+
 	if (m_pPlayer->Is_Control())
-	{
-		if (m_pPlayer->Get_NearTarget() == nullptr)
-			Set_TargetPos();
-	}
+		m_pPlayer->Set_TargetPos(m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
+
 }
 
 void CState_Sasuke_Attack_cmb08::Tick_State(_float fTimeDelta)
@@ -77,12 +77,9 @@ void CState_Sasuke_Attack_cmb08::Tick_State_Control(_float fTimeDelta)
 	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
 
-	if (m_pPlayer->Get_NearTarget() == nullptr)
-		Follow_TargetPos(fTimeDelta);
-	else
-		Follow_TargetObject(fTimeDelta);
+	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= m_iInputNext)
+	if (iFrame >= m_iInputNext)
 	{
 		if (KEY_TAP(KEY::LBTN))
 		{
@@ -90,6 +87,16 @@ void CState_Sasuke_Attack_cmb08::Tick_State_Control(_float fTimeDelta)
 			return;
 		}
 
+	}
+
+	if (iFrame >= 1)
+	{
+		if (!m_bSetTargetPos)
+		{
+			Set_TargetPos();
+			m_bSetTargetPos = true;
+		}
+		Follow_TargetPos(fTimeDelta);
 	}
 
 	Update_Collider(fTimeDelta);
@@ -100,10 +107,7 @@ void CState_Sasuke_Attack_cmb08::Tick_State_Control(_float fTimeDelta)
 
 void CState_Sasuke_Attack_cmb08::Tick_State_NoneControl(_float fTimeDelta)
 {
-	if (m_pPlayer->Get_NearTarget() == nullptr)
-		Follow_TargetPos(fTimeDelta);
-	else
-		Follow_TargetObject(fTimeDelta);
+	Follow_TargetPos(fTimeDelta);
 }
 
 void CState_Sasuke_Attack_cmb08::Update_Collider(_float fTimeDelta)
@@ -137,32 +141,6 @@ void CState_Sasuke_Attack_cmb08::Update_Collider(_float fTimeDelta)
 	}
 }
 
-void CState_Sasuke_Attack_cmb08::Follow_TargetObject(_float fTimeDelta)
-{
-	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vTargetObjectPos = m_pPlayer->Get_NearTarget()->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-
-
-	Vec3 vDir = vTargetObjectPos - vPlayerPos;
-	vDir.Normalize();
-
-	Vec3 vTargetPos = vTargetObjectPos + vDir * -0.8f;
-	Vec3 vTargetDistance = vTargetPos - vPlayerPos;
-	Vec3 vMove = vDir;
-	vMove.Normalize();
-	vMove *= m_fMoveSpeed * fTimeDelta;
-
-	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
-
-	if (vTargetDistance.Length() > vMove.Length())
-	{
-		vPlayerPos += vMove;
-		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
-	}
-	else
-		vPlayerPos = vTargetPos;
-}
-
 void CState_Sasuke_Attack_cmb08::Follow_TargetPos(_float fTimeDelta)
 {
 	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
@@ -186,6 +164,25 @@ void CState_Sasuke_Attack_cmb08::Follow_TargetPos(_float fTimeDelta)
 
 void CState_Sasuke_Attack_cmb08::Set_TargetPos()
 {
+	CGameObject* pTarget = m_pPlayer->Get_NearTarget();
+	if (pTarget)
+	{
+		Vec3 vTargetObjectPos = pTarget->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+		Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+
+		Vec3 vDistance = vPlayerPos - vTargetObjectPos;
+
+		if (vDistance.Length() <= 3.0f)
+		{
+			vDistance.Normalize();
+			vDistance *= 0.8f;
+			Vec3 vTargetPos = vTargetObjectPos + vDistance;
+			m_pPlayer->Set_TargetPos(vTargetPos);
+			return;
+		}
+	}
+
+	m_pPlayer->Reset_NearTarget();
 	Vec3 vLook = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 

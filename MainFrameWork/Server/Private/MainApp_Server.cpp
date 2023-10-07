@@ -17,6 +17,7 @@
 #include "CollisionManager.h"
 #include "DeadLockProfiler.h"
 #include "SocketUtils.h"
+#include "RigidBody.h"
 
 
 
@@ -33,7 +34,7 @@ HRESULT CMainApp_Server::Initialize()
 	CServerPacketHandler::Init();
 
 	ServerServiceRef service = std::make_shared<ServerService>(
-		NetAddress(L"192.168.200.155", 7777),
+		NetAddress(L"192.168.1.1", 7777),
 		std::make_shared<IocpCore>(),
 		std::make_shared<CGameSession>, // TODO : SessionManager µî
 		10);
@@ -109,6 +110,10 @@ HRESULT CMainApp_Server::Ready_Prototype_Component()
 		CSphereCollider::Create(nullptr, nullptr))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_RigidBody */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"),
+		CRigidBody::Create(nullptr, nullptr))))
+		return E_FAIL;
 
 	return S_OK;
 }

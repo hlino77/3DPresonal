@@ -18,13 +18,20 @@ public:
 	virtual void Tick_State(_float fTimeDelta) override;
 	virtual void Exit_State() override;
 
+
+	void		 Knock_Back();
+	void		 LookAt_HitObject(_float fTimeDelta);
+
 private:
 	class CMonster_WhiteZetsu_Server* m_pMonster = nullptr;
 
+
+	
 private:
 	//Animation
 	_int m_iAnimIndex = 0;
 
+	Vec3 m_vHitPos;
 public:
 	virtual void Free() override;
 };

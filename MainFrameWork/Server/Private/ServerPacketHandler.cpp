@@ -125,24 +125,24 @@ bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION&
 	return true;
 }
 
-bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt)
+bool Handel_S_OBJECTINFO_Server(PacketSessionRef& session, Protocol::S_OBJECTINFO& pkt)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	auto tPlayer = pkt.mutable_tplayer(0);
+	auto tObject = pkt.mutable_tobject(0);
 
 
-	CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(pGameInstance->Find_GameObejct(tPlayer->ilevel(), tPlayer->ilayer(), tPlayer->iplayerid()));
-	if (pPlayer == nullptr)
+	CGameObject* pObject = pGameInstance->Find_GameObejct(tObject->ilevel(), tObject->ilayer(), tObject->iobjectid());
+	if (pObject == nullptr)
 	{
 		Safe_Release(pGameInstance);
 		return true;
 	}
 
 
-	pPlayer->Set_TargetPos(Vec3(tPlayer->mutable_vtargetpos()->mutable_data()));
-	pPlayer->Get_TransformCom()->Set_WorldMatrix(Matrix(tPlayer->mutable_matworld()->mutable_data()));
+	pObject->Set_TargetPos(Vec3(tObject->mutable_vtargetpos()->mutable_data()));
+	pObject->Get_TransformCom()->Set_WorldMatrix(Matrix(tObject->mutable_matworld()->mutable_data()));
 
 
 	//CGameSessionManager::GetInstance()->Add_SendCount();
@@ -157,18 +157,20 @@ bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	auto tPlayer = pkt.tplayer();
+	auto tObject = pkt.tobject();
 	
-	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.tplayer().ilayer(), pkt.tplayer().iplayerid());
-	if (pObject == nullptr || pObject->Is_Control() == true)
+	
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(tObject.ilevel(), tObject.ilayer(), tObject.iobjectid());
+	if (pObject == nullptr)
 	{
 		Safe_Release(pGameInstance);
 		return true;
 	}
 
 
-	Vec3 vTargetPos(pkt.tplayer().vtargetpos().data());
-	Matrix matTargetWorld(pkt.tplayer().matworld().data());
+	Vec3 vTargetPos(tObject.vtargetpos().data());
+	Matrix matTargetWorld(tObject.matworld().data());
 
 
 	pObject->Set_TargetPos(vTargetPos);
@@ -179,13 +181,27 @@ bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt)
 		pObject->Reset_NearTarget();
 	else
 	{
-		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.tplayer().ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
+		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(tObject.ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
 		if (pNearTarget == nullptr)
 		{
 			Safe_Release(pGameInstance);
 			return true;
 		}
 		pObject->Set_NearTarget(pNearTarget);
+	}
+
+
+	if (pkt.ihitobjectid() == -1)
+		pObject->Reset_HitObject();
+	else
+	{
+		CGameObject* pHitObject = pGameInstance->Find_GameObejct(tObject.ilevel(), pkt.ihitobjectlayer(), pkt.ihitobjectid());
+		if (pHitObject == nullptr)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pObject->Set_HitObject(pHitObject);
 	}
 
 
@@ -217,9 +233,7 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->Set_Radius(pkt.fradius());
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
 	pCollider->Set_AttackType(pkt.iattacktype());
-
-	cout << "Recv" << endl;
-
+	pCollider->Set_Center();
 	Safe_Release(pGameInstance);
 	return true;
 }

@@ -38,12 +38,6 @@ private:
 	BoundingSphere	m_tBoundingSphere;
 
 
-	
-private:
-	CTransform*		m_pOwnerTransform = nullptr;
-	class CModel*	m_pOwnerModel = nullptr;
-
-
 public:
 	static	CSphereCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg)	override;

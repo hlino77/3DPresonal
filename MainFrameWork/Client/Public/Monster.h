@@ -57,6 +57,8 @@ public:
 public:
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
+
+	void			Follow_ServerPos(_float fDistance, _float fLerpSpeed);
 protected:
 	virtual HRESULT Ready_Components();
 

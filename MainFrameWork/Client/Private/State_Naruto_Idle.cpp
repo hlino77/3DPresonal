@@ -60,18 +60,7 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)
 {
-	CTransform* pTransform = m_pPlayer->Get_TransformCom();
-	Vec3 vCurrPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vServerPos(m_pPlayer->Get_TargetMatrix().m[3]);
-
-
-
-	Vec3 vDistance = vServerPos - vCurrPos;
-	if (vDistance.Length() > 0.1f)
-	{
-		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, 0.2f);
-		pTransform->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
-	}
+	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
 }
 
 void CState_Naruto_Idle::Free()

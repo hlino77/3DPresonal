@@ -24,7 +24,7 @@ public:
 	virtual void	DebugRender() {};
 #endif // DEBUG
 protected:
-	CGameObject* m_pGameObject = nullptr;
+	CGameObject* m_pOwner = nullptr;
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };

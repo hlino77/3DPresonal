@@ -6,7 +6,7 @@
 #include "Camera_Player.h"
 #include "AsUtils.h"
 #include "ColliderSphere.h"
-
+#include "RigidBody.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -40,6 +40,19 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
+	if (KEY_TAP(KEY::SPACE))
+	{
+		m_pRigidBody->AddForce(Vec3(0.0f, 1000.0f, 0.0f), ForceMode::FORCE);
+		m_pRigidBody->UseGravity(true);
+	}
+	
+
+	if (KEY_TAP(KEY::P))
+	{
+		m_pRigidBody->AddForce(Vec3(0.0f, 0.0f, 300.0f), ForceMode::FORCE);
+	}
+
+	m_pRigidBody->Tick(fTimeDelta);
 
 }
 
@@ -160,6 +173,20 @@ void CPlayer::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
 }
 
+void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
+{
+	Vec3 vCurrPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Matrix matTargetWorld = m_matTargetWorld;
+	Vec3 vServerPos(matTargetWorld.m[3]);
+
+	Vec3 vDistance = vServerPos - vCurrPos;
+	if (vDistance.Length() > fDistance)
+	{
+		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, fLerpSpeed);
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
+	}
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -187,6 +214,9 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"), TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachine)))
 		return E_FAIL;
 
+	///* For.Com_RigidBody */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_RigidBody"), TEXT("Com_RigidBody"), (CComponent**)&m_pRigidBody)))
+		return E_FAIL;
 
 	///* For.Com_Model */
 	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
@@ -199,7 +229,6 @@ HRESULT CPlayer::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = true;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderBody"), (CComponent**)&pCollider, &tColliderInfo)))
@@ -213,7 +242,6 @@ HRESULT CPlayer::Ready_Components()
 		CCollider::ColliderInfo tColliderInfo;
 		tColliderInfo.m_bActive = false;
 		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
-		tColliderInfo.pOwner = this;
 		CSphereCollider* pCollider = nullptr;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))
@@ -271,11 +299,11 @@ void CPlayer::Send_State(const wstring& szName)
 	Protocol::S_STATE pkt;
 	pkt.set_strstate(CAsUtils::ToString(szName));
 
-	auto tPlayer = pkt.mutable_tplayer();
+	auto tPlayer = pkt.mutable_tobject();
 
 	tPlayer->set_ilevel(pGameInstance->Get_CurrLevelIndex());
 	tPlayer->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
-	tPlayer->set_iplayerid(m_iObjectID);
+	tPlayer->set_iobjectid(m_iObjectID);
 
 	auto vTargetPos = tPlayer->mutable_vtargetpos();
 	vTargetPos->Resize(3, 0.0f);
@@ -294,6 +322,14 @@ void CPlayer::Send_State(const wstring& szName)
 	{
 		pkt.set_itargetobjectid(m_pNearTarget->Get_ObjectID());
 		pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
+	}
+
+	if (m_pHitObject == nullptr)
+		pkt.set_ihitobjectid(-1);
+	else
+	{
+		pkt.set_ihitobjectid(m_pHitObject->Get_ObjectID());
+		pkt.set_ihitobjectlayer(m_pHitObject->Get_ObjectLayer());
 	}
 		
 

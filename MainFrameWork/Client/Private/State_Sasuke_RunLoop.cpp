@@ -24,7 +24,7 @@ HRESULT CState_Sasuke_RunLoop::Initialize()
 	m_iRun_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.0f);
 	
 
-	m_fAccel = 0.4f;
+	m_fAccel = 10.0f;
 	m_fMaxSpeed = 5.0f;
 
 	if (m_iRun_Loop == -1)
@@ -75,7 +75,7 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 
 		if (fCurrSpeed < m_fMaxSpeed)
 		{
-			fCurrSpeed += m_fAccel;
+			fCurrSpeed += m_fAccel * fTimeDelta;
 			fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
 			m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 		}
@@ -113,7 +113,7 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	if (fCurrSpeed < m_fMaxSpeed)
 	{
-		fCurrSpeed += m_fAccel;
+		fCurrSpeed += m_fAccel * fTimeDelta;
 		fCurrSpeed = min(fCurrSpeed, m_fMaxSpeed);
 		m_pPlayer->Set_MoveSpeed(fCurrSpeed);
 	}

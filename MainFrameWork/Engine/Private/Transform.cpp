@@ -343,6 +343,18 @@ void CTransform::LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta)
 	}
 }
 
+void CTransform::Move_Pos(Vec3 vTargetPos)
+{
+	Vec3 vPos;
+	{
+		READ_LOCK
+		vPos = Vec3(m_WorldMatrix.m[3]);
+	}
+	
+	vPos += vTargetPos;
+	Set_State(STATE::STATE_POSITION, vPos);
+}
+
 void CTransform::Turn_Speed(Vec3 vAxis, _float fSpeed, _float fTimeDelta)
 {
 	Quaternion vRot = Quaternion::CreateFromAxisAngle(vAxis, fSpeed * fTimeDelta);

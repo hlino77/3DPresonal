@@ -17,7 +17,7 @@ enum : uint16
 	PKT_S_CHARACTERNAME = 6,
 	PKT_S_MATRIX = 7,
 	PKT_S_ANIMATION = 8,
-	PKT_S_PLAYERINFO = 9,
+	PKT_S_OBJECTINFO = 9,
 	PKT_S_STATE = 10,
 	PKT_S_COLLIDERSTATE = 11,
 	PKT_S_COLLISION = 12,
@@ -32,7 +32,7 @@ bool Handel_S_CREATEOBJECT_Server(PacketSessionRef& session, Protocol::S_CREATE_
 bool Handel_S_CHARACTERNAME_Server(PacketSessionRef& session, Protocol::S_CHARACTER_NAME& pkt);
 bool Handel_S_MATRIX_Server(PacketSessionRef& session, Protocol::S_MATRIX& pkt);
 bool Handel_S_ANIMATION_Server(PacketSessionRef& session, Protocol::S_ANIMATION& pkt);
-bool Handel_S_PLAYERINFO_Server(PacketSessionRef& session, Protocol::S_PLAYERINFO& pkt);
+bool Handel_S_OBJECTINFO_Server(PacketSessionRef& session, Protocol::S_OBJECTINFO& pkt);
 bool Handel_S_STATE_Server(PacketSessionRef& session, Protocol::S_STATE& pkt);
 bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLIDERSTATE& pkt);
 bool Handel_S_COLLISION_Server(PacketSessionRef& session, Protocol::S_COLLISION& pkt);
@@ -54,7 +54,7 @@ public:
 		GPacketHandler[PKT_S_CHARACTERNAME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CHARACTER_NAME>(Handel_S_CHARACTERNAME_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_MATRIX] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_MATRIX>(Handel_S_MATRIX_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_ANIMATION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_ANIMATION>(Handel_S_ANIMATION_Server, session, buffer, len); };
-		GPacketHandler[PKT_S_PLAYERINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_PLAYERINFO>(Handel_S_PLAYERINFO_Server, session, buffer, len); };
+		GPacketHandler[PKT_S_OBJECTINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_OBJECTINFO>(Handel_S_OBJECTINFO_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_STATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_STATE>(Handel_S_STATE_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_COLLIDERSTATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_COLLIDERSTATE>(Handel_S_COLLIDERSTATE_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_COLLISION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_COLLISION>(Handel_S_COLLISION_Server, session, buffer, len); };
@@ -76,7 +76,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_CHARACTER_NAME& pkt) { return MakeSendBuffer(pkt, PKT_S_CHARACTERNAME); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_MATRIX& pkt) { return MakeSendBuffer(pkt, PKT_S_MATRIX); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_ANIMATION& pkt) { return MakeSendBuffer(pkt, PKT_S_ANIMATION); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_PLAYERINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_PLAYERINFO); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_OBJECTINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_OBJECTINFO); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_STATE& pkt) { return MakeSendBuffer(pkt, PKT_S_STATE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_COLLIDERSTATE& pkt) { return MakeSendBuffer(pkt, PKT_S_COLLIDERSTATE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_COLLISION& pkt) { return MakeSendBuffer(pkt, PKT_S_COLLISION); }

@@ -20,7 +20,6 @@ class ENGINE_DLL CCollider : public CComponent
 public:
 	struct ColliderInfo
 	{
-		CGameObject* pOwner = nullptr;
 		_uint m_iLayer;
 		_bool m_bActive = false;
 	};
@@ -64,7 +63,6 @@ public:
 	void			OnCollisionExit(CCollider* pOther);
 protected:
 	CRigidBody*				m_pRigidBody;
-	CGameObject*			m_pOwner = nullptr;
 
 	_uint					m_iColLayer;
 	_bool					m_bActive = false;

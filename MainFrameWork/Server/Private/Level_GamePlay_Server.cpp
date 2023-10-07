@@ -207,30 +207,28 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 	if (ObjectList.size() == 0)
 		return S_OK;
 
-	Protocol::S_PLAYERINFO pkt;
+	Protocol::S_OBJECTINFO pkt;
 
-	for (auto& Player : ObjectList)
+	for (auto& Object : ObjectList)
 	{
-		CPlayer_Server* pPlayer = dynamic_cast<CPlayer_Server*>(Player);
-
-		if (pPlayer == nullptr)
+		if (Object == nullptr)
 			continue;
 
-		auto tPlayer = pkt.add_tplayer();
-		tPlayer->set_iplayerid(Player->Get_ObjectID());
-		tPlayer->set_ilevel(LEVELID::LEVEL_GAMEPLAY);
-		tPlayer->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+		auto tObject = pkt.add_tobject();
+		tObject->set_iobjectid(Object->Get_ObjectID());
+		tObject->set_ilevel(LEVELID::LEVEL_GAMEPLAY);
+		tObject->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
 
 
-		auto vTargetPos = tPlayer->mutable_vtargetpos();
+		auto vTargetPos = tObject->mutable_vtargetpos();
 		vTargetPos->Resize(3, 0.0f);
-		Vec3 vPlayerTargetPos = pPlayer->Get_TargetPos();
+		Vec3 vPlayerTargetPos = Object->Get_TargetPos();
 		memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
-		auto matWorld = tPlayer->mutable_matworld();
+		auto matWorld = tObject->mutable_matworld();
 		matWorld->Resize(16, 0.0f);
-		Matrix matPlayerWorld = pPlayer->Get_TransformCom()->Get_WorldMatrix();
+		Matrix matPlayerWorld = Object->Get_TransformCom()->Get_WorldMatrix();
 		memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
 
 		/*if (pPlayer->Get_ObjectTag() == L"Naruto")

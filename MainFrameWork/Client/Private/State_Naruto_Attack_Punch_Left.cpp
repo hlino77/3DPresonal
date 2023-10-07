@@ -74,12 +74,9 @@ void CState_Naruto_Attack_Punch_Left::Tick_State_Control(_float fTimeDelta)
 	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
 
-	if (m_pPlayer->Get_NearTarget() == nullptr)
-		Follow_TargetPos(fTimeDelta);
-	else
-		Follow_TargetObject(fTimeDelta);
+	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
 
-	if (pPlayerModel->Get_Anim_Frame(m_iAnimIndex) >= m_iInputNext)
+	if (iFrame >= m_iInputNext)
 	{
 		if (KEY_TAP(KEY::LBTN))
 		{
@@ -89,6 +86,8 @@ void CState_Naruto_Attack_Punch_Left::Tick_State_Control(_float fTimeDelta)
 
 	}
 
+	Follow_TargetPos(fTimeDelta);
+
 	Update_Collider(fTimeDelta);
 
 	if (pPlayerModel->Is_AnimationEnd(m_iAnimIndex))
@@ -97,10 +96,7 @@ void CState_Naruto_Attack_Punch_Left::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_Attack_Punch_Left::Tick_State_NoneControl(_float fTimeDelta)
 {
-	if (m_pPlayer->Get_NearTarget() == nullptr)
-		Follow_TargetPos(fTimeDelta);
-	else
-		Follow_TargetObject(fTimeDelta);
+	Follow_TargetPos(fTimeDelta);
 }
 
 void CState_Naruto_Attack_Punch_Left::Update_Collider(_float fTimeDelta)
@@ -134,32 +130,6 @@ void CState_Naruto_Attack_Punch_Left::Update_Collider(_float fTimeDelta)
 	}
 }
 
-void CState_Naruto_Attack_Punch_Left::Follow_TargetObject(_float fTimeDelta)
-{
-	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vTargetObjectPos = m_pPlayer->Get_NearTarget()->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
-
-
-	Vec3 vDir = vTargetObjectPos - vPlayerPos;
-	vDir.Normalize();
-
-	Vec3 vTargetPos = vTargetObjectPos + vDir * -0.8f;
-	Vec3 vTargetDistance = vTargetPos - vPlayerPos;
-	Vec3 vMove = vDir;
-	vMove.Normalize();
-	vMove *= m_fMoveSpeed * fTimeDelta;
-
-	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
-
-	if (vTargetDistance.Length() > vMove.Length())
-	{
-		vPlayerPos += vMove;
-		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
-	}
-	else
-		vPlayerPos = vTargetPos;
-}
-
 void CState_Naruto_Attack_Punch_Left::Set_TargetPos()
 {
 	CGameObject* pTarget = m_pPlayer->Get_NearTarget();
@@ -173,7 +143,7 @@ void CState_Naruto_Attack_Punch_Left::Set_TargetPos()
 		if (vDistance.Length() <= 3.0f)
 		{
 			vDistance.Normalize();
-			vDistance *= 0.8f;
+			vDistance *= 0.6f;
 			Vec3 vTargetPos = vTargetObjectPos + vDistance;
 			m_pPlayer->Set_TargetPos(vTargetPos);
 			return;

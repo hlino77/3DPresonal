@@ -76,6 +76,9 @@ public:
 	Vec3			Make_LeftDir();
 	void			Go_Straight(_float fSpeed, _float fTimeDelta);
 	void			Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
+
+
+	void			Follow_ServerPos(_float fDistance, _float fLerpSpeed);
 protected:
 	virtual HRESULT Ready_Components();
 

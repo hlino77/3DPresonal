@@ -54,6 +54,7 @@ private:
 	_float m_fCurrSpeedX, m_fCurrSpeedY;
 	_float m_fBreak;
 
+	_float m_fPrevY;
 
 	_float m_fCameraLength;
 

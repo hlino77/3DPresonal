@@ -62,8 +62,8 @@ void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollid
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
+		m_pHitObject = pOther->Get_Owner();
 		Set_State(L"Hit_Middle");
-		cout << "Hit" << endl;
 	}
 }
 
@@ -77,22 +77,22 @@ void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollide
 
 void CMonster_WhiteZetsu_Server::Send_MonsterInfo()
 {
-	Protocol::S_PLAYERINFO pkt;
+	Protocol::S_OBJECTINFO pkt;
 
-	auto tPlayerInfo = pkt.add_tplayer();
+	auto tObject = pkt.add_tobject();
 
-	tPlayerInfo->set_iplayerid(m_iObjectID);
-	tPlayerInfo->set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
-	tPlayerInfo->set_ilayer((_uint)LAYER_TYPE::LAYER_MONSTER);
+	tObject->set_iobjectid(m_iObjectID);
+	tObject->set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	tObject->set_ilayer((_uint)LAYER_TYPE::LAYER_MONSTER);
 
 
-	auto vTargetPos = tPlayerInfo->mutable_vtargetpos();
+	auto vTargetPos = tObject->mutable_vtargetpos();
 	vTargetPos->Resize(3, 0.0f);
 	Vec3 vPlayerTargetPos = m_vTargetPos.load();
 	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
 
 
-	auto matWorld = tPlayerInfo->mutable_matworld();
+	auto matWorld = tObject->mutable_matworld();
 	matWorld->Resize(16, 0.0f);
 	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
 	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));

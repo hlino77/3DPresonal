@@ -25,7 +25,6 @@ public:
 	void		Update_Collider(_float fTimeDelta);
 
 
-	void		Follow_TargetObject(_float fTimeDelta);
 	void		Follow_TargetPos(_float fTimeDelta);
 	void		Set_TargetPos();
 private:
@@ -42,6 +41,8 @@ private:
 
 
 	_float	m_fMoveSpeed = 0.0f;
+
+	_bool	m_bSetTargetPos = false;
 public:
 	virtual void Free() override;
 };

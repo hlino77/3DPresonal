@@ -26,11 +26,7 @@ HRESULT CSphereCollider::Initialize_Prototype()
 
 HRESULT CSphereCollider::Initialize(void* pArg)
 {
-	//m_pRigidBody = m_pGameObject->GetRigidBody();
-
-	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pGameObject->Get_Component(L"Com_Transform"));
-	m_pOwnerModel = dynamic_cast<CModel*>(m_pGameObject->Get_Component(L"Com_Model"));
-	m_tBoundingSphere.Center = m_pOwnerTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	m_tBoundingSphere.Center = m_pOwner->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 	m_tBoundingSphere.Radius = 1.0f;
 
 	if (pArg == nullptr)
@@ -38,7 +34,6 @@ HRESULT CSphereCollider::Initialize(void* pArg)
 
 	ColliderInfo* tCollider = static_cast<ColliderInfo*>(pArg);
 
-	m_pOwner = tCollider->pOwner;
 	m_iColLayer = tCollider->m_iLayer;
 	m_bActive = tCollider->m_bActive;
 
@@ -47,7 +42,7 @@ HRESULT CSphereCollider::Initialize(void* pArg)
 
 void CSphereCollider::Tick(const _float& fTimeDelta)
 {
-	m_tBoundingSphere.Center = m_pOwnerTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	m_tBoundingSphere.Center = m_pOwner->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 	//m_tBoundingSphere.Radius = m_pOwnerTransform->Get_Scale().Length() / 2.f;
 
 	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
@@ -96,7 +91,7 @@ _bool CSphereCollider::Intersects(Super* other)
 
 void CSphereCollider::Set_Center()
 {
-	Matrix matObjectWorld = m_pOwnerTransform->Get_WorldMatrix();
+	Matrix matObjectWorld = m_pOwner->Get_TransformCom()->Get_WorldMatrix();
 
 	if (m_vOffset != Vec3(0.0f, 0.0f, 0.0f))
 	{
@@ -115,9 +110,9 @@ void CSphereCollider::Set_Center()
 
 void CSphereCollider::Set_Center_ToBone()
 {
-	Matrix matOwnerWolrd = m_pOwnerTransform->Get_WorldMatrix();
+	Matrix matOwnerWolrd = m_pOwner->Get_TransformCom()->Get_WorldMatrix();
 
-	Matrix matBone = m_pOwnerModel->Get_CurrBoneMatrix(m_iBoneIndex);
+	Matrix matBone = m_pOwner->Get_ModelCom()->Get_CurrBoneMatrix(m_iBoneIndex);
 
 	Matrix matResult = matBone * matOwnerWolrd;
 
@@ -141,7 +136,7 @@ CSphereCollider* CSphereCollider::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 CComponent* CSphereCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CSphereCollider* pInstance = new CSphereCollider(*this);
-	pInstance->m_pGameObject = pGameObject;
+	pInstance->m_pOwner = pGameObject;
 	//pInstance->m_pRigidBody = pInstance->m_pGameObject->GetRigidBody();
 
 	if (FAILED(pInstance->Initialize(pArg)))
