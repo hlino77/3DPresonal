@@ -78,7 +78,9 @@ void CState_Naruto_Attack_Punch_Right::Tick_State_Control(_float fTimeDelta)
 
 	if (iFrame >= m_iInputNext)
 	{
-		if (KEY_TAP(KEY::LBTN))
+		Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+		Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		if (KEY_TAP(KEY::LBTN) && vTargetPos == vPlayerPos)
 		{
 			m_pPlayer->Set_State(L"Attack_Normal_cmb03");
 			return;
