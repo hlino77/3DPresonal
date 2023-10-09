@@ -186,9 +186,9 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 {
 	for (auto& pLayer : m_pLayers[iLevelIndex])
 	{
-		Safe_Release(pLayer);
+		pLayer->Clear();
 	}
-	m_pLayers[iLevelIndex].clear();
+	//m_pLayers[iLevelIndex].clear();
 }
 
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)

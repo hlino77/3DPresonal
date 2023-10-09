@@ -10,6 +10,9 @@
 #include "DeadLockProfiler.h"
 #include "SocketUtils.h"
 #include "RigidBody.h"
+#include "MainLogo.h"
+#include "BackGround_Loading.h"
+
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -50,6 +53,9 @@ HRESULT CMainApp::Initialize()
 
 	/* 1-4-1. 게임내에서 사용할 여러 자원(텍스쳐, 모델, 객체) 들을 준비한다.  */
 
+	if (FAILED(Ready_Prototype_Font()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -84,7 +90,7 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelID)
 
 	/* 로고레베릉ㄹ 할당하고 싶었지만. 로고레벨을 위한 로딩레벨을 먼저 생성하여 로딩작업을 수행할꺼야. */
 	/* 로딩객체에게 eLevelID라는 내가 실제 할당ㅎ아고 싶었던 레벨열거체를 준거지?! 실제할당하고싶었던 레벨에 자원을 준비라하라고 */
-	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelID))))
+	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelID, L"MainLogo"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -139,6 +145,38 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CSphereCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+  	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MainLogo"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/BackGround/MainLogo.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/BackGround/BackGround_Loading.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround_MainLogo"),
+		CMainLogo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround_Loading"),
+		CBackGround_Loading::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Font()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->AddFont(L"125", L"../Bin/Resources/Fonts/125.spritefont");
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

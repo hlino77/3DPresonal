@@ -21,7 +21,7 @@ public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	
-
+	void Clear();
 public:
 	list<class CGameObject*>& Find_GameObjects() { return m_GameObjects; }
 	CGameObject* Find_GameObject(const wstring& strObjectTag);

@@ -25,6 +25,7 @@ int g_arrVK[(int)KEY::TYPE_END] =
 	VK_SPACE,
 	VK_RETURN,
 	VK_ESCAPE,
+	VK_BACK,
 
 	VK_LBUTTON,
 	VK_RBUTTON
@@ -52,6 +53,7 @@ HRESULT CKey_Manager::Reserve_Manager(ID3D11Device* pDevice, ID3D11DeviceContext
 
 
 	ZeroMemory(&m_tMousePos, sizeof(POINT));
+
 
 	return S_OK;
 }
@@ -105,6 +107,7 @@ void CKey_Manager::Tick(_float fTimeDelta)
 	GetCursorPos(&m_tMousePos);
 	ScreenToClient(m_hWnd, &m_tMousePos);
 }
+
 
 
 

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Loader.h"
 #include "GameInstance.h"
-#include "BackGround.h"
 #include "Player_Naruto.h"
 #include "Camera_Free.h"
 #include "StaticModel.h"
@@ -12,6 +11,17 @@
 #include "Camera_Player.h"
 #include "Player_Sasuke.h"
 #include "Monster_WhiteZetsu.h"
+#include "MainLogo.h"
+#include "UI_NickName.h"
+#include "UI_NickNameInput.h"
+#include "BackGround_Lobby.h"
+#include "UI_TitleCloud.h"
+#include "UI_Title.h"
+#include "UI_TitleSymbol.h"
+#include "UI_PlayerWindow.h"
+#include "UI_PlayerWindowTitle.h"
+#include "UI_PlayerInfo.h"
+
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -63,6 +73,9 @@ _int CLoader::Loading()
 	case LEVEL_LOGO:
 		hr = Loading_For_Level_Logo();
 		break;
+	case LEVEL_LOBBY:
+		hr = Loading_For_Level_Lobby();
+		break;
 	case LEVEL_GAMEPLAY:
 		hr = Loading_For_Level_GamePlay();
 		break;
@@ -84,6 +97,14 @@ HRESULT CLoader::Loading_For_Level_Logo()
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_NickNameDialog"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/NickNameDialog.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_NickNameInput"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/NickNameInput.png"))))
+		return E_FAIL;
+
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 
@@ -94,6 +115,16 @@ HRESULT CLoader::Loading_For_Level_Logo()
 	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;
 	
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_NickNameDialog"), CUI_NickName::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_NickNameInput"), CUI_NickNameInput::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
+
 	Safe_Release(pGameInstance);
 
 	m_strLoading = TEXT("로딩 끝.");
@@ -165,6 +196,88 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	m_isFinished = true;
 
 	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_Lobby()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Lobby"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/BackGround/BackGround_Lobby.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_TitleCloud"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/TitleCloud_%d.png", 11))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Title"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Title.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_TitleSymbol"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/TitleSymbol.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Window"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Window.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_WindowTitle"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/WindowTitle.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_PlayerInfo"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/PlayerInfo.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_OtherPlayerInfo"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/OtherPlayerInfo.png"))))
+		return E_FAIL;
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+
+	/* For.GameObject */
+	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+	///* For.Prototype_GameObject_BackGround */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround_Lobby"), CBackGround_Lobby::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TitleCloud"), CUI_TitleCloud::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Title"), CUI_Title::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TitleSymbol"), CUI_TitleSymbol::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PlayerWindow"), CUI_PlayerWindow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PlayerWindowTitle"), CUI_PlayerWindowTitle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PlayerInfo"), CUI_PlayerInfo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
 
 	return S_OK;
 }

@@ -67,6 +67,7 @@ private:
 private:
 	HRESULT Initialize_Client();
 	HRESULT Ready_Prototype_Component();
+	HRESULT Ready_Prototype_Font();
 
 public:
 	static CMainApp* Create();

@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[14]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -80,6 +80,9 @@ extern S_LOGINDefaultTypeInternal _S_LOGIN_default_instance_;
 class S_MATRIX;
 struct S_MATRIXDefaultTypeInternal;
 extern S_MATRIXDefaultTypeInternal _S_MATRIX_default_instance_;
+class S_NICKNAME;
+struct S_NICKNAMEDefaultTypeInternal;
+extern S_NICKNAMEDefaultTypeInternal _S_NICKNAME_default_instance_;
 class S_OBJECTINFO;
 struct S_OBJECTINFODefaultTypeInternal;
 extern S_OBJECTINFODefaultTypeInternal _S_OBJECTINFO_default_instance_;
@@ -92,6 +95,9 @@ extern S_STATEDefaultTypeInternal _S_STATE_default_instance_;
 class S_TIME;
 struct S_TIMEDefaultTypeInternal;
 extern S_TIMEDefaultTypeInternal _S_TIME_default_instance_;
+class S_USERINFO;
+struct S_USERINFODefaultTypeInternal;
+extern S_USERINFODefaultTypeInternal _S_USERINFO_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::S_ANIMATION* Arena::CreateMaybeMessage<::Protocol::S_ANIMATION>(Arena*);
@@ -102,10 +108,12 @@ template<> ::Protocol::S_CREATE_OBJCECT* Arena::CreateMaybeMessage<::Protocol::S
 template<> ::Protocol::S_LEVEL_STATE* Arena::CreateMaybeMessage<::Protocol::S_LEVEL_STATE>(Arena*);
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
 template<> ::Protocol::S_MATRIX* Arena::CreateMaybeMessage<::Protocol::S_MATRIX>(Arena*);
+template<> ::Protocol::S_NICKNAME* Arena::CreateMaybeMessage<::Protocol::S_NICKNAME>(Arena*);
 template<> ::Protocol::S_OBJECTINFO* Arena::CreateMaybeMessage<::Protocol::S_OBJECTINFO>(Arena*);
 template<> ::Protocol::S_OPEN_LEVEL* Arena::CreateMaybeMessage<::Protocol::S_OPEN_LEVEL>(Arena*);
 template<> ::Protocol::S_STATE* Arena::CreateMaybeMessage<::Protocol::S_STATE>(Arena*);
 template<> ::Protocol::S_TIME* Arena::CreateMaybeMessage<::Protocol::S_TIME>(Arena*);
+template<> ::Protocol::S_USERINFO* Arena::CreateMaybeMessage<::Protocol::S_USERINFO>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
@@ -2148,6 +2156,284 @@ class S_COLLISION final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_NICKNAME final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_NICKNAME) */ {
+ public:
+  inline S_NICKNAME() : S_NICKNAME(nullptr) {}
+  ~S_NICKNAME() override;
+  explicit constexpr S_NICKNAME(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_NICKNAME(const S_NICKNAME& from);
+  S_NICKNAME(S_NICKNAME&& from) noexcept
+    : S_NICKNAME() {
+    *this = ::std::move(from);
+  }
+
+  inline S_NICKNAME& operator=(const S_NICKNAME& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_NICKNAME& operator=(S_NICKNAME&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_NICKNAME& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_NICKNAME* internal_default_instance() {
+    return reinterpret_cast<const S_NICKNAME*>(
+               &_S_NICKNAME_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    12;
+
+  friend void swap(S_NICKNAME& a, S_NICKNAME& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_NICKNAME* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_NICKNAME* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_NICKNAME* New() const final {
+    return new S_NICKNAME();
+  }
+
+  S_NICKNAME* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_NICKNAME>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_NICKNAME& from);
+  void MergeFrom(const S_NICKNAME& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_NICKNAME* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_NICKNAME";
+  }
+  protected:
+  explicit S_NICKNAME(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kStrNickNameFieldNumber = 1,
+  };
+  // string strNickName = 1;
+  void clear_strnickname();
+  const std::string& strnickname() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_strnickname(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_strnickname();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_strnickname();
+  void set_allocated_strnickname(std::string* strnickname);
+  private:
+  const std::string& _internal_strnickname() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_strnickname(const std::string& value);
+  std::string* _internal_mutable_strnickname();
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_NICKNAME)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strnickname_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S_USERINFO final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_USERINFO) */ {
+ public:
+  inline S_USERINFO() : S_USERINFO(nullptr) {}
+  ~S_USERINFO() override;
+  explicit constexpr S_USERINFO(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_USERINFO(const S_USERINFO& from);
+  S_USERINFO(S_USERINFO&& from) noexcept
+    : S_USERINFO() {
+    *this = ::std::move(from);
+  }
+
+  inline S_USERINFO& operator=(const S_USERINFO& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_USERINFO& operator=(S_USERINFO&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_USERINFO& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_USERINFO* internal_default_instance() {
+    return reinterpret_cast<const S_USERINFO*>(
+               &_S_USERINFO_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    13;
+
+  friend void swap(S_USERINFO& a, S_USERINFO& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_USERINFO* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_USERINFO* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_USERINFO* New() const final {
+    return new S_USERINFO();
+  }
+
+  S_USERINFO* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_USERINFO>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_USERINFO& from);
+  void MergeFrom(const S_USERINFO& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_USERINFO* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_USERINFO";
+  }
+  protected:
+  explicit S_USERINFO(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTUserFieldNumber = 1,
+  };
+  // repeated .Protocol.UserInfo tUser = 1;
+  int tuser_size() const;
+  private:
+  int _internal_tuser_size() const;
+  public:
+  void clear_tuser();
+  ::Protocol::UserInfo* mutable_tuser(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::UserInfo >*
+      mutable_tuser();
+  private:
+  const ::Protocol::UserInfo& _internal_tuser(int index) const;
+  ::Protocol::UserInfo* _internal_add_tuser();
+  public:
+  const ::Protocol::UserInfo& tuser(int index) const;
+  ::Protocol::UserInfo* add_tuser();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::UserInfo >&
+      tuser() const;
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_USERINFO)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::UserInfo > tuser_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -3374,9 +3660,102 @@ inline void S_COLLISION::set_benter(bool value) {
   // @@protoc_insertion_point(field_set:Protocol.S_COLLISION.bEnter)
 }
 
+// -------------------------------------------------------------------
+
+// S_NICKNAME
+
+// string strNickName = 1;
+inline void S_NICKNAME::clear_strnickname() {
+  strnickname_.ClearToEmpty();
+}
+inline const std::string& S_NICKNAME::strnickname() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NICKNAME.strNickName)
+  return _internal_strnickname();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void S_NICKNAME::set_strnickname(ArgT0&& arg0, ArgT... args) {
+ 
+ strnickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.S_NICKNAME.strNickName)
+}
+inline std::string* S_NICKNAME::mutable_strnickname() {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_NICKNAME.strNickName)
+  return _internal_mutable_strnickname();
+}
+inline const std::string& S_NICKNAME::_internal_strnickname() const {
+  return strnickname_.Get();
+}
+inline void S_NICKNAME::_internal_set_strnickname(const std::string& value) {
+  
+  strnickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* S_NICKNAME::_internal_mutable_strnickname() {
+  
+  return strnickname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* S_NICKNAME::release_strnickname() {
+  // @@protoc_insertion_point(field_release:Protocol.S_NICKNAME.strNickName)
+  return strnickname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void S_NICKNAME::set_allocated_strnickname(std::string* strnickname) {
+  if (strnickname != nullptr) {
+    
+  } else {
+    
+  }
+  strnickname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), strnickname,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_NICKNAME.strNickName)
+}
+
+// -------------------------------------------------------------------
+
+// S_USERINFO
+
+// repeated .Protocol.UserInfo tUser = 1;
+inline int S_USERINFO::_internal_tuser_size() const {
+  return tuser_.size();
+}
+inline int S_USERINFO::tuser_size() const {
+  return _internal_tuser_size();
+}
+inline ::Protocol::UserInfo* S_USERINFO::mutable_tuser(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_USERINFO.tUser)
+  return tuser_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::UserInfo >*
+S_USERINFO::mutable_tuser() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_USERINFO.tUser)
+  return &tuser_;
+}
+inline const ::Protocol::UserInfo& S_USERINFO::_internal_tuser(int index) const {
+  return tuser_.Get(index);
+}
+inline const ::Protocol::UserInfo& S_USERINFO::tuser(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_USERINFO.tUser)
+  return _internal_tuser(index);
+}
+inline ::Protocol::UserInfo* S_USERINFO::_internal_add_tuser() {
+  return tuser_.Add();
+}
+inline ::Protocol::UserInfo* S_USERINFO::add_tuser() {
+  // @@protoc_insertion_point(field_add:Protocol.S_USERINFO.tUser)
+  return _internal_add_tuser();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::UserInfo >&
+S_USERINFO::tuser() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_USERINFO.tUser)
+  return tuser_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

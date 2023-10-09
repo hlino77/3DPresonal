@@ -12,6 +12,7 @@ IMPLEMENT_SINGLETON(CServerSessionManager)
 CServerSessionManager::CServerSessionManager()
 	:m_fTimesync(3.0f)
 {
+	m_szNickName = L"";
 }
 
 void CServerSessionManager::Tick(_float fTimeDelta)

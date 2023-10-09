@@ -22,6 +22,8 @@ public:
 	void	Tick(_float fTimeDelta);
 
 
+
+
 public:
 	KEY_STATE GetKeyState(KEY _eKey) { return m_vecKey[(int)_eKey].eState; }
 	const POINT& GetMousePos() { return m_tMousePos; }

@@ -27,9 +27,13 @@ public:
 
 	const wstring	Get_CharacterName();
 	void			Set_CharacterName(const wstring& strName);
+
+	const wstring	Get_NickName();
+	void			Set_NickName(const wstring& strName);
 private:
 	LEVELSTATE	m_eLevelState;
 	wstring		m_strCharacter;
+	wstring		m_strNickName;
 	_uint		m_iPlayerID;
 };
 

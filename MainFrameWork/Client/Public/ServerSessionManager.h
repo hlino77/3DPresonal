@@ -39,6 +39,9 @@ public:
 
 	void				Set_NetworkDelay(_float fDelay) { m_fNetworkDelay = fDelay; }
 	_float				Get_NetworkDelay() { return m_fNetworkDelay; }
+
+	void				Set_NickName(const wstring& szNickName) { m_szNickName = szNickName; }
+	const wstring&		Get_NickName() { return m_szNickName; }
 private:
 	ServerSessionRef m_pServerSession;
 
@@ -55,6 +58,8 @@ private:
 
 	_float m_fNetworkDelay = 0.0f;
 	_float m_fTimesync;
+
+	wstring m_szNickName;
 
 public:
 	virtual void Free() override;

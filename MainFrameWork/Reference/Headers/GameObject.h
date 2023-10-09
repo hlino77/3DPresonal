@@ -56,6 +56,8 @@ public:
 
 	_bool					Is_Control() { return m_bControl; }
 
+	_bool					Is_Active() { return m_bActive; }
+	void					Set_Active(_bool bActive) { m_bActive = bActive; }
 
 	CGameObject*			Get_NearTarget() { return m_pNearTarget; }
 	void					Reset_NearTarget() { m_pNearTarget = nullptr; }
@@ -94,6 +96,8 @@ protected:
 	_bool				m_bControl = false;
 	_uint				m_iLayer = 0;
 
+
+	_bool				m_bActive = true;
 
 	atomic<Vec3>					m_vTargetPos;
 	atomic<Matrix>					m_matTargetWorld;

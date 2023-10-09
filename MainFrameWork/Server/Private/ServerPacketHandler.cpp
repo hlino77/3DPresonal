@@ -8,6 +8,8 @@
 #include "Struct.pb.h"
 #include "Protocol.pb.h"
 #include "ColliderSphere.h"
+#include "Level_Ready_Server.h"
+#include "LobbyUser_Server.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -241,5 +243,73 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 bool Handel_S_COLLISION_Server(PacketSessionRef& session, Protocol::S_COLLISION& pkt)
 {
 
+	return true;
+}
+
+bool Handel_S_NICKNAME_Server(PacketSessionRef& session, Protocol::S_NICKNAME& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	shared_ptr<CGameSession> pGameSession = dynamic_pointer_cast<CGameSession>(session);
+	pGameSession->Set_NickName(CAsUtils::ToWString(pkt.strnickname()));
+
+	
+	if (pGameInstance->Get_CurrLevelIndex() != LEVELID::LEVEL_READY)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	CLevel_Ready_Server* pLevel = dynamic_cast<CLevel_Ready_Server*>(pGameInstance->Get_CurrLevel());
+	
+	pLevel->Add_LobbyUser(pGameSession->Get_NickName());
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_USERINFO_Server(PacketSessionRef& session, Protocol::S_USERINFO& pkt)
+{
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_CurrLevelIndex() != LEVELID::LEVEL_LOBBY)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	CLevel_Ready_Server* pLevel = dynamic_cast<CLevel_Ready_Server*>(pGameInstance->Get_CurrLevel());
+
+	if (pLevel == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	auto& tUser = pkt.tuser(0);
+
+	wstring szNickName = CAsUtils::ToWString(tUser.strnickname());
+
+
+	CLobbyUser_Server* pUser = pLevel->Find_LobbyUser(szNickName);
+
+	if (pUser == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pUser->Set_Character(CAsUtils::ToWString(tUser.strcharacter()));
+	if (tUser.bready())
+		pUser->Set_Ready();
+
+
+	Safe_Release(pGameInstance);
 	return true;
 }

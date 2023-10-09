@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -64,11 +64,15 @@ extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
 class Time;
 struct TimeDefaultTypeInternal;
 extern TimeDefaultTypeInternal _Time_default_instance_;
+class UserInfo;
+struct UserInfoDefaultTypeInternal;
+extern UserInfoDefaultTypeInternal _UserInfo_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::BuffData* Arena::CreateMaybeMessage<::Protocol::BuffData>(Arena*);
 template<> ::Protocol::ObjectInfo* Arena::CreateMaybeMessage<::Protocol::ObjectInfo>(Arena*);
 template<> ::Protocol::Time* Arena::CreateMaybeMessage<::Protocol::Time>(Arena*);
+template<> ::Protocol::UserInfo* Arena::CreateMaybeMessage<::Protocol::UserInfo>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
@@ -585,6 +589,170 @@ class ObjectInfo final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
+// -------------------------------------------------------------------
+
+class UserInfo final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.UserInfo) */ {
+ public:
+  inline UserInfo() : UserInfo(nullptr) {}
+  ~UserInfo() override;
+  explicit constexpr UserInfo(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  UserInfo(const UserInfo& from);
+  UserInfo(UserInfo&& from) noexcept
+    : UserInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline UserInfo& operator=(const UserInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UserInfo& operator=(UserInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UserInfo& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const UserInfo* internal_default_instance() {
+    return reinterpret_cast<const UserInfo*>(
+               &_UserInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(UserInfo& a, UserInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(UserInfo* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UserInfo* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline UserInfo* New() const final {
+    return new UserInfo();
+  }
+
+  UserInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<UserInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const UserInfo& from);
+  void MergeFrom(const UserInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(UserInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.UserInfo";
+  }
+  protected:
+  explicit UserInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kStrNickNameFieldNumber = 1,
+    kStrCharacterFieldNumber = 2,
+    kBReadyFieldNumber = 3,
+  };
+  // string strNickName = 1;
+  void clear_strnickname();
+  const std::string& strnickname() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_strnickname(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_strnickname();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_strnickname();
+  void set_allocated_strnickname(std::string* strnickname);
+  private:
+  const std::string& _internal_strnickname() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_strnickname(const std::string& value);
+  std::string* _internal_mutable_strnickname();
+  public:
+
+  // string strCharacter = 2;
+  void clear_strcharacter();
+  const std::string& strcharacter() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_strcharacter(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_strcharacter();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_strcharacter();
+  void set_allocated_strcharacter(std::string* strcharacter);
+  private:
+  const std::string& _internal_strcharacter() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_strcharacter(const std::string& value);
+  std::string* _internal_mutable_strcharacter();
+  public:
+
+  // bool bReady = 3;
+  void clear_bready();
+  bool bready() const;
+  void set_bready(bool value);
+  private:
+  bool _internal_bready() const;
+  void _internal_set_bready(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.UserInfo)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strnickname_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strcharacter_;
+  bool bready_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
 // ===================================================================
 
 
@@ -885,9 +1053,125 @@ ObjectInfo::mutable_matworld() {
   return _internal_mutable_matworld();
 }
 
+// -------------------------------------------------------------------
+
+// UserInfo
+
+// string strNickName = 1;
+inline void UserInfo::clear_strnickname() {
+  strnickname_.ClearToEmpty();
+}
+inline const std::string& UserInfo::strnickname() const {
+  // @@protoc_insertion_point(field_get:Protocol.UserInfo.strNickName)
+  return _internal_strnickname();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void UserInfo::set_strnickname(ArgT0&& arg0, ArgT... args) {
+ 
+ strnickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.UserInfo.strNickName)
+}
+inline std::string* UserInfo::mutable_strnickname() {
+  // @@protoc_insertion_point(field_mutable:Protocol.UserInfo.strNickName)
+  return _internal_mutable_strnickname();
+}
+inline const std::string& UserInfo::_internal_strnickname() const {
+  return strnickname_.Get();
+}
+inline void UserInfo::_internal_set_strnickname(const std::string& value) {
+  
+  strnickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* UserInfo::_internal_mutable_strnickname() {
+  
+  return strnickname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* UserInfo::release_strnickname() {
+  // @@protoc_insertion_point(field_release:Protocol.UserInfo.strNickName)
+  return strnickname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void UserInfo::set_allocated_strnickname(std::string* strnickname) {
+  if (strnickname != nullptr) {
+    
+  } else {
+    
+  }
+  strnickname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), strnickname,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.UserInfo.strNickName)
+}
+
+// string strCharacter = 2;
+inline void UserInfo::clear_strcharacter() {
+  strcharacter_.ClearToEmpty();
+}
+inline const std::string& UserInfo::strcharacter() const {
+  // @@protoc_insertion_point(field_get:Protocol.UserInfo.strCharacter)
+  return _internal_strcharacter();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void UserInfo::set_strcharacter(ArgT0&& arg0, ArgT... args) {
+ 
+ strcharacter_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.UserInfo.strCharacter)
+}
+inline std::string* UserInfo::mutable_strcharacter() {
+  // @@protoc_insertion_point(field_mutable:Protocol.UserInfo.strCharacter)
+  return _internal_mutable_strcharacter();
+}
+inline const std::string& UserInfo::_internal_strcharacter() const {
+  return strcharacter_.Get();
+}
+inline void UserInfo::_internal_set_strcharacter(const std::string& value) {
+  
+  strcharacter_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* UserInfo::_internal_mutable_strcharacter() {
+  
+  return strcharacter_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* UserInfo::release_strcharacter() {
+  // @@protoc_insertion_point(field_release:Protocol.UserInfo.strCharacter)
+  return strcharacter_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void UserInfo::set_allocated_strcharacter(std::string* strcharacter) {
+  if (strcharacter != nullptr) {
+    
+  } else {
+    
+  }
+  strcharacter_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), strcharacter,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.UserInfo.strCharacter)
+}
+
+// bool bReady = 3;
+inline void UserInfo::clear_bready() {
+  bready_ = false;
+}
+inline bool UserInfo::_internal_bready() const {
+  return bready_;
+}
+inline bool UserInfo::bready() const {
+  // @@protoc_insertion_point(field_get:Protocol.UserInfo.bReady)
+  return _internal_bready();
+}
+inline void UserInfo::_internal_set_bready(bool value) {
+  
+  bready_ = value;
+}
+inline void UserInfo::set_bready(bool value) {
+  _internal_set_bready(value);
+  // @@protoc_insertion_point(field_set:Protocol.UserInfo.bReady)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

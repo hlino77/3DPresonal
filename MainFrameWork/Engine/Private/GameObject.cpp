@@ -11,17 +11,19 @@ CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext,
 	, m_strObjectTag(strObjectTag)
 	, m_iObjType(iObjType)
 	, m_vTargetPos(Vec3(0.0f, 0.0f, 0.0f))
+	, m_bActive(true)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
 
-CGameObject::CGameObject(const CGameObject & rhs)
+CGameObject::CGameObject(const CGameObject& rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
 	, m_strObjectTag(rhs.m_strObjectTag)
 	, m_iObjType(rhs.m_iObjType)
 	, m_matTargetWorld(rhs.m_matTargetWorld.load())
+	, m_bActive(rhs.m_bActive)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);

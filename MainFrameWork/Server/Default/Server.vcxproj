@@ -161,6 +161,7 @@
     <ClCompile Include="..\Private\Level_Loading_Server.cpp" />
     <ClCompile Include="..\Private\Level_Ready_Server.cpp" />
     <ClCompile Include="..\Private\Loader_Server.cpp" />
+    <ClCompile Include="..\Private\LobbyUser_Server.cpp" />
     <ClCompile Include="..\Private\MainApp_Server.cpp" />
     <ClCompile Include="..\Private\Monster_Server.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu_Server.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="..\Public\Level_Loading_Server.h" />
     <ClInclude Include="..\Public\Level_Ready_Server.h" />
     <ClInclude Include="..\Public\Loader_Server.h" />
+    <ClInclude Include="..\Public\LobbyUser_Server.h" />
     <ClInclude Include="..\Public\MainApp_Server.h" />
     <ClInclude Include="..\Public\Monster_Server.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu_Server.h" />

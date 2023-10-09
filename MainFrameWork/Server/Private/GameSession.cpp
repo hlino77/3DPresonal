@@ -10,6 +10,12 @@ CGameSession::CGameSession()
 void CGameSession::OnConnected()
 {
 	CGameSessionManager::GetInstance()->Add(static_pointer_cast<CGameSession>(shared_from_this()));
+
+	Protocol::S_OPEN_LEVEL pkt;
+	pkt.set_ilevelid((uint64)LEVELID::LEVEL_LOBBY);
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	Send(pSendBuffer);
 }
 
 void CGameSession::OnDisconnected()
@@ -63,4 +69,16 @@ void CGameSession::Set_CharacterName(const wstring& strName)
 {
 	WRITE_LOCK
 	m_strCharacter = strName;
+}
+
+const wstring CGameSession::Get_NickName()
+{
+	READ_LOCK
+	return m_strNickName;
+}
+
+void CGameSession::Set_NickName(const wstring& strName)
+{
+	WRITE_LOCK
+	m_strNickName = strName;
 }

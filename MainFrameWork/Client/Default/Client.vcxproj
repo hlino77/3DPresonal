@@ -166,7 +166,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\public\BackGround.h" />
+    <ClInclude Include="..\Public\BackGround_Loading.h" />
+    <ClInclude Include="..\Public\BackGround_Lobby.h" />
+    <ClInclude Include="..\Public\Level_Lobby.h" />
+    <ClInclude Include="..\Public\LobbyUser.h" />
+    <ClInclude Include="..\Public\MainLogo.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Camera_Player.h" />
     <ClInclude Include="..\Public\ClientPacketHandler.h" />
@@ -203,13 +207,26 @@
     <ClInclude Include="..\Public\State_WhiteZetsu_Idle.h" />
     <ClInclude Include="..\Public\StaticModel.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
+    <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_NickName.h" />
+    <ClInclude Include="..\Public\UI_NickNameInput.h" />
+    <ClInclude Include="..\Public\UI_PlayerInfo.h" />
+    <ClInclude Include="..\Public\UI_PlayerWindow.h" />
+    <ClInclude Include="..\Public\UI_PlayerWindowTitle.h" />
+    <ClInclude Include="..\Public\UI_Title.h" />
+    <ClInclude Include="..\Public\UI_TitleCloud.h" />
+    <ClInclude Include="..\Public\UI_TitleSymbol.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\private\BackGround.cpp" />
+    <ClCompile Include="..\Private\BackGround_Loading.cpp" />
+    <ClCompile Include="..\Private\BackGround_Lobby.cpp" />
+    <ClCompile Include="..\Private\Level_Lobby.cpp" />
+    <ClCompile Include="..\Private\LobbyUser.cpp" />
+    <ClCompile Include="..\Private\MainLogo.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Player.cpp" />
     <ClCompile Include="..\Private\ClientPacketHandler.cpp" />
@@ -254,6 +271,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_NickName.cpp" />
+    <ClCompile Include="..\Private\UI_NickNameInput.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerInfo.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerWindow.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerWindowTitle.cpp" />
+    <ClCompile Include="..\Private\UI_Title.cpp" />
+    <ClCompile Include="..\Private\UI_TitleCloud.cpp" />
+    <ClCompile Include="..\Private\UI_TitleSymbol.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

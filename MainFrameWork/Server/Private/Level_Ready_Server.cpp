@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Level_Loading_Server.h"
 #include "GameSessionManager.h"
+#include "LobbyUser_Server.h"
+#include "Server_Defines.h"
+#include "AsUtils.h"
 
 CLevel_Ready_Server::CLevel_Ready_Server()
 	: CLevel(nullptr, nullptr)
@@ -19,14 +22,25 @@ HRESULT CLevel_Ready_Server::Initialize()
 
 HRESULT CLevel_Ready_Server::Tick(_float fTimeDelta)
 {
+	//cout << m_Users.size() << endl;
+
+
+	m_fUserInfoSendTime += fTimeDelta;
+
+	if (m_fUserInfoSendTime >= 0.1f)
+	{
+		m_fUserInfoSendTime = 0.0f;
+		Broadcast_UserInfo();
+	}
+
 	return S_OK;
 }
 
 HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 {
-	_uint iUserCount = CGameSessionManager::GetInstance()->Get_SessionCount();
+	/*_uint iUserCount = CGameSessionManager::GetInstance()->Get_SessionCount();
 
-	if (iUserCount == 2)
+	if (iUserCount == 1)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
@@ -41,9 +55,28 @@ HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 		CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 		Safe_Release(pGameInstance);
-	}
+	}*/
 
 	return S_OK;
+}
+
+void CLevel_Ready_Server::Add_LobbyUser(const wstring& szLobbyUser)
+{
+	m_Users.push_back(new CLobbyUser_Server(szLobbyUser));
+}
+
+CLobbyUser_Server* CLevel_Ready_Server::Find_LobbyUser(const wstring& szNickName)
+{
+	if (m_Users.empty())
+		return nullptr;
+
+	for (auto& User : m_Users)
+	{
+		if(User->Get_NickName() == szNickName)
+			return User;
+	}
+
+	return nullptr;
 }
 
 HRESULT CLevel_Ready_Server::Ready_Layer_BackGround()
@@ -52,6 +85,28 @@ HRESULT CLevel_Ready_Server::Ready_Layer_BackGround()
 	Safe_AddRef(pGameInstance);
 
 	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Ready_Server::Broadcast_UserInfo()
+{
+	if (m_Users.empty())
+		return S_OK;
+
+	Protocol::S_USERINFO pkt;
+
+	for (auto& User : m_Users)
+	{
+		auto tUser = pkt.add_tuser();
+		tUser->set_strnickname(CAsUtils::ToString(User->Get_NickName()));
+		tUser->set_strcharacter(CAsUtils::ToString(User->Get_Character()));
+		tUser->set_bready(User->Is_Ready());
+	}
+	
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+	
 
 	return S_OK;
 }
@@ -72,4 +127,11 @@ CLevel_Ready_Server* CLevel_Ready_Server::Create()
 void CLevel_Ready_Server::Free()
 {
 	__super::Free();
+
+
+	for (auto& User : m_Users)
+	{
+		Safe_Delete(User);
+	}
+	m_Users.clear();
 }

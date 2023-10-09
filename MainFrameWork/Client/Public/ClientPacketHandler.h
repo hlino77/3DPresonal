@@ -20,6 +20,8 @@ enum : uint16
 	PKT_S_STATE = 10,
 	PKT_S_COLLIDERSTATE = 11,
 	PKT_S_COLLISION = 12,
+	PKT_S_NICKNAME = 13,
+	PKT_S_USERINFO = 14,
 };
 
 // TODO
@@ -35,6 +37,9 @@ bool Handel_S_OBJECTINFO_Client(PacketSessionRef& session, Protocol::S_OBJECTINF
 bool Handel_S_STATE_Client(PacketSessionRef& session, Protocol::S_STATE& pkt);
 bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLIDERSTATE& pkt);
 bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION& pkt);
+bool Handel_S_NICKNAME_Client(PacketSessionRef& session, Protocol::S_NICKNAME& pkt);
+bool Handel_S_USERINFO_Client(PacketSessionRef& session, Protocol::S_USERINFO& pkt);
+
 
 
 class CClientPacketHandler
@@ -57,6 +62,8 @@ public:
 		GPacketHandler[PKT_S_STATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_STATE>(Handel_S_STATE_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_COLLIDERSTATE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_COLLIDERSTATE>(Handel_S_COLLIDERSTATE_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_COLLISION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_COLLISION>(Handel_S_COLLISION_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_NICKNAME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_NICKNAME>(Handel_S_NICKNAME_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_USERINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_USERINFO>(Handel_S_USERINFO_Client, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -78,6 +85,8 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_STATE& pkt) { return MakeSendBuffer(pkt, PKT_S_STATE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_COLLIDERSTATE& pkt) { return MakeSendBuffer(pkt, PKT_S_COLLIDERSTATE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_COLLISION& pkt) { return MakeSendBuffer(pkt, PKT_S_COLLISION); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_NICKNAME& pkt) { return MakeSendBuffer(pkt, PKT_S_NICKNAME); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_USERINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_USERINFO); }
 
 
 private:

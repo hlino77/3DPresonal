@@ -9,6 +9,8 @@
 #include "AsUtils.h"
 #include "Monster.h"
 #include "ColliderSphere.h"
+#include "Level_Lobby.h"
+#include "LobbyUser.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -59,11 +61,18 @@ bool Handel_S_OPENLEVEL_Client(PacketSessionRef& session, Protocol::S_OPEN_LEVEL
 	{
 		if ((_uint)LEVELID::LEVEL_LOADING != pGameInstance->Get_CurrLevelIndex())
 		{
-			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(pGameInstance->Get_Device(), pGameInstance->Get_Context(), (LEVELID)pkt.ilevelid()))))
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(pGameInstance->Get_Device(), pGameInstance->Get_Context(), (LEVELID)pkt.ilevelid(), L"Loading"))))
 			{
 				Safe_Release(pGameInstance);
 				return true;
 			}
+
+			CServerSessionManager::GetInstance()->Get_ServerSession()->Set_LevelState(LEVELSTATE::LOADING);
+			Protocol::S_LEVEL_STATE pkt;
+			pkt.set_ilevelstate((_uint)LEVELSTATE::LOADING);
+
+			SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+			CServerSessionManager::GetInstance()->Send(pSendBuffer);
 			break;
 		}
 	}
@@ -333,5 +342,66 @@ bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION&
 
 	Safe_Release(pGameInstance);
 
+	return true;
+}
+
+bool Handel_S_NICKNAME_Client(PacketSessionRef& session, Protocol::S_NICKNAME& pkt)
+{
+
+
+	return true;
+}
+
+bool Handel_S_USERINFO_Client(PacketSessionRef& session, Protocol::S_USERINFO& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_CurrLevelIndex() != LEVELID::LEVEL_LOBBY)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+	
+
+	CLevel_Lobby* pLevel = dynamic_cast<CLevel_Lobby*>(pGameInstance->Get_CurrLevel());
+
+	if (pLevel == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	for (_uint i = 0; i < pkt.tuser_size(); ++i)
+	{
+		auto& tUser = pkt.tuser(i);
+
+		wstring szNickName = CAsUtils::ToWString(tUser.strnickname());
+		
+		CLobbyUser* pUser = pLevel->Find_LobbyUser(szNickName);
+
+		if (pUser == nullptr)
+		{
+			pLevel->Add_LobbyUser(szNickName);
+			pUser = pLevel->Find_LobbyUser(szNickName);
+			pUser->Set_Character(CAsUtils::ToWString(tUser.strcharacter()));
+			if (tUser.bready())
+				pUser->Set_Ready();
+		}
+
+		if (pUser->Get_NickName() == CServerSessionManager::GetInstance()->Get_NickName())
+			continue;
+		else
+		{
+			pUser->Set_Character(CAsUtils::ToWString(tUser.strcharacter()));
+			if (tUser.bready())
+				pUser->Set_Ready();
+		}
+		
+	}
+
+
+	Safe_Release(pGameInstance);
 	return true;
 }

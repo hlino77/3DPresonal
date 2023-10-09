@@ -8,6 +8,7 @@
 #include "Light_Manager.h"
 #include "Key_Manager.h"
 #include "Utils.h"
+#include "Text_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -22,6 +23,7 @@ CGameInstance::CGameInstance()
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pLight_Manager(CLight_Manager::GetInstance())
 	, m_pKey_Manager(CKey_Manager::GetInstance())
+	, m_pText_Manager(CText_Manager::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -32,6 +34,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pLight_Manager);
 	Safe_AddRef(m_pKey_Manager);
+	Safe_AddRef(m_pText_Manager);
 
 	Safe_AddRef(m_pUtilities);
 }
@@ -63,6 +66,12 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayerType,
 
 	if (FAILED(m_pInput_Device->Initialize(hInst, hWnd)))
 		return E_FAIL;
+
+
+	if (FAILED(m_pText_Manager->Reserve_Manager(*ppDevice, *ppContext)))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -365,6 +374,26 @@ const POINT& CGameInstance::GetMousePos()
 {
 
 	return POINT();
+}
+
+void CGameInstance::AddFont(const wstring& szTextName, const wstring& szFontPath)
+{
+	m_pText_Manager->AddFont(szTextName, szFontPath);
+}
+
+void CGameInstance::DrawFont(const wstring& szTextName, const wstring& szString, const Vec2& vPosition, const Vec4& vColor, const _float& fRotation, const Vec2& vOrigin, const Vec2& vScale)
+{
+	m_pText_Manager->DrawFont(szTextName, szString, vPosition, vColor, fRotation, vOrigin, vScale);
+}
+
+Vec2 CGameInstance::MeasureString(const wstring& szTextName, const wstring& szString)
+{
+	return m_pText_Manager->MeasureString(szTextName, szString);
+}
+
+void CGameInstance::InputText(wstring& szInputText)
+{
+	m_pText_Manager->InputText(szInputText);
 }
 
 

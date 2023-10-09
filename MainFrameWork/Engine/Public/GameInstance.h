@@ -92,6 +92,12 @@ public:
 	const POINT& GetMousePos();
 
 
+public:
+	void			AddFont(const wstring & szTextName, const wstring & szFontPath);
+	void			DrawFont(const wstring & szTextName, const wstring & szString, const Vec2 & vPosition, const Vec4 & vColor, const _float & fRotation, const Vec2 & vOrigin, const Vec2 & vScale);
+	Vec2			MeasureString(const wstring & szTextName, const wstring & szString);
+	void			InputText(wstring& szInputText);
+
 private:
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -101,11 +107,10 @@ private:
 	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
-
+	class CText_Manager*			m_pText_Manager = { nullptr };
 
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CUtils*					m_pUtilities = { nullptr };
-
 public:
 	static void Release_Engine();
 	virtual void Free() override;

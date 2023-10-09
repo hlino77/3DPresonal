@@ -24,7 +24,7 @@ enum class KEY
 	A, S, D, F, G, H, J, K, L,
 	Z, X, C, V, B, N, M,
 	ALT, CTRL, SHIFT,
-	SPACE, ENTER, ESC,
+	SPACE, ENTER, ESC, BACK,
 	LBTN, RBTN,
 	TYPE_END
 };

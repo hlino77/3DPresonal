@@ -25,7 +25,7 @@ void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && pGameObject->Is_Active())
 			pGameObject->Tick(fTimeDelta);
 	}
 }
@@ -34,9 +34,18 @@ void CLayer::LateTick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && pGameObject->Is_Active())
 			pGameObject->LateTick(fTimeDelta);
 	}
+}
+
+void CLayer::Clear()
+{
+	WRITE_LOCK
+	for (auto& pGameObject : m_GameObjects)
+		Safe_Release(pGameObject);
+
+	m_GameObjects.clear();
 }
 
 CGameObject* CLayer::Find_GameObject(const wstring& strObjectTag)
@@ -109,8 +118,5 @@ void CLayer::Free()
 {
 	__super::Free();
 
-	for (auto& pGameObject : m_GameObjects)
-		Safe_Release(pGameObject);
-
-	m_GameObjects.clear();
+	Clear();
 }
