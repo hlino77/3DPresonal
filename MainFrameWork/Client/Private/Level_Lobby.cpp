@@ -454,6 +454,11 @@ void CLevel_Lobby::Update_PlayerInfo()
 
 void CLevel_Lobby::Update_CharacterSelect()
 {
+	CLobbyUser* pLobbyUser = Find_LobbyUser(CServerSessionManager::GetInstance()->Get_NickName());
+	if (pLobbyUser != nullptr && pLobbyUser->Is_Ready())
+		return;
+
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -469,6 +474,20 @@ void CLevel_Lobby::Update_CharacterSelect()
 
 	if (!m_CharacterSelect.empty())
 	{
+		if (KEY_TAP(KEY::ENTER))
+		{
+			pLobbyUser->Set_Ready();
+
+			Protocol::S_CHARACTER_NAME pkt;
+			pkt.set_strname(CAsUtils::ToString(m_CharacterSelect[m_iCharacterIndex]->Get_CharacterName()));
+
+			SendBufferRef sendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+			CServerSessionManager::GetInstance()->Get_ServerSession()->Send(sendBuffer);
+		}
+
+
+
+
 		if (KEY_TAP(KEY::RIGHT_ARROW))
 		{
 			if (m_iCharacterIndex < m_iMaxCharacterIndex)

@@ -38,9 +38,14 @@ HRESULT CLevel_Ready_Server::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 {
-	/*_uint iUserCount = CGameSessionManager::GetInstance()->Get_SessionCount();
+	_bool bAllReady = false;
 
-	if (iUserCount == 1)
+	for (auto& User : m_Users)
+	{
+		bAllReady = User->Is_Ready();
+	}
+
+	if (bAllReady)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
@@ -55,7 +60,7 @@ HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 		CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 		Safe_Release(pGameInstance);
-	}*/
+	}
 
 	return S_OK;
 }

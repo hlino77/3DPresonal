@@ -16,12 +16,6 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
-	Protocol::S_CHARACTER_NAME pkt;
-	pkt.set_strname("Sasuke");
-
-	SendBufferRef sendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
-	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(sendBuffer);
-
 	Send_LevelState(LEVELSTATE::INITREADY);
 	Wait_ServerLevelState(LEVELSTATE::INITSTART);
 

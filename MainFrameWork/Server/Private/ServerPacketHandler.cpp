@@ -276,7 +276,7 @@ bool Handel_S_USERINFO_Server(PacketSessionRef& session, Protocol::S_USERINFO& p
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (pGameInstance->Get_CurrLevelIndex() != LEVELID::LEVEL_LOBBY)
+	if (pGameInstance->Get_CurrLevelIndex() != LEVELID::LEVEL_READY)
 	{
 		Safe_Release(pGameInstance);
 		return true;
