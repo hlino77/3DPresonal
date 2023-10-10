@@ -54,6 +54,15 @@ HRESULT CLevel_Lobby::Tick(_float fTimeDelta)
 	Update_PlayerInfo();
 	Update_CharacterSelect();
 
+
+	m_fPlayerInfoSendTime += fTimeDelta;
+
+	if (m_fPlayerInfoSendTime >= 0.05f)
+	{
+		m_fPlayerInfoSendTime = 0.0f;
+		Send_UserInfo();
+	}
+
 	return S_OK;
 }
 
@@ -391,6 +400,26 @@ void CLevel_Lobby::Wait_ServerLevelState(LEVELSTATE eState)
 		if (ServerSession->Get_LevelState() == eState)
 			break;
 	}
+}
+
+void CLevel_Lobby::Send_UserInfo()
+{
+	CLobbyUser* pLobbyUser = Find_LobbyUser(CServerSessionManager::GetInstance()->Get_NickName());
+
+	if (pLobbyUser == nullptr)
+		return;
+
+	Protocol::S_USERINFO pkt;
+
+	auto tUser = pkt.add_tuser();
+
+	tUser->set_bready(pLobbyUser->Is_Ready());
+	tUser->set_strnickname(CAsUtils::ToString(pLobbyUser->Get_NickName()));
+	tUser->set_strcharacter(CAsUtils::ToString(pLobbyUser->Get_Character()));
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
 void CLevel_Lobby::Update_PlayerInfo()

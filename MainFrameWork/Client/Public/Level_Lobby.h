@@ -35,7 +35,7 @@ public:
 private:
 	void	Send_LevelState(LEVELSTATE eState);
 	void	Wait_ServerLevelState(LEVELSTATE eState);
-
+	void	Send_UserInfo();
 
 	void	Update_PlayerInfo();
 	void	Update_CharacterSelect();
@@ -50,6 +50,9 @@ private:
 
 	_uint m_iCharacterIndex = 0;
 	_uint m_iMaxCharacterIndex = 1;
+
+
+	_float m_fPlayerInfoSendTime;
 
 public:
 	static class CLevel_Lobby* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
