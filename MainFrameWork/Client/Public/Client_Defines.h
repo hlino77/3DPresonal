@@ -52,5 +52,5 @@ using namespace Client;
 
 
 
-#define SERVER_IP		L"192.168.1.5"
+#define SERVER_IP		L"192.168.1.4"
 #define SERVER_PORT		7777

@@ -2,7 +2,7 @@
 #include "UI_PlayerInfo.h"
 #include "GameInstance.h"
 #include "ServerSessionManager.h"
-
+#include "UI_CharacterSelect.h"
 
 CUI_PlayerInfo::CUI_PlayerInfo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI(pDevice, pContext)
@@ -52,6 +52,18 @@ HRESULT CUI_PlayerInfo::Initialize(void* pArg)
 	m_ProjMatrix = XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
 
+	//CharacterTexture
+	m_fTextureSizeX = 93.f;
+	m_fTextureSizeY = 85.f;
+	m_fTextureX = m_fX - 109.f;
+	m_fTextureY = m_fY;
+
+
+	m_pTextureTransform->Set_Scale(Vec3(m_fTextureSizeX, m_fTextureSizeY, 1.f));
+	m_pTextureTransform->Set_State(CTransform::STATE_POSITION,
+		Vec3(m_fTextureX - g_iWinSizeX * 0.5f, -m_fTextureY + g_iWinSizeY * 0.5f, m_vUITargetPos.z - 0.01f));
+
+
 	m_fMoveSpeed = 200.0f;
 
 	m_fAlpha = 0.0f;
@@ -77,6 +89,8 @@ HRESULT CUI_PlayerInfo::Render()
 
 	if (m_eState == UISTATE::TICK)
 		Render_String();
+		
+	Render_CharacterTexture();
 
 	return S_OK;
 }
@@ -85,6 +99,16 @@ void CUI_PlayerInfo::Appear()
 {
 	m_bActive = true;
 	m_eState = UISTATE::APPEAR;
+}
+
+void CUI_PlayerInfo::Set_TextureIndex(const wstring& szCharacterName)
+{
+	if (szCharacterName == L"Naruto")
+		m_iTextureIndex = 1;
+	else if (szCharacterName == L"Sasuke")
+		m_iTextureIndex = 3;
+	else
+		m_iTextureIndex = 0;
 }
 
 void CUI_PlayerInfo::UI_AppearTick(_float fTimeDelta)
@@ -105,66 +129,20 @@ void CUI_PlayerInfo::UI_AppearTick(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		Vec3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, m_vUITargetPos.z));
+
+	m_fTextureX = m_fX - 109.f;
+	m_fTextureY = m_fY;
+
+
+	m_pTextureTransform->Set_Scale(Vec3(m_fTextureSizeX, m_fTextureSizeY, 1.f));
+	m_pTextureTransform->Set_State(CTransform::STATE_POSITION,
+		Vec3(m_fTextureX - g_iWinSizeX * 0.5f, -m_fTextureY + g_iWinSizeY * 0.5f, m_vUITargetPos.z - 0.01f));
+
 }
 
 void CUI_PlayerInfo::UI_Tick(_float fTimeDelta)
 {
-
-	if (KEY_TAP(KEY::LEFT_ARROW))
-	{
-		m_fX -= 1.0f;
-	}
-
-	if (KEY_TAP(KEY::RIGHT_ARROW))
-	{
-		m_fX += 1.0f;
-	}
-
-	if (KEY_TAP(KEY::UP_ARROW))
-	{
-		m_fY -= 1.0f;
-	}
-
-	if (KEY_TAP(KEY::DOWN_ARROW))
-	{
-		m_fY += 1.0f;
-	}
-
-	if (KEY_TAP(KEY::U))
-	{
-		m_fSizeX -= 1.0f;
-	}
-
-	if (KEY_TAP(KEY::I))
-	{
-		m_fSizeX += 1.0f;
-	}
-
-	if (KEY_TAP(KEY::O))
-	{
-		m_fSizeY -= 1.0f;
-	}
-
-	if (KEY_TAP(KEY::P))
-	{
-		m_fSizeY += 1.0f;
-	}
-
-
-	if (KEY_TAP(KEY::Y))
-	{
-		cout << "Pos : " << m_fX << " " << m_fY << endl;
-		cout << "Size : " << m_fSizeX << " " << m_fSizeY << endl;
- 	}
-
-
-	m_pTransformCom->Set_Scale(Vec3(m_fSizeX, m_fSizeY, 1.f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		Vec3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, m_vUITargetPos.z));
-
-
-
-
+	
 }
 
 void CUI_PlayerInfo::UI_DisappearTick(_float fTimeDelta)
@@ -191,6 +169,22 @@ HRESULT CUI_PlayerInfo::Ready_Components()
 			return E_FAIL;
 	}
 
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Character"),
+		TEXT("Com_CharacterTexture"), (CComponent**)&m_pCharacterTexture)))
+		return E_FAIL;
+
+	CTransform::tagTransformDesc		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof TransformDesc);
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		TEXT("Com_CharacterTransform"), (CComponent**)&m_pTextureTransform, &TransformDesc)))
+		return E_FAIL;
+
+
+
 	
 	return S_OK;
 }
@@ -214,6 +208,25 @@ void CUI_PlayerInfo::Render_String()
 	CGameInstance::GetInstance()->DrawFont(L"125", m_szNickName, vPos, Vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
 }
 
+HRESULT CUI_PlayerInfo::Render_CharacterTexture()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTextureTransform->Get_WorldMatrix())))
+		return S_OK;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
+
+	m_pCharacterTexture->Set_SRV(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex);
+
+	m_pShaderCom->Begin(0);
+
+	m_pVIBufferCom->Render();
+}
 
 
 

@@ -21,6 +21,7 @@
 #include "UI_PlayerWindow.h"
 #include "UI_PlayerWindowTitle.h"
 #include "UI_PlayerInfo.h"
+#include "UI_CharacterSelect.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -242,6 +243,13 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/OtherPlayerInfo.png"))))
 		return E_FAIL;
 
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Character"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Character_%d.png", 5))))
+		return E_FAIL;
+
+
+
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 
@@ -273,6 +281,10 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PlayerInfo"), CUI_PlayerInfo::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CharacterSelect"), CUI_CharacterSelect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	Safe_Release(pGameInstance);
 

@@ -208,6 +208,7 @@
     <ClInclude Include="..\Public\StaticModel.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
     <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_CharacterSelect.h" />
     <ClInclude Include="..\Public\UI_NickName.h" />
     <ClInclude Include="..\Public\UI_NickNameInput.h" />
     <ClInclude Include="..\Public\UI_PlayerInfo.h" />
@@ -272,6 +273,7 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_CharacterSelect.cpp" />
     <ClCompile Include="..\Private\UI_NickName.cpp" />
     <ClCompile Include="..\Private\UI_NickNameInput.cpp" />
     <ClCompile Include="..\Private\UI_PlayerInfo.cpp" />

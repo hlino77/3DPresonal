@@ -38,13 +38,18 @@ private:
 
 
 	void	Update_PlayerInfo();
-
+	void	Update_CharacterSelect();
+	void	Make_CharacterSelect();
 
 
 
 private:
 	vector<class CLobbyUser*> m_Users;
 	vector<class CUI_PlayerInfo*> m_PlayerInfo;
+	vector<class CUI_CharacterSelect*> m_CharacterSelect;
+
+	_uint m_iCharacterIndex = 0;
+	_uint m_iMaxCharacterIndex = 1;
 
 public:
 	static class CLevel_Lobby* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

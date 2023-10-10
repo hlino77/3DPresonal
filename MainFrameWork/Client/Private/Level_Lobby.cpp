@@ -12,6 +12,7 @@
 #include "UI_TitleCloud.h"
 #include "UI_PlayerInfo.h"
 #include "UI_PlayerWindowTitle.h"
+#include "UI_CharacterSelect.h"
 
 CLevel_Lobby::CLevel_Lobby(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -51,6 +52,7 @@ HRESULT CLevel_Lobby::Initialize()
 HRESULT CLevel_Lobby::Tick(_float fTimeDelta)
 {
 	Update_PlayerInfo();
+	Update_CharacterSelect();
 
 	return S_OK;
 }
@@ -160,6 +162,7 @@ HRESULT CLevel_Lobby::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 
 	if (nullptr == pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_PlayerWindowTitle")))
 		return E_FAIL;
+
 
 
 	Safe_Release(pGameInstance);
@@ -392,20 +395,154 @@ void CLevel_Lobby::Wait_ServerLevelState(LEVELSTATE eState)
 
 void CLevel_Lobby::Update_PlayerInfo()
 {
-	CUI_PlayerWindowTitle* pWindowTitle = dynamic_cast<CUI_PlayerWindowTitle*>(CGameInstance::GetInstance()->
-		Find_GameObejct(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"PlayerWindowTitle"));
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CUI_PlayerWindowTitle* pWindowTitle = dynamic_cast<CUI_PlayerWindowTitle*>(pGameInstance->
+		Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"PlayerWindowTitle"));
 	
 	if (pWindowTitle->Get_UIState() != CUI::UISTATE::TICK)
 		return;
 
-
+	_uint iIndex = 0;
 	for (auto& PlayerInfo : m_PlayerInfo)
 	{
 		if (PlayerInfo->Is_Active())
-			continue;
+		{
+			if (PlayerInfo->Get_UIState() == CUI::UISTATE::TICK)
+			{
+				PlayerInfo->Set_TextureIndex(m_Users[iIndex]->Get_Character());
+			}
+		}
+		else
+			PlayerInfo->Appear();
 
-		PlayerInfo->Appear();
+		++iIndex;
 	}
+
+	Safe_Release(pGameInstance);
+}
+
+void CLevel_Lobby::Update_CharacterSelect()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	wstring szUIName = L"PlayerInfo_" + CServerSessionManager::GetInstance()->Get_NickName();
+
+	CUI_PlayerInfo* pPlayerInfo = dynamic_cast<CUI_PlayerInfo*>(pGameInstance->
+		Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, szUIName));
+
+	if (pPlayerInfo == nullptr || pPlayerInfo->Get_UIState() != CUI::UISTATE::TICK)
+		return;
+
+
+
+	if (!m_CharacterSelect.empty())
+	{
+		if (KEY_TAP(KEY::RIGHT_ARROW))
+		{
+			if (m_iCharacterIndex < m_iMaxCharacterIndex)
+			{
+				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(false);
+				++m_iCharacterIndex;
+				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
+			}
+		}
+
+
+		if (KEY_TAP(KEY::LEFT_ARROW))
+		{
+			if (m_iCharacterIndex > 0)
+			{
+				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(false);
+				--m_iCharacterIndex;
+				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
+			}
+		}
+
+
+		return;
+	}
+	else
+		Make_CharacterSelect();
+
+	
+
+	Safe_Release(pGameInstance);
+}
+
+void CLevel_Lobby::Make_CharacterSelect()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	{
+		CUI_CharacterSelect::CharacterUI tCharacterUI;
+
+		tCharacterUI.bSelected = true;
+		tCharacterUI.iIndex = 0;
+		tCharacterUI.iTexture = 1;
+		tCharacterUI.szCharacterName = L"Naruto";
+
+		CUI_CharacterSelect* pUI = dynamic_cast<CUI_CharacterSelect*>(pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_CharacterSelect"), &tCharacterUI));
+		if (pUI == nullptr)
+			return;
+
+		m_CharacterSelect.push_back(pUI);
+	}
+
+	{
+		CUI_CharacterSelect::CharacterUI tCharacterUI;
+
+		tCharacterUI.bSelected = false;
+		tCharacterUI.iIndex = 1;
+		tCharacterUI.iTexture = 3;
+		tCharacterUI.szCharacterName = L"Sasuke";
+
+		CUI_CharacterSelect* pUI = dynamic_cast<CUI_CharacterSelect*>(pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_CharacterSelect"), &tCharacterUI));
+		if (pUI == nullptr)
+			return;
+
+		m_CharacterSelect.push_back(pUI);
+	}
+
+
+	{
+		CUI_CharacterSelect::CharacterUI tCharacterUI;
+
+		tCharacterUI.bSelected = false;
+		tCharacterUI.iIndex = 2;
+		tCharacterUI.iTexture = 0;
+		tCharacterUI.szCharacterName = L"None1";
+
+		CUI_CharacterSelect* pUI = dynamic_cast<CUI_CharacterSelect*>(pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_CharacterSelect"), &tCharacterUI));
+		if (pUI == nullptr)
+			return;
+
+		m_CharacterSelect.push_back(pUI);
+	}
+
+	{
+		CUI_CharacterSelect::CharacterUI tCharacterUI;
+
+		tCharacterUI.bSelected = false;
+		tCharacterUI.iIndex = 3;
+		tCharacterUI.iTexture = 0;
+		tCharacterUI.szCharacterName = L"None2";
+
+		CUI_CharacterSelect* pUI = dynamic_cast<CUI_CharacterSelect*>(pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_CharacterSelect"), &tCharacterUI));
+		if (pUI == nullptr)
+			return;
+
+		m_CharacterSelect.push_back(pUI);
+	}
+
+	m_iCharacterIndex = 0;
+	m_iMaxCharacterIndex = 1;
+
+
+	Safe_Release(pGameInstance);
 }
 
 CLevel_Lobby * CLevel_Lobby::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
