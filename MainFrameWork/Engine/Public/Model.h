@@ -48,6 +48,8 @@ public:
 	_bool	Is_AnimationEnd(_uint iAnimation);
 	_float	Get_Anim_MaxFrameRatio(_uint iAnimation);
 	_uint	Get_Anim_Frame(_uint iAnimation);
+	_uint	Get_Anim_MaxFrame(_uint iAnimation);
+
 
 	_int	Find_BoneIndex(const wstring& szBoneName);
 	Matrix  Get_CurrBoneMatrix(_uint iIndex);

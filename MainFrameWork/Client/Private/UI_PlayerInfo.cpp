@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "ServerSessionManager.h"
 #include "UI_CharacterSelect.h"
+#include "Level_Lobby.h"
+#include "LobbyUser.h"
 
 CUI_PlayerInfo::CUI_PlayerInfo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI(pDevice, pContext)
@@ -64,6 +66,18 @@ HRESULT CUI_PlayerInfo::Initialize(void* pArg)
 		Vec3(m_fTextureX - g_iWinSizeX * 0.5f, -m_fTextureY + g_iWinSizeY * 0.5f, m_vUITargetPos.z - 0.01f));
 
 
+	//ReadyMark
+	m_fMarkSizeX = 20.f;
+	m_fMarkSizeY = 20.f;
+	m_fMarkX = m_vUITargetPos.x + 125.f;
+	m_fMarkY = m_vUITargetPos.y + 2.0f;
+
+
+	m_pMarkTransform->Set_Scale(Vec3(m_fMarkSizeX, m_fMarkSizeY, 1.f));
+	m_pMarkTransform->Set_State(CTransform::STATE_POSITION,
+		Vec3(m_fMarkX - g_iWinSizeX * 0.5f, -m_fMarkY + g_iWinSizeY * 0.5f, m_vUITargetPos.z - 0.01f));
+
+
 	m_fMoveSpeed = 200.0f;
 
 	m_fAlpha = 0.0f;
@@ -91,6 +105,10 @@ HRESULT CUI_PlayerInfo::Render()
 		Render_String();
 		
 	Render_CharacterTexture();
+
+
+	if (m_bReady)
+		Render_ReadyMark();
 
 	return S_OK;
 }
@@ -142,7 +160,10 @@ void CUI_PlayerInfo::UI_AppearTick(_float fTimeDelta)
 
 void CUI_PlayerInfo::UI_Tick(_float fTimeDelta)
 {
-	
+	CLevel_Lobby* pLevelLobby = dynamic_cast<CLevel_Lobby*>(CGameInstance::GetInstance()->Get_CurrLevel());
+
+	if (pLevelLobby)
+		m_bReady = pLevelLobby->Find_LobbyUser(m_szNickName)->Is_Ready();
 }
 
 void CUI_PlayerInfo::UI_DisappearTick(_float fTimeDelta)
@@ -173,15 +194,34 @@ HRESULT CUI_PlayerInfo::Ready_Components()
 		TEXT("Com_CharacterTexture"), (CComponent**)&m_pCharacterTexture)))
 		return E_FAIL;
 
-	CTransform::tagTransformDesc		TransformDesc;
-	ZeroMemory(&TransformDesc, sizeof TransformDesc);
-
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_CharacterTransform"), (CComponent**)&m_pTextureTransform, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_ReadyMark"),
+		TEXT("Com_MarkTexture"), (CComponent**)&m_pMarkTexture)))
 		return E_FAIL;
+
+	{
+		CTransform::tagTransformDesc		TransformDesc;
+		ZeroMemory(&TransformDesc, sizeof TransformDesc);
+
+		TransformDesc.fSpeedPerSec = 5.f;
+		TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+			TEXT("Com_CharacterTransform"), (CComponent**)&m_pTextureTransform, &TransformDesc)))
+			return E_FAIL;
+	}
+	
+
+	{
+		CTransform::tagTransformDesc		TransformDesc;
+		ZeroMemory(&TransformDesc, sizeof TransformDesc);
+
+		TransformDesc.fSpeedPerSec = 5.f;
+		TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+			TEXT("Com_MarkTransform"), (CComponent**)&m_pMarkTransform, &TransformDesc)))
+			return E_FAIL;
+	}
 
 
 
@@ -228,6 +268,29 @@ HRESULT CUI_PlayerInfo::Render_CharacterTexture()
 	m_pVIBufferCom->Render();
 }
 
+HRESULT CUI_PlayerInfo::Render_ReadyMark()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pMarkTransform->Get_WorldMatrix())))
+		return S_OK;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
+
+	m_pMarkTexture->Set_SRV(m_pShaderCom, "g_DiffuseTexture");
+
+	m_pShaderCom->Begin(0);
+
+	m_pVIBufferCom->Render();
+
+
+	return S_OK;
+}
+
 
 
 CUI_PlayerInfo * CUI_PlayerInfo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -236,7 +299,7 @@ CUI_PlayerInfo * CUI_PlayerInfo::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : PlayerWindowTitle");
+		MSG_BOX("Failed to Created : PlayerInfo");
 		Safe_Release(pInstance);
 	}
 
@@ -249,7 +312,7 @@ CGameObject * CUI_PlayerInfo::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : PlayerWindowTitle");
+		MSG_BOX("Failed to Cloned : PlayerInfo");
 		Safe_Release(pInstance);
 	}
 

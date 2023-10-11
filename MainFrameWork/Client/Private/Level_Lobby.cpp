@@ -13,6 +13,7 @@
 #include "UI_PlayerInfo.h"
 #include "UI_PlayerWindowTitle.h"
 #include "UI_CharacterSelect.h"
+#include "Player_Lobby.h"
 
 CLevel_Lobby::CLevel_Lobby(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -127,6 +128,8 @@ HRESULT CLevel_Lobby::Ready_Layer_Player(const LAYER_TYPE eLayerType)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_PLAYER), TEXT("Prototype_GameObject_Player_Lobby")))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -430,7 +433,7 @@ void CLevel_Lobby::Update_PlayerInfo()
 	CUI_PlayerWindowTitle* pWindowTitle = dynamic_cast<CUI_PlayerWindowTitle*>(pGameInstance->
 		Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"PlayerWindowTitle"));
 	
-	if (pWindowTitle->Get_UIState() != CUI::UISTATE::TICK)
+	if (pWindowTitle == nullptr || pWindowTitle->Get_UIState() != CUI::UISTATE::TICK)
 		return;
 
 	_uint iIndex = 0;
@@ -495,6 +498,7 @@ void CLevel_Lobby::Update_CharacterSelect()
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(false);
 				++m_iCharacterIndex;
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
+				Update_PlayerLobby();
 			}
 		}
 
@@ -506,6 +510,7 @@ void CLevel_Lobby::Update_CharacterSelect()
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(false);
 				--m_iCharacterIndex;
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
+				Update_PlayerLobby();
 			}
 		}
 
@@ -588,7 +593,23 @@ void CLevel_Lobby::Make_CharacterSelect()
 
 	m_iCharacterIndex = 0;
 	m_iMaxCharacterIndex = 1;
+	
 
+	Update_PlayerLobby();
+
+
+	Safe_Release(pGameInstance);
+}
+
+void CLevel_Lobby::Update_PlayerLobby()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CPlayer_Lobby* pPlayer = dynamic_cast<CPlayer_Lobby*>(pGameInstance->Find_GameObejct(LEVELID::LEVEL_LOBBY, (_uint)LAYER_TYPE::LAYER_PLAYER, L"Player_Lobby"));
+
+	if (pPlayer)
+		pPlayer->Set_CharacterName(m_CharacterSelect[m_iCharacterIndex]->Get_CharacterName());
 
 	Safe_Release(pGameInstance);
 }

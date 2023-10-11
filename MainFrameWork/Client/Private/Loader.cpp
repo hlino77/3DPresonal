@@ -22,6 +22,7 @@
 #include "UI_PlayerWindowTitle.h"
 #include "UI_PlayerInfo.h"
 #include "UI_CharacterSelect.h"
+#include "Player_Lobby.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -248,6 +249,9 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Character_%d.png", 5))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_ReadyMark"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/ReadyMark.png"))))
+		return E_FAIL;
 
 
 	/* For.Shader */
@@ -255,6 +259,35 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 
 	/* For.GameObject */
 	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+
+	{
+		wstring strFileName = L"Naruto";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"Sasuke";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	/* For.Prototype_Component_Shader_AnimModel */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, TEXT("Prototype_Component_Shader_AnimModel"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
 
 	///* For.Prototype_GameObject_BackGround */
 	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
@@ -285,6 +318,10 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CharacterSelect"), CUI_CharacterSelect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Lobby"),
+		CPlayer_Lobby::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

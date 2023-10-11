@@ -41,7 +41,7 @@ private:
 	void	Update_CharacterSelect();
 	void	Make_CharacterSelect();
 
-
+	void	Update_PlayerLobby();
 
 private:
 	vector<class CLobbyUser*> m_Users;

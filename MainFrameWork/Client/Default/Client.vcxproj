@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\Player_Lobby.h" />
     <ClInclude Include="..\Public\Player_Naruto.h" />
     <ClInclude Include="..\Public\Player_Sasuke.h" />
     <ClInclude Include="..\Public\Protocol.pb.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Player_Lobby.cpp" />
     <ClCompile Include="..\Private\Player_Naruto.cpp" />
     <ClCompile Include="..\Private\Player_Sasuke.cpp" />
     <ClCompile Include="..\Private\Protocol.pb.cc">

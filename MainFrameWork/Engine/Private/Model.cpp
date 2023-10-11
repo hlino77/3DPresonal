@@ -50,7 +50,10 @@ _uint CModel::Get_MaterialIndex(_uint iMeshIndex)
 
 void CModel::Set_CurrAnim(_int iCurrAnim)
 {
+	m_Animations[m_iCurrAnim]->Reset_Animation();
+	m_Animations[iCurrAnim]->Reset_Animation();
 	m_iCurrAnim = iCurrAnim;
+	
 	m_bNext = false;
 	m_bReserved = false;
 	ZeroMemory(&m_tCurrChange, sizeof(CHANGEANIM));
@@ -207,6 +210,12 @@ HRESULT CModel::Set_NextAnimation()
 
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
+	if (m_bReserved)
+	{
+		if (m_Animations[m_iCurrAnim]->Get_Frame() >= m_tReserveChange.m_iChangeFrame)
+			Set_NextAnimation();
+	}
+
 	if (m_bNext)
 	{
 		m_tCurrChange.m_fSumTime += fTimeDelta;
@@ -226,14 +235,6 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 		Set_AnimationBlend_Transforms();
 	else
 		Set_Animation_Transforms();
-
-
-	if (m_bReserved)
-	{
-		if (m_Animations[m_iCurrAnim]->Get_Frame() >= m_tReserveChange.m_iChangeFrame)
-			Set_NextAnimation();
-	}
-
 
 	return S_OK;
 }
@@ -641,4 +642,9 @@ void CModel::Free()
 	}
 
 	m_ModelBones.clear();
+}
+
+_uint CModel::Get_Anim_MaxFrame(_uint iAnimation)
+{
+	return m_Animations[iAnimation]->Get_MaxFrame();
 }

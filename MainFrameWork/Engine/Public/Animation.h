@@ -28,6 +28,7 @@ public:
 	void	 Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	_uint	 Get_Frame() { return m_tKeyDesc.iCurrFrame; }
 	void	 Set_Frame(_uint iFrame);
+	_uint	 Get_MaxFrame() { return m_iFrameCount - 1; }
 	
 
 	vector<ModelKeyframeData>& Get_KeyDatas(_uint iFrame) { return m_KeyFrameBones[iFrame]; }

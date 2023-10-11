@@ -53,6 +53,7 @@ private:
 
 	void		Render_String();
 	HRESULT		Render_CharacterTexture();
+	HRESULT		Render_ReadyMark();
 
 	wstring		m_szNickName;
 
@@ -66,6 +67,18 @@ private:
 	_float m_fTextureSizeY;
 	_float m_fTextureX;
 	_float m_fTextureY;
+
+	//ReadyMark
+
+	class CTransform* m_pMarkTransform;
+	class CTexture* m_pMarkTexture;
+
+	_float m_fMarkSizeX;
+	_float m_fMarkSizeY;
+	_float m_fMarkX;
+	_float m_fMarkY;
+
+	_bool  m_bReady = false;
 
 	_float m_fMoveSpeed;
 
