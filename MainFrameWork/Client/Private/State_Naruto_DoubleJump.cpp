@@ -44,7 +44,12 @@ void CState_Naruto_DoubleJump::Enter_State()
 		Set_TargetPos();
 	else
 	{
-		_float fTargetPosAngle = XMConvertToDegrees(acosf((m_pPlayer->Get_TargetPos() - m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION)).Dot(Vec3(0.0f, 1.0f, 0.0f))));
+		Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
+		Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		Vec3 vDir = vTargetPos - vPos;
+		vDir.Normalize();
+
+		_float fTargetPosAngle = XMConvertToDegrees(acosf(vDir.Dot(Vec3(0.0f, 1.0f, 0.0f))));
 		if (fTargetPosAngle > 10.0f)
 			m_bLookAt = true;
 		else
@@ -115,14 +120,14 @@ void CState_Naruto_DoubleJump::Set_TargetPos()
 	{
 		vDir.Normalize();
 
-		vTargetPos += (vDir * 1.0f);
-		vTargetPos.y += 1.5f;
+		vTargetPos += (vDir * 10.0f);
+		vTargetPos.y += 15.0f;
 		m_bLookAt = true;
 	}
 	else
 	{
 		vTargetPos = vPlayerPos;
-		vTargetPos.y += 1.5f;
+		vTargetPos.y += 15.0f;
 		m_bLookAt = false;
 	}
 
