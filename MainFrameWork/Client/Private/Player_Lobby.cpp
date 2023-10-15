@@ -176,16 +176,17 @@ HRESULT CPlayer_Lobby::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_LOBBY, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 
 	///* For.Com_Model */
 
+
 	{
 		wstring strComName = L"Prototype_Component_Model_Naruto";
 		CModel* pModel = nullptr;
-		if (FAILED(__super::Add_Component(LEVEL_LOBBY, strComName, TEXT("Com_Model_Naruto"), (CComponent**)&pModel)))
+		if (FAILED(__super::Add_Component(pGameInstance->Get_CurrLevelIndex(), strComName, TEXT("Com_Model_Naruto"), (CComponent**)&pModel)))
 			return E_FAIL;
 
 		m_Models.emplace(L"Naruto", pModel);
@@ -194,7 +195,7 @@ HRESULT CPlayer_Lobby::Ready_Components()
 	{
 		wstring strComName = L"Prototype_Component_Model_Sasuke";
 		CModel* pModel = nullptr;
-		if (FAILED(__super::Add_Component(LEVEL_LOBBY, strComName, TEXT("Com_Model_Sasuke"), (CComponent**)&pModel)))
+		if (FAILED(__super::Add_Component(pGameInstance->Get_CurrLevelIndex(), strComName, TEXT("Com_Model_Sasuke"), (CComponent**)&pModel)))
 			return E_FAIL;
 
 		m_Models.emplace(L"Sasuke", pModel);

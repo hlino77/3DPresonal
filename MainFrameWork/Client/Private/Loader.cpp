@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Loader.h"
 #include "GameInstance.h"
+#include "AsFileUtils.h"
+#include "AsUtils.h"
 #include "Player_Naruto.h"
 #include "Camera_Free.h"
 #include "StaticModel.h"
@@ -78,8 +80,8 @@ _int CLoader::Loading()
 	case LEVEL_LOBBY:
 		hr = Loading_For_Level_Lobby();
 		break;
-	case LEVEL_GAMEPLAY:
-		hr = Loading_For_Level_GamePlay();
+	case LEVEL_ARENA:
+		hr = Loading_For_Level_Arena();
 		break;
 	}
 
@@ -135,7 +137,7 @@ HRESULT CLoader::Loading_For_Level_Logo()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_For_Level_GamePlay()
+HRESULT CLoader::Loading_For_Level_Arena()
 {
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -181,18 +183,13 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 
 
 	m_strLoading = TEXT("모델을 로딩 중 입니다.");
-	Loading_Model_For_Level_GamePlay();
+	Loading_Model_For_Level_Arena();
 
 
-	/* For.Prototype_Component_Shader_Model */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
 
-	/* For.Prototype_Component_Shader_AnimModel */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
+	Load_MapData(LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
+
+
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
@@ -283,12 +280,6 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 			return E_FAIL;
 	}
 
-
-	/* For.Prototype_Component_Shader_AnimModel */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, TEXT("Prototype_Component_Shader_AnimModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
-		return E_FAIL;
-
 	///* For.Prototype_GameObject_BackGround */
 	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;
@@ -331,8 +322,44 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 	return S_OK;
 }
 
+HRESULT CLoader::Load_MapData(LEVELID eLevel, const wstring& szFilePath)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
-HRESULT CLoader::Loading_Model_For_Level_GamePlay()
+	shared_ptr<CAsFileUtils> file = make_shared<CAsFileUtils>();
+	file->Open(szFilePath, FileMode::Read);
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+
+	_uint iSize = file->Read<_uint>();
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		wstring szModelName = CAsUtils::ToWString(file->Read<string>());
+		Matrix	matWorld = file->Read<Matrix>();
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+
+		wstring strComponentName = L"Prototype_Component_Model_" + szModelName;
+
+		if (FAILED(pGameInstance->Check_Prototype(eLevel, strComponentName)))
+			continue;
+
+
+		if (FAILED(pGameInstance->Add_Prototype(eLevel, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, szModelName, true, PivotMatrix))))
+			continue;
+	}
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+
+HRESULT CLoader::Loading_Model_For_Level_Arena()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -346,7 +373,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true ,PivotMatrix))))
 			return E_FAIL;
 	}
@@ -356,7 +383,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
 			return E_FAIL;
 	}
@@ -367,7 +394,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -378,7 +405,7 @@ HRESULT CLoader::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/Static/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
 			return E_FAIL;
 	}

@@ -6,11 +6,11 @@
 
 BEGIN(Server)
 
-class CLevel_GamePlay_Server final : public CLevel
+class CLevel_Arena_Server final : public CLevel
 {
 private:
-	CLevel_GamePlay_Server();
-	virtual ~CLevel_GamePlay_Server() = default;
+	CLevel_Arena_Server();
+	virtual ~CLevel_Arena_Server() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -40,7 +40,7 @@ private:
 	void			Start_Collision();
 	void			End_Collision();
 public:
-	static class CLevel_GamePlay_Server* Create();
+	static class CLevel_Arena_Server* Create();
 	virtual void Free() override;
 
 

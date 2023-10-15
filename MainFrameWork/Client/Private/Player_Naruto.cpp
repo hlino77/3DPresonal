@@ -13,6 +13,9 @@
 #include "State_Naruto_Attack_JumpDoubleKick.h"
 #include "ServerSessionManager.h"
 #include "ColliderSphere.h"
+#include "State_Naruto_Jump.h"
+#include "State_Naruto_FallFront.h"
+#include "State_Naruto_DoubleJump.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -138,6 +141,11 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Idle", new CState_Naruto_Idle(L"Idle", this));
 	m_pStateMachine->Add_State(L"Run_Loop", new CState_Naruto_RunLoop(L"Run_Loop", this));
 	m_pStateMachine->Add_State(L"Run_End", new CState_Naruto_RunEnd(L"Run_End", this));
+	m_pStateMachine->Add_State(L"Jump", new CState_Naruto_Jump(L"Jump", this));
+	m_pStateMachine->Add_State(L"Fall_Front", new CState_Naruto_FallFront(L"Fall_Front", this));
+	m_pStateMachine->Add_State(L"DoubleJump", new CState_Naruto_DoubleJump(L"DoubleJump", this));
+
+
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Naruto_Attack_Punch_Left(L"Attack_Normal_cmb01", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Naruto_Attack_Punch_Right(L"Attack_Normal_cmb02", this));

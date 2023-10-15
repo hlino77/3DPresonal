@@ -44,7 +44,8 @@ public:
 	
 private:
 	_bool m_bMouseMove = true;
-	Vec3 m_vOffset;
+	Vec3 m_vTargetOffset;
+	_float m_fCameraAngle;
 
 
 	_float m_fSesitive;

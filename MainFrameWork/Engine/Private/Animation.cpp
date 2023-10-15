@@ -114,10 +114,12 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	m_tKeyDesc.fSumTime += fTimeDelta * m_fSpeed;
 	
 	float fTimePerFrame = 1.f / (m_fTickPerSecond);
+
 	if (m_tKeyDesc.fSumTime >= fTimePerFrame)
 	{
-		m_tKeyDesc.fSumTime -= fTimePerFrame;
-		m_tKeyDesc.iCurrFrame = (m_tKeyDesc.iCurrFrame + 1) % m_iFrameCount;
+		_uint iFrame = m_tKeyDesc.fSumTime / fTimePerFrame;
+		m_tKeyDesc.fSumTime -= fTimePerFrame * iFrame;
+		m_tKeyDesc.iCurrFrame = (m_tKeyDesc.iCurrFrame + iFrame) % m_iFrameCount;
 		m_tKeyDesc.iNextFrame = (m_tKeyDesc.iCurrFrame + 1) % m_iFrameCount;
 
 		if (m_tKeyDesc.iCurrFrame == m_iFrameCount - 2)
@@ -125,6 +127,9 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	}
 
 	m_tKeyDesc.fRatio = (m_tKeyDesc.fSumTime / fTimePerFrame);
+
+	if (m_tKeyDesc.fRatio > 1.0f)
+		m_tKeyDesc.fRatio = 1.0f;
 
 	return S_OK;
 }

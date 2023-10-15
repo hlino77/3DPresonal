@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Level_GamePlay_Server.h"
+#include "Level_Arena_Server.h"
 #include "GameSessionManager.h"
 #include "GameSession.h"
 #include "AsUtils.h"
@@ -9,12 +9,12 @@
 #include "CollisionManager.h"
 #include "ThreadManager.h"
 
-CLevel_GamePlay_Server::CLevel_GamePlay_Server()
+CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
 {
 }
 
-HRESULT CLevel_GamePlay_Server::Initialize()
+HRESULT CLevel_Arena_Server::Initialize()
 {
 	Broadcast_LevelState(LEVELSTATE::INITREADY);
 	Wait_ClientLevelState(LEVELSTATE::INITREADY);
@@ -56,12 +56,12 @@ HRESULT CLevel_GamePlay_Server::Initialize()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Tick(_float fTimeDelta)
+HRESULT CLevel_Arena_Server::Tick(_float fTimeDelta)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::LateTick(_float fTimeDelta)
+HRESULT CLevel_Arena_Server::LateTick(_float fTimeDelta)
 {
 	m_fBroadcastTime += fTimeDelta;
 	if (m_fBroadcastTime >= 0.05f)
@@ -73,23 +73,23 @@ HRESULT CLevel_GamePlay_Server::LateTick(_float fTimeDelta)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Exit()
+HRESULT CLevel_Arena_Server::Exit()
 {
 	End_Collision();
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Lights()
+HRESULT CLevel_Arena_Server::Ready_Lights()
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_Camera(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_Camera(const LAYER_TYPE eLayerType)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_Player(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_Player(const LAYER_TYPE eLayerType)
 {
 	if (FAILED(Broadcast_Character()))
 		return E_FAIL;
@@ -97,12 +97,12 @@ HRESULT CLevel_GamePlay_Server::Ready_Layer_Player(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
 	if (FAILED(Broadcast_Monster(L"WhiteZetsu", Vec3(0.0f, 0.0f, 5.0f))))
 		return E_FAIL;
@@ -110,17 +110,17 @@ HRESULT CLevel_GamePlay_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_UI(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena_Server::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Broadcast_Character()
+HRESULT CLevel_Arena_Server::Broadcast_Character()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -134,7 +134,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 		Protocol::S_CREATE_OBJCECT pkt;
 		pkt.set_strname(CAsUtils::ToString(strCharacter));
 		pkt.set_iobjectid(g_iObjectID++);
-		pkt.set_ilevel((uint32)LEVELID::LEVEL_GAMEPLAY);
+		pkt.set_ilevel((uint32)LEVELID::LEVEL_ARENA);
 		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_PLAYER);
 		pkt.set_iobjecttype((uint32)OBJ_TYPE::PLAYER);
 
@@ -172,7 +172,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Character()
 	Safe_Release(pGameInstance);
 }
 
-void CLevel_GamePlay_Server::Broadcast_LevelState(LEVELSTATE eState)
+void CLevel_Arena_Server::Broadcast_LevelState(LEVELSTATE eState)
 {
 	Protocol::S_LEVEL_STATE pkt;
 	pkt.set_ilevelstate((uint32)eState);
@@ -181,7 +181,7 @@ void CLevel_GamePlay_Server::Broadcast_LevelState(LEVELSTATE eState)
 	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 }
 
-void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
+void CLevel_Arena_Server::Wait_ClientLevelState(LEVELSTATE eState)
 {
 	set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 
@@ -200,9 +200,9 @@ void CLevel_GamePlay_Server::Wait_ClientLevelState(LEVELSTATE eState)
 	}
 }
 
-HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
+HRESULT CLevel_Arena_Server::Broadcast_PlayerInfo()
 {
-	auto& ObjectList = CGameInstance::GetInstance()->Find_GameObjects(LEVELID::LEVEL_GAMEPLAY, (_uint)LAYER_TYPE::LAYER_PLAYER);
+	auto& ObjectList = CGameInstance::GetInstance()->Find_GameObjects(LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_PLAYER);
 
 	if (ObjectList.size() == 0)
 		return S_OK;
@@ -216,7 +216,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 
 		auto tObject = pkt.add_tobject();
 		tObject->set_iobjectid(Object->Get_ObjectID());
-		tObject->set_ilevel(LEVELID::LEVEL_GAMEPLAY);
+		tObject->set_ilevel(LEVELID::LEVEL_ARENA);
 		tObject->set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
 
 
@@ -243,7 +243,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_PlayerInfo()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
+HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -252,7 +252,7 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Monster(const wstring& szName, Vec3 vP
 	Protocol::S_CREATE_OBJCECT pkt;
 	pkt.set_strname(CAsUtils::ToString(szName));
 	pkt.set_iobjectid(g_iObjectID++);
-	pkt.set_ilevel((uint32)LEVELID::LEVEL_GAMEPLAY);
+	pkt.set_ilevel((uint32)LEVELID::LEVEL_ARENA);
 	pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_MONSTER);
 	pkt.set_iobjecttype((uint32)OBJ_TYPE::MONSTER);
 
@@ -282,13 +282,13 @@ HRESULT CLevel_GamePlay_Server::Broadcast_Monster(const wstring& szName, Vec3 vP
 	return S_OK;
 }
 
-void CLevel_GamePlay_Server::Set_CheckGruop()
+void CLevel_Arena_Server::Set_CheckGruop()
 {
 	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_BODY);
 	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_ATTACK);
 }
 
-void CLevel_GamePlay_Server::Start_Collision()
+void CLevel_Arena_Server::Start_Collision()
 {
 	Set_CheckGruop();
 
@@ -330,7 +330,7 @@ void CLevel_GamePlay_Server::Start_Collision()
 		});
 }
 
-void CLevel_GamePlay_Server::End_Collision()
+void CLevel_Arena_Server::End_Collision()
 {
 	CCollisionManager::GetInstance()->Set_Stop(true);
 	m_pCollisionThread->join();
@@ -339,9 +339,9 @@ void CLevel_GamePlay_Server::End_Collision()
 }
 
 
-CLevel_GamePlay_Server* CLevel_GamePlay_Server::Create()
+CLevel_Arena_Server* CLevel_Arena_Server::Create()
 {
-	CLevel_GamePlay_Server* pInstance = new CLevel_GamePlay_Server();
+	CLevel_Arena_Server* pInstance = new CLevel_Arena_Server();
 
 	if (FAILED(pInstance->Initialize()))
 	{
@@ -352,7 +352,7 @@ CLevel_GamePlay_Server* CLevel_GamePlay_Server::Create()
 	return pInstance;
 }
 
-void CLevel_GamePlay_Server::Free()
+void CLevel_Arena_Server::Free()
 {
 	__super::Free();
 }

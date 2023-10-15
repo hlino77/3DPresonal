@@ -38,23 +38,26 @@ HRESULT CLevel_Ready_Server::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Ready_Server::LateTick(_float fTimeDelta)
 {
-	_bool bAllReady = false;
+
+
+	_uint iAllReady = 0;
 
 	for (auto& User : m_Users)
 	{
-		bAllReady = User->Is_Ready();
+		if (User->Is_Ready())
+			++iAllReady;
 	}
 
-	if (bAllReady)
+	if (!m_Users.empty() && iAllReady >= m_Users.size())
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading_Server::Create(LEVEL_GAMEPLAY))))
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading_Server::Create(LEVEL_ARENA))))
 			return E_FAIL;
 
 		Protocol::S_OPEN_LEVEL pkt;
-		pkt.set_ilevelid((uint64)LEVELID::LEVEL_GAMEPLAY);
+		pkt.set_ilevelid((uint64)LEVELID::LEVEL_ARENA);
 
 		SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 		CGameSessionManager::GetInstance()->Broadcast(sendBuffer);

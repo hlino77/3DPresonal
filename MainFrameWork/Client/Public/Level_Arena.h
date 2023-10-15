@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CLevel_GamePlay final : public CLevel
+class CLevel_Arena final : public CLevel
 {
 private:
-	CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_GamePlay() = default;
+	CLevel_Arena(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_Arena() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -29,8 +29,10 @@ private:
 	void	Send_LevelState(LEVELSTATE eState);
 	void	Wait_ServerLevelState(LEVELSTATE eState);
 
+	HRESULT Load_MapData(LEVELID eLevel, const wstring& szFullPath);
+
 public:
-	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static class CLevel_Arena* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 

@@ -219,21 +219,26 @@ void CTransform::LookAt_ForLandObject(Vec3 vAt)
 {
 	Vec3 vLook = vAt - Get_State(CTransform::STATE_POSITION);
 
+	Vec3 vUp(0.0f, 1.0f, 0.0f);
+
 	Vec3 vScale = Get_Scale();
 
 
-	Vec3 vRight = Vec3(0.0f, 1.0f, 0.0f).Cross(vLook);
+	Vec3 vRight = vUp.Cross(vLook);
 	vRight.Normalize();
 	vRight *= vScale.x;
 
-	vLook = vRight.Cross(Get_State(CTransform::STATE_UP));
+	vLook = vRight.Cross(vUp);
 	vLook.Normalize();
 	vLook *= vScale.z;
+
+	vUp *= vScale.y;
 
 
 	WRITE_LOCK
 	Set_State(CTransform::STATE_RIGHT, vRight);
 	Set_State(CTransform::STATE_LOOK, vLook);
+	Set_State(CTransform::STATE_UP, vUp);
 }
 
 void CTransform::Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance)
@@ -301,6 +306,10 @@ void CTransform::LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta)
 	Vec3 vUp = Get_State(CTransform::STATE_UP);
 	vUp.Normalize();
 
+
+	Vec3 vTargetRight = vUp.Cross(vTargetLook);
+	vTargetLook = vTargetRight.Cross(vUp);
+	vTargetLook.Normalize();
 
 	_float fRadian = acosf(min(1.0f,vTargetLook.Dot(vPlayerLook)));
 	if (fRadian <= fSpeed * fTimeDelta)

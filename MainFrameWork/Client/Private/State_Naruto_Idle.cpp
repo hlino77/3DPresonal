@@ -56,6 +56,9 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 
 	if (KEY_TAP(KEY::LBTN))
 		m_pPlayer->Set_State(L"Attack_Normal_cmb01");
+
+	if (KEY_TAP(KEY::SPACE))
+		m_pPlayer->Set_State(L"Jump");
 }
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)

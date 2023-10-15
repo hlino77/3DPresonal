@@ -98,17 +98,17 @@ void CRigidBody::UseGravity(_bool UseGravity)
 void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 {
 	if (m_UseGravity)
-		m_vLinearVelocity += m_vGravityDir * 9.81f * fTimeDelta;
+		m_vLinearVelocity += m_vGravityDir * 9.81f * fTimeDelta * m_fMass;
 
-	m_vAngularVelocity += m_vAngularAcceleration * fTimeDelta;
-	m_vLinearVelocity += m_vLinearAcceleration * fTimeDelta;
+	m_vAngularVelocity += m_vAngularAcceleration;
+	m_vLinearVelocity += m_vLinearAcceleration;
 
 	_float fAngularResistance = m_fAngularDrag;
 	_float fLinearResistance = m_fDrag;
 	_float fLinearGroundResistance = m_fGroundDrag;
 
-	(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
-	(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
+	//(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
+	//(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
 
 
 	if (m_bGround)

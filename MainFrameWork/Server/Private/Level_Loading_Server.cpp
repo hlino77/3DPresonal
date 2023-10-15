@@ -3,7 +3,7 @@
 #include "Loader_Server.h"
 #include "GameInstance.h"
 #include "Level_Ready_Server.h"
-#include "Level_GamePlay_Server.h"
+#include "Level_Arena_Server.h"
 
 CLevel_Loading_Server::CLevel_Loading_Server()
 	:CLevel(nullptr, nullptr)
@@ -51,8 +51,8 @@ HRESULT CLevel_Loading_Server::LateTick(_float fTimeDelta)
 			case LEVEL_READY:
 				pNewLevel = CLevel_Ready_Server::Create();
 				break;
-			case LEVEL_GAMEPLAY:
-				pNewLevel = CLevel_GamePlay_Server::Create();
+			case LEVEL_ARENA:
+				pNewLevel = CLevel_Arena_Server::Create();
 				break;
 		}
 

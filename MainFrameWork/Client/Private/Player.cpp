@@ -35,22 +35,25 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+
+	m_pRigidBody->SetMass(2.0f);
+
     return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (KEY_TAP(KEY::SPACE))
-	{
-		m_pRigidBody->AddForce(Vec3(0.0f, 1000.0f, 0.0f), ForceMode::FORCE);
-		m_pRigidBody->UseGravity(true);
-	}
+	//if (KEY_TAP(KEY::SPACE))
+	//{
+	//	m_pRigidBody->AddForce(Vec3(0.0f, 1000.0f, 0.0f), ForceMode::FORCE);
+	//	m_pRigidBody->UseGravity(true);
+	//}
 	
 
-	if (KEY_TAP(KEY::P))
+	/*if (KEY_TAP(KEY::P))
 	{
 		m_pRigidBody->AddForce(Vec3(0.0f, 0.0f, 300.0f), ForceMode::FORCE);
-	}
+	}*/
 
 	m_pRigidBody->Tick(fTimeDelta);
 
@@ -63,11 +66,8 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
-
-	
+	if (m_bRender)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CPlayer::Render()
@@ -121,7 +121,6 @@ void CPlayer::Find_NearTarget()
 Vec3 CPlayer::Make_StraightDir()
 {
 	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
-	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 
 	Vec3 vDir = vCameraRight.Cross(m_pTransformCom->Get_State(CTransform::STATE::STATE_UP));
 	vDir.Normalize();
@@ -132,7 +131,6 @@ Vec3 CPlayer::Make_StraightDir()
 Vec3 CPlayer::Make_RightDir()
 {
 	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
-	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 
 	Vec3 vDir = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
 	vDir.Normalize();
@@ -143,9 +141,8 @@ Vec3 CPlayer::Make_RightDir()
 Vec3 CPlayer::Make_BackDir()
 {
 	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
-	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
 
-	Vec3 vDir = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT).Cross(m_pTransformCom->Get_State(CTransform::STATE::STATE_UP));
+	Vec3 vDir = vCameraRight.Cross(m_pTransformCom->Get_State(CTransform::STATE::STATE_UP));
 	vDir.Normalize();
 
 	return -vDir;
@@ -154,7 +151,46 @@ Vec3 CPlayer::Make_BackDir()
 Vec3 CPlayer::Make_LeftDir()
 {
 	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
-	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+
+	Vec3 vDir = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+	vDir.Normalize();
+
+	return -vDir;
+}
+
+Vec3 CPlayer::Make_Straight_JumpDir()
+{
+	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+
+	Vec3 vDir = vCameraRight.Cross(Vec3(0.0f, 1.0f, 0.0f));
+	vDir.Normalize();
+
+	return vDir;
+}
+
+Vec3 CPlayer::Make_Right_JumpDir()
+{
+	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+
+	Vec3 vDir = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+	vDir.Normalize();
+
+	return vDir;
+}
+
+Vec3 CPlayer::Make_Back_JumpDir()
+{
+	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+
+	Vec3 vDir = vCameraRight.Cross(Vec3(0.0f, 1.0f, 0.0f));
+	vDir.Normalize();
+
+	return -vDir;
+}
+
+Vec3 CPlayer::Make_Left_JumpDir()
+{
+	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
 
 	Vec3 vDir = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
 	vDir.Normalize();
@@ -207,7 +243,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	///* For.Com_State */
@@ -220,7 +256,7 @@ HRESULT CPlayer::Ready_Components()
 
 	///* For.Com_Model */
 	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Component(pGameInstance->Get_CurrLevelIndex(), strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 

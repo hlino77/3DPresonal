@@ -43,11 +43,12 @@ private:
 
 private:
 	HRESULT Loading_For_Level_Logo();
-	HRESULT Loading_For_Level_GamePlay();
+	HRESULT Loading_For_Level_Arena();
 	HRESULT Loading_For_Level_Lobby();
 	
+	HRESULT Load_MapData(LEVELID eLevel, const wstring& szFilePath);
 
-	HRESULT Loading_Model_For_Level_GamePlay();
+	HRESULT Loading_Model_For_Level_Arena();
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVELID eNextLevel);

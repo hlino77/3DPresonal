@@ -66,6 +66,15 @@ public:
 	CGameObject*			Get_HitObject() { return m_pHitObject; }
 	void					Reset_HitObject() { m_pHitObject = nullptr; }
 	void					Set_HitObject(CGameObject* pObject) { m_pHitObject = pObject; }
+
+
+	void					Set_ModelName(const wstring& strName) { m_szModelName = strName; }
+	const wstring&			Get_ModelName() { return m_szModelName; }
+
+
+	void					Set_Render(_bool bRender) { m_bRender = bRender; }
+	_bool					Is_Render() { return m_bRender; }
+
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -89,7 +98,7 @@ protected:
 protected:
 	_float				m_fCamDistance = 0.f;
 	wstring				m_strObjectTag = L"";
-
+	wstring				m_szModelName = L"";
 
 	_int				m_iObjType = -1;
 	_int				m_iObjectID = -1;
@@ -97,6 +106,8 @@ protected:
 	_uint				m_iLayer = 0;
 
 
+
+	_bool				m_bRender = true;
 	_bool				m_bActive = true;
 
 	atomic<Vec3>					m_vTargetPos;

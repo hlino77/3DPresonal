@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Level_GamePlay.h"
+#include "Level_Arena.h"
 #include "GameInstance.h"
 #include "Camera.h"
 #include "Player_Naruto.h"
@@ -8,13 +8,15 @@
 #include "ServerSessionManager.h"
 #include "ServerSession.h"
 #include "Camera_Player.h"
+#include "AsFileUtils.h"
+#include "AsUtils.h"
 
-CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_GamePlay::Initialize()
+HRESULT CLevel_Arena::Initialize()
 {
 	Send_LevelState(LEVELSTATE::INITREADY);
 	Wait_ServerLevelState(LEVELSTATE::INITSTART);
@@ -53,17 +55,17 @@ HRESULT CLevel_GamePlay::Initialize()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Tick(_float fTimeDelta)
+HRESULT CLevel_Arena::Tick(_float fTimeDelta)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
+HRESULT CLevel_Arena::LateTick(_float fTimeDelta)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Lights()
+HRESULT CLevel_Arena::Ready_Lights()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -107,14 +109,14 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_Camera(const LAYER_TYPE eLayerType)
 {
 
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Player(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_Player(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -125,26 +127,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	{
-		CStaticModel::MODELDESC Desc;
-		Desc.strFileName = CAsUtils::ToWString("SM_ENV_TCHEXA_ArenaGround_Aa");
-		Desc.iLayer = (_uint)eLayerType;
-
-		if (nullptr == pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, _uint(eLayerType), TEXT("Prototype_GameObject_StaticModel"), &Desc))
-			return E_FAIL;
-	}
+	Load_MapData(LEVELID::LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
 
 	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -154,7 +149,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_UI(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -173,7 +168,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -185,7 +180,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Player_Camera(const LAYER_TYPE eLayerType)
+HRESULT CLevel_Arena::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -213,7 +208,7 @@ HRESULT CLevel_GamePlay::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 	CameraDesc.pPlayer = pPlayer;
 	CameraDesc.vInitPos = pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION) + Vec3(0.0f, 5.0f, -5.0f);
 
-	CGameObject* pCamera = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, _uint(eLayerType), TEXT("Prototype_GameObject_Camera_Player"), &CameraDesc);
+	CGameObject* pCamera = pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(eLayerType), TEXT("Prototype_GameObject_Camera_Player"), &CameraDesc);
 	if (pCamera == nullptr)
 		return E_FAIL;
 
@@ -224,7 +219,7 @@ HRESULT CLevel_GamePlay::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 	return S_OK;
 }
 
-void CLevel_GamePlay::Send_LevelState(LEVELSTATE eState)
+void CLevel_Arena::Send_LevelState(LEVELSTATE eState)
 {
 	Protocol::S_LEVEL_STATE pkt;
 	pkt.set_ilevelstate((uint32)eState);
@@ -233,7 +228,7 @@ void CLevel_GamePlay::Send_LevelState(LEVELSTATE eState)
 	CServerSessionManager::GetInstance()->Get_ServerSession()->Send(sendBuffer);
 }
 
-void CLevel_GamePlay::Wait_ServerLevelState(LEVELSTATE eState)
+void CLevel_Arena::Wait_ServerLevelState(LEVELSTATE eState)
 {
 	ServerSessionRef& ServerSession = CServerSessionManager::GetInstance()->Get_ServerSession();
 
@@ -244,9 +239,50 @@ void CLevel_GamePlay::Wait_ServerLevelState(LEVELSTATE eState)
 	}
 }
 
-CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+HRESULT CLevel_Arena::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 {
-	CLevel_GamePlay*	pInstance = new CLevel_GamePlay(pDevice, pContext);
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	shared_ptr<CAsFileUtils> file = make_shared<CAsFileUtils>();
+	file->Open(szFullPath, FileMode::Read);
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+
+	_uint iSize = file->Read<_uint>();
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		wstring szModelName = CAsUtils::ToWString(file->Read<string>());
+		Matrix	matWorld = file->Read<Matrix>();
+
+
+		{
+			CStaticModel::MODELDESC Desc;
+			Desc.strFileName = szModelName;
+			Desc.iLayer = (_uint)LAYER_TYPE::LAYER_BACKGROUND;
+
+
+			CGameObject* pObject = pGameInstance->Add_GameObject(LEVEL_ARENA, Desc.iLayer, TEXT("Prototype_GameObject_StaticModel"), &Desc);
+			if (nullptr == pObject)
+			{
+				Safe_Release(pGameInstance);
+				return E_FAIL;
+			}
+
+			pObject->Get_TransformCom()->Set_WorldMatrix(matWorld);
+		}
+	}
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+CLevel_Arena * CLevel_Arena::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+{
+	CLevel_Arena*	pInstance = new CLevel_Arena(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
@@ -257,7 +293,7 @@ CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 	return pInstance;
 }
 
-void CLevel_GamePlay::Free()
+void CLevel_Arena::Free()
 {
 	__super::Free();
 

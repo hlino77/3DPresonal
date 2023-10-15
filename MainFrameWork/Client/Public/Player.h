@@ -56,6 +56,10 @@ public:
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
+
+
+	void					Set_DoubleJump(_bool bJump) { m_bDoubleJump = bJump; }
+	_bool					Is_DoubleJump() { return m_bDoubleJump; }
 public:
 
 
@@ -74,6 +78,13 @@ public:
 	Vec3			Make_RightDir();
 	Vec3			Make_BackDir();
 	Vec3			Make_LeftDir();
+
+	Vec3			Make_Straight_JumpDir();
+	Vec3			Make_Right_JumpDir();
+	Vec3			Make_Back_JumpDir();
+	Vec3			Make_Left_JumpDir();
+
+
 	void			Go_Straight(_float fSpeed, _float fTimeDelta);
 	void			Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 
@@ -93,7 +104,7 @@ protected:
 
 
 	unordered_map<wstring, _uint>	m_BoneIndex;
-
+	_bool							m_bDoubleJump = true;
 
 	
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */

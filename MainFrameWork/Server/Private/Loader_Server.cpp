@@ -47,8 +47,8 @@ _int CLoader_Server::Loading()
 	case LEVEL_READY:
 		hr = Loading_For_Level_Ready();
 		break;
-	case LEVEL_GAMEPLAY:
-		hr = Loading_For_Level_GamePlay();
+	case LEVEL_ARENA:
+		hr = Loading_For_Level_Arena();
 		break;
 	}
 
@@ -80,7 +80,7 @@ HRESULT CLoader_Server::Loading_For_Level_Ready()
 	return S_OK;
 }
 
-HRESULT CLoader_Server::Loading_For_Level_GamePlay()
+HRESULT CLoader_Server::Loading_For_Level_Arena()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -94,7 +94,7 @@ HRESULT CLoader_Server::Loading_For_Level_GamePlay()
 	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 
-	Loading_Model_For_Level_GamePlay();
+	Loading_Model_For_Level_Arena();
 
 
 	Safe_Release(pGameInstance);
@@ -104,7 +104,7 @@ HRESULT CLoader_Server::Loading_For_Level_GamePlay()
 	return S_OK;
 }
 
-HRESULT CLoader_Server::Loading_Model_For_Level_GamePlay()
+HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -125,7 +125,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -135,7 +135,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -145,7 +145,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_GamePlay()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
 			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
 			return E_FAIL;
 	}

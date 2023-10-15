@@ -176,7 +176,7 @@
     <ClInclude Include="..\Public\ClientPacketHandler.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Enum.pb.h" />
-    <ClInclude Include="..\Public\Level_GamePlay.h" />
+    <ClInclude Include="..\Public\Level_Arena.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Loader.h" />
@@ -194,7 +194,10 @@
     <ClInclude Include="..\Public\State_Naruto_Attack_JumpDoubleKick.h" />
     <ClInclude Include="..\Public\State_Naruto_Attack_Punch_Left.h" />
     <ClInclude Include="..\Public\State_Naruto_Attack_Punch_Right.h" />
+    <ClInclude Include="..\Public\State_Naruto_DoubleJump.h" />
+    <ClInclude Include="..\Public\State_Naruto_FallFront.h" />
     <ClInclude Include="..\Public\State_Naruto_Idle.h" />
+    <ClInclude Include="..\Public\State_Naruto_Jump.h" />
     <ClInclude Include="..\Public\State_Naruto_RunEnd.h" />
     <ClInclude Include="..\Public\State_Naruto_RunLoop.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb01.h" />
@@ -236,7 +239,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\Private\Level_Arena.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
@@ -257,7 +260,10 @@
     <ClCompile Include="..\Private\State_Naruto_Attack_JumpDoubleKick.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Attack_Punch_Left.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Attack_Punch_Right.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_DoubleJump.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_FallFront.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_Jump.cpp" />
     <ClCompile Include="..\Private\State_Naruto_RunEnd.cpp" />
     <ClCompile Include="..\Private\State_Naruto_RunLoop.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb01.cpp" />

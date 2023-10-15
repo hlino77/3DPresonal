@@ -87,6 +87,9 @@ private:
 
 
 	void	Change_NextAnimation();
+
+
+	class CTexture*	Create_Texture(const wstring& szFullPath);
 private:
 
 	Matrix						m_PivotMatrix;
@@ -95,7 +98,6 @@ private:
 private:
 	_uint							m_iNumMeshes = 0;
 	vector<class CMesh*>			m_Meshes;
-	typedef vector<class CMesh*>	MESHES;
 
 private:
 	_uint									m_iNumMaterials = 0;

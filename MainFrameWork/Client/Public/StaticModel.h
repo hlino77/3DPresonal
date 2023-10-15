@@ -43,7 +43,6 @@ public:
 	CTransform* Get_TransformCom() { return m_pTransformCom; }
 	CModel* Get_ModelCom() { return m_pModelCom; }
 
-	void Set_ModelName(const wstring& strName) { m_strObjectTag = strName; }
 
 
 	HRESULT Add_ModelComponent(const wstring& strComName);
@@ -53,8 +52,6 @@ protected:
 private: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
-	CTransform* m_pTransformCom = nullptr;
-	CModel* m_pModelCom = nullptr;
 
 private:
 

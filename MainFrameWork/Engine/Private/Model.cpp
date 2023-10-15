@@ -7,6 +7,7 @@
 #include "AsUtils.h"
 #include <filesystem>
 #include "tinyxml2.h"
+#include "GameInstance.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -453,7 +454,8 @@ HRESULT CModel::Load_MaterialData_FromFile()
 				else if (m_eModelType == TYPE::TYPE_NONANIM)
 					szFullPath = m_strFilePath + L"Texture/" + strTexture;
 
-				MaterialDesc.pTexture[aiTextureType_DIFFUSE] = CTexture::Create(m_pDevice, m_pContext, szFullPath);
+		
+				MaterialDesc.pTexture[aiTextureType_DIFFUSE] = Create_Texture(szFullPath);
 				if (nullptr == MaterialDesc.pTexture[aiTextureType_DIFFUSE])
 					return E_FAIL;
 			}
@@ -473,7 +475,7 @@ HRESULT CModel::Load_MaterialData_FromFile()
 				else if (m_eModelType == TYPE::TYPE_NONANIM)
 					szFullPath = m_strFilePath + L"Texture/" + strTexture;
 
-				MaterialDesc.pTexture[aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, szFullPath);
+				MaterialDesc.pTexture[aiTextureType_SPECULAR] = Create_Texture(szFullPath);
 				if (nullptr == MaterialDesc.pTexture[aiTextureType_SPECULAR])
 					return E_FAIL;
 			}
@@ -493,7 +495,7 @@ HRESULT CModel::Load_MaterialData_FromFile()
 				else if (m_eModelType == TYPE::TYPE_NONANIM)
 					szFullPath = m_strFilePath + L"Texture/" + strTexture;
 
-				MaterialDesc.pTexture[aiTextureType_NORMALS] = CTexture::Create(m_pDevice, m_pContext, szFullPath);
+				MaterialDesc.pTexture[aiTextureType_NORMALS] = Create_Texture(szFullPath);
 				if (nullptr == MaterialDesc.pTexture[aiTextureType_NORMALS])
 					return E_FAIL;
 			}
@@ -647,4 +649,37 @@ void CModel::Free()
 _uint CModel::Get_Anim_MaxFrame(_uint iAnimation)
 {
 	return m_Animations[iAnimation]->Get_MaxFrame();
+}
+
+CTexture* CModel::Create_Texture(const wstring& szFullPath)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	_tchar			szFileName[MAX_PATH] = TEXT("");
+
+	_wsplitpath_s(szFullPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+
+
+	wstring szComName = L"Prototype_Component_Texture_";
+	szComName += szFileName;
+
+
+	CComponent* pComponent = pGameInstance->Clone_Component(m_pOwner, pGameInstance->Get_CurrLevelIndex(), szComName);
+
+
+	if (pComponent)
+	{
+		CTexture* pTexture = dynamic_cast<CTexture*>(pComponent);
+
+		Safe_Release(pGameInstance);
+		return pTexture;
+	}
+
+	CTexture* pTexture = CTexture::Create(m_pDevice, m_pContext, szFullPath);
+
+	pGameInstance->Add_Prototype(pGameInstance->Get_CurrLevelIndex(), szComName, pTexture);
+
+	Safe_Release(pGameInstance);
+	return pTexture;
 }

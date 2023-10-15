@@ -38,10 +38,10 @@ private:
 
 private:
 	HRESULT Loading_For_Level_Ready();
-	HRESULT Loading_For_Level_GamePlay();
+	HRESULT Loading_For_Level_Arena();
 
 
-	HRESULT Loading_Model_For_Level_GamePlay();
+	HRESULT Loading_Model_For_Level_Arena();
 
 public:
 	static CLoader_Server* Create(LEVELID eNextLevel);
