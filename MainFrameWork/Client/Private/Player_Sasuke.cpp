@@ -14,7 +14,10 @@
 #include "ServerSessionManager.h"
 #include "Engine_Defines.h"
 #include "ColliderSphere.h"
-#include "ColliderSphere.h"
+#include "State_Sasuke_Jump.h"
+#include "State_Sasuke_FallFront.h"
+#include "State_Sasuke_DoubleJump.h"
+
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -144,6 +147,9 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Idle", new CState_Sasuke_Idle(L"Idle", this));
 	m_pStateMachine->Add_State(L"Run_Loop", new CState_Sasuke_RunLoop(L"Run_Loop", this));
 	m_pStateMachine->Add_State(L"Run_End", new CState_Sasuke_RunEnd(L"Run_End", this));
+	m_pStateMachine->Add_State(L"Jump", new CState_Sasuke_Jump(L"Jump", this));
+	m_pStateMachine->Add_State(L"Fall_Front", new CState_Sasuke_FallFront(L"Fall_Front", this));
+	m_pStateMachine->Add_State(L"DoubleJump", new CState_Sasuke_DoubleJump(L"DoubleJump", this));
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Sasuke_Attack_cmb03(L"Attack_Normal_cmb02", this));

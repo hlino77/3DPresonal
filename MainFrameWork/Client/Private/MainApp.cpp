@@ -56,11 +56,15 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Font()))
 		return E_FAIL;
 
+	ShowCursor(false);
+
 	return S_OK;
 }
 
 void CMainApp::Tick(_float fTimeDelta)
 {
+	Set_Mouse();
+
 	CServerSessionManager::GetInstance()->Tick(fTimeDelta);
 
 	/* 게임내에 존재하는 여러 객체들의 갱신. */
@@ -94,6 +98,17 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelID)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMainApp::Set_Mouse()
+{
+	POINT MousePos;
+
+	MousePos.x = g_iWinSizeX / 2;
+	MousePos.y = g_iWinSizeY / 2;
+
+	ClientToScreen(g_hWnd, &MousePos);
+	SetCursorPos(MousePos.x, MousePos.y);
 }
 
 HRESULT CMainApp::Initialize_Client()

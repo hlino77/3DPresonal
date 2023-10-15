@@ -1,24 +1,24 @@
 #include "stdafx.h"
-#include "State_Naruto_DoubleJump.h"
-#include "Player_Naruto.h"
+#include "State_Sasuke_DoubleJump.h"
+#include "Player_Sasuke.h"
 #include "Model.h"
 #include "StateMachine.h"
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
 
-CState_Naruto_DoubleJump::CState_Naruto_DoubleJump(const wstring& strStateName, CPlayer_Naruto* pPlayer)
+CState_Sasuke_DoubleJump::CState_Sasuke_DoubleJump(const wstring& strStateName, CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
 	, m_pPlayer(pPlayer)
 {
 }
 
-CState_Naruto_DoubleJump::CState_Naruto_DoubleJump(const CState& rhs, CStateMachine* pMachine)
+CState_Sasuke_DoubleJump::CState_Sasuke_DoubleJump(const CState& rhs, CStateMachine* pMachine)
 	:CState(rhs, pMachine)
 {
 }
 
-HRESULT CState_Naruto_DoubleJump::Initialize()
+HRESULT CState_Sasuke_DoubleJump::Initialize()
 {
 	m_iDouble_Jump = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"DoubleJump", 3.0f);
 
@@ -26,14 +26,14 @@ HRESULT CState_Naruto_DoubleJump::Initialize()
 		return E_FAIL;
 
 	if(m_pPlayer->Is_Control())
-		m_TickFunc = &CState_Naruto_DoubleJump::Tick_State_Control;
+		m_TickFunc = &CState_Sasuke_DoubleJump::Tick_State_Control;
 	else
-		m_TickFunc = &CState_Naruto_DoubleJump::Tick_State_NoneControl;
+		m_TickFunc = &CState_Sasuke_DoubleJump::Tick_State_NoneControl;
 
 	return S_OK;
 }
 
-void CState_Naruto_DoubleJump::Enter_State()
+void CState_Sasuke_DoubleJump::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iDouble_Jump, 0.1f, 0, 0);
 
@@ -60,27 +60,28 @@ void CState_Naruto_DoubleJump::Enter_State()
 
 }
 
-void CState_Naruto_DoubleJump::Tick_State(_float fTimeDelta)
+void CState_Sasuke_DoubleJump::Tick_State(_float fTimeDelta)
 {
 	m_TickFunc(*this, fTimeDelta);
 }
 
-void CState_Naruto_DoubleJump::Exit_State()
+void CState_Sasuke_DoubleJump::Exit_State()
 {
 
 }
 
-void CState_Naruto_DoubleJump::Tick_State_Control(_float fTimeDelta)
+void CState_Sasuke_DoubleJump::Tick_State_Control(_float fTimeDelta)
 {
 	if (m_bLookAt)
 		m_pPlayer->Get_TransformCom()->LookAt_Lerp(m_vDir, 10.0f, fTimeDelta);
 
 	_uint iFrame = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_iDouble_Jump);
-	if (iFrame >= 44)
-		m_pPlayer->Set_State(L"Fall_Front");		
+	if (iFrame >= 20)
+		m_pPlayer->Set_State(L"Fall_Front");
+		
 }
 
-void CState_Naruto_DoubleJump::Tick_State_NoneControl(_float fTimeDelta)
+void CState_Sasuke_DoubleJump::Tick_State_NoneControl(_float fTimeDelta)
 {
 	if (m_bLookAt)
 		m_pPlayer->Get_TransformCom()->LookAt_Lerp(m_vDir, 10.0f, fTimeDelta);
@@ -88,7 +89,7 @@ void CState_Naruto_DoubleJump::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
 }
 
-void CState_Naruto_DoubleJump::Set_TargetPos()
+void CState_Sasuke_DoubleJump::Set_TargetPos()
 {
 	Vec3 vDir(0.0f, 0.0f, 0.0f);
 
@@ -133,7 +134,7 @@ void CState_Naruto_DoubleJump::Set_TargetPos()
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 
-void CState_Naruto_DoubleJump::Set_Jump()
+void CState_Sasuke_DoubleJump::Set_Jump()
 {
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
 
@@ -153,7 +154,7 @@ void CState_Naruto_DoubleJump::Set_Jump()
 	m_vDir.Normalize();
 }
 
-void CState_Naruto_DoubleJump::Free()
+void CState_Sasuke_DoubleJump::Free()
 {
 	__super::Free();
 }

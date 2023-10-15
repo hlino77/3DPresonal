@@ -204,7 +204,10 @@
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb03.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb06.h" />
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb08.h" />
+    <ClInclude Include="..\Public\State_Sasuke_DoubleJump.h" />
+    <ClInclude Include="..\Public\State_Sasuke_FallFront.h" />
     <ClInclude Include="..\Public\State_Sasuke_Idle.h" />
+    <ClInclude Include="..\Public\State_Sasuke_Jump.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunEnd.h" />
     <ClInclude Include="..\Public\State_Sasuke_RunLoop.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_HitMiddle.h" />
@@ -270,7 +273,10 @@
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb03.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb06.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb08.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_DoubleJump.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_FallFront.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_Jump.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunEnd.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_RunLoop.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_HitMiddle.cpp" />

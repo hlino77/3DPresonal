@@ -85,12 +85,17 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
-	
+	if (KEY_TAP(KEY::SPACE))
+	{
+		m_pPlayer->Set_State(L"Jump");
+		return;
+	}
 
 
 	if (KEY_NONE(KEY::W) && KEY_NONE(KEY::A) && KEY_NONE(KEY::S) && KEY_NONE(KEY::D))
 	{
 		m_pPlayer->Set_State(L"Run_End");
+		return;
 	}
 }
 
