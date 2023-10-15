@@ -76,7 +76,6 @@ void CState_Naruto_Jump::Tick_State_Control(_float fTimeDelta)
 	if (fDistance < vMove.Length())
 	{
 		_uint iTemp = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_pPlayer->Get_ModelCom()->Get_CurrAnim());
-		m_pPlayer->Set_Render(true);
 		m_pPlayer->Set_State(L"Fall_Front");
 	}
 		
@@ -84,20 +83,6 @@ void CState_Naruto_Jump::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_Jump::Tick_State_NoneControl(_float fTimeDelta)
 {
-	CTransform* pTransform = m_pPlayer->Get_TransformCom();
-
-	Vec3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
-	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
-
-	Vec3 vDir = vTargetPos - vPos;
-	_float fDistance = vDir.Length();
-
-	Vec3 vMove = m_pPlayer->Get_RigidBody()->GetLinearVelocity() * fTimeDelta;
-
-
-	if (fDistance < vMove.Length())
-		m_pPlayer->Set_Render(true);
-
 	m_pPlayer->Follow_ServerPos(0.05f, 0.1f);
 }
 

@@ -37,6 +37,7 @@ void CState_Naruto_FallFront::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iFall_Front, 0.2f, 0, 0);
 	m_pPlayer->Get_RigidBody()->UseGravity(true);
+	m_pPlayer->Set_Render(true);
 }
 
 void CState_Naruto_FallFront::Tick_State(_float fTimeDelta)
