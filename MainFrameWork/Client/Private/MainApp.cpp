@@ -102,13 +102,13 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelID)
 
 void CMainApp::Set_Mouse()
 {
-	POINT MousePos;
+	/*POINT MousePos;
 
 	MousePos.x = g_iWinSizeX / 2;
 	MousePos.y = g_iWinSizeY / 2;
 
 	ClientToScreen(g_hWnd, &MousePos);
-	SetCursorPos(MousePos.x, MousePos.y);
+	SetCursorPos(MousePos.x, MousePos.y);*/
 }
 
 HRESULT CMainApp::Initialize_Client()

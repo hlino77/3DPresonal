@@ -119,13 +119,11 @@ void CState_Sasuke_Jump::Set_TargetPos()
 
 		vTargetPos += (vDir * 2.0f);
 		vTargetPos.y += 2.5f;
-		m_pPlayer->Reserve_Animation(m_iJump_Front, 0.1f, 0, 0);
 	}
 	else
 	{
 		vTargetPos = vPlayerPos;
 		vTargetPos.y += 2.5f;
-		m_pPlayer->Reserve_Animation(m_iJump_Vertical, 0.1f, 0, 0);
 	}
 
 
@@ -154,12 +152,14 @@ void CState_Sasuke_Jump::Set_Jump()
 		vDir *= 30.0f;
 		m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 		m_pPlayer->Get_RigidBody()->AddForce(vDir, ForceMode::FORCE);
+		m_pPlayer->Reserve_Animation(m_iJump_Front, 0.1f, 0, 0);
 	}
 	else
 	{
 		vDir *= 20.0f;
 		m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 		m_pPlayer->Get_RigidBody()->AddForce(vDir, ForceMode::FORCE);
+		m_pPlayer->Reserve_Animation(m_iJump_Vertical, 0.1f, 0, 0);
 	}
 }
 
