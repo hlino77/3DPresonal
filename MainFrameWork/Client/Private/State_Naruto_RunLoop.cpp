@@ -41,17 +41,13 @@ HRESULT CState_Naruto_RunLoop::Initialize()
 
 void CState_Naruto_RunLoop::Enter_State()
 {
-	m_pPlayer->Reserve_Animation(m_iRun_Loop, 0.2f, 0, 0);
+	m_pPlayer->Reserve_Animation(m_iRun_Loop, 0.1f, 0, 0);
 
 	if (m_pPlayer->Is_Control())
 	{
 		Vec3 vDir = Make_MoveDir();
 		vDir.Normalize();
 		Set_TargetPos(vDir);
-	}
-	else
-	{
-		m_matPrev = m_pPlayer->Get_TargetMatrix();
 	}
 }
 

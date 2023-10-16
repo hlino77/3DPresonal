@@ -17,6 +17,9 @@
 #include "State_Sasuke_Jump.h"
 #include "State_Sasuke_FallFront.h"
 #include "State_Sasuke_DoubleJump.h"
+#include "State_Sasuke_Land.h"
+#include "State_Sasuke_WalkLoop.h"
+#include "State_Sasuke_WalkEnd.h"
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -150,6 +153,10 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Jump", new CState_Sasuke_Jump(L"Jump", this));
 	m_pStateMachine->Add_State(L"Fall_Front", new CState_Sasuke_FallFront(L"Fall_Front", this));
 	m_pStateMachine->Add_State(L"DoubleJump", new CState_Sasuke_DoubleJump(L"DoubleJump", this));
+	m_pStateMachine->Add_State(L"Land", new CState_Sasuke_Land(L"Land", this));
+	m_pStateMachine->Add_State(L"Walk_Loop", new CState_Sasuke_WalkLoop(L"Walk_Loop", this));
+	m_pStateMachine->Add_State(L"Walk_End", new CState_Sasuke_WalkEnd(L"Walk_End", this));
+
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Sasuke_Attack_cmb03(L"Attack_Normal_cmb02", this));

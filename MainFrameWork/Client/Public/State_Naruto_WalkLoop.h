@@ -3,14 +3,12 @@
 
 BEGIN(Client)
 
-class CState_Naruto_RunLoop : public CState
+class CState_Naruto_WalkLoop : public CState
 {
-
-
 public:
-	CState_Naruto_RunLoop(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
-	CState_Naruto_RunLoop(const CState& rhs, class CStateMachine* pMachine);
-	virtual ~CState_Naruto_RunLoop() = default;
+	CState_Naruto_WalkLoop(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
+	CState_Naruto_WalkLoop(const CState& rhs, class CStateMachine* pMachine);
+	virtual ~CState_Naruto_WalkLoop() = default;
 
 
 public:
@@ -29,7 +27,7 @@ private:
 	class CPlayer_Naruto* m_pPlayer = nullptr;
 
 	
-	std::function<void(CState_Naruto_RunLoop&, _float)> m_TickFunc;
+	std::function<void(CState_Naruto_WalkLoop&, _float)> m_TickFunc;
 private:
 	_float m_fMaxSpeed = 0.f;
 	_float m_fAccel = 0.f;
@@ -37,10 +35,11 @@ private:
 
 
 	//Animation
-	_int m_iRun_Loop = -1;
+	_int m_iWalk_Loop = -1;
 	
 
 	Vec3 Make_MoveDir();
+
 
 public:
 	virtual void Free() override;

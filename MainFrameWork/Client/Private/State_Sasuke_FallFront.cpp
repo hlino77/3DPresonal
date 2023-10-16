@@ -60,7 +60,7 @@ void CState_Sasuke_FallFront::Tick_State_Control(_float fTimeDelta)
 
 	if (m_pPlayer->Get_RigidBody()->UseGravity() == false)
 	{
-		m_pPlayer->Set_State(L"Idle");
+		m_pPlayer->Set_State(L"Land");
 		return;
 	}
 }

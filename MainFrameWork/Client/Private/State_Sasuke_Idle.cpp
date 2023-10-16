@@ -51,7 +51,7 @@ void CState_Sasuke_Idle::Tick_State_Control(_float fTimeDelta)
 {
 	if (KEY_HOLD(KEY::W) || KEY_HOLD(KEY::S) || KEY_HOLD(KEY::D) || KEY_HOLD(KEY::A))
 	{
-		m_pPlayer->Set_State(L"Run_Loop");
+		m_pPlayer->Set_State(L"Walk_Loop");
 		return;
 	}
 

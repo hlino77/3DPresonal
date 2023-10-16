@@ -16,6 +16,9 @@
 #include "State_Naruto_Jump.h"
 #include "State_Naruto_FallFront.h"
 #include "State_Naruto_DoubleJump.h"
+#include "State_Naruto_Land.h"
+#include "State_Naruto_WalkLoop.h"
+#include "State_Naruto_WalkEnd.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -144,6 +147,11 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Jump", new CState_Naruto_Jump(L"Jump", this));
 	m_pStateMachine->Add_State(L"Fall_Front", new CState_Naruto_FallFront(L"Fall_Front", this));
 	m_pStateMachine->Add_State(L"DoubleJump", new CState_Naruto_DoubleJump(L"DoubleJump", this));
+	m_pStateMachine->Add_State(L"Land", new CState_Naruto_Land(L"Land", this));
+	m_pStateMachine->Add_State(L"Walk_Loop", new CState_Naruto_WalkLoop(L"Walk_Loop", this));
+	m_pStateMachine->Add_State(L"Walk_End", new CState_Naruto_WalkEnd(L"Walk_End", this));
+
+
 
 
 

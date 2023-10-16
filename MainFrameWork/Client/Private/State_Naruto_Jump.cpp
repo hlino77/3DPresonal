@@ -39,6 +39,8 @@ HRESULT CState_Naruto_Jump::Initialize()
 
 void CState_Naruto_Jump::Enter_State()
 {
+	m_pPlayer->Set_MoveSpeed(0.0f);
+
 	if(m_pPlayer->Is_Control())
 		Set_TargetPos();
 
