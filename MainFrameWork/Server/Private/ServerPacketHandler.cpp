@@ -10,6 +10,7 @@
 #include "ColliderSphere.h"
 #include "Level_Ready_Server.h"
 #include "LobbyUser_Server.h"
+#include "ColliderOBB.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -236,6 +237,17 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
 	pCollider->Set_AttackType(pkt.iattacktype());
 	pCollider->Set_Center();
+
+
+	if (pkt.tchild_size() > 0)
+	{
+		auto& tChild = pkt.tchild(0);
+		COBBCollider* pChild = dynamic_cast<COBBCollider*>(pCollider->Get_Child());
+		
+		pChild->Set_Offset(Vec3(tChild.voffset().data()));
+		pChild->Set_Scale(Vec3(tChild.vscale().data()));
+	}
+
 	Safe_Release(pGameInstance);
 	return true;
 }

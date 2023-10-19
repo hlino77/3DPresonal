@@ -12,7 +12,8 @@
 #include "RigidBody.h"
 #include "MainLogo.h"
 #include "BackGround_Loading.h"
-
+#include "ColliderOBB.h"
+#include "CollisionManager.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -113,6 +114,7 @@ void CMainApp::Set_Mouse()
 
 HRESULT CMainApp::Initialize_Client()
 {
+	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
 	// Manager Reserve
 	return S_OK;
 }
@@ -158,6 +160,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"),
 		CSphereCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"),
+		COBBCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

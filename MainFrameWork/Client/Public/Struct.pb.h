@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -58,6 +58,9 @@ namespace Protocol {
 class BuffData;
 struct BuffDataDefaultTypeInternal;
 extern BuffDataDefaultTypeInternal _BuffData_default_instance_;
+class ChildCollider;
+struct ChildColliderDefaultTypeInternal;
+extern ChildColliderDefaultTypeInternal _ChildCollider_default_instance_;
 class ObjectInfo;
 struct ObjectInfoDefaultTypeInternal;
 extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
@@ -70,6 +73,7 @@ extern UserInfoDefaultTypeInternal _UserInfo_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::BuffData* Arena::CreateMaybeMessage<::Protocol::BuffData>(Arena*);
+template<> ::Protocol::ChildCollider* Arena::CreateMaybeMessage<::Protocol::ChildCollider>(Arena*);
 template<> ::Protocol::ObjectInfo* Arena::CreateMaybeMessage<::Protocol::ObjectInfo>(Arena*);
 template<> ::Protocol::Time* Arena::CreateMaybeMessage<::Protocol::Time>(Arena*);
 template<> ::Protocol::UserInfo* Arena::CreateMaybeMessage<::Protocol::UserInfo>(Arena*);
@@ -753,6 +757,175 @@ class UserInfo final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
+// -------------------------------------------------------------------
+
+class ChildCollider final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.ChildCollider) */ {
+ public:
+  inline ChildCollider() : ChildCollider(nullptr) {}
+  ~ChildCollider() override;
+  explicit constexpr ChildCollider(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ChildCollider(const ChildCollider& from);
+  ChildCollider(ChildCollider&& from) noexcept
+    : ChildCollider() {
+    *this = ::std::move(from);
+  }
+
+  inline ChildCollider& operator=(const ChildCollider& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ChildCollider& operator=(ChildCollider&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ChildCollider& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ChildCollider* internal_default_instance() {
+    return reinterpret_cast<const ChildCollider*>(
+               &_ChildCollider_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(ChildCollider& a, ChildCollider& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ChildCollider* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ChildCollider* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ChildCollider* New() const final {
+    return new ChildCollider();
+  }
+
+  ChildCollider* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ChildCollider>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const ChildCollider& from);
+  void MergeFrom(const ChildCollider& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ChildCollider* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.ChildCollider";
+  }
+  protected:
+  explicit ChildCollider(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kVOffsetFieldNumber = 1,
+    kVScaleFieldNumber = 2,
+  };
+  // repeated float vOffset = 1 [packed = true];
+  int voffset_size() const;
+  private:
+  int _internal_voffset_size() const;
+  public:
+  void clear_voffset();
+  private:
+  float _internal_voffset(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      _internal_voffset() const;
+  void _internal_add_voffset(float value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      _internal_mutable_voffset();
+  public:
+  float voffset(int index) const;
+  void set_voffset(int index, float value);
+  void add_voffset(float value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      voffset() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      mutable_voffset();
+
+  // repeated float vScale = 2 [packed = true];
+  int vscale_size() const;
+  private:
+  int _internal_vscale_size() const;
+  public:
+  void clear_vscale();
+  private:
+  float _internal_vscale(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      _internal_vscale() const;
+  void _internal_add_vscale(float value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      _internal_mutable_vscale();
+  public:
+  float vscale(int index) const;
+  void set_vscale(int index, float value);
+  void add_vscale(float value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+      vscale() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+      mutable_vscale();
+
+  // @@protoc_insertion_point(class_scope:Protocol.ChildCollider)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > voffset_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > vscale_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
 // ===================================================================
 
 
@@ -1167,9 +1340,109 @@ inline void UserInfo::set_bready(bool value) {
   // @@protoc_insertion_point(field_set:Protocol.UserInfo.bReady)
 }
 
+// -------------------------------------------------------------------
+
+// ChildCollider
+
+// repeated float vOffset = 1 [packed = true];
+inline int ChildCollider::_internal_voffset_size() const {
+  return voffset_.size();
+}
+inline int ChildCollider::voffset_size() const {
+  return _internal_voffset_size();
+}
+inline void ChildCollider::clear_voffset() {
+  voffset_.Clear();
+}
+inline float ChildCollider::_internal_voffset(int index) const {
+  return voffset_.Get(index);
+}
+inline float ChildCollider::voffset(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.ChildCollider.vOffset)
+  return _internal_voffset(index);
+}
+inline void ChildCollider::set_voffset(int index, float value) {
+  voffset_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protocol.ChildCollider.vOffset)
+}
+inline void ChildCollider::_internal_add_voffset(float value) {
+  voffset_.Add(value);
+}
+inline void ChildCollider::add_voffset(float value) {
+  _internal_add_voffset(value);
+  // @@protoc_insertion_point(field_add:Protocol.ChildCollider.vOffset)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+ChildCollider::_internal_voffset() const {
+  return voffset_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+ChildCollider::voffset() const {
+  // @@protoc_insertion_point(field_list:Protocol.ChildCollider.vOffset)
+  return _internal_voffset();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+ChildCollider::_internal_mutable_voffset() {
+  return &voffset_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+ChildCollider::mutable_voffset() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.ChildCollider.vOffset)
+  return _internal_mutable_voffset();
+}
+
+// repeated float vScale = 2 [packed = true];
+inline int ChildCollider::_internal_vscale_size() const {
+  return vscale_.size();
+}
+inline int ChildCollider::vscale_size() const {
+  return _internal_vscale_size();
+}
+inline void ChildCollider::clear_vscale() {
+  vscale_.Clear();
+}
+inline float ChildCollider::_internal_vscale(int index) const {
+  return vscale_.Get(index);
+}
+inline float ChildCollider::vscale(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.ChildCollider.vScale)
+  return _internal_vscale(index);
+}
+inline void ChildCollider::set_vscale(int index, float value) {
+  vscale_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protocol.ChildCollider.vScale)
+}
+inline void ChildCollider::_internal_add_vscale(float value) {
+  vscale_.Add(value);
+}
+inline void ChildCollider::add_vscale(float value) {
+  _internal_add_vscale(value);
+  // @@protoc_insertion_point(field_add:Protocol.ChildCollider.vScale)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+ChildCollider::_internal_vscale() const {
+  return vscale_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >&
+ChildCollider::vscale() const {
+  // @@protoc_insertion_point(field_list:Protocol.ChildCollider.vScale)
+  return _internal_vscale();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+ChildCollider::_internal_mutable_vscale() {
+  return &vscale_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
+ChildCollider::mutable_vscale() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.ChildCollider.vScale)
+  return _internal_mutable_vscale();
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

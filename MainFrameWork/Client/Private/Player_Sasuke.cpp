@@ -20,7 +20,10 @@
 #include "State_Sasuke_Land.h"
 #include "State_Sasuke_WalkLoop.h"
 #include "State_Sasuke_WalkEnd.h"
-
+#include "ColliderOBB.h"
+#include "CollisionManager.h"
+#include "PickingMgr.h"
+#include "State_Sasuke_WallLand.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -61,7 +64,7 @@ void CPlayer_Sasuke::LateTick(_float fTimeDelta)
 	__super::LateTick(fTimeDelta);
 
 
-	Set_Colliders();
+	Set_Colliders(fTimeDelta);
 
 	if (m_bControl)
 	{
@@ -72,6 +75,9 @@ void CPlayer_Sasuke::LateTick(_float fTimeDelta)
 			Send_PlayerInfo();
 		}
 	}
+
+
+
 }
 
 HRESULT CPlayer_Sasuke::Render()
@@ -90,6 +96,11 @@ HRESULT CPlayer_Sasuke::Render()
 void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
 	int i = 0;
+
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+	}
 }
 
 void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -100,11 +111,18 @@ void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
 	int i = 0;
+
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+	}
 }
 
-void CPlayer_Sasuke::Set_Colliders()
+void CPlayer_Sasuke::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Tick(fTimeDelta);
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
@@ -156,6 +174,7 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Land", new CState_Sasuke_Land(L"Land", this));
 	m_pStateMachine->Add_State(L"Walk_Loop", new CState_Sasuke_WalkLoop(L"Walk_Loop", this));
 	m_pStateMachine->Add_State(L"Walk_End", new CState_Sasuke_WalkEnd(L"Walk_End", this));
+	m_pStateMachine->Add_State(L"WallLand", new CState_Sasuke_WallLand(L"WallLand", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));
@@ -176,14 +195,18 @@ HRESULT CPlayer_Sasuke::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
+
+	dynamic_cast<COBBCollider*>(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child())->Set_Scale(Vec3(0.5f, 0.5f, 0.5f));
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
+
+
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.7f, 1.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
-
-
 
 
 	return S_OK;

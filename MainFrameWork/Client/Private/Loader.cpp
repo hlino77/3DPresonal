@@ -25,6 +25,7 @@
 #include "UI_PlayerInfo.h"
 #include "UI_CharacterSelect.h"
 #include "Player_Lobby.h"
+#include "ColMesh.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -181,6 +182,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CStaticModel::Create(m_pDevice, m_pContext, PROP))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ColMesh"),
+		CColMesh::Create(m_pDevice, m_pContext, COLMESH))))
+		return E_FAIL;
+
 
 	m_strLoading = TEXT("모델을 로딩 중 입니다.");
 	Loading_Model_For_Level_Arena();
@@ -188,7 +193,7 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 
 	Load_MapData(LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
-
+	Load_ColMesh(LEVEL_ARENA, L"../Bin/Resources/ColMeshData/Arena.data");
 
 
 	m_strLoading = TEXT("로딩 끝.");
@@ -266,7 +271,7 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -276,7 +281,7 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOBBY, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -350,8 +355,61 @@ HRESULT CLoader::Load_MapData(LEVELID eLevel, const wstring& szFilePath)
 
 
 		if (FAILED(pGameInstance->Add_Prototype(eLevel, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, szModelPath, szModelName, true, PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, szModelPath, szModelName, true, false, PivotMatrix))))
 			continue;
+	}
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLoader::Load_ColMesh(LEVELID eLevel, const wstring& szFilePath)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	shared_ptr<CAsFileUtils> file = make_shared<CAsFileUtils>();
+	file->Open(szFilePath, FileMode::Read);
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+
+	_uint iSize = file->Read<_uint>();
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		wstring szModelName = CAsUtils::ToWString(file->Read<string>());
+		Matrix	matWorld = file->Read<Matrix>();
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+
+		wstring strComponentName = L"Prototype_Component_Model_" + szModelName;
+
+		if (FAILED(pGameInstance->Check_Prototype(eLevel, strComponentName)))
+			continue;
+
+
+		if (FAILED(pGameInstance->Add_Prototype(eLevel, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, szModelName, true, true, PivotMatrix))))
+			continue;
+
+
+		_uint iColCount = file->Read<_uint>();
+
+		for (_uint i = 0; i < iColCount; ++i)
+		{
+			Vec3 vOffset = file->Read<Vec3>();
+			_float fRadius = file->Read<_float>();
+
+
+			if (file->Read<_bool>())
+			{
+				Vec3 vOffset = file->Read<Vec3>();
+				Vec3 vScale = file->Read<Vec3>();
+				Quaternion vQuat = file->Read<Quaternion>();
+			}
+		}
 	}
 
 	Safe_Release(pGameInstance);
@@ -374,7 +432,7 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true ,PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , false, PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -384,7 +442,7 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , false,  PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -395,18 +453,7 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, PivotMatrix))))
-			return E_FAIL;
-	}
-
-	
-	{
-		wstring strFileName = L"SM_ENV_TCHEXA_ArenaGround_Aa";
-		wstring strFilePath = L"../Bin/Resources/Meshes/Static/";
-		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
-
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , PivotMatrix))))
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
 			return E_FAIL;
 	}
 

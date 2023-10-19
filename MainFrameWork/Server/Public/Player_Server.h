@@ -46,7 +46,7 @@ public:
 
 
 public:
-	void				Set_Colliders();
+	void				Set_Colliders(_float fTimeDelta);
 
 
 private:

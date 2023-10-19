@@ -19,6 +19,9 @@ public:
 public:
 	virtual HRESULT Render();
 
+
+	_uint Get_NumVertices() { return m_iNumVertices; }
+	_uint Get_NumPrimitives() { return m_iNumPrimitives; }
 protected:
 	ID3D11Buffer* m_pVB = nullptr;
 	ID3D11Buffer* m_pIB = nullptr;

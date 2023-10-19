@@ -15,6 +15,7 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
+	virtual HRESULT Exit() override;
 
 private:
 	HRESULT Ready_Lights();
@@ -30,6 +31,19 @@ private:
 	void	Wait_ServerLevelState(LEVELSTATE eState);
 
 	HRESULT Load_MapData(LEVELID eLevel, const wstring& szFullPath);
+	HRESULT Load_ColMesh(LEVELID eLevel, const wstring& szFullPath);
+
+
+	void			Set_CheckGruop();
+	void			Start_Collision();
+	void			Start_Picking();
+	void			End_Picking();
+	void			End_Collision();
+
+
+private:
+	thread* m_pCollisionThread = nullptr;
+	thread* m_pPickingThread = nullptr;
 
 public:
 	static class CLevel_Arena* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

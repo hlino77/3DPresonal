@@ -10,6 +10,11 @@
 #include "Camera_Player.h"
 #include "AsFileUtils.h"
 #include "AsUtils.h"
+#include "ColMesh.h"
+#include "ColliderOBB.h"
+#include "ThreadManager.h"
+#include "CollisionManager.h"
+#include "PickingMgr.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -52,6 +57,9 @@ HRESULT CLevel_Arena::Initialize()
 	if (FAILED(Ready_Player_Camera(LAYER_TYPE::LAYER_CAMERA)))
 		return E_FAIL;
 
+	Start_Collision();
+	Start_Picking();
+
 	return S_OK;
 }
 
@@ -62,6 +70,13 @@ HRESULT CLevel_Arena::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Arena::LateTick(_float fTimeDelta)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_Arena::Exit()
+{
+	End_Collision();
+	End_Picking();
 	return S_OK;
 }
 
@@ -132,7 +147,10 @@ HRESULT CLevel_Arena::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+
+	Load_ColMesh(LEVELID::LEVEL_ARENA, L"../Bin/Resources/ColMeshData/Arena.data");
 	Load_MapData(LEVELID::LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
+	
 
 	Safe_Release(pGameInstance);
 
@@ -265,7 +283,7 @@ HRESULT CLevel_Arena::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 			Desc.iLayer = (_uint)LAYER_TYPE::LAYER_BACKGROUND;
 
 
-			CGameObject* pObject = pGameInstance->Add_GameObject(LEVEL_ARENA, Desc.iLayer, TEXT("Prototype_GameObject_StaticModel"), &Desc);
+			CGameObject* pObject = pGameInstance->Add_GameObject(eLevel, Desc.iLayer, TEXT("Prototype_GameObject_StaticModel"), &Desc);
 			if (nullptr == pObject)
 			{
 				Safe_Release(pGameInstance);
@@ -278,6 +296,198 @@ HRESULT CLevel_Arena::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 
 	Safe_Release(pGameInstance);
 	return S_OK;
+}
+
+HRESULT CLevel_Arena::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	shared_ptr<CAsFileUtils> file = make_shared<CAsFileUtils>();
+	file->Open(szFullPath, FileMode::Read);
+
+
+	_uint iSize = file->Read<_uint>();
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		wstring szModelName = CAsUtils::ToWString(file->Read<string>());
+		Matrix	matWorld = file->Read<Matrix>();
+
+		CColMesh::MODELDESC Desc;
+		Desc.strFileName = szModelName;
+		Desc.iLayer = (_uint)LAYER_TYPE::LAYER_COLMESH;
+
+
+		CGameObject* pObject = pGameInstance->Add_GameObject(eLevel, Desc.iLayer, TEXT("Prototype_GameObject_ColMesh"), &Desc);
+		if (nullptr == pObject)
+		{
+			Safe_Release(pGameInstance);
+			return E_FAIL;
+		}
+
+		pObject->Get_TransformCom()->Set_WorldMatrix(matWorld);
+
+
+
+		_uint iColliderCount = file->Read<_uint>();
+		CColMesh* pColMesh = dynamic_cast<CColMesh*>(pObject);
+
+
+		for (_uint i = 0; i < iColliderCount; ++i)
+		{
+			pColMesh->Add_Collider();
+
+			CSphereCollider* pCollider = pColMesh->Get_StaticCollider(i);
+
+			{
+				Vec3 vOffset = file->Read<Vec3>();
+				pCollider->Set_Offset(vOffset);
+
+
+				_float fRadius = file->Read<_float>();
+				pCollider->Set_Radius(fRadius);
+
+
+				pCollider->Set_Center();
+			}
+
+			_bool bChild = file->Read<_bool>();
+
+			if (bChild)
+			{
+				pColMesh->Add_ChildCollider(i);
+
+				COBBCollider* pChild = dynamic_cast<COBBCollider*>(pCollider->Get_Child());
+
+
+				Vec3 vOffset = file->Read<Vec3>();
+				pChild->Set_Offset(vOffset);
+
+				Vec3 vScale = file->Read<Vec3>();
+				pChild->Set_Scale(vScale);
+
+				Quaternion vQuat = file->Read<Quaternion>();
+				pChild->Set_Orientation(vQuat);
+
+				pChild->Set_StaticBoundingBox();
+			}
+		}
+
+
+
+
+	}
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+void CLevel_Arena::Set_CheckGruop()
+{
+	CCollisionManager::GetInstance()->CheckGroup((_uint)LAYER_COLLIDER::LAYER_BODY, (_uint)LAYER_COLLIDER::LAYER_BODY);
+}
+
+void CLevel_Arena::Start_Collision()
+{
+	Set_CheckGruop();
+
+	m_pCollisionThread = new thread([=]()
+		{
+			ThreadManager::GetInstance()->InitTLS();
+
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+
+			CCollisionManager* pCollisionManager = CCollisionManager::GetInstance();
+			pCollisionManager->AddRef();
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Default"))))
+				return FALSE;
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60"))))
+				return FALSE;
+
+			_float		fTimeAcc = 0.f;
+
+
+			while (!pCollisionManager->Is_Stop())
+			{
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Default"));
+
+				if (fTimeAcc >= 1.f / 60.0f)
+				{
+					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60")));
+					fTimeAcc = 0.f;
+				}
+			}
+
+			Safe_Release(pCollisionManager);
+
+			Safe_Release(pGameInstance);
+
+			ThreadManager::GetInstance()->DestroyTLS();
+		});
+}
+
+void CLevel_Arena::Start_Picking()
+{
+
+	m_pPickingThread = new thread([=]()
+		{
+			ThreadManager::GetInstance()->InitTLS();
+
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+
+			CPickingMgr* pPickingMgr = CPickingMgr::GetInstance();
+			pPickingMgr->AddRef();
+
+			pPickingMgr->Set_Player(CServerSessionManager::GetInstance()->Get_Player());
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_Default"))))
+				return FALSE;
+
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_60"))))
+				return FALSE;
+
+			_float		fTimeAcc = 0.f;
+
+
+			while (!pPickingMgr->Is_Stop())
+			{
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking_Default"));
+
+				if (fTimeAcc >= 1.f / 60.0f)
+				{
+					pPickingMgr->Update_PickingMgr();
+					fTimeAcc = 0.f;
+				}
+			}
+
+			Safe_Release(pPickingMgr);
+
+			Safe_Release(pGameInstance);
+
+			ThreadManager::GetInstance()->DestroyTLS();
+		});
+
+}
+
+void CLevel_Arena::End_Picking()
+{
+	CPickingMgr::GetInstance()->Set_Stop(true);
+	m_pPickingThread->join();
+	CPickingMgr::GetInstance()->Reset();
+	Safe_Delete(m_pPickingThread);
+}
+
+void CLevel_Arena::End_Collision()
+{
+	CCollisionManager::GetInstance()->Set_Stop(true);
+	m_pCollisionThread->join();
+	CCollisionManager::GetInstance()->Reset();
+	Safe_Delete(m_pCollisionThread);
 }
 
 CLevel_Arena * CLevel_Arena::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

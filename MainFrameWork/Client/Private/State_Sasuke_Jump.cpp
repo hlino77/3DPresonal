@@ -44,11 +44,12 @@ void CState_Sasuke_Jump::Enter_State()
 	if(m_pPlayer->Is_Control())
 		Set_TargetPos();
 
-
 	Set_Jump();
 
 
 	m_pPlayer->Set_DoubleJump(false);
+
+	m_pPlayer->Set_Wall(false);
 }
 
 void CState_Sasuke_Jump::Tick_State(_float fTimeDelta)

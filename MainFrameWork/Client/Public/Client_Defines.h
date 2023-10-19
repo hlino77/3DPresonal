@@ -8,13 +8,14 @@ namespace Client
 {
 	enum LEVELID { LEVEL_STATIC, LEVEL_LOGO, LEVEL_LOBBY, LEVEL_ARENA, LEVEL_LOADING, LEVEL_END };
 
-	enum OBJ_TYPE { PLAYER, MONSTER, TERRAIN, PROP, UI, OBJ_END };
+	enum OBJ_TYPE { PLAYER, MONSTER, TERRAIN, PROP, UI, COLMESH ,OBJ_END };
 
 	const unsigned int		g_iWinSizeX = 1280;
 	const unsigned int		g_iWinSizeY = 720;
 
 	enum class LAYER_TYPE
 	{
+		LAYER_COLMESH,
 		LAYER_TERRAIN,
 		LAYER_SKYBOX,
 		LAYER_CAMERA,
@@ -31,6 +32,7 @@ namespace Client
 	{
 		LAYER_BODY,
 		LAYER_ATTACK,
+		LAYER_CHILD,
 		LAYER_END
 	};
 
@@ -52,5 +54,5 @@ using namespace Client;
 
 
 
-#define SERVER_IP		L"192.168.1.5"
+#define SERVER_IP		L"192.168.1.27"
 #define SERVER_PORT		7777

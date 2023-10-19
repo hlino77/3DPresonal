@@ -66,6 +66,10 @@ public:
 	void Move_Dir(Vec3 vDir, _float fTimeDelta);
 	void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta);
 	void Move_Pos(Vec3 vTargetPos);
+
+
+	void Set_Up(Vec3 vNormal);
+
 private:
 	Matrix					m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc;

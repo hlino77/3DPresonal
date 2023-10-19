@@ -75,8 +75,21 @@ struct UserInfoDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT UserInfoDefaultTypeInternal _UserInfo_default_instance_;
+constexpr ChildCollider::ChildCollider(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : voffset_()
+  , vscale_(){}
+struct ChildColliderDefaultTypeInternal {
+  constexpr ChildColliderDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~ChildColliderDefaultTypeInternal() {}
+  union {
+    ChildCollider _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ChildColliderDefaultTypeInternal _ChildCollider_default_instance_;
 }  // namespace Protocol
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Struct_2eproto[4];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Struct_2eproto[5];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Struct_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Struct_2eproto = nullptr;
 
@@ -114,12 +127,20 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Struct_2eproto::offsets[] PROT
   PROTOBUF_FIELD_OFFSET(::Protocol::UserInfo, strnickname_),
   PROTOBUF_FIELD_OFFSET(::Protocol::UserInfo, strcharacter_),
   PROTOBUF_FIELD_OFFSET(::Protocol::UserInfo, bready_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::ChildCollider, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::Protocol::ChildCollider, voffset_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::ChildCollider, vscale_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::Protocol::BuffData)},
   { 8, -1, sizeof(::Protocol::Time)},
   { 15, -1, sizeof(::Protocol::ObjectInfo)},
   { 25, -1, sizeof(::Protocol::UserInfo)},
+  { 33, -1, sizeof(::Protocol::ChildCollider)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -127,6 +148,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_Time_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_ObjectInfo_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_UserInfo_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_ChildCollider_default_instance_),
 };
 
 const char descriptor_table_protodef_Struct_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -138,15 +160,16 @@ const char descriptor_table_protodef_Struct_2eproto[] PROTOBUF_SECTION_VARIABLE(
   "er\030\003 \001(\005\022\026\n\nvTargetPos\030\004 \003(\002B\002\020\001\022\024\n\010matW"
   "orld\030\005 \003(\002B\002\020\001\"E\n\010UserInfo\022\023\n\013strNickNam"
   "e\030\001 \001(\t\022\024\n\014strCharacter\030\002 \001(\t\022\016\n\006bReady\030"
-  "\003 \001(\010b\006proto3"
+  "\003 \001(\010\"8\n\rChildCollider\022\023\n\007vOffset\030\001 \003(\002B"
+  "\002\020\001\022\022\n\006vScale\030\002 \003(\002B\002\020\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Struct_2eproto_deps[1] = {
   &::descriptor_table_Enum_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Struct_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Struct_2eproto = {
-  false, false, 333, descriptor_table_protodef_Struct_2eproto, "Struct.proto", 
-  &descriptor_table_Struct_2eproto_once, descriptor_table_Struct_2eproto_deps, 1, 4,
+  false, false, 391, descriptor_table_protodef_Struct_2eproto, "Struct.proto", 
+  &descriptor_table_Struct_2eproto_once, descriptor_table_Struct_2eproto_deps, 1, 5,
   schemas, file_default_instances, TableStruct_Struct_2eproto::offsets,
   file_level_metadata_Struct_2eproto, file_level_enum_descriptors_Struct_2eproto, file_level_service_descriptors_Struct_2eproto,
 };
@@ -1227,6 +1250,233 @@ void UserInfo::InternalSwap(UserInfo* other) {
       file_level_metadata_Struct_2eproto[3]);
 }
 
+// ===================================================================
+
+class ChildCollider::_Internal {
+ public:
+};
+
+ChildCollider::ChildCollider(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
+  voffset_(arena),
+  vscale_(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:Protocol.ChildCollider)
+}
+ChildCollider::ChildCollider(const ChildCollider& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      voffset_(from.voffset_),
+      vscale_(from.vscale_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Protocol.ChildCollider)
+}
+
+void ChildCollider::SharedCtor() {
+}
+
+ChildCollider::~ChildCollider() {
+  // @@protoc_insertion_point(destructor:Protocol.ChildCollider)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void ChildCollider::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void ChildCollider::ArenaDtor(void* object) {
+  ChildCollider* _this = reinterpret_cast< ChildCollider* >(object);
+  (void)_this;
+}
+void ChildCollider::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void ChildCollider::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ChildCollider::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protocol.ChildCollider)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  voffset_.Clear();
+  vscale_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ChildCollider::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated float vOffset = 1 [packed = true];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_voffset(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 13) {
+          _internal_add_voffset(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
+          ptr += sizeof(float);
+        } else goto handle_unusual;
+        continue;
+      // repeated float vScale = 2 [packed = true];
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_vscale(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21) {
+          _internal_add_vscale(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
+          ptr += sizeof(float);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* ChildCollider::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protocol.ChildCollider)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated float vOffset = 1 [packed = true];
+  if (this->_internal_voffset_size() > 0) {
+    target = stream->WriteFixedPacked(1, _internal_voffset(), target);
+  }
+
+  // repeated float vScale = 2 [packed = true];
+  if (this->_internal_vscale_size() > 0) {
+    target = stream->WriteFixedPacked(2, _internal_vscale(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protocol.ChildCollider)
+  return target;
+}
+
+size_t ChildCollider::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protocol.ChildCollider)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated float vOffset = 1 [packed = true];
+  {
+    unsigned int count = static_cast<unsigned int>(this->_internal_voffset_size());
+    size_t data_size = 4UL * count;
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    total_size += data_size;
+  }
+
+  // repeated float vScale = 2 [packed = true];
+  {
+    unsigned int count = static_cast<unsigned int>(this->_internal_vscale_size());
+    size_t data_size = 4UL * count;
+    if (data_size > 0) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<::PROTOBUF_NAMESPACE_ID::int32>(data_size));
+    }
+    total_size += data_size;
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void ChildCollider::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:Protocol.ChildCollider)
+  GOOGLE_DCHECK_NE(&from, this);
+  const ChildCollider* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<ChildCollider>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Protocol.ChildCollider)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:Protocol.ChildCollider)
+    MergeFrom(*source);
+  }
+}
+
+void ChildCollider::MergeFrom(const ChildCollider& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Protocol.ChildCollider)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  voffset_.MergeFrom(from.voffset_);
+  vscale_.MergeFrom(from.vscale_);
+}
+
+void ChildCollider::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:Protocol.ChildCollider)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ChildCollider::CopyFrom(const ChildCollider& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protocol.ChildCollider)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ChildCollider::IsInitialized() const {
+  return true;
+}
+
+void ChildCollider::InternalSwap(ChildCollider* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  voffset_.InternalSwap(&other->voffset_);
+  vscale_.InternalSwap(&other->vscale_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ChildCollider::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_Struct_2eproto_getter, &descriptor_table_Struct_2eproto_once,
+      file_level_metadata_Struct_2eproto[4]);
+}
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
@@ -1241,6 +1491,9 @@ template<> PROTOBUF_NOINLINE ::Protocol::ObjectInfo* Arena::CreateMaybeMessage< 
 }
 template<> PROTOBUF_NOINLINE ::Protocol::UserInfo* Arena::CreateMaybeMessage< ::Protocol::UserInfo >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protocol::UserInfo >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::ChildCollider* Arena::CreateMaybeMessage< ::Protocol::ChildCollider >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::ChildCollider >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

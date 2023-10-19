@@ -72,8 +72,9 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	Vec3 vPlayerPos = Vec3(matPlayerWorld.m[3]) + m_vTargetOffset;
 
 
-
-	Matrix matLocal = matWorld * matPlayerWorld.Invert();
+	Matrix matRotWorld = m_pTransformCom->Get_WorldMatrix();
+	matRotWorld.Translation(vPlayerPos);
+	Matrix matLocal = matWorld * matRotWorld.Invert();
 	if (m_bMouseMove)
 	{
 		_long	MouseMove = 0;
@@ -130,7 +131,9 @@ void CCamera_Player::Tick(_float fTimeDelta)
 		if (m_fCurrSpeedX)
 			matLocal *= Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), m_fCurrSpeedX));
 	}
-	matWorld = matLocal * matPlayerWorld;
+	matWorld = matLocal * matRotWorld;
+
+
 
 	Vec3 vOffset = Vec3(matWorld.m[3]) - vPlayerPos;
 
@@ -147,9 +150,9 @@ void CCamera_Player::Tick(_float fTimeDelta)
 		m_fCameraAngle = XMConvertToRadians(30.0f);
 		m_fCurrSpeedY = 0.0f;
 	}
-	if (fAngle > 100.0f)
+	if (fAngle > 150.0f)
 	{
-		m_fCameraAngle = XMConvertToRadians(100.0f);
+		m_fCameraAngle = XMConvertToRadians(150.0f);
 		m_fCurrSpeedY = 0.0f;
 	}
 

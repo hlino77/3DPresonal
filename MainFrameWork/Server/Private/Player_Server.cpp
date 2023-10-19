@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "ColliderSphere.h"
 #include "GameSession.h"
+#include "ColliderOBB.h"
 
 
 CPlayer_Server::CPlayer_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -51,7 +52,7 @@ void CPlayer_Server::LateTick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	Set_Colliders();
+	Set_Colliders(fTimeDelta);
 }
 
 HRESULT CPlayer_Server::Render()
@@ -119,9 +120,11 @@ void CPlayer_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	Safe_Release(pGameInstance);
 }
 
-void CPlayer_Server::Set_Colliders()
+void CPlayer_Server::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Tick(fTimeDelta);
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
@@ -196,6 +199,14 @@ HRESULT CPlayer_Server::Ready_Components()
 
 		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 		CCollisionManager::GetInstance()->Add_Colider(pCollider);
+
+		COBBCollider* pChildCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), TEXT("Com_ColliderBodyChild"), (CComponent**)&pChildCollider, &tColliderInfo)))
+			return E_FAIL;
+
+		if (pChildCollider)
+			pCollider->Set_Child(pChildCollider);
 	}
 
 	{

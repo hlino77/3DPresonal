@@ -14,7 +14,8 @@ CMesh::CMesh(const CMesh & rhs)
 	, m_szName(rhs.m_szName)
 	, m_szMaterialName(rhs.m_szMaterialName)
 	, m_iBoneIndex(rhs.m_iBoneIndex)
-
+	, m_pVertices(rhs.m_pVertices)
+	, m_pIndices(rhs.m_pIndices)
 {
 	//strcpy_s(m_szName, rhs.m_szName);
 }
@@ -30,7 +31,7 @@ HRESULT CMesh::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CMesh::LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFileUtils, Matrix PivotMatrix)
+HRESULT CMesh::LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFileUtils, Matrix PivotMatrix, _bool bColMesh)
 {
 	m_szName = CAsUtils::ToWString(pFileUtils->Read<string>());
 	m_iBoneIndex = pFileUtils->Read<int32>();
@@ -56,23 +57,44 @@ HRESULT CMesh::LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFil
 		m_BufferDesc.StructureByteStride = m_iStride;
 
 
-		VTXANIMMODEL* pVertices = new VTXANIMMODEL[iVTXCount];
-		ZeroMemory(pVertices, sizeof(VTXANIMMODEL) * iVTXCount);
+		if (bColMesh)
+		{
+			m_pVertices = new VTXANIMMODEL[iVTXCount];
+			ZeroMemory(m_pVertices, sizeof(VTXANIMMODEL) * iVTXCount);
 
 
-		void* pData = pVertices;
-		pFileUtils->Read(&pData, sizeof(VTXANIMMODEL) * iVTXCount);
+			void* pData = m_pVertices;
+			pFileUtils->Read(&pData, sizeof(VTXANIMMODEL) * iVTXCount);
 
-		if (eModelType == CModel::TYPE::TYPE_NONANIM)
-			Ready_Vertices(pVertices, PivotMatrix);
+			if (eModelType == CModel::TYPE::TYPE_NONANIM)
+				Ready_Vertices(m_pVertices, PivotMatrix);
 
-		ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-		m_SubResourceData.pSysMem = pVertices;
+			ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+			m_SubResourceData.pSysMem = m_pVertices;
 
-		if (FAILED(__super::Create_VertexBuffer()))
-			return E_FAIL;
+			if (FAILED(__super::Create_VertexBuffer()))
+				return E_FAIL;
+		}
+		else
+		{
+			VTXANIMMODEL* pVertices = new VTXANIMMODEL[iVTXCount];
+			ZeroMemory(pVertices, sizeof(VTXANIMMODEL) * iVTXCount);
 
-		Safe_Delete_Array(pVertices);
+
+			void* pData = pVertices;
+			pFileUtils->Read(&pData, sizeof(VTXANIMMODEL) * iVTXCount);
+
+			if (eModelType == CModel::TYPE::TYPE_NONANIM)
+				Ready_Vertices(pVertices, PivotMatrix);
+
+			ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+			m_SubResourceData.pSysMem = pVertices;
+
+			if (FAILED(__super::Create_VertexBuffer()))
+				return E_FAIL;
+
+			Safe_Delete_Array(pVertices);
+		}
 	}
 
 	//IndexData
@@ -94,19 +116,36 @@ HRESULT CMesh::LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFil
 		m_BufferDesc.StructureByteStride = 0;
 
 
-		FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
-		ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+		if (bColMesh)
+		{
+			m_pIndices = new FACEINDICES32[m_iNumPrimitives];
+			ZeroMemory(m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
 
-		void* pData = pIndices;
-		pFileUtils->Read(&pData, sizeof(FACEINDICES32) * m_iNumPrimitives);
+			void* pData = m_pIndices;
+			pFileUtils->Read(&pData, sizeof(FACEINDICES32) * m_iNumPrimitives);
 
-		ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-		m_SubResourceData.pSysMem = pIndices;
+			ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+			m_SubResourceData.pSysMem = m_pIndices;
 
-		if (FAILED(__super::Create_IndexBuffer()))
-			return E_FAIL;
+			if (FAILED(__super::Create_IndexBuffer()))
+				return E_FAIL;
+		}
+		else
+		{
+			FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
+			ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
 
-		Safe_Delete_Array(pIndices);
+			void* pData = pIndices;
+			pFileUtils->Read(&pData, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+			ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+			m_SubResourceData.pSysMem = pIndices;
+
+			if (FAILED(__super::Create_IndexBuffer()))
+				return E_FAIL;
+
+			Safe_Delete_Array(pIndices);
+		}
 	}
 
 	return S_OK;

@@ -29,10 +29,12 @@ public:
 	virtual HRESULT Initialize(void* pArg);	
 
 public:
-	HRESULT	LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFileUtils, Matrix PivotMatrix);
+	HRESULT	LoadData_FromMeshFile(CModel::TYPE eModelType, CAsFileUtils* pFileUtils, Matrix PivotMatrix, _bool bColMesh);
 	HRESULT	LoadData_FromConverter(CModel::TYPE eModelType, shared_ptr<asMesh> pMesh, Matrix PivotMatrix);
 
 
+	VTXANIMMODEL* Get_Vertices() { return m_pVertices; }
+	FACEINDICES32* Get_Indices() { return m_pIndices; }
 private:
 	//char				m_szName[MAX_PATH] = "";
 	_uint				m_iMaterialIndex = 0;
@@ -46,6 +48,9 @@ private:
 	_uint							m_iBoneIndex;
 	wstring							m_szName;
 	wstring							m_szMaterialName;
+
+	VTXANIMMODEL*					m_pVertices = nullptr;
+	FACEINDICES32*					m_pIndices = nullptr;
 private:
 	HRESULT Ready_Vertices(VTXANIMMODEL* pVertices, Matrix PivotMatrix);
 

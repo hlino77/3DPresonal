@@ -55,8 +55,11 @@ public:
 	Matrix  Get_CurrBoneMatrix(_uint iIndex);
 
 	_int	Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed);
+
+
+	vector<class CMesh*>& Get_Meshes() { return m_Meshes; }
 public:
-	virtual HRESULT Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient);
+	virtual HRESULT Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient, _bool bColMesh);
 	virtual HRESULT Initialize(void* pArg);
 
 
@@ -76,12 +79,12 @@ public:
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
 
-	HRESULT Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient);
+	HRESULT Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient, _bool bColMesh);
 
 
 
 private:
-	HRESULT Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient);
+	HRESULT Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient, _bool bColMesh);
 	HRESULT Load_MaterialData_FromFile();
 	HRESULT Load_AnimationData_FromFile(Matrix PivotMatrix, _bool bClient);
 
@@ -136,7 +139,7 @@ private:
 
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const wstring& strFilePath, const wstring& strFileName, _bool bClient ,Matrix PivotMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const wstring& strFilePath, const wstring& strFileName, _bool bClient, _bool bColMesh, Matrix PivotMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(CGameObject* pObject, void* pArg = nullptr);
 	virtual void Free() override;
 };

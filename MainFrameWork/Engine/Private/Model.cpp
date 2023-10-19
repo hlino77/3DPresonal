@@ -1,4 +1,4 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Animation.h"
@@ -130,12 +130,12 @@ _int CModel::Initailize_FindAnimation(const wstring& szAnimName, _float fSpeed)
 	return iAnimationIndex;
 }
 
-HRESULT CModel::Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient)
+HRESULT CModel::Initialize_Prototype(Matrix PivotMatrix, const wstring& strFilePath, const wstring& strFileName, _bool bClient, _bool bColMesh)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 
 
-	if(FAILED(Load_AssetFile_FromBinary(strFilePath, strFileName, bClient)))
+	if(FAILED(Load_AssetFile_FromBinary(strFilePath, strFileName, bClient, bColMesh)))
 		return E_FAIL;
 
 	return S_OK;
@@ -322,14 +322,14 @@ HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 }
 
 
-HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient)
+HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient, _bool bColMesh)
 {
 	m_strFileName = pFileName;
 	m_strFilePath = pFilePath;
 
 
 
-	if (FAILED(Load_ModelData_FromFile(XMLoadFloat4x4(&m_PivotMatrix), bClient)))
+	if (FAILED(Load_ModelData_FromFile(XMLoadFloat4x4(&m_PivotMatrix), bClient, bColMesh)))
 		return E_FAIL;
 
 
@@ -350,7 +350,7 @@ HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstrin
 	return S_OK;
 }
 
-HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient)
+HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient, _bool bColMesh)
 {
 	wstring strfullPath = m_strFilePath + m_strFileName + L"/" + m_strFileName + L".mesh";
 
@@ -388,7 +388,7 @@ HRESULT CModel::Load_ModelData_FromFile(Matrix PivotMatrix, _bool bClient)
 			if (nullptr == pMeshContainer)
 				return E_FAIL;
 
-			pMeshContainer->LoadData_FromMeshFile(m_eModelType, pFileUtils.get(), PivotMatrix);
+			pMeshContainer->LoadData_FromMeshFile(m_eModelType, pFileUtils.get(), PivotMatrix, bColMesh);
 
 			m_Meshes.push_back(pMeshContainer);
 		}
@@ -585,11 +585,11 @@ void CModel::Change_NextAnimation()
 }
 
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFilePath, const wstring& strFileName, _bool bClient, Matrix PivotMatrix)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFilePath, const wstring& strFileName, _bool bClient, _bool bColMesh, Matrix PivotMatrix)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(PivotMatrix, strFilePath, strFileName, bClient)))
+	if (FAILED(pInstance->Initialize_Prototype(PivotMatrix, strFilePath, strFileName, bClient, bColMesh)))
 	{
 		MSG_BOX("Failed To Created : CTexture");
 		Safe_Release(pInstance);

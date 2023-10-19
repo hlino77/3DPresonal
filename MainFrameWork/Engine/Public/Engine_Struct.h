@@ -234,6 +234,13 @@ namespace Engine
 
 	} DATA_SCENE;
 
+
+	typedef struct tagTriangleDesc
+	{
+		Vec3 vPos0, vPos1, vPos2;
+		_float fDist;
+	}TRIAGLEDESC;
+
 }
 
 

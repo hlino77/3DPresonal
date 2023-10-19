@@ -165,11 +165,13 @@
     <ClInclude Include="..\Public\BufferWriter.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\ColliderBase.h" />
+    <ClInclude Include="..\Public\ColliderOBB.h" />
     <ClInclude Include="..\Public\ColliderSphere.h" />
     <ClInclude Include="..\Public\CollisionManager.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\Public\Component_Manager.h" />
     <ClInclude Include="..\Public\CoreTLS.h" />
+    <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\Public\DeadLockProfiler.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
@@ -233,11 +235,13 @@
     <ClCompile Include="..\Private\BufferWriter.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\ColliderBase.cpp" />
+    <ClCompile Include="..\Private\ColliderOBB.cpp" />
     <ClCompile Include="..\Private\ColliderSphere.cpp" />
     <ClCompile Include="..\Private\CollisionManager.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\Private\Component_Manager.cpp" />
     <ClCompile Include="..\Private\CoreTLS.cpp" />
+    <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\Private\DeadLockProfiler.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />

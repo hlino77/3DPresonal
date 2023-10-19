@@ -1836,6 +1836,7 @@ class S_COLLIDERSTATE final :
 
   enum : int {
     kVOffsetFieldNumber = 6,
+    kTChildFieldNumber = 9,
     kIObjectIDFieldNumber = 1,
     kILevelFieldNumber = 2,
     kILayerFieldNumber = 3,
@@ -1865,6 +1866,24 @@ class S_COLLIDERSTATE final :
       voffset() const;
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
       mutable_voffset();
+
+  // repeated .Protocol.ChildCollider tChild = 9;
+  int tchild_size() const;
+  private:
+  int _internal_tchild_size() const;
+  public:
+  void clear_tchild();
+  ::Protocol::ChildCollider* mutable_tchild(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ChildCollider >*
+      mutable_tchild();
+  private:
+  const ::Protocol::ChildCollider& _internal_tchild(int index) const;
+  ::Protocol::ChildCollider* _internal_add_tchild();
+  public:
+  const ::Protocol::ChildCollider& tchild(int index) const;
+  ::Protocol::ChildCollider* add_tchild();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ChildCollider >&
+      tchild() const;
 
   // int32 iObjectID = 1;
   void clear_iobjectid();
@@ -1937,6 +1956,7 @@ class S_COLLIDERSTATE final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > voffset_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ChildCollider > tchild_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
@@ -3494,6 +3514,42 @@ inline void S_COLLIDERSTATE::_internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::
 inline void S_COLLIDERSTATE::set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_iattacktype(value);
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iAttackType)
+}
+
+// repeated .Protocol.ChildCollider tChild = 9;
+inline int S_COLLIDERSTATE::_internal_tchild_size() const {
+  return tchild_.size();
+}
+inline int S_COLLIDERSTATE::tchild_size() const {
+  return _internal_tchild_size();
+}
+inline ::Protocol::ChildCollider* S_COLLIDERSTATE::mutable_tchild(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_COLLIDERSTATE.tChild)
+  return tchild_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ChildCollider >*
+S_COLLIDERSTATE::mutable_tchild() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_COLLIDERSTATE.tChild)
+  return &tchild_;
+}
+inline const ::Protocol::ChildCollider& S_COLLIDERSTATE::_internal_tchild(int index) const {
+  return tchild_.Get(index);
+}
+inline const ::Protocol::ChildCollider& S_COLLIDERSTATE::tchild(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.tChild)
+  return _internal_tchild(index);
+}
+inline ::Protocol::ChildCollider* S_COLLIDERSTATE::_internal_add_tchild() {
+  return tchild_.Add();
+}
+inline ::Protocol::ChildCollider* S_COLLIDERSTATE::add_tchild() {
+  // @@protoc_insertion_point(field_add:Protocol.S_COLLIDERSTATE.tChild)
+  return _internal_add_tchild();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ChildCollider >&
+S_COLLIDERSTATE::tchild() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_COLLIDERSTATE.tChild)
+  return tchild_;
 }
 
 // -------------------------------------------------------------------

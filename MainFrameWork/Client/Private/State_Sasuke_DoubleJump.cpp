@@ -58,6 +58,8 @@ void CState_Sasuke_DoubleJump::Enter_State()
 
 	Set_Jump();
 
+
+	m_pPlayer->Set_DoubleJump(true);
 }
 
 void CState_Sasuke_DoubleJump::Tick_State(_float fTimeDelta)

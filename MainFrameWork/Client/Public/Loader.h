@@ -47,6 +47,8 @@ private:
 	HRESULT Loading_For_Level_Lobby();
 	
 	HRESULT Load_MapData(LEVELID eLevel, const wstring& szFilePath);
+	HRESULT Load_ColMesh(LEVELID eLevel, const wstring& szFilePath);
+
 
 	HRESULT Loading_Model_For_Level_Arena();
 

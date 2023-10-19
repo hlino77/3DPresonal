@@ -49,6 +49,8 @@ void CState_Naruto_Jump::Enter_State()
 
 
 	m_pPlayer->Set_DoubleJump(false);
+
+	m_pPlayer->Set_Wall(false);
 }
 
 void CState_Naruto_Jump::Tick_State(_float fTimeDelta)

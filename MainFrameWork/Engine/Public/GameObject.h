@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "AsTypes.h"
+#include "Lock.h"
 
 /* 클라이엉ㄴ트에서 제작할 다양한 게임오브젝트들의 부모가된다. */
 
@@ -36,52 +37,63 @@ public:
 	class CModel*		Get_ModelCom() { return m_pModelCom; }
 	class CRigidBody*	Get_RigidBody() { return m_pRigidBody; }
 public:
-	virtual HRESULT			SetUp_State(Matrix StateMatrix) { return S_OK; }
-	void					Set_NoneControlState(const wstring& szName);
+	virtual HRESULT				SetUp_State(Matrix StateMatrix) { return S_OK; }
+	void						Set_NoneControlState(const wstring& szName);
 
 public:
-	void					Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
-	Vec3					Get_TargetPos() { return m_vTargetPos.load(); }
+	void						Set_TargetPos(Vec3 vTargetPos) { m_vTargetPos.store(vTargetPos); }
+	Vec3						Get_TargetPos() { return m_vTargetPos.load(); }
 
-	void					Set_TargetMatrix(Matrix matTargetWorld) { m_matTargetWorld.store(matTargetWorld); }
-	Matrix					Get_TargetMatrix() { return m_matTargetWorld.load(); }
+	void						Set_TargetMatrix(Matrix matTargetWorld) { m_matTargetWorld.store(matTargetWorld); }
+	Matrix						Get_TargetMatrix() { return m_matTargetWorld.load(); }
 
-	void					Set_ObjectTag(const wstring& strName) { m_strObjectTag = strName; }
-	const wstring&			Get_ObjectTag() { return m_strObjectTag; }
+	void						Set_ObjectTag(const wstring& strName) { m_strObjectTag = strName; }
+	const wstring&				Get_ObjectTag() { return m_strObjectTag; }
 
-	_uint					Get_ObjectID() { return m_iObjectID; }
-	_uint					Get_ObjectLayer() { return m_iLayer; }
+	_uint						Get_ObjectID() { return m_iObjectID; }
+	_uint						Get_ObjectLayer() { return m_iLayer; }
 
-	class CSphereCollider*	Get_Colider(const _uint& iLayer) { return m_Coliders[iLayer]; }
+	class CSphereCollider*		Get_Colider(const _uint& iLayer) { return m_Coliders[iLayer]; }
 
-	_bool					Is_Control() { return m_bControl; }
+	_bool						Is_Control() { return m_bControl; }
 
-	_bool					Is_Active() { return m_bActive; }
-	void					Set_Active(_bool bActive) { m_bActive = bActive; }
+	_bool						Is_Active() { return m_bActive; }
+	void						Set_Active(_bool bActive) { m_bActive = bActive; }
 
-	CGameObject*			Get_NearTarget() { return m_pNearTarget; }
-	void					Reset_NearTarget() { m_pNearTarget = nullptr; }
-	void					Set_NearTarget(CGameObject* pObject) { m_pNearTarget = pObject; }
+	CGameObject*				Get_NearTarget() { return m_pNearTarget; }
+	void						Reset_NearTarget() { m_pNearTarget = nullptr; }
+	void						Set_NearTarget(CGameObject* pObject) { m_pNearTarget = pObject; }
 
-	CGameObject*			Get_HitObject() { return m_pHitObject; }
-	void					Reset_HitObject() { m_pHitObject = nullptr; }
-	void					Set_HitObject(CGameObject* pObject) { m_pHitObject = pObject; }
-
-
-	void					Set_ModelName(const wstring& strName) { m_szModelName = strName; }
-	const wstring&			Get_ModelName() { return m_szModelName; }
+	CGameObject*				Get_HitObject() { return m_pHitObject; }
+	void						Reset_HitObject() { m_pHitObject = nullptr; }
+	void						Set_HitObject(CGameObject* pObject) { m_pHitObject = pObject; }
 
 
-	void					Set_Render(_bool bRender) { m_bRender = bRender; }
-	_bool					Is_Render() { return m_bRender; }
+	void						Set_ModelName(const wstring& strName) { m_szModelName = strName; }
+	const wstring&				Get_ModelName() { return m_szModelName; }
+
+
+	void						Set_Render(_bool bRender) { m_bRender = bRender; }
+	_bool						Is_Render() { return m_bRender; }
+
+
+	_uint						Get_ObjectType() { return m_iObjType; }
+
+	void						Set_Pick(TRIAGLEDESC tTriangle) { m_tTriangle = tTriangle; };
+	_bool						Is_Picking() { return m_bPicking; }
+
+	TRIAGLEDESC					Get_Triangle() { return m_tTriangle; }
+	void						Reset_Triangle() { ZeroMemory(&m_tTriangle, sizeof(TRIAGLEDESC)); m_tTriangle.fDist = -1.0f; }
+
 
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Compute_CamZ(Vec4 vWorldPos);
 
-
 protected:
+	USE_LOCK
+
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
@@ -110,11 +122,17 @@ protected:
 	_bool				m_bRender = true;
 	_bool				m_bActive = true;
 
-	atomic<Vec3>					m_vTargetPos;
-	atomic<Matrix>					m_matTargetWorld;
+	atomic<Vec3>		m_vTargetPos;
+	atomic<Matrix>		m_matTargetWorld;
 
-	CGameObject* m_pNearTarget = nullptr;
-	CGameObject* m_pHitObject = nullptr;
+	CGameObject*		m_pNearTarget = nullptr;
+	CGameObject*		m_pHitObject = nullptr;
+
+
+	//WallPicking
+	_bool						m_bPicking = false;
+	TRIAGLEDESC					m_tTriangle;
+
 private:
 	CComponent* Find_Component(const wstring & strComponentTag);
 

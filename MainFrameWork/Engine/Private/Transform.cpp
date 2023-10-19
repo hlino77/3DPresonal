@@ -311,7 +311,7 @@ void CTransform::LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta)
 	vTargetLook = vTargetRight.Cross(vUp);
 	vTargetLook.Normalize();
 
-	_float fRadian = acosf(min(1.0f,vTargetLook.Dot(vPlayerLook)));
+	_float fRadian = acosf(min(1.0f, vTargetLook.Dot(vPlayerLook)));
 	if (fRadian <= fSpeed * fTimeDelta)
 	{
 		vPlayerLook = vTargetLook;
@@ -362,6 +362,33 @@ void CTransform::Move_Pos(Vec3 vTargetPos)
 	
 	vPos += vTargetPos;
 	Set_State(STATE::STATE_POSITION, vPos);
+}
+
+void CTransform::Set_Up(Vec3 vNormal)
+{
+	Vec3 vLook = Get_State(STATE::STATE_LOOK);
+	vLook.Normalize();
+
+	Vec3 vUp = vNormal;
+
+	Vec3 vRight = vUp.Cross(vLook);
+	vLook = vRight.Cross(vUp);
+
+	vRight.Normalize();
+	vUp.Normalize();
+	vLook.Normalize();
+
+	Vec3 vScale = Get_Scale();
+
+	vRight *= vScale.x;
+	vUp *= vScale.y;
+	vLook *= vScale.z;
+
+	WRITE_LOCK
+	Set_State(CTransform::STATE_RIGHT, vRight);
+	Set_State(CTransform::STATE_UP, vUp);
+	Set_State(CTransform::STATE_LOOK, vLook);
+
 }
 
 void CTransform::Turn_Speed(Vec3 vAxis, _float fSpeed, _float fTimeDelta)

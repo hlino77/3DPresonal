@@ -25,11 +25,13 @@ public:
 	void				Send_PlayerInfo();
 
 
-	void				Set_Colliders();
+	void				Set_Colliders(_float fTimeDelta);
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();
 	HRESULT			Ready_Coliders();
+
+
 
 private:
 	_float	m_fSendInfoTime = 0.0f;

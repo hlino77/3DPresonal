@@ -90,6 +90,16 @@ public:
 
 
 	void			Follow_ServerPos(_float fDistance, _float fLerpSpeed);
+
+	void			Set_Picking(_bool bPicking) { m_bPicking = bPicking; }
+
+
+	void			Set_Wall(_bool bWall) { m_bWall = bWall; }
+	_bool			Is_Wall() { return m_bWall; }
+
+
+	void			Set_PlayerToWall();
+
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -106,6 +116,8 @@ protected:
 	unordered_map<wstring, _uint>	m_BoneIndex;
 	_bool							m_bDoubleJump = true;
 
+
+	_bool							m_bWall = false;
 	
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;

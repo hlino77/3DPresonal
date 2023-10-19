@@ -61,6 +61,10 @@ public:
 
 	void			OnCollisionEnter(CCollider* pOther);
 	void			OnCollisionExit(CCollider* pOther);
+
+
+	CCollider*		Get_Child() { return m_pChild; }
+	void			Set_Child(CCollider* pChild) { m_pChild = pChild; }
 protected:
 	CRigidBody*				m_pRigidBody;
 
@@ -69,6 +73,8 @@ protected:
 
 	_uint					m_iBoneIndex = 0;
 	Vec3					m_vOffset;
+
+	CCollider*				m_pChild = nullptr;
 private:
 	ColliderType			m_eColliderType;
 	_bool					m_IsTrigger;

@@ -70,6 +70,7 @@ void CGameObject::Set_NoneControlState(const wstring& szName)
 }
 
 
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Find_Component(pComponentTag))

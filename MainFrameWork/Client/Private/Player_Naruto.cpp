@@ -19,6 +19,9 @@
 #include "State_Naruto_Land.h"
 #include "State_Naruto_WalkLoop.h"
 #include "State_Naruto_WalkEnd.h"
+#include "PickingMgr.h"
+#include "ColliderOBB.h"
+#include "State_Naruto_WallLand.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -57,7 +60,7 @@ void CPlayer_Naruto::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 
-	Set_Colliders();
+	Set_Colliders(fTimeDelta);
 
 	if (m_bControl)
 	{
@@ -86,6 +89,10 @@ HRESULT CPlayer_Naruto::Render()
 void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
 	int i = 0;
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+	}
 }
 
 void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -95,6 +102,11 @@ void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
 	int i = 0;
+
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+	}
 }
 
 void CPlayer_Naruto::Send_PlayerInfo()
@@ -124,9 +136,11 @@ void CPlayer_Naruto::Send_PlayerInfo()
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
-void CPlayer_Naruto::Set_Colliders()
+void CPlayer_Naruto::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Tick(fTimeDelta);
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
@@ -150,6 +164,7 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Land", new CState_Naruto_Land(L"Land", this));
 	m_pStateMachine->Add_State(L"Walk_Loop", new CState_Naruto_WalkLoop(L"Walk_Loop", this));
 	m_pStateMachine->Add_State(L"Walk_End", new CState_Naruto_WalkEnd(L"Walk_End", this));
+	m_pStateMachine->Add_State(L"WallLand", new CState_Naruto_WallLand(L"WallLand", this));
 
 
 
@@ -173,7 +188,13 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
+
+	dynamic_cast<COBBCollider*>(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child())->Set_Scale(Vec3(0.5f, 0.5f, 0.5f));
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
+
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
+
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);

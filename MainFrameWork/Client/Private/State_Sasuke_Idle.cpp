@@ -5,6 +5,7 @@
 #include "StateMachine.h"
 #include "Key_Manager.h"
 #include "GameInstance.h"
+#include "PickingMgr.h"
 
 CState_Sasuke_Idle::CState_Sasuke_Idle(const wstring& strStateName, class CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
@@ -67,6 +68,7 @@ void CState_Sasuke_Idle::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Set_State(L"Jump");
 		return;
 	}
+
 }
 
 void CState_Sasuke_Idle::Tick_State_NoneControl(_float fTimeDelta)

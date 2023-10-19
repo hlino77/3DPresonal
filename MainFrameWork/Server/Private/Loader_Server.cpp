@@ -126,7 +126,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -136,7 +136,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
 			return E_FAIL;
 	}
 
@@ -146,7 +146,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
-			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, PivotMatrix))))
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
 			return E_FAIL;
 	}
 

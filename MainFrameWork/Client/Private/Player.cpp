@@ -7,6 +7,10 @@
 #include "AsUtils.h"
 #include "ColliderSphere.h"
 #include "RigidBody.h"
+#include "ColliderOBB.h"
+#include "CollisionManager.h"
+#include "PickingMgr.h"
+#include "Struct.pb.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -56,11 +60,14 @@ void CPlayer::Tick(_float fTimeDelta)
 	}*/
 
 	m_pRigidBody->Tick(fTimeDelta);
-
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	if (m_bWall)
+		Set_PlayerToWall();
+
+
 	if (nullptr == m_pRendererCom)
 		return;
 
@@ -120,9 +127,12 @@ void CPlayer::Find_NearTarget()
 
 Vec3 CPlayer::Make_StraightDir()
 {
-	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
 
-	Vec3 vDir = vCameraRight.Cross(m_pTransformCom->Get_State(CTransform::STATE::STATE_UP));
+	Vec3 vRight = vUp.Cross(vCameraLook);
+	Vec3 vDir = vRight.Cross(vUp);
 	vDir.Normalize();
 
 	return vDir;
@@ -140,9 +150,12 @@ Vec3 CPlayer::Make_RightDir()
 
 Vec3 CPlayer::Make_BackDir()
 {
-	Vec3 vCameraRight = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_RIGHT);
+	Vec3 vCameraLook = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE::STATE_LOOK);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
 
-	Vec3 vDir = vCameraRight.Cross(m_pTransformCom->Get_State(CTransform::STATE::STATE_UP));
+	Vec3 vRight = vUp.Cross(vCameraLook);
+	Vec3 vDir = vRight.Cross(vUp);
 	vDir.Normalize();
 
 	return -vDir;
@@ -212,15 +225,70 @@ void CPlayer::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 {
 	Vec3 vCurrPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+	Vec3 vCurrUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
 	Matrix matTargetWorld = m_matTargetWorld;
-	Vec3 vServerPos(matTargetWorld.m[3]);
 
-	Vec3 vDistance = vServerPos - vCurrPos;
-	if (vDistance.Length() > fDistance)
 	{
-		vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, fLerpSpeed);
-		m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
+		Vec3 vServerPos(matTargetWorld.m[3]);
+
+		Vec3 vDistance = vServerPos - vCurrPos;
+		if (vDistance.Length() > fDistance)
+		{
+			vCurrPos = Vec3::Lerp(vCurrPos, vServerPos, fLerpSpeed);
+			m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vCurrPos);
+		}
 	}
+	
+
+	{
+		Vec3 vServerUp(matTargetWorld.m[1]);
+
+		Vec3 vDistance = vServerUp - vCurrUp;
+		if (vDistance.Length() > 0.001f)
+		{
+			vCurrUp = Vec3::Lerp(vCurrUp, vServerUp, 0.1f);
+			m_pTransformCom->Set_Up(vCurrUp);
+		}
+	}
+
+}
+
+
+
+
+void CPlayer::Set_PlayerToWall()
+{
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vRayPos = vPos + vUp * 5.0f;
+	Vec3 vDir = -vUp;
+
+	CPickingMgr::GetInstance()->Set_Ray(vRayPos, vDir);
+
+
+	if (m_tTriangle.fDist == -1.0f)
+		return;
+
+	_float fDist;
+	if (TriangleTests::Intersects(vRayPos, vDir, m_tTriangle.vPos0, m_tTriangle.vPos1, m_tTriangle.vPos2, fDist))
+	{
+		Vec3 vPlayerPos = vRayPos + vDir * fDist;
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPlayerPos);
+
+		Vec3 vDir1 = m_tTriangle.vPos1 - m_tTriangle.vPos0;
+		Vec3 vDir2 = m_tTriangle.vPos2 - m_tTriangle.vPos1;
+
+		Vec3 vNormal = vDir1.Cross(vDir2);
+		vNormal.Normalize();
+
+
+		m_pTransformCom->Set_Up(vNormal);
+	}
+
+
+
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -271,6 +339,18 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		if(pCollider)
 			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
+
+		COBBCollider* pChildCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), TEXT("Com_ColliderBodyChild"), (CComponent**)&pChildCollider, &tColliderInfo)))
+			return E_FAIL;
+
+		if (pChildCollider)
+			pCollider->Set_Child(pChildCollider);
+
+
+		if (m_bControl)
+			CCollisionManager::GetInstance()->Add_Colider(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]);
 	}
 
 
@@ -396,6 +476,28 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	vOffset->Resize(3, 0.0f);
 	Vec3 vColliderOffset = pCollider->Get_Offset();
 	memcpy(vOffset->mutable_data(), &vColliderOffset, sizeof(Vec3));
+
+	
+
+	if (pCollider->Get_Child())
+	{
+		COBBCollider* pChild = dynamic_cast<COBBCollider*>(pCollider->Get_Child());
+		auto tchild = pkt.add_tchild();
+
+
+		auto vOffset = tchild->mutable_voffset();
+		vOffset->Resize(3, 0.0f);
+		Vec3 vColOffset = pChild->Get_Offset();
+
+		memcpy(vOffset->mutable_data(), &vColOffset, sizeof(Vec3));
+
+
+		auto vScale = tchild->mutable_vscale();
+		vScale->Resize(3, 0.0f);
+		Vec3 vColScale = pChild->Get_Scale();
+
+		memcpy(vScale->mutable_data(), &vColScale, sizeof(Vec3));
+	}
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);

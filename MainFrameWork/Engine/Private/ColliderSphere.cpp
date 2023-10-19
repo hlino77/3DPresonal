@@ -4,6 +4,7 @@
 #include "ColliderSphere.h"
 #include "DebugDraw.h"
 #include "Model.h"
+#include "ColliderOBB.h"
 
 CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext, ColliderType::Sphere)
@@ -63,6 +64,10 @@ void CSphereCollider::DebugRender()
 	DX::Draw(m_pBatch, m_tBoundingSphere, Colors::Green);
 
 	m_pBatch->End();
+
+
+	if (m_pChild)
+		m_pChild->DebugRender();
 #endif // DEBUG
 }
 _bool CSphereCollider::Intersects(SimpleMath::Ray& ray, OUT _float& distance)
@@ -72,18 +77,29 @@ _bool CSphereCollider::Intersects(SimpleMath::Ray& ray, OUT _float& distance)
 
 _bool CSphereCollider::Intersects(Super* other)
 {
-	ColliderType type = other->GetColliderType();
-
-	switch (type)
+	if (m_tBoundingSphere.Intersects(static_cast<CSphereCollider*>(other)->GetBoundingSphere()))
 	{
-	case ColliderType::Sphere:
-		return m_tBoundingSphere.Intersects(static_cast<CSphereCollider*>(other)->GetBoundingSphere());
-	//case ColliderType::AABB:
-	//	return m_tBoundingSphere.Intersects(static_cast<CAABBCollider*>(other)->GetBoundingBox());
-	//case ColliderType::OBB:
-	//	return m_tBoundingSphere.Intersects(static_cast<COBBCollider*>(other)->GetBoundingBox());
-	//case ColliderType::Cylinder:
-	//	return m_tBoundingSphere.Intersects(static_cast<CCylinderCollider*>(other)->GetBoundingCylinder());
+		if (m_pChild)
+		{
+			if (other->Get_Child())
+			{
+				return static_cast<COBBCollider*>(m_pChild)->Intersects(other->Get_Child());
+			}
+			else
+			{
+				return static_cast<COBBCollider*>(m_pChild)->Intersects(other);
+			}
+		}
+		else
+		{
+			if (other->Get_Child())
+			{
+				return m_tBoundingSphere.Intersects(static_cast<COBBCollider*>(other->Get_Child())->GetBoundingBox());
+			}
+			else
+				return true;
+		}
+
 	}
 
 	return false;

@@ -18,7 +18,7 @@
 #include "DeadLockProfiler.h"
 #include "SocketUtils.h"
 #include "RigidBody.h"
-
+#include "ColliderOBB.h"
 
 
 CMainApp_Server::CMainApp_Server()
@@ -34,7 +34,7 @@ HRESULT CMainApp_Server::Initialize()
 	CServerPacketHandler::Init();
 
 	ServerServiceRef service = std::make_shared<ServerService>(
-		NetAddress(L"192.168.1.5", 7777),
+		NetAddress(L"192.168.1.27", 7777),
 		std::make_shared<IocpCore>(),
 		std::make_shared<CGameSession>, // TODO : SessionManager µî
 		10);
@@ -104,6 +104,10 @@ HRESULT CMainApp_Server::Ready_Prototype_Component()
 	/* For.Prototype_Component_State */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"),
 		CStateMachine::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"),
+		COBBCollider::Create(nullptr, nullptr))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"),

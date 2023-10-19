@@ -1,24 +1,25 @@
 #include "stdafx.h"
 #include "GameInstance.h"
-#include "StaticModel.h"
+#include "ColMesh.h"
+#include "ColliderOBB.h"
+#include "CollisionManager.h"
 
-
-CStaticModel::CStaticModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, OBJ_TYPE eObjType)
-	: CGameObject(pDevice, pContext, L"StaticModel", eObjType)
+CColMesh::CColMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, OBJ_TYPE eObjType)
+	: CGameObject(pDevice, pContext, L"ColMesh", eObjType)
 {
 }
 
-CStaticModel::CStaticModel(const CStaticModel& rhs)
+CColMesh::CColMesh(const CColMesh& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CStaticModel::Initialize_Prototype()
+HRESULT CColMesh::Initialize_Prototype()
 {
     return S_OK;
 }
 
-HRESULT CStaticModel::Initialize(void* pArg)
+HRESULT CColMesh::Initialize(void* pArg)
 {
 	MODELDESC* Desc = static_cast<MODELDESC*>(pArg);
 	m_strObjectTag = Desc->strFileName;
@@ -28,29 +29,27 @@ HRESULT CStaticModel::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	
 
     return S_OK;
 }
 
-void CStaticModel::Tick(_float fTimeDelta)
+void CColMesh::Tick(_float fTimeDelta)
 {
-
 }
 
-void CStaticModel::LateTick(_float fTimeDelta)
+void CColMesh::LateTick(_float fTimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return;
 
-	if(m_bRender)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
-HRESULT CStaticModel::Render()
+HRESULT CColMesh::Render()
 {
 	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
-		return S_OK;
+		return E_FAIL;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -70,20 +69,32 @@ HRESULT CStaticModel::Render()
 		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return S_OK;
 
+
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
-			return S_OK;
+			return E_FAIL;
 	}
 
 	Safe_Release(pGameInstance);
 
+
+
+	for (auto Collider : m_StaticColliders)
+	{
+		Collider->DebugRender();
+
+		if (Collider->Get_Child())
+			Collider->Get_Child()->DebugRender();
+	}
+
+
     return S_OK;
 }
 
-HRESULT CStaticModel::Add_ModelComponent(const wstring& strComName)
+HRESULT CColMesh::Add_ModelComponent(const wstring& strComName)
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
@@ -91,7 +102,63 @@ HRESULT CStaticModel::Add_ModelComponent(const wstring& strComName)
 	return S_OK;
 }
 
-HRESULT CStaticModel::Ready_Components()
+void CColMesh::Add_Collider()
+{
+	CSphereCollider* pCollider = nullptr;
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CSphereCollider::ColliderInfo tInfo;
+	tInfo.m_bActive = true;
+	tInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
+
+	CComponent* pComponent = pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), &tInfo);
+	if (nullptr == pComponent)
+		return;
+
+	pCollider = dynamic_cast<CSphereCollider*>(pComponent);
+	if (nullptr == pCollider)
+		return;
+
+	CCollisionManager::GetInstance()->Add_Colider(pCollider);
+
+	m_StaticColliders.push_back(pCollider);
+
+	Safe_Release(pGameInstance);
+
+}
+
+void CColMesh::Add_ChildCollider(_uint iIndex)
+{
+	COBBCollider* pCollider = nullptr;
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CCollider::ColliderInfo tInfo;
+	tInfo.m_bActive = true;
+	tInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_END;
+
+	CComponent* pComponent = pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), &tInfo);
+	if (nullptr == pComponent)
+		return;
+
+	pCollider = dynamic_cast<COBBCollider*>(pComponent);
+	if (nullptr == pCollider)
+		return;
+
+
+	m_StaticColliders[iIndex]->Set_Child(pCollider);
+
+	Safe_Release(pGameInstance);
+}
+
+HRESULT CColMesh::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -134,33 +201,33 @@ HRESULT CStaticModel::Ready_Components()
 }
 
 
-CStaticModel* CStaticModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, OBJ_TYPE eObjType)
+CColMesh* CColMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, OBJ_TYPE eObjType)
 {
-	CStaticModel* pInstance = new CStaticModel(pDevice, pContext, eObjType);
+	CColMesh* pInstance = new CColMesh(pDevice, pContext, eObjType);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed To Created : CStaticModel");
+		MSG_BOX("Failed To Created : CColMesh");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CStaticModel::Clone(void* pArg)
+CGameObject* CColMesh::Clone(void* pArg)
 {
-	CStaticModel* pInstance = new CStaticModel(*this);
+	CColMesh* pInstance = new CColMesh(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Cloned : CStaticModel");
+		MSG_BOX("Failed To Cloned : CColMesh");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CStaticModel::Free()
+void CColMesh::Free()
 {
 	__super::Free();
 
