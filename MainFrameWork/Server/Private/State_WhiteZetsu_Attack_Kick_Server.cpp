@@ -74,7 +74,7 @@ void CState_WhiteZetsu_Attack_Kick_Server::Update_Collider()
 
 	if (iFrame <= m_iColliderFrame1 + 3)
 	{
-		if (iFrame >= m_iColliderFrame1)
+		if (iFrame >= m_iColliderFrame1 && iFrame < m_iColliderFrame1 + 3)
 		{
 			if (pCollider->IsActive() == false)
 			{
@@ -97,7 +97,7 @@ void CState_WhiteZetsu_Attack_Kick_Server::Update_Collider()
 	else
 	{
 
-		if (iFrame >= m_iColliderFrame2)
+		if (iFrame >= m_iColliderFrame2 && iFrame < m_iColliderFrame2 + 3)
 		{
 			if (pCollider->IsActive() == false)
 			{

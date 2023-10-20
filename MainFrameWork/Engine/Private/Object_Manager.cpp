@@ -144,7 +144,7 @@ CGameObject* CObject_Manager::Find_NearGameObject(_uint iLevelIndex, const _uint
 	list<CGameObject*>& ObjectList = Find_Layer(iLevelIndex, iLayerType)->Find_GameObjects();
 
 	CGameObject* pFindObject = nullptr;
-	Vec3 vDistance(0.0f, 0.0f, 0.0f);
+	_float fDistance = -1.0f;
 
 	if (ObjectList.empty())
 		return nullptr;
@@ -155,18 +155,21 @@ CGameObject* CObject_Manager::Find_NearGameObject(_uint iLevelIndex, const _uint
 		if (pFindObject == nullptr)
 		{
 			pFindObject = Object;
+			Vec3 vCallObjectPos = pCallObject->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+			Vec3 vObjectPos = Object->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+			fDistance = (vCallObjectPos - vObjectPos).Length();
 			continue;
 		}
 			
 		Vec3 vCallObjectPos = pCallObject->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 		Vec3 vObjectPos = Object->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 
-		Vec3 vNewDistance = vObjectPos - vCallObjectPos;
+		_float fNewDistance = (vObjectPos - vCallObjectPos).Length();
 		
-		if (vNewDistance.Length() < vDistance.Length())
+		if (fNewDistance < fDistance)
 		{
 			pFindObject = Object;
-			vDistance = vNewDistance;
+			fDistance = fNewDistance;
 		}
 	}
 

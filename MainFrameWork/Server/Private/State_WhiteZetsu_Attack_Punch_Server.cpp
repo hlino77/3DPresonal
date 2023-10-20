@@ -55,7 +55,7 @@ void CState_WhiteZetsu_Attack_Punch_Server::Update_Collider()
 	_uint iFrame = m_pMonster->Get_ModelCom()->Get_Anim_Frame(m_iAttack_Punch);
 	CSphereCollider* pCollider = m_pMonster->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
-	if (iFrame >= m_iColliderFrame)
+	if (iFrame >= m_iColliderFrame && iFrame < m_iColliderFrame + 3)
 	{
 		if (pCollider->IsActive() == false)
 		{
