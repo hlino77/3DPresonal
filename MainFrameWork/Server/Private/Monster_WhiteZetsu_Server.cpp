@@ -68,8 +68,11 @@ void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollid
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		m_pHitObject = pOther->Get_Owner();
-		Set_State(L"Hit_Middle");
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			m_pHitObject = pOther->Get_Owner();
+			Set_State(L"Hit_Middle");
+		}
 	}
 }
 

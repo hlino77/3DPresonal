@@ -33,7 +33,7 @@ void CState_WhiteZetsu_Attack_Punch::Enter_State()
 
 void CState_WhiteZetsu_Attack_Punch::Tick_State(_float fTimeDelta)
 {
-
+	m_pMonster->Follow_ServerPos(0.01f, 0.1f);
 }
 
 void CState_WhiteZetsu_Attack_Punch::Exit_State()

@@ -53,7 +53,7 @@ void CState_WhiteZetsu_HitMiddle::Knock_Back()
 
 	vDir.Normalize();
 
-	m_pMonster->Get_RigidBody()->AddForce(vDir * 4.f, ForceMode::FORCE);
+	m_pMonster->Get_RigidBody()->AddForce(vDir * 6.f, ForceMode::FORCE);
 }
 
 void CState_WhiteZetsu_HitMiddle::LookAt_HitObject(_float fTimeDelta)

@@ -24,6 +24,7 @@
 #include "CollisionManager.h"
 #include "PickingMgr.h"
 #include "State_Sasuke_WallLand.h"
+#include "State_Sasuke_HitMiddle.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -101,6 +102,17 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
 	}
+
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			m_pHitObject = pOther->Get_Owner();
+			Set_State(L"Hit_Middle");
+		}
+	}
+
 }
 
 void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -175,6 +187,7 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Walk_Loop", new CState_Sasuke_WalkLoop(L"Walk_Loop", this));
 	m_pStateMachine->Add_State(L"Walk_End", new CState_Sasuke_WalkEnd(L"Walk_End", this));
 	m_pStateMachine->Add_State(L"WallLand", new CState_Sasuke_WallLand(L"WallLand", this));
+	m_pStateMachine->Add_State(L"Hit_Middle", new CState_Sasuke_HitMiddle(L"Hit_Middle", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));

@@ -197,6 +197,7 @@
     <ClInclude Include="..\Public\State_Naruto_Attack_Punch_Right.h" />
     <ClInclude Include="..\Public\State_Naruto_DoubleJump.h" />
     <ClInclude Include="..\Public\State_Naruto_FallFront.h" />
+    <ClInclude Include="..\Public\State_Naruto_HitMiddle.h" />
     <ClInclude Include="..\Public\State_Naruto_Idle.h" />
     <ClInclude Include="..\Public\State_Naruto_Jump.h" />
     <ClInclude Include="..\Public\State_Naruto_Land.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="..\Public\State_Sasuke_Attack_cmb08.h" />
     <ClInclude Include="..\Public\State_Sasuke_DoubleJump.h" />
     <ClInclude Include="..\Public\State_Sasuke_FallFront.h" />
+    <ClInclude Include="..\Public\State_Sasuke_HitMiddle.h" />
     <ClInclude Include="..\Public\State_Sasuke_Idle.h" />
     <ClInclude Include="..\Public\State_Sasuke_Jump.h" />
     <ClInclude Include="..\Public\State_Sasuke_Land.h" />
@@ -280,6 +282,7 @@
     <ClCompile Include="..\Private\State_Naruto_Attack_Punch_Right.cpp" />
     <ClCompile Include="..\Private\State_Naruto_DoubleJump.cpp" />
     <ClCompile Include="..\Private\State_Naruto_FallFront.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_HitMiddle.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Idle.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Jump.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Land.cpp" />
@@ -294,6 +297,7 @@
     <ClCompile Include="..\Private\State_Sasuke_Attack_cmb08.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_DoubleJump.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_FallFront.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_HitMiddle.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Idle.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Jump.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_Land.cpp" />

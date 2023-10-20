@@ -38,6 +38,7 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 	if (FAILED(Ready_Coliders()))
 		return E_FAIL;
 
+	m_pRigidBody->SetMass(2.0f);
 
     return S_OK;
 }
@@ -125,6 +126,7 @@ HRESULT CMonster_Server::Ready_Components()
 			return E_FAIL;
 		if (pCollider)
 			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_ATTACK, pCollider);
+		CCollisionManager::GetInstance()->Add_Colider(pCollider);
 	}
 
 

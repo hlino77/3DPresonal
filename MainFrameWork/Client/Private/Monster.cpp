@@ -33,6 +33,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pRigidBody->SetMass(2.0f);
+
     return S_OK;
 }
 
