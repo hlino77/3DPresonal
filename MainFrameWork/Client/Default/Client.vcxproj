@@ -219,6 +219,11 @@
     <ClInclude Include="..\Public\State_Sasuke_WalkEnd.h" />
     <ClInclude Include="..\Public\State_Sasuke_WalkLoop.h" />
     <ClInclude Include="..\Public\State_Sasuke_WallLand.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_Appear.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Kick.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Normal.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Punch.h" />
+    <ClInclude Include="..\Public\State_WhiteZetsu_ChasePlayer.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_HitMiddle.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Idle.h" />
     <ClInclude Include="..\Public\StaticModel.h" />
@@ -297,6 +302,11 @@
     <ClCompile Include="..\Private\State_Sasuke_WalkEnd.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_WalkLoop.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_WallLand.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_Appear.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Kick.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Normal.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Punch.cpp" />
+    <ClCompile Include="..\Private\State_WhiteZetsu_ChasePlayer.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_HitMiddle.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Idle.cpp" />
     <ClCompile Include="..\Private\StaticModel.cpp" />

@@ -8,6 +8,7 @@
 #include "Monster_WhiteZetsu_Server.h"
 #include "CollisionManager.h"
 #include "ThreadManager.h"
+#include "Struct.pb.h"
 
 CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
@@ -260,6 +261,9 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 	vPacketPos->Resize(3, 0.0f);
 	memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
 
+	/*auto tMonster = pkt.add_tmonsterinfo();
+	tMonster->set_ffollowdistance(10.0f);*/
+
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 
@@ -275,6 +279,8 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 		return E_FAIL;
 
 	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+
+	pMonster->Set_FollowDistance(10.0f);
 
 	Safe_Release(pGameInstance);
 

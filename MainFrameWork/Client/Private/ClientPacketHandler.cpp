@@ -133,6 +133,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			return true;
 		}
 		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
+
 		break;
 	}
 	case OBJ_TYPE::PROP:
@@ -403,5 +404,33 @@ bool Handel_S_USERINFO_Client(PacketSessionRef& session, Protocol::S_USERINFO& p
 
 
 	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGET& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
+	if (pNearTarget == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+	pObject->Set_NearTarget(pNearTarget);
+
+	Safe_Release(pGameInstance);
+
 	return true;
 }

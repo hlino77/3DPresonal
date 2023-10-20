@@ -9,6 +9,11 @@
 #include "ColliderSphere.h"
 #include "State_WhiteZetsu_Idle.h"
 #include "State_WhiteZetsu_HitMiddle.h"
+#include "State_WhiteZetsu_ChasePlayer.h"
+#include "State_WhiteZetsu_Appear.h"
+#include "State_WhiteZetsu_Attack_Normal.h"
+#include "State_WhiteZetsu_Attack_Kick.h"
+#include "State_WhiteZetsu_Attack_Punch.h"
 
 CMonster_WhiteZetsu::CMonster_WhiteZetsu(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -54,17 +59,20 @@ HRESULT CMonster_WhiteZetsu::Render()
 	__super::Render();
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
+
 	return S_OK;
 }
 
 void CMonster_WhiteZetsu::Set_Colliders()
 {
-	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
-	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE::STATE_UP);
-	vUp.Normalize();
-
-
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
+
 }
 
 
@@ -79,6 +87,14 @@ HRESULT CMonster_WhiteZetsu::Ready_State()
 {
 	m_pStateMachine->Add_State(L"Idle", new CState_WhiteZetsu_Idle(L"Idle", this));
 	m_pStateMachine->Add_State(L"Hit_Middle", new CState_WhiteZetsu_HitMiddle(L"Hit_Middle", this));
+	m_pStateMachine->Add_State(L"ChaseTarget", new CState_WhiteZetsu_ChasePlayer(L"ChaseTarget", this));
+	m_pStateMachine->Add_State(L"Appear", new CState_WhiteZetsu_Appear(L"Appear", this));
+	m_pStateMachine->Add_State(L"Attack_Normal", new CState_WhiteZetsu_Attack_Normal(L"Attack_Normal", this));
+	m_pStateMachine->Add_State(L"Attack_Kick", new CState_WhiteZetsu_Attack_Kick(L"Attack_Kick", this));
+	m_pStateMachine->Add_State(L"Attack_Punch", new CState_WhiteZetsu_Attack_Punch(L"Attack_Punch", this));
+
+	m_pStateMachine->Change_State(L"Appear");
+
 	return S_OK;
 }
 

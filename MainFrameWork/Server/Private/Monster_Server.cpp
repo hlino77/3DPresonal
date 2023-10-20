@@ -50,7 +50,8 @@ void CMonster_Server::Tick(_float fTimeDelta)
 void CMonster_Server::LateTick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
-	Set_Colliders();
+
+	Set_Colliders(fTimeDelta);
 }
 
 HRESULT CMonster_Server::Render()
@@ -113,6 +114,18 @@ HRESULT CMonster_Server::Ready_Components()
 		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 		CCollisionManager::GetInstance()->Add_Colider(pCollider);
 	}
+	
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = false;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+		if (pCollider)
+			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_ATTACK, pCollider);
+	}
 
 
 	Safe_Release(pGameInstance);
@@ -127,6 +140,49 @@ HRESULT CMonster_Server::Ready_Components()
     return S_OK;
 }
 
+
+void CMonster_Server::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
+{
+	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
+}
+
+void CMonster_Server::Find_NearTarget()
+{
+	m_pNearTarget = nullptr;
+	m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_PLAYER, this);
+}
+
+void CMonster_Server::Send_NearTarget()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Protocol::S_NEARTARGET pkt;
+	
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilayer(m_iLayer);
+
+
+	pkt.set_itargetobjectid(m_pNearTarget->Get_ObjectID());
+	pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
+
+
+	Safe_Release(pGameInstance);
+}
+
+_float CMonster_Server::Get_NearTargetDistance()
+{
+	if (m_pNearTarget == nullptr)
+		return 10000.0f;
+
+	Vec3 vTargetPos = m_pNearTarget->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	_float fDistance = (vTargetPos - vPos).Length();
+	return fDistance;
+}
 
 void CMonster_Server::Send_State(const wstring& szName)
 {
@@ -216,9 +272,12 @@ void CMonster_Server::Send_ColliderState(const _uint& iLayer)
 	Safe_Release(pGameInstance);
 }
 
-void CMonster_Server::Set_Colliders()
+void CMonster_Server::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
+
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
 }
 
 HRESULT CMonster_Server::Ready_Coliders()
@@ -227,6 +286,12 @@ HRESULT CMonster_Server::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
+
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(0.5f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.7f, 1.0f));
+	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
 	return S_OK;
 }

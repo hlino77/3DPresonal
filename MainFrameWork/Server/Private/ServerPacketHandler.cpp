@@ -325,3 +325,8 @@ bool Handel_S_USERINFO_Server(PacketSessionRef& session, Protocol::S_USERINFO& p
 	Safe_Release(pGameInstance);
 	return true;
 }
+
+bool Handel_S_NEARTARGET_Server(PacketSessionRef& session, Protocol::S_NEARTARGET& pkt)
+{
+	return false;
+}

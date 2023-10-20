@@ -25,7 +25,7 @@ HRESULT CState_Naruto_RunLoop::Initialize()
 	
 
 	m_fAccel = 10.0f;
-	m_fMaxSpeed = 5.0f;
+	m_fMaxSpeed = 6.0f;
 
 	if (m_iRun_Loop == -1)
 		return E_FAIL;
@@ -91,9 +91,6 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 	{
 		m_pPlayer->Set_State(L"Run_End");
 	}
-
-
-	
 }
 
 void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)

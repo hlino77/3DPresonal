@@ -24,7 +24,7 @@ public:
 	HRESULT Add_State(const wstring& strStateTag, class CState* pState);
 	HRESULT Change_State(const wstring& strStateTag);
 		
-
+	const wstring& Get_CurrState();
 private:
 	class CState* m_pCurrState = nullptr;
 	map<wstring, class CState*> m_States;

@@ -19,7 +19,7 @@ CState_WhiteZetsu_Idle_Server::CState_WhiteZetsu_Idle_Server(const CState& rhs, 
 HRESULT CState_WhiteZetsu_Idle_Server::Initialize()
 {
 	m_iIdle_Loop = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Idle_Loop", 1.0f);
-	m_pMonster->Get_ModelCom()->Set_CurrAnim(m_iIdle_Loop);
+
 	if (m_iIdle_Loop == -1)
 		return E_FAIL;
 
@@ -33,6 +33,23 @@ void CState_WhiteZetsu_Idle_Server::Enter_State()
 
 void CState_WhiteZetsu_Idle_Server::Tick_State(_float fTimeDelta)
 {
+	m_pMonster->Update_NearTarget(fTimeDelta);
+
+	_float fDistance = m_pMonster->Get_NearTargetDistance();
+
+	if (fDistance <= 1.0f)
+	{
+		m_fAttackDelay += fTimeDelta;
+
+		if (m_fAttackDelay >= 1.0f)
+		{
+			m_pMonster->Attack_Random();
+			m_fAttackDelay = 0.0f;
+		}
+	}
+
+
+	Vec3 vTargetPos = m_pMonster->Get_TargetPos();
 
 }
 

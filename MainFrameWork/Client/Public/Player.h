@@ -72,7 +72,7 @@ public:
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 
-	void					Find_NearTarget();
+	void			Find_NearTarget();
 
 	Vec3			Make_StraightDir();
 	Vec3			Make_RightDir();

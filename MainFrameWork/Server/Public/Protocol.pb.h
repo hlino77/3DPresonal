@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[14]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[15]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -80,6 +80,9 @@ extern S_LOGINDefaultTypeInternal _S_LOGIN_default_instance_;
 class S_MATRIX;
 struct S_MATRIXDefaultTypeInternal;
 extern S_MATRIXDefaultTypeInternal _S_MATRIX_default_instance_;
+class S_NEARTARGET;
+struct S_NEARTARGETDefaultTypeInternal;
+extern S_NEARTARGETDefaultTypeInternal _S_NEARTARGET_default_instance_;
 class S_NICKNAME;
 struct S_NICKNAMEDefaultTypeInternal;
 extern S_NICKNAMEDefaultTypeInternal _S_NICKNAME_default_instance_;
@@ -108,6 +111,7 @@ template<> ::Protocol::S_CREATE_OBJCECT* Arena::CreateMaybeMessage<::Protocol::S
 template<> ::Protocol::S_LEVEL_STATE* Arena::CreateMaybeMessage<::Protocol::S_LEVEL_STATE>(Arena*);
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
 template<> ::Protocol::S_MATRIX* Arena::CreateMaybeMessage<::Protocol::S_MATRIX>(Arena*);
+template<> ::Protocol::S_NEARTARGET* Arena::CreateMaybeMessage<::Protocol::S_NEARTARGET>(Arena*);
 template<> ::Protocol::S_NICKNAME* Arena::CreateMaybeMessage<::Protocol::S_NICKNAME>(Arena*);
 template<> ::Protocol::S_OBJECTINFO* Arena::CreateMaybeMessage<::Protocol::S_OBJECTINFO>(Arena*);
 template<> ::Protocol::S_OPEN_LEVEL* Arena::CreateMaybeMessage<::Protocol::S_OPEN_LEVEL>(Arena*);
@@ -765,6 +769,7 @@ class S_CREATE_OBJCECT final :
 
   enum : int {
     kVPosFieldNumber = 7,
+    kTMonsterInfoFieldNumber = 8,
     kStrNameFieldNumber = 5,
     kIObjectIDFieldNumber = 1,
     kIObjectTypeFieldNumber = 2,
@@ -793,6 +798,24 @@ class S_CREATE_OBJCECT final :
       vpos() const;
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
       mutable_vpos();
+
+  // repeated .Protocol.MonsterCreateInfo tMonsterInfo = 8;
+  int tmonsterinfo_size() const;
+  private:
+  int _internal_tmonsterinfo_size() const;
+  public:
+  void clear_tmonsterinfo();
+  ::Protocol::MonsterCreateInfo* mutable_tmonsterinfo(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MonsterCreateInfo >*
+      mutable_tmonsterinfo();
+  private:
+  const ::Protocol::MonsterCreateInfo& _internal_tmonsterinfo(int index) const;
+  ::Protocol::MonsterCreateInfo* _internal_add_tmonsterinfo();
+  public:
+  const ::Protocol::MonsterCreateInfo& tmonsterinfo(int index) const;
+  ::Protocol::MonsterCreateInfo* add_tmonsterinfo();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MonsterCreateInfo >&
+      tmonsterinfo() const;
 
   // string strName = 5;
   void clear_strname();
@@ -861,6 +884,7 @@ class S_CREATE_OBJCECT final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > vpos_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MonsterCreateInfo > tmonsterinfo_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr strname_;
   ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
   ::PROTOBUF_NAMESPACE_ID::uint32 iobjecttype_;
@@ -2454,6 +2478,182 @@ class S_USERINFO final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_NEARTARGET final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_NEARTARGET) */ {
+ public:
+  inline S_NEARTARGET() : S_NEARTARGET(nullptr) {}
+  ~S_NEARTARGET() override;
+  explicit constexpr S_NEARTARGET(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_NEARTARGET(const S_NEARTARGET& from);
+  S_NEARTARGET(S_NEARTARGET&& from) noexcept
+    : S_NEARTARGET() {
+    *this = ::std::move(from);
+  }
+
+  inline S_NEARTARGET& operator=(const S_NEARTARGET& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_NEARTARGET& operator=(S_NEARTARGET&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_NEARTARGET& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_NEARTARGET* internal_default_instance() {
+    return reinterpret_cast<const S_NEARTARGET*>(
+               &_S_NEARTARGET_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    14;
+
+  friend void swap(S_NEARTARGET& a, S_NEARTARGET& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_NEARTARGET* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_NEARTARGET* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_NEARTARGET* New() const final {
+    return new S_NEARTARGET();
+  }
+
+  S_NEARTARGET* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_NEARTARGET>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_NEARTARGET& from);
+  void MergeFrom(const S_NEARTARGET& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_NEARTARGET* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_NEARTARGET";
+  }
+  protected:
+  explicit S_NEARTARGET(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIObjectIDFieldNumber = 1,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kITargetObjectLayerFieldNumber = 4,
+    kITargetObjectIDFieldNumber = 5,
+  };
+  // int32 iObjectID = 1;
+  void clear_iobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
+  void set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iobjectid() const;
+  void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
+  void clear_ilayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
+  void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilayer() const;
+  void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iTargetObjectLayer = 4;
+  void clear_itargetobjectlayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectlayer() const;
+  void set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_itargetobjectlayer() const;
+  void _internal_set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iTargetObjectID = 5;
+  void clear_itargetobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectid() const;
+  void set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_itargetobjectid() const;
+  void _internal_set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_NEARTARGET)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectlayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 itargetobjectid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -2771,6 +2971,42 @@ inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
 S_CREATE_OBJCECT::mutable_vpos() {
   // @@protoc_insertion_point(field_mutable_list:Protocol.S_CREATE_OBJCECT.vPos)
   return _internal_mutable_vpos();
+}
+
+// repeated .Protocol.MonsterCreateInfo tMonsterInfo = 8;
+inline int S_CREATE_OBJCECT::_internal_tmonsterinfo_size() const {
+  return tmonsterinfo_.size();
+}
+inline int S_CREATE_OBJCECT::tmonsterinfo_size() const {
+  return _internal_tmonsterinfo_size();
+}
+inline ::Protocol::MonsterCreateInfo* S_CREATE_OBJCECT::mutable_tmonsterinfo(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_CREATE_OBJCECT.tMonsterInfo)
+  return tmonsterinfo_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MonsterCreateInfo >*
+S_CREATE_OBJCECT::mutable_tmonsterinfo() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S_CREATE_OBJCECT.tMonsterInfo)
+  return &tmonsterinfo_;
+}
+inline const ::Protocol::MonsterCreateInfo& S_CREATE_OBJCECT::_internal_tmonsterinfo(int index) const {
+  return tmonsterinfo_.Get(index);
+}
+inline const ::Protocol::MonsterCreateInfo& S_CREATE_OBJCECT::tmonsterinfo(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S_CREATE_OBJCECT.tMonsterInfo)
+  return _internal_tmonsterinfo(index);
+}
+inline ::Protocol::MonsterCreateInfo* S_CREATE_OBJCECT::_internal_add_tmonsterinfo() {
+  return tmonsterinfo_.Add();
+}
+inline ::Protocol::MonsterCreateInfo* S_CREATE_OBJCECT::add_tmonsterinfo() {
+  // @@protoc_insertion_point(field_add:Protocol.S_CREATE_OBJCECT.tMonsterInfo)
+  return _internal_add_tmonsterinfo();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MonsterCreateInfo >&
+S_CREATE_OBJCECT::tmonsterinfo() const {
+  // @@protoc_insertion_point(field_list:Protocol.S_CREATE_OBJCECT.tMonsterInfo)
+  return tmonsterinfo_;
 }
 
 // -------------------------------------------------------------------
@@ -3805,9 +4041,115 @@ S_USERINFO::tuser() const {
   return tuser_;
 }
 
+// -------------------------------------------------------------------
+
+// S_NEARTARGET
+
+// int32 iObjectID = 1;
+inline void S_NEARTARGET::clear_iobjectid() {
+  iobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::_internal_iobjectid() const {
+  return iobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::iobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NEARTARGET.iObjectID)
+  return _internal_iobjectid();
+}
+inline void S_NEARTARGET::_internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iobjectid_ = value;
+}
+inline void S_NEARTARGET::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iObjectID)
+}
+
+// int32 iLevel = 2;
+inline void S_NEARTARGET::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NEARTARGET.iLevel)
+  return _internal_ilevel();
+}
+inline void S_NEARTARGET::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_NEARTARGET::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iLevel)
+}
+
+// int32 iLayer = 3;
+inline void S_NEARTARGET::clear_ilayer() {
+  ilayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::_internal_ilayer() const {
+  return ilayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::ilayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NEARTARGET.iLayer)
+  return _internal_ilayer();
+}
+inline void S_NEARTARGET::_internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilayer_ = value;
+}
+inline void S_NEARTARGET::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iLayer)
+}
+
+// int32 iTargetObjectLayer = 4;
+inline void S_NEARTARGET::clear_itargetobjectlayer() {
+  itargetobjectlayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::_internal_itargetobjectlayer() const {
+  return itargetobjectlayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::itargetobjectlayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NEARTARGET.iTargetObjectLayer)
+  return _internal_itargetobjectlayer();
+}
+inline void S_NEARTARGET::_internal_set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  itargetobjectlayer_ = value;
+}
+inline void S_NEARTARGET::set_itargetobjectlayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_itargetobjectlayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iTargetObjectLayer)
+}
+
+// int32 iTargetObjectID = 5;
+inline void S_NEARTARGET::clear_itargetobjectid() {
+  itargetobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::_internal_itargetobjectid() const {
+  return itargetobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_NEARTARGET::itargetobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_NEARTARGET.iTargetObjectID)
+  return _internal_itargetobjectid();
+}
+inline void S_NEARTARGET::_internal_set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  itargetobjectid_ = value;
+}
+inline void S_NEARTARGET::set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_itargetobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iTargetObjectID)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -63,6 +63,15 @@ HRESULT CStateMachine::Change_State(const wstring& strStateTag)
 	return S_OK;
 }
 
+const wstring& CStateMachine::Get_CurrState()
+{
+	if (m_pCurrState == nullptr)
+		return L"";
+
+
+	return m_pCurrState->Get_StateName();
+}
+
 CState* CStateMachine::Find_State(const wstring& strStateTag)
 {
 	auto iter = m_States.find(strStateTag);

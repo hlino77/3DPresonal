@@ -55,10 +55,13 @@ public:
 
 	_bool					Is_Control() { return m_bControl; }
 public:
-	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
+	void					Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 
-	void			Follow_ServerPos(_float fDistance, _float fLerpSpeed);
+	void					Follow_ServerPos(_float fDistance, _float fLerpSpeed);
+
+
+	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 protected:
 	virtual HRESULT Ready_Components();
 

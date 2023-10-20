@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -61,6 +61,9 @@ extern BuffDataDefaultTypeInternal _BuffData_default_instance_;
 class ChildCollider;
 struct ChildColliderDefaultTypeInternal;
 extern ChildColliderDefaultTypeInternal _ChildCollider_default_instance_;
+class MonsterCreateInfo;
+struct MonsterCreateInfoDefaultTypeInternal;
+extern MonsterCreateInfoDefaultTypeInternal _MonsterCreateInfo_default_instance_;
 class ObjectInfo;
 struct ObjectInfoDefaultTypeInternal;
 extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
@@ -74,6 +77,7 @@ extern UserInfoDefaultTypeInternal _UserInfo_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::BuffData* Arena::CreateMaybeMessage<::Protocol::BuffData>(Arena*);
 template<> ::Protocol::ChildCollider* Arena::CreateMaybeMessage<::Protocol::ChildCollider>(Arena*);
+template<> ::Protocol::MonsterCreateInfo* Arena::CreateMaybeMessage<::Protocol::MonsterCreateInfo>(Arena*);
 template<> ::Protocol::ObjectInfo* Arena::CreateMaybeMessage<::Protocol::ObjectInfo>(Arena*);
 template<> ::Protocol::Time* Arena::CreateMaybeMessage<::Protocol::Time>(Arena*);
 template<> ::Protocol::UserInfo* Arena::CreateMaybeMessage<::Protocol::UserInfo>(Arena*);
@@ -926,6 +930,138 @@ class ChildCollider final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
+// -------------------------------------------------------------------
+
+class MonsterCreateInfo final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.MonsterCreateInfo) */ {
+ public:
+  inline MonsterCreateInfo() : MonsterCreateInfo(nullptr) {}
+  ~MonsterCreateInfo() override;
+  explicit constexpr MonsterCreateInfo(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  MonsterCreateInfo(const MonsterCreateInfo& from);
+  MonsterCreateInfo(MonsterCreateInfo&& from) noexcept
+    : MonsterCreateInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline MonsterCreateInfo& operator=(const MonsterCreateInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MonsterCreateInfo& operator=(MonsterCreateInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MonsterCreateInfo& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MonsterCreateInfo* internal_default_instance() {
+    return reinterpret_cast<const MonsterCreateInfo*>(
+               &_MonsterCreateInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(MonsterCreateInfo& a, MonsterCreateInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MonsterCreateInfo* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MonsterCreateInfo* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MonsterCreateInfo* New() const final {
+    return new MonsterCreateInfo();
+  }
+
+  MonsterCreateInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MonsterCreateInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const MonsterCreateInfo& from);
+  void MergeFrom(const MonsterCreateInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MonsterCreateInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.MonsterCreateInfo";
+  }
+  protected:
+  explicit MonsterCreateInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFFollowDistanceFieldNumber = 1,
+  };
+  // float fFollowDistance = 1;
+  void clear_ffollowdistance();
+  float ffollowdistance() const;
+  void set_ffollowdistance(float value);
+  private:
+  float _internal_ffollowdistance() const;
+  void _internal_set_ffollowdistance(float value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.MonsterCreateInfo)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  float ffollowdistance_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
 // ===================================================================
 
 
@@ -1438,9 +1574,35 @@ ChildCollider::mutable_vscale() {
   return _internal_mutable_vscale();
 }
 
+// -------------------------------------------------------------------
+
+// MonsterCreateInfo
+
+// float fFollowDistance = 1;
+inline void MonsterCreateInfo::clear_ffollowdistance() {
+  ffollowdistance_ = 0;
+}
+inline float MonsterCreateInfo::_internal_ffollowdistance() const {
+  return ffollowdistance_;
+}
+inline float MonsterCreateInfo::ffollowdistance() const {
+  // @@protoc_insertion_point(field_get:Protocol.MonsterCreateInfo.fFollowDistance)
+  return _internal_ffollowdistance();
+}
+inline void MonsterCreateInfo::_internal_set_ffollowdistance(float value) {
+  
+  ffollowdistance_ = value;
+}
+inline void MonsterCreateInfo::set_ffollowdistance(float value) {
+  _internal_set_ffollowdistance(value);
+  // @@protoc_insertion_point(field_set:Protocol.MonsterCreateInfo.fFollowDistance)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

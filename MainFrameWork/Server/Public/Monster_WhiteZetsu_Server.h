@@ -27,6 +27,10 @@ public:
 public:
 	void				Send_MonsterInfo();
 
+
+	void				Update_NearTarget(_float fTimeDelta);
+
+	void				Attack_Random();
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -36,6 +40,8 @@ private:
 
 private:
 	_float	m_fSendInfoTime = 0.0f;
+
+	_float	m_fFindTargetTime = 0.0f;
 
 public:
 	static	CMonster_WhiteZetsu_Server* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

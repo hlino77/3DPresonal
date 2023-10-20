@@ -25,7 +25,7 @@ HRESULT CState_Sasuke_RunLoop::Initialize()
 	
 
 	m_fAccel = 10.0f;
-	m_fMaxSpeed = 5.0f;
+	m_fMaxSpeed = 6.0f;
 
 	if (m_iRun_Loop == -1)
 		return E_FAIL;

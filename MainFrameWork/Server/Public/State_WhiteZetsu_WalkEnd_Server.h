@@ -3,12 +3,12 @@
 
 BEGIN(Server)
 
-class CState_WhiteZetsu_Idle_Server : public CState
+class CState_WhiteZetsu_WalkEnd_Server : public CState
 {
 public:
-	CState_WhiteZetsu_Idle_Server(const wstring& strStateName, class CMonster_WhiteZetsu_Server* pPlayer);
-	CState_WhiteZetsu_Idle_Server(const CState& rhs, class CStateMachine* pMachine);
-	virtual ~CState_WhiteZetsu_Idle_Server() = default;
+	CState_WhiteZetsu_WalkEnd_Server(const wstring& strStateName, class CMonster_WhiteZetsu_Server* pPlayer);
+	CState_WhiteZetsu_WalkEnd_Server(const CState& rhs, class CStateMachine* pMachine);
+	virtual ~CState_WhiteZetsu_WalkEnd_Server() = default;
 
 
 public:
@@ -23,10 +23,8 @@ private:
 
 private:
 	//Animation
-	_int m_iIdle_Loop = 0;
+	_int m_iWalk_End = 0;
 
-
-	_float m_fAttackDelay;
 public:
 	virtual void Free() override;
 };

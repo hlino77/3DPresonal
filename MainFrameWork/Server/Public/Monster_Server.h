@@ -50,10 +50,20 @@ public:
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
 
-
+	void					Set_FollowDistance(_float fDistance) { m_fFollowDistance = fDistance; }
+	_float					Get_FollowDistance() { return m_fFollowDistance; }
+	
 
 	
+	
 public:
+
+
+	void					Find_NearTarget();
+
+	void					Send_NearTarget();
+
+	_float					Get_NearTargetDistance();
 
 	//Send Packet
 	void				Send_State(const wstring& szName);
@@ -61,8 +71,11 @@ public:
 	void				Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void				Send_ColliderState(const _uint& iLayer);
 
-	void				Set_Colliders();
+	void				Set_Colliders(_float fTimeDelta);
 	HRESULT				Ready_Coliders();
+
+
+	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -75,7 +88,7 @@ protected:
 	unordered_map<wstring, _uint>	m_BoneIndex;
 
 
-
+	_float							m_fFollowDistance = 0.0f;
 
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 

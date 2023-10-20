@@ -108,6 +108,12 @@ void CMonster::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 	}
 }
 
+void CMonster::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
+{
+	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
+}
+
 HRESULT CMonster::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -156,6 +162,19 @@ HRESULT CMonster::Ready_Components()
 
 		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 	}
+
+	{
+		CCollider::ColliderInfo tColliderInfo;
+		tColliderInfo.m_bActive = false;
+		tColliderInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_ATTACK;
+		CSphereCollider* pCollider = nullptr;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), TEXT("Com_ColliderAttack"), (CComponent**)&pCollider, &tColliderInfo)))
+			return E_FAIL;
+		if (pCollider)
+			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_ATTACK, pCollider);
+	}
+
 
 
 	Safe_Release(pGameInstance);
