@@ -286,7 +286,7 @@ void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 	if (TriangleTests::Intersects(vRayPos, vDir, m_tTriangle.vPos0, m_tTriangle.vPos1, m_tTriangle.vPos2, fDist))
 	{
 		Vec3 vTargetPos = vRayPos + vDir * fDist;
-		vTargetPos += -vDir * 0.1f;
+		vTargetPos += -vDir * 0.05f;
 
 		vPos = Vec3::Lerp(vPos, vTargetPos, 8.0f * fTimeDelta);
 

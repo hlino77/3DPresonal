@@ -112,10 +112,20 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			return true;
 		}
 			
+		Vec3 vPos(pkt.vpos().data());
+
+
 		if(Desc.bControl)
 			CServerSessionManager::GetInstance()->Set_Player(pPlayer);
+		else
+		{
+			Matrix matWorld = XMMatrixIdentity();
+			matWorld.Translation(vPos);
+			pPlayer->Set_TargetMatrix(matWorld);
+		}
 		
-		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
+		
+		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 		break;
 	}
 	case OBJ_TYPE::MONSTER:
