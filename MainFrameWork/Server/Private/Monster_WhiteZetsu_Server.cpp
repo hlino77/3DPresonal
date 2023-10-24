@@ -61,6 +61,8 @@ void CMonster_WhiteZetsu_Server::LateTick(_float fTimeDelta)
 
 HRESULT CMonster_WhiteZetsu_Server::Render()
 {
+	__super::Render();
+
 	return S_OK;
 }
 

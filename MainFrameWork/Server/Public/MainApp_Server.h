@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CGameInstance;
+class CRenderer;
 END
 
 BEGIN(Server)
@@ -28,6 +29,7 @@ private:
 private:
 	CGameInstance* m_pGameInstance = { nullptr };
 
+	CRenderer* m_pRenderer_Com = { nullptr };
 private:
 	HRESULT Open_Level(LEVELID eLevelID);
 

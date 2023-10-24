@@ -108,7 +108,7 @@ HRESULT CLevel_Arena_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 
 HRESULT CLevel_Arena_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
-	Vec3 vPos(0.0f, 0.0f, 5.0f);
+	Vec3 vPos(-20.0f, 0.0f, 5.0f);
 
 	for (_uint i = 0; i < 10; ++i)
 	{

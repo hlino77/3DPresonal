@@ -51,14 +51,18 @@ void CPlayer_Server::Tick(_float fTimeDelta)
 
 void CPlayer_Server::LateTick(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
 
 	Set_Colliders(fTimeDelta);
+
+
+	if (m_bRender)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CPlayer_Server::Render()
 {
-
+	m_PlayAnimation.get();
 
     return S_OK;
 }
@@ -170,6 +174,11 @@ HRESULT CPlayer_Server::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
+
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
 
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC		TransformDesc;

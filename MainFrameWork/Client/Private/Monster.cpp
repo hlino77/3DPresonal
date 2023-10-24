@@ -50,10 +50,10 @@ void CMonster::Tick(_float fTimeDelta)
 
 void CMonster::LateTick(_float fTimeDelta)
 {
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+
 	if (nullptr == m_pRendererCom)
 		return;
-
-	m_pModelCom->Play_Animation(fTimeDelta);
 
 	if (m_bRender)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -63,6 +63,8 @@ HRESULT CMonster::Render()
 {
 	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
 		return S_OK;
+
+	m_PlayAnimation.get();
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);

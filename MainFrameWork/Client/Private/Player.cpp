@@ -73,6 +73,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+
 	if (m_bWall && m_bControl)
 		Set_PlayerToWall(fTimeDelta);
 
@@ -83,8 +85,7 @@ void CPlayer::LateTick(_float fTimeDelta)
 	for (auto& CollisionStay : m_CollisionList)
 		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
 
-
-	m_pModelCom->Play_Animation(fTimeDelta);
+	//m_pModelCom->Play_Animation(fTimeDelta);
 
 	if (m_bRender)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -94,6 +95,8 @@ HRESULT CPlayer::Render()
 {
 	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
 		return S_OK;
+	
+	m_PlayAnimation.get();
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);

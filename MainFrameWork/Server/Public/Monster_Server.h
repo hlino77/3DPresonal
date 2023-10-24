@@ -9,6 +9,7 @@ BEGIN(Engine)
 class CTransform;
 class CSphereCollider;
 class CCollider;
+class CRenderer;
 class CModel;
 END
 
@@ -75,18 +76,20 @@ public:
 	HRESULT				Ready_Coliders();
 
 
-	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
+	void				Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 
 	void				Body_Collision(CGameObject* pObject);
 	void				Hit_Attack(CCollider* pCollider);
 
 	void				Set_Die();
 protected:
-	virtual HRESULT Ready_Components();
+	virtual HRESULT		Ready_Components();
 
 
 
 protected:
+	CRenderer*						m_pRendererCom = nullptr;
+	std::future<HRESULT>			m_PlayAnimation;
 
 	_float							m_fMoveSpeed = 0.0f;
 
@@ -97,6 +100,9 @@ protected:
 
 
 	_int							m_iHp;
+
+
+
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 

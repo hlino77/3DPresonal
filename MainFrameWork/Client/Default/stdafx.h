@@ -16,7 +16,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+#include <future>
 
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"

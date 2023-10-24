@@ -8,7 +8,6 @@
 #include "RigidBody.h"
 #include "NavigationMgr.h"
 
-
 CMonster_Server::CMonster_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
 {
@@ -55,16 +54,24 @@ void CMonster_Server::Tick(_float fTimeDelta)
 
 void CMonster_Server::LateTick(_float fTimeDelta)
 {
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+
 	for (auto& CollisionStay : m_CollisionList)
 		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
 
-	m_pModelCom->Play_Animation(fTimeDelta);
-
+	//m_pModelCom->Play_Animation(fTimeDelta);
+	
 	Set_Colliders(fTimeDelta);
+
+
+	if (m_bRender)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CMonster_Server::Render()
 {
+	m_PlayAnimation.get();
+
 	return S_OK;
 }
 
@@ -94,6 +101,10 @@ HRESULT CMonster_Server::Ready_Components()
 
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;

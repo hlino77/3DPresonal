@@ -20,6 +20,7 @@
 #include "RigidBody.h"
 #include "ColliderOBB.h"
 #include "NavigationMgr.h"
+#include "Renderer.h"
 
 
 CMainApp_Server::CMainApp_Server()
@@ -82,6 +83,8 @@ void CMainApp_Server::Tick(_float fTimeDelta)
 
 HRESULT CMainApp_Server::Render()
 {
+	m_pRenderer_Com->Draw();
+
 	m_pGameInstance->Render_Debug();
 	return S_OK;
 }
@@ -97,6 +100,11 @@ HRESULT CMainApp_Server::Ready_Prototype_Component()
 {
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
+
+	/* For.Prototype_Component_Renderer */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), m_pRenderer_Com = CRenderer::Create(nullptr, nullptr))))
+		return E_FAIL;
+	Safe_AddRef(m_pRenderer_Com);
 
 	/* For.Prototype_Component_Transform */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
