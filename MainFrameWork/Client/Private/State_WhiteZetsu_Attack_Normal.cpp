@@ -18,7 +18,7 @@ CState_WhiteZetsu_Attack_Normal::CState_WhiteZetsu_Attack_Normal(const CState& r
 }
 HRESULT CState_WhiteZetsu_Attack_Normal::Initialize()
 {
-	m_iAttack_DownStrike = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_DownStrike", 1.0f);
+	m_iAttack_DownStrike = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_DownStrike", 1.2f);
 
 	if (m_iAttack_DownStrike == -1)
 		return E_FAIL;
@@ -33,7 +33,7 @@ void CState_WhiteZetsu_Attack_Normal::Enter_State()
 
 void CState_WhiteZetsu_Attack_Normal::Tick_State(_float fTimeDelta)
 {
-	m_pMonster->Follow_ServerPos(0.01f, 0.1f);
+	m_pMonster->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_Attack_Normal::Exit_State()

@@ -40,6 +40,10 @@ public:
 	_bool	IsKinematic()	const						{ return m_IsKinematic; }
 	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
 
+	void	SetCompareGruond(_bool bCompare);
+	_bool	IsCompareGruond() { return m_bCompareGround; }
+
+
 	_float	GetMass()	const							{ return m_fMass; }
 	void	SetMass(_float fMass)						{ m_fMass = fMass; }
 	_float	GetDrag()	const							{ return m_fDrag; }
@@ -96,7 +100,7 @@ private:
 	_bool	m_UseGravity;
 	_bool	m_IsKinematic;
 	_bool	m_bGround = true;
-
+	_bool	m_bCompareGround = true;
 
 	_float	m_fMass;
 	_float	m_fDrag;

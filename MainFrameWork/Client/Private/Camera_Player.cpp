@@ -43,8 +43,8 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 	m_fSpeedX = 0.1f;
 	m_fSpeedY = 0.1f;
 
-	m_fMaxSpeedX = 0.05f;
-	m_fMaxSpeedY = 0.05f;
+	m_fMaxSpeedX = 0.03f;
+	m_fMaxSpeedY = 0.03f;
 
 	m_fBreak = 0.2f;
 	
@@ -124,7 +124,7 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 		if (m_fCurrSpeedY)
 		{
-			Vec3 vRight = Vec3(matLocal.m[0]) + m_vTargetOffset;
+			Vec3 vRight = Vec3(matLocal.m[0]);
 
 			matLocal *= Matrix::CreateFromQuaternion(Quaternion::CreateFromAxisAngle(vRight, m_fCurrSpeedY));
 		}	
@@ -173,9 +173,9 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	Vec3 vCamLook = Vec3(matWorld.m[2]);
 	vCamLook.Normalize();
 
-	Vec3 vPos = Vec3::Lerp(vCamPos, vTargetPos, m_fCameraSpeed);
+	Vec3 vPos = Vec3::Lerp(vCamPos, vTargetPos, m_fCameraSpeed * fTimeDelta);
 
-	Vec3 vLook = Vec3::Lerp(vCamLook, vTargetLook, m_fCameraSpeed);
+	Vec3 vLook = Vec3::Lerp(vCamLook, vTargetLook, m_fCameraSpeed * fTimeDelta);
 	vLook.Normalize();
 
 

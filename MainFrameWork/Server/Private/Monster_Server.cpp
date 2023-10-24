@@ -6,6 +6,7 @@
 #include "GameSessionManager.h"
 #include "CollisionManager.h"
 #include "RigidBody.h"
+#include "NavigationMgr.h"
 
 
 CMonster_Server::CMonster_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -40,16 +41,23 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 
 	m_pRigidBody->SetMass(2.0f);
 
+	CNavigationMgr::GetInstance()->Find_FirstCell(this);
+
     return S_OK;
 }
 
 void CMonster_Server::Tick(_float fTimeDelta)
 {
+	CNavigationMgr::GetInstance()->SetUp_OnCell(this);
+
 	m_pRigidBody->Tick(fTimeDelta);
 }
 
 void CMonster_Server::LateTick(_float fTimeDelta)
 {
+	for (auto& CollisionStay : m_CollisionList)
+		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
+
 	m_pModelCom->Play_Animation(fTimeDelta);
 
 	Set_Colliders(fTimeDelta);
@@ -62,6 +70,7 @@ HRESULT CMonster_Server::Render()
 
 void CMonster_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
+	
 }
 
 void CMonster_Server::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -70,6 +79,7 @@ void CMonster_Server::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 
 void CMonster_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
+	
 }
 
 
@@ -147,6 +157,47 @@ void CMonster_Server::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 {
 	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
+}
+
+void CMonster_Server::Body_Collision(CGameObject* pObject)
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vOtherPos = pObject->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+
+	Vec3 vDir = vPos - vOtherPos;
+	_float fDistance = vDir.Length();
+
+
+	if (fDistance < 0.5f)
+	{
+		vDir.Normalize();
+		Vec3 vTargetPos = vOtherPos + vDir * 0.5f;
+		vPos = Vec3::Lerp(vPos, vTargetPos, 0.2f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+}
+
+void CMonster_Server::Hit_Attack(CCollider* pCollider)
+{
+	if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+	{
+		//m_iHp -= pCollider->Get_Attack();
+
+		if (m_iHp <= 0)
+		{
+			Set_State(L"Dying_Normal");
+			return;
+		}
+
+		m_pHitObject = pCollider->Get_Owner();
+		Set_State(L"Hit_Middle");
+	}
+}
+
+void CMonster_Server::Set_Die()
+{
+	for (auto& Collider : m_Coliders)
+		Collider.second->SetActive(false);
 }
 
 void CMonster_Server::Find_NearTarget()
@@ -261,6 +312,7 @@ void CMonster_Server::Send_ColliderState(const _uint& iLayer)
 	pkt.set_bactive(pCollider->IsActive());
 	pkt.set_fradius(pCollider->Get_Radius());
 	pkt.set_iattacktype(pCollider->Get_AttackType());
+	pkt.set_iattack(pCollider->Get_Attack());
 
 
 	auto vOffset = pkt.mutable_voffset();

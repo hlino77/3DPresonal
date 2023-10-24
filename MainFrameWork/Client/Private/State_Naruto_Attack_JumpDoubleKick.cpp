@@ -139,6 +139,7 @@ void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _ui
 		{
 			pCollider->SetActive(true);
 			pCollider->Set_AttackType((_uint)COLLIDER_ATTACK::MIDDLE);
+			pCollider->Set_Attack(1);
 			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 		}
 	}
@@ -149,6 +150,7 @@ void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _ui
 		{
 			pCollider->SetActive(false);
 			pCollider->Set_AttackType(0);
+			pCollider->Set_Attack(0);
 			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 		}
 	}

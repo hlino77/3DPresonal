@@ -76,7 +76,7 @@ void CState_Sasuke_RunEnd::Tick_State_Control(_float fTimeDelta)
 	{
 		CTransform* pTransform = m_pPlayer->Get_TransformCom();
 		Vec3 vPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
-		vPos = Vec3::Lerp(vPos, m_vStopPos, 0.1f);
+		vPos = Vec3::Lerp(vPos, m_vStopPos, 4.0f * fTimeDelta);
 		pTransform->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 	}
 

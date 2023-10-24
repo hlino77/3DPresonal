@@ -19,7 +19,7 @@ CState_WhiteZetsu_Attack_Normal_Server::CState_WhiteZetsu_Attack_Normal_Server(c
 }
 HRESULT CState_WhiteZetsu_Attack_Normal_Server::Initialize()
 {
-	m_iAttack_DownStrike = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_DownStrike", 1.0f);
+	m_iAttack_DownStrike = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_DownStrike", 1.2f);
 
 	if (m_iAttack_DownStrike == -1)
 		return E_FAIL;

@@ -18,7 +18,7 @@ CState_WhiteZetsu_Attack_Punch::CState_WhiteZetsu_Attack_Punch(const CState& rhs
 }
 HRESULT CState_WhiteZetsu_Attack_Punch::Initialize()
 {
-	m_iAttack_Punch = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.0f);
+	m_iAttack_Punch = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.2f);
 
 	if (m_iAttack_Punch == -1)
 		return E_FAIL;
@@ -33,7 +33,7 @@ void CState_WhiteZetsu_Attack_Punch::Enter_State()
 
 void CState_WhiteZetsu_Attack_Punch::Tick_State(_float fTimeDelta)
 {
-	m_pMonster->Follow_ServerPos(0.01f, 0.1f);
+	m_pMonster->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_Attack_Punch::Exit_State()

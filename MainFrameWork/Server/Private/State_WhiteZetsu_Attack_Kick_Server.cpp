@@ -19,7 +19,7 @@ CState_WhiteZetsu_Attack_Kick_Server::CState_WhiteZetsu_Attack_Kick_Server(const
 }
 HRESULT CState_WhiteZetsu_Attack_Kick_Server::Initialize()
 {
-	m_iAttack_JumpTurnKick = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpTurnKick", 1.0f);
+	m_iAttack_JumpTurnKick = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpTurnKick", 1.2f);
 
 	if (m_iAttack_JumpTurnKick == -1)
 		return E_FAIL;
@@ -53,11 +53,11 @@ void CState_WhiteZetsu_Attack_Kick_Server::Tick_State(_float fTimeDelta)
 
 		if (fDistance < 1.1f)
 			m_pMonster->Set_State(L"Attack_Punch");
-		else
-			m_pMonster->Set_State(L"Idle");
 	}
 	
 
+	if (m_pMonster->Get_ModelCom()->Is_AnimationEnd(m_iAttack_JumpTurnKick))
+		m_pMonster->Set_State(L"Idle");
 }
 
 void CState_WhiteZetsu_Attack_Kick_Server::Exit_State()

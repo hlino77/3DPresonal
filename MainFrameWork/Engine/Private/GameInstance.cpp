@@ -9,6 +9,8 @@
 #include "Key_Manager.h"
 #include "Utils.h"
 #include "Text_Manager.h"
+#include "NavigationMgr.h"
+
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -24,6 +26,7 @@ CGameInstance::CGameInstance()
 	, m_pLight_Manager(CLight_Manager::GetInstance())
 	, m_pKey_Manager(CKey_Manager::GetInstance())
 	, m_pText_Manager(CText_Manager::GetInstance())
+	, m_pNavigationMgr(CNavigationMgr::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -35,8 +38,12 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLight_Manager);
 	Safe_AddRef(m_pKey_Manager);
 	Safe_AddRef(m_pText_Manager);
+	Safe_AddRef(m_pNavigationMgr);
+
 
 	Safe_AddRef(m_pUtilities);
+
+
 }
 
 HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayerType, 

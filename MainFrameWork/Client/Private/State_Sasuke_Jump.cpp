@@ -41,14 +41,14 @@ void CState_Sasuke_Jump::Enter_State()
 {
 	m_pPlayer->Set_MoveSpeed(0.0f);
 
-	if(m_pPlayer->Is_Control())
+	if (m_pPlayer->Is_Control())
 		Set_TargetPos();
+
 
 	Set_Jump();
 
-
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
 	m_pPlayer->Set_DoubleJump(false);
-
 	m_pPlayer->Set_Wall(false);
 }
 
@@ -59,34 +59,23 @@ void CState_Sasuke_Jump::Tick_State(_float fTimeDelta)
 
 void CState_Sasuke_Jump::Exit_State()
 {
-
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 }
 
 void CState_Sasuke_Jump::Tick_State_Control(_float fTimeDelta)
 {
-	
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
 
 	Vec3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
-	Vec3 vDir = vTargetPos - vPos;
-	_float fDistance = vDir.Length();
-
-	Vec3 vMove = m_pPlayer->Get_RigidBody()->GetLinearVelocity() * fTimeDelta;
-
-
-	if (fDistance < vMove.Length())
-	{
-		_uint iTemp = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_pPlayer->Get_ModelCom()->Get_CurrAnim());
+	if (vTargetPos.y <= vPos.y)
 		m_pPlayer->Set_State(L"Fall_Front");
-	}
-		
 }
 
 void CState_Sasuke_Jump::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.05f, 0.1f);
+	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_Sasuke_Jump::Set_TargetPos()
@@ -159,7 +148,7 @@ void CState_Sasuke_Jump::Set_Jump()
 	}
 	else
 	{
-		vDir *= 20.0f;
+		vDir *= 25.0f;
 		m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 		m_pPlayer->Get_RigidBody()->AddForce(vDir, ForceMode::FORCE);
 		m_pPlayer->Reserve_Animation(m_iJump_Vertical, 0.1f, 0, 0);

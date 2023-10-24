@@ -237,7 +237,7 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
 	pCollider->Set_AttackType(pkt.iattacktype());
 	pCollider->Set_Center();
-
+	pCollider->Set_Attack(pkt.iattack());
 
 	if (pkt.tchild_size() > 0)
 	{

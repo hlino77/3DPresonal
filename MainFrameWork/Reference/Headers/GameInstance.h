@@ -92,6 +92,10 @@ public:
 	const POINT& GetMousePos();
 
 
+	/* For. NavigationManager */
+public:
+
+
 public:
 	void			AddFont(const wstring & szTextName, const wstring & szFontPath);
 	void			DrawFont(const wstring & szTextName, const wstring & szString, const Vec2 & vPosition, const Vec4 & vColor, const _float & fRotation, const Vec2 & vOrigin, const Vec2 & vScale);
@@ -111,6 +115,8 @@ private:
 
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CUtils*					m_pUtilities = { nullptr };
+
+	class CNavigationMgr*			m_pNavigationMgr = { nullptr };
 public:
 	static void Release_Engine();
 	virtual void Free() override;

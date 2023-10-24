@@ -93,21 +93,31 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
 		CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+		return;
 	}
 
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
-		{
-			m_pHitObject = pOther->Get_Owner();
-			Set_State(L"Hit_Middle");
-		}
+		Hit_Attack(pOther);
+		return;
+	}
+
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Add_CollisionStay(iColLayer, pOther);
+		return;
 	}
 }
 
 void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 {
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Body_Collision(pOther->Get_Owner());
+		return;
+	}
 }
 
 void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
@@ -117,6 +127,14 @@ void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
 		CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+		return;
+	}
+
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Delete_CollisionStay(iColLayer, pOther);
+		return;
 	}
 }
 
@@ -150,8 +168,6 @@ void CPlayer_Naruto::Send_PlayerInfo()
 void CPlayer_Naruto::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
-
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Tick(fTimeDelta);
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
@@ -201,10 +217,6 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
-
-	dynamic_cast<COBBCollider*>(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child())->Set_Scale(Vec3(0.5f, 0.5f, 0.5f));
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Set_Offset(Vec3(0.0f, 0.7f, 0.0f));
-
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 

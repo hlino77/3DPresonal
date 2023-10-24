@@ -14,6 +14,7 @@
 #include "State_WhiteZetsu_Attack_Normal.h"
 #include "State_WhiteZetsu_Attack_Kick.h"
 #include "State_WhiteZetsu_Attack_Punch.h"
+#include "State_WhiteZetsu_Dying_Normal.h"
 
 CMonster_WhiteZetsu::CMonster_WhiteZetsu(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -58,7 +59,8 @@ HRESULT CMonster_WhiteZetsu::Render()
 {
 	__super::Render();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
+	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->IsActive())
+		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
@@ -92,6 +94,7 @@ HRESULT CMonster_WhiteZetsu::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Normal", new CState_WhiteZetsu_Attack_Normal(L"Attack_Normal", this));
 	m_pStateMachine->Add_State(L"Attack_Kick", new CState_WhiteZetsu_Attack_Kick(L"Attack_Kick", this));
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_WhiteZetsu_Attack_Punch(L"Attack_Punch", this));
+	m_pStateMachine->Add_State(L"Dying_Normal", new CState_WhiteZetsu_Dying_Normal(L"Dying_Normal", this));
 
 	m_pStateMachine->Change_State(L"Appear");
 

@@ -74,7 +74,7 @@ void CState_Naruto_FallFront::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_FallFront::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
+	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_Naruto_FallFront::Set_Ray()
@@ -142,7 +142,7 @@ void CState_Naruto_FallFront::Set_Wall()
 
 		Vec3 vDistance = vPickPos - vPlayerPos;
 
-		if (vDistance.Length() < 10.0f)
+		if (vDistance.Length() < 2.0f)
 		{
 			m_pPlayer->Set_Picking(false);
 

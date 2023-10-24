@@ -14,6 +14,7 @@
 #include "BackGround_Loading.h"
 #include "ColliderOBB.h"
 #include "CollisionManager.h"
+#include "NavigationMgr.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -57,7 +58,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Font()))
 		return E_FAIL;
 
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	return S_OK;
 }
@@ -81,6 +82,9 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pRenderer_Com->Draw();
+
+	CNavigationMgr::GetInstance()->Render();
+
 	m_pGameInstance->Render_Debug();
 	/* 초기화한 장면에 객체들을 그린다. */
 	m_pGameInstance->Present();
@@ -115,6 +119,9 @@ void CMainApp::Set_Mouse()
 HRESULT CMainApp::Initialize_Client()
 {
 	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
+
+	CNavigationMgr::GetInstance()->Reserve_Manager(m_pDevice, m_pContext);
+	
 	// Manager Reserve
 	return S_OK;
 }

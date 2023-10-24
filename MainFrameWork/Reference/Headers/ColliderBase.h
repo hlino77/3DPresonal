@@ -65,6 +65,10 @@ public:
 
 	CCollider*		Get_Child() { return m_pChild; }
 	void			Set_Child(CCollider* pChild) { m_pChild = pChild; }
+
+	_uint			Get_Attack() { return m_iAttack; }
+	void			Set_Attack(_uint iAttack) { m_iAttack = iAttack; }
+
 protected:
 	CRigidBody*				m_pRigidBody;
 
@@ -83,6 +87,8 @@ private:
 	static atomic<_uint>	g_iNextID;
 	
 	_uint					m_iAttackType = 0;
+	_uint					m_iAttack = 0;
+
 	//_int			m_iCol;
 
 

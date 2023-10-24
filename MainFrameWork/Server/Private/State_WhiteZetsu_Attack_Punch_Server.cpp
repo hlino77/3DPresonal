@@ -19,7 +19,7 @@ CState_WhiteZetsu_Attack_Punch_Server::CState_WhiteZetsu_Attack_Punch_Server(con
 }
 HRESULT CState_WhiteZetsu_Attack_Punch_Server::Initialize()
 {
-	m_iAttack_Punch = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.0f);
+	m_iAttack_Punch = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.2f);
 
 	if (m_iAttack_Punch == -1)
 		return E_FAIL;

@@ -78,6 +78,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _float      fTimeFPS = 0.f;
     _uint       iFrameCount = 0;
     _float      fNetDelay = 0;
+    _uint       iMaxFrame = 120;
 
     // 기본 메시지 루프입니다.
 	/* 내 게임(CMainApp)의 갱신(Tick)과. 렌더(Render)를 반복적으로 수행한다. */
@@ -99,7 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         fTimeFPS += pGameInstance->Compute_TimeDelta(TEXT("Timer_FPS"));
 
 
-		if (fTimeAcc >= 1.f / 60.0f)
+		if (fTimeAcc >= 1.f / iMaxFrame)
 		{
 			pMainApp->Tick(pGameInstance->Compute_TimeDelta(TEXT("Timer_60")));
 			pMainApp->Render();

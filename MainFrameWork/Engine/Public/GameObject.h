@@ -8,9 +8,17 @@
 
 BEGIN(Engine)
 
+class CCollider;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
+public:
+	typedef struct CollisionStayDesc
+	{
+		CCollider* pCollider;
+		_uint iColLayer;
+	}COLLISIONSTAY;
+
 protected:
 	/* 원형을 생성할 때 */
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, wstring strObjectTag, _int iObjType);
@@ -86,6 +94,12 @@ public:
 	void						Reset_Triangle() { ZeroMemory(&m_tTriangle, sizeof(TRIAGLEDESC)); m_tTriangle.fDist = -1.0f; }
 
 
+	void						Set_CurrCell(_int iIndex) { m_iCurrCell = iIndex; }
+	_int						Get_CurrCell() { return m_iCurrCell; }
+
+
+	void						Add_CollisionStay(_uint iColLayer, CCollider* pCollider);
+	void						Delete_CollisionStay(_uint iColLayer, CCollider* pCollider);
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -132,6 +146,13 @@ protected:
 	//WallPicking
 	_bool						m_bPicking = false;
 	TRIAGLEDESC					m_tTriangle;
+
+
+	//Navigation
+	_int						m_iCurrCell = -1;
+	_int						m_iPrevCell = -1;
+
+	list<COLLISIONSTAY>			m_CollisionList;
 
 private:
 	CComponent* Find_Component(const wstring & strComponentTag);

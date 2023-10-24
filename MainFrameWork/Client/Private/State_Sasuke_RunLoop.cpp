@@ -121,7 +121,7 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
-	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
+	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 Vec3 CState_Sasuke_RunLoop::Make_MoveDir()

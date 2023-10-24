@@ -15,6 +15,7 @@
 #include "ThreadManager.h"
 #include "CollisionManager.h"
 #include "PickingMgr.h"
+#include "NavigationMgr.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -23,6 +24,8 @@ CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContex
 
 HRESULT CLevel_Arena::Initialize()
 {
+	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
+
 	Send_LevelState(LEVELSTATE::INITREADY);
 	Wait_ServerLevelState(LEVELSTATE::INITSTART);
 
@@ -50,12 +53,13 @@ HRESULT CLevel_Arena::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
 		return E_FAIL;
 
-
 	Send_LevelState(LEVELSTATE::INITEND);
 	Wait_ServerLevelState(LEVELSTATE::INITEND);
 
 	if (FAILED(Ready_Player_Camera(LAYER_TYPE::LAYER_CAMERA)))
 		return E_FAIL;
+
+
 
 	Start_Collision();
 	Start_Picking();
@@ -222,7 +226,7 @@ HRESULT CLevel_Arena::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 	CameraDesc.tCameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	CameraDesc.fSensitive = 0.1f;
-	CameraDesc.fSpeed = 0.07f;
+	CameraDesc.fSpeed = 4.f;
 	CameraDesc.pPlayer = pPlayer;
 	CameraDesc.vInitPos = pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION) + Vec3(0.0f, 5.0f, -5.0f);
 
@@ -382,6 +386,7 @@ HRESULT CLevel_Arena::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
+
 
 void CLevel_Arena::Set_CheckGruop()
 {

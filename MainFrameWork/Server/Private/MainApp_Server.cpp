@@ -19,6 +19,7 @@
 #include "SocketUtils.h"
 #include "RigidBody.h"
 #include "ColliderOBB.h"
+#include "NavigationMgr.h"
 
 
 CMainApp_Server::CMainApp_Server()
@@ -87,6 +88,7 @@ HRESULT CMainApp_Server::Render()
 
 HRESULT CMainApp_Server::Initiailize_Server()
 {
+	CNavigationMgr::GetInstance()->Reserve_Manager(nullptr, nullptr);
 	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
 	return S_OK;
 }

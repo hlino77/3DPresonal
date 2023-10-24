@@ -33,7 +33,7 @@ void CState_WhiteZetsu_Idle_Server::Enter_State()
 
 void CState_WhiteZetsu_Idle_Server::Tick_State(_float fTimeDelta)
 {
-	m_pMonster->Update_NearTarget(fTimeDelta);
+	/*m_pMonster->Update_NearTarget(fTimeDelta);
 
 	_float fDistance = m_pMonster->Get_NearTargetDistance();
 
@@ -49,7 +49,7 @@ void CState_WhiteZetsu_Idle_Server::Tick_State(_float fTimeDelta)
 	}
 
 
-	Vec3 vTargetPos = m_pMonster->Get_TargetPos();
+	Vec3 vTargetPos = m_pMonster->Get_TargetPos();*/
 
 }
 

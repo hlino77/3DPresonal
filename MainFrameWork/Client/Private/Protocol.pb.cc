@@ -169,7 +169,8 @@ constexpr S_COLLIDERSTATE::S_COLLIDERSTATE(
   , icollayer_(0)
   , fradius_(0)
   , bactive_(false)
-  , iattacktype_(0){}
+  , iattacktype_(0)
+  , iattack_(0){}
 struct S_COLLIDERSTATEDefaultTypeInternal {
   constexpr S_COLLIDERSTATEDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -339,6 +340,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, voffset_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, bactive_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, iattacktype_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, iattack_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLIDERSTATE, tchild_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_COLLISION, _internal_metadata_),
@@ -388,10 +390,10 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 65, -1, sizeof(::Protocol::S_OBJECTINFO)},
   { 71, -1, sizeof(::Protocol::S_STATE)},
   { 82, -1, sizeof(::Protocol::S_COLLIDERSTATE)},
-  { 96, -1, sizeof(::Protocol::S_COLLISION)},
-  { 109, -1, sizeof(::Protocol::S_NICKNAME)},
-  { 115, -1, sizeof(::Protocol::S_USERINFO)},
-  { 121, -1, sizeof(::Protocol::S_NEARTARGET)},
+  { 97, -1, sizeof(::Protocol::S_COLLISION)},
+  { 110, -1, sizeof(::Protocol::S_NICKNAME)},
+  { 116, -1, sizeof(::Protocol::S_USERINFO)},
+  { 122, -1, sizeof(::Protocol::S_NEARTARGET)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -435,22 +437,22 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\001(\0132\024.Protocol.ObjectInfo\022\020\n\010strState\030\002 "
   "\001(\t\022\032\n\022iTargetObjectLayer\030\003 \001(\005\022\027\n\017iTarg"
   "etObjectID\030\004 \001(\005\022\027\n\017iHitObjectLayer\030\005 \001("
-  "\005\022\024\n\014iHitObjectID\030\006 \001(\005\"\314\001\n\017S_COLLIDERST"
+  "\005\022\024\n\014iHitObjectID\030\006 \001(\005\"\335\001\n\017S_COLLIDERST"
   "ATE\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016"
   "\n\006iLayer\030\003 \001(\005\022\021\n\tiColLayer\030\004 \001(\005\022\017\n\007fRa"
   "dius\030\005 \001(\002\022\023\n\007vOffset\030\006 \003(\002B\002\020\001\022\017\n\007bActi"
-  "ve\030\007 \001(\010\022\023\n\013iAttackType\030\010 \001(\005\022\'\n\006tChild\030"
-  "\t \003(\0132\027.Protocol.ChildCollider\"\242\001\n\013S_COL"
-  "LISION\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001("
-  "\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n\tiColLayer\030\004 \001(\005\022\020\n\010"
-  "iOtherID\030\005 \001(\005\022\023\n\013iOtherLayer\030\006 \001(\005\022\026\n\016i"
-  "OtherColLayer\030\007 \001(\005\022\016\n\006bEnter\030\010 \001(\010\"!\n\nS"
-  "_NICKNAME\022\023\n\013strNickName\030\001 \001(\t\"/\n\nS_USER"
-  "INFO\022!\n\005tUser\030\001 \003(\0132\022.Protocol.UserInfo\""
-  "v\n\014S_NEARTARGET\022\021\n\tiObjectID\030\001 \001(\005\022\016\n\006iL"
-  "evel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\032\n\022iTargetObj"
-  "ectLayer\030\004 \001(\005\022\027\n\017iTargetObjectID\030\005 \001(\005b"
-  "\006proto3"
+  "ve\030\007 \001(\010\022\023\n\013iAttackType\030\010 \001(\005\022\017\n\007iAttack"
+  "\030\t \001(\005\022\'\n\006tChild\030\n \003(\0132\027.Protocol.ChildC"
+  "ollider\"\242\001\n\013S_COLLISION\022\021\n\tiObjectID\030\001 \001"
+  "(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 \001(\005\022\021\n\tiC"
+  "olLayer\030\004 \001(\005\022\020\n\010iOtherID\030\005 \001(\005\022\023\n\013iOthe"
+  "rLayer\030\006 \001(\005\022\026\n\016iOtherColLayer\030\007 \001(\005\022\016\n\006"
+  "bEnter\030\010 \001(\010\"!\n\nS_NICKNAME\022\023\n\013strNickNam"
+  "e\030\001 \001(\t\"/\n\nS_USERINFO\022!\n\005tUser\030\001 \003(\0132\022.P"
+  "rotocol.UserInfo\"v\n\014S_NEARTARGET\022\021\n\tiObj"
+  "ectID\030\001 \001(\005\022\016\n\006iLevel\030\002 \001(\005\022\016\n\006iLayer\030\003 "
+  "\001(\005\022\032\n\022iTargetObjectLayer\030\004 \001(\005\022\027\n\017iTarg"
+  "etObjectID\030\005 \001(\005b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -458,7 +460,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 1487, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  false, false, 1504, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
   &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 15,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
@@ -3059,16 +3061,16 @@ S_COLLIDERSTATE::S_COLLIDERSTATE(const S_COLLIDERSTATE& from)
       tchild_(from.tchild_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&iobjectid_, &from.iobjectid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&iattacktype_) -
-    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
+    static_cast<size_t>(reinterpret_cast<char*>(&iattack_) -
+    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattack_));
   // @@protoc_insertion_point(copy_constructor:Protocol.S_COLLIDERSTATE)
 }
 
 void S_COLLIDERSTATE::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&iobjectid_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&iattacktype_) -
-    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&iattack_) -
+    reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattack_));
 }
 
 S_COLLIDERSTATE::~S_COLLIDERSTATE() {
@@ -3100,8 +3102,8 @@ void S_COLLIDERSTATE::Clear() {
   voffset_.Clear();
   tchild_.Clear();
   ::memset(&iobjectid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&iattacktype_) -
-      reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattacktype_));
+      reinterpret_cast<char*>(&iattack_) -
+      reinterpret_cast<char*>(&iobjectid_)) + sizeof(iattack_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3170,16 +3172,23 @@ const char* S_COLLIDERSTATE::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated .Protocol.ChildCollider tChild = 9;
+      // int32 iAttack = 9;
       case 9:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 74)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 72)) {
+          iattack_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated .Protocol.ChildCollider tChild = 10;
+      case 10:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 82)) {
           ptr -= 1;
           do {
             ptr += 1;
             ptr = ctx->ParseMessage(_internal_add_tchild(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<74>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<82>(ptr));
         } else goto handle_unusual;
         continue;
       default: {
@@ -3258,12 +3267,18 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(8, this->_internal_iattacktype(), target);
   }
 
-  // repeated .Protocol.ChildCollider tChild = 9;
+  // int32 iAttack = 9;
+  if (this->iattack() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(9, this->_internal_iattack(), target);
+  }
+
+  // repeated .Protocol.ChildCollider tChild = 10;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_tchild_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(9, this->_internal_tchild(i), target, stream);
+      InternalWriteMessage(10, this->_internal_tchild(i), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3294,7 +3309,7 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // repeated .Protocol.ChildCollider tChild = 9;
+  // repeated .Protocol.ChildCollider tChild = 10;
   total_size += 1UL * this->_internal_tchild_size();
   for (const auto& msg : this->tchild_) {
     total_size +=
@@ -3344,6 +3359,13 @@ size_t S_COLLIDERSTATE::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_iattacktype());
+  }
+
+  // int32 iAttack = 9;
+  if (this->iattack() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_iattack());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3400,6 +3422,9 @@ void S_COLLIDERSTATE::MergeFrom(const S_COLLIDERSTATE& from) {
   if (from.iattacktype() != 0) {
     _internal_set_iattacktype(from._internal_iattacktype());
   }
+  if (from.iattack() != 0) {
+    _internal_set_iattack(from._internal_iattack());
+  }
 }
 
 void S_COLLIDERSTATE::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -3426,8 +3451,8 @@ void S_COLLIDERSTATE::InternalSwap(S_COLLIDERSTATE* other) {
   voffset_.InternalSwap(&other->voffset_);
   tchild_.InternalSwap(&other->tchild_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, iattacktype_)
-      + sizeof(S_COLLIDERSTATE::iattacktype_)
+      PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, iattack_)
+      + sizeof(S_COLLIDERSTATE::iattack_)
       - PROTOBUF_FIELD_OFFSET(S_COLLIDERSTATE, iobjectid_)>(
           reinterpret_cast<char*>(&iobjectid_),
           reinterpret_cast<char*>(&other->iobjectid_));

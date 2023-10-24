@@ -1860,7 +1860,7 @@ class S_COLLIDERSTATE final :
 
   enum : int {
     kVOffsetFieldNumber = 6,
-    kTChildFieldNumber = 9,
+    kTChildFieldNumber = 10,
     kIObjectIDFieldNumber = 1,
     kILevelFieldNumber = 2,
     kILayerFieldNumber = 3,
@@ -1868,6 +1868,7 @@ class S_COLLIDERSTATE final :
     kFRadiusFieldNumber = 5,
     kBActiveFieldNumber = 7,
     kIAttackTypeFieldNumber = 8,
+    kIAttackFieldNumber = 9,
   };
   // repeated float vOffset = 6 [packed = true];
   int voffset_size() const;
@@ -1891,7 +1892,7 @@ class S_COLLIDERSTATE final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
       mutable_voffset();
 
-  // repeated .Protocol.ChildCollider tChild = 9;
+  // repeated .Protocol.ChildCollider tChild = 10;
   int tchild_size() const;
   private:
   int _internal_tchild_size() const;
@@ -1972,6 +1973,15 @@ class S_COLLIDERSTATE final :
   void _internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 iAttack = 9;
+  void clear_iattack();
+  ::PROTOBUF_NAMESPACE_ID::int32 iattack() const;
+  void set_iattack(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iattack() const;
+  void _internal_set_iattack(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S_COLLIDERSTATE)
  private:
   class _Internal;
@@ -1988,6 +1998,7 @@ class S_COLLIDERSTATE final :
   float fradius_;
   bool bactive_;
   ::PROTOBUF_NAMESPACE_ID::int32 iattacktype_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iattack_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3752,7 +3763,27 @@ inline void S_COLLIDERSTATE::set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 valu
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iAttackType)
 }
 
-// repeated .Protocol.ChildCollider tChild = 9;
+// int32 iAttack = 9;
+inline void S_COLLIDERSTATE::clear_iattack() {
+  iattack_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::_internal_iattack() const {
+  return iattack_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_COLLIDERSTATE::iattack() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.iAttack)
+  return _internal_iattack();
+}
+inline void S_COLLIDERSTATE::_internal_set_iattack(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iattack_ = value;
+}
+inline void S_COLLIDERSTATE::set_iattack(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iattack(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iAttack)
+}
+
+// repeated .Protocol.ChildCollider tChild = 10;
 inline int S_COLLIDERSTATE::_internal_tchild_size() const {
   return tchild_.size();
 }

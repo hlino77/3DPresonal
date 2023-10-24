@@ -4,6 +4,7 @@
 #include "ColliderBase.h"
 #include "ColliderSphere.h"
 #include "StateMachine.h"
+#include "ColliderBase.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, wstring strObjectTag, _int iObjType)
 	: m_pDevice(pDevice)
@@ -119,6 +120,29 @@ HRESULT CGameObject::Compute_CamZ(Vec4 vWorldPos)
 
 }
 
+
+void CGameObject::Add_CollisionStay(_uint iColLayer, CCollider* pCollider)
+{
+	COLLISIONSTAY tCollision;
+	tCollision.iColLayer = iColLayer;
+	tCollision.pCollider = pCollider;
+
+	m_CollisionList.push_back(tCollision);
+}
+
+void CGameObject::Delete_CollisionStay(_uint iColLayer, CCollider* pCollider)
+{
+	for (auto& Collision = m_CollisionList.begin(); Collision != m_CollisionList.end();)
+	{
+		if (Collision->iColLayer == iColLayer && Collision->pCollider == pCollider)
+		{
+			Collision = m_CollisionList.erase(Collision);
+		}
+		else
+			++Collision;
+	}
+
+}
 
 void CGameObject::Free()
 {

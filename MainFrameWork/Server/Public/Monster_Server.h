@@ -76,6 +76,11 @@ public:
 
 
 	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
+
+	void				Body_Collision(CGameObject* pObject);
+	void				Hit_Attack(CCollider* pCollider);
+
+	void				Set_Die();
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -90,6 +95,8 @@ protected:
 
 	_float							m_fFollowDistance = 0.0f;
 
+
+	_int							m_iHp;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 

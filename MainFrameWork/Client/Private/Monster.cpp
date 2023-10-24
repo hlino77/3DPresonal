@@ -7,6 +7,7 @@
 #include "AsUtils.h"
 #include "ColliderSphere.h"
 #include "RigidBody.h"
+#include "NavigationMgr.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
@@ -35,11 +36,15 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	m_pRigidBody->SetMass(2.0f);
 
+	CNavigationMgr::GetInstance()->Find_FirstCell(this);
+
     return S_OK;
 }
 
 void CMonster::Tick(_float fTimeDelta)
 {
+	CNavigationMgr::GetInstance()->SetUp_OnCell(this);
+
 	m_pRigidBody->Tick(fTimeDelta);
 }
 
@@ -114,6 +119,12 @@ void CMonster::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 {
 	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
+}
+
+void CMonster::Set_Die()
+{
+	for (auto& Collider : m_Coliders)
+		Collider.second->SetActive(false);
 }
 
 HRESULT CMonster::Ready_Components()

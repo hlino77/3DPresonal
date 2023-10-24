@@ -18,7 +18,7 @@ CState_WhiteZetsu_Attack_Kick::CState_WhiteZetsu_Attack_Kick(const CState& rhs, 
 }
 HRESULT CState_WhiteZetsu_Attack_Kick::Initialize()
 {
-	m_iAttack_JumpTurnKick = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpTurnKick", 1.0f);
+	m_iAttack_JumpTurnKick = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpTurnKick", 1.2f);
 
 	if (m_iAttack_JumpTurnKick == -1)
 		return E_FAIL;
@@ -33,7 +33,7 @@ void CState_WhiteZetsu_Attack_Kick::Enter_State()
 
 void CState_WhiteZetsu_Attack_Kick::Tick_State(_float fTimeDelta)
 {
-	m_pMonster->Follow_ServerPos(0.01f, 0.1f);
+	m_pMonster->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_Attack_Kick::Exit_State()

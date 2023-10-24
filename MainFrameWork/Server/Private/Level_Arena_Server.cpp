@@ -9,6 +9,7 @@
 #include "CollisionManager.h"
 #include "ThreadManager.h"
 #include "Struct.pb.h"
+#include "NavigationMgr.h"
 
 CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
@@ -17,6 +18,8 @@ CLevel_Arena_Server::CLevel_Arena_Server()
 
 HRESULT CLevel_Arena_Server::Initialize()
 {
+	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
+
 	Broadcast_LevelState(LEVELSTATE::INITREADY);
 	Wait_ClientLevelState(LEVELSTATE::INITREADY);
 	Broadcast_LevelState(LEVELSTATE::INITSTART);
@@ -126,7 +129,7 @@ HRESULT CLevel_Arena_Server::Broadcast_Character()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	Vec3 vPos(0.0f, 0.0f, 0.0f);
+	Vec3 vPos(0.0f, 0.0f, -10.0f);
 
 	set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
 	for (auto& OwnerSession : Sessions)

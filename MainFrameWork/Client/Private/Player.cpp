@@ -11,6 +11,7 @@
 #include "CollisionManager.h"
 #include "PickingMgr.h"
 #include "Struct.pb.h"
+#include "NavigationMgr.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -42,6 +43,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pRigidBody->SetMass(2.0f);
 
+
+	Reset_Triangle();
+
+	CNavigationMgr::GetInstance()->Find_FirstCell(this);
+
     return S_OK;
 }
 
@@ -59,17 +65,24 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pRigidBody->AddForce(Vec3(0.0f, 0.0f, 300.0f), ForceMode::FORCE);
 	}*/
 
+	if(!m_bWall)
+		CNavigationMgr::GetInstance()->SetUp_OnCell(this);
+
 	m_pRigidBody->Tick(fTimeDelta);
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
 	if (m_bWall)
-		Set_PlayerToWall();
+		Set_PlayerToWall(fTimeDelta);
 
 
 	if (nullptr == m_pRendererCom)
 		return;
+
+	for (auto& CollisionStay : m_CollisionList)
+		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
+
 
 	m_pModelCom->Play_Animation(fTimeDelta);
 
@@ -222,6 +235,7 @@ void CPlayer::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
 }
 
+
 void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 {
 	Vec3 vCurrPos = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
@@ -246,7 +260,7 @@ void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 		Vec3 vDistance = vServerUp - vCurrUp;
 		if (vDistance.Length() > 0.001f)
 		{
-			vCurrUp = Vec3::Lerp(vCurrUp, vServerUp, 0.1f);
+			vCurrUp = Vec3::Lerp(vCurrUp, vServerUp, fLerpSpeed);
 			m_pTransformCom->Set_Up(vCurrUp);
 		}
 	}
@@ -254,9 +268,7 @@ void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 }
 
 
-
-
-void CPlayer::Set_PlayerToWall()
+void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 {
 	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
 	vUp.Normalize();
@@ -273,22 +285,48 @@ void CPlayer::Set_PlayerToWall()
 	_float fDist;
 	if (TriangleTests::Intersects(vRayPos, vDir, m_tTriangle.vPos0, m_tTriangle.vPos1, m_tTriangle.vPos2, fDist))
 	{
-		Vec3 vPlayerPos = vRayPos + vDir * fDist;
+		Vec3 vTargetPos = vRayPos + vDir * fDist;
 
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPlayerPos);
+		vPos = Vec3::Lerp(vPos, vTargetPos, 7.0f * fTimeDelta);
 
-		Vec3 vDir1 = m_tTriangle.vPos1 - m_tTriangle.vPos0;
-		Vec3 vDir2 = m_tTriangle.vPos2 - m_tTriangle.vPos1;
-
-		Vec3 vNormal = vDir1.Cross(vDir2);
-		vNormal.Normalize();
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 
-		m_pTransformCom->Set_Up(vNormal);
+		vUp = Vec3::Lerp(vUp, m_tTriangle.vNormal, 5.0f * fTimeDelta);
+
+		m_pTransformCom->Set_Up(vUp);
 	}
+	/*else
+		cout << "NO" << endl;*/
+
+}
+
+void CPlayer::Body_Collision(CGameObject* pObject)
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vOtherPos = pObject->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+
+	Vec3 vDir = vPos - vOtherPos;
+	_float fDistance = vDir.Length();
 
 
+	if (fDistance < 0.5f)
+	{
+		vDir.Normalize();
+		Vec3 vTargetPos = vOtherPos + vDir * 0.5f;
+		vPos = Vec3::Lerp(vPos, vTargetPos, 0.2f);
 
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+}
+
+void CPlayer::Hit_Attack(CCollider* pCollider)
+{
+	if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+	{
+		m_pHitObject = pCollider->Get_Owner();
+		Set_State(L"Hit_Middle");
+	}
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -339,15 +377,6 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		if(pCollider)
 			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
-
-		COBBCollider* pChildCollider = nullptr;
-
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), TEXT("Com_ColliderBodyChild"), (CComponent**)&pChildCollider, &tColliderInfo)))
-			return E_FAIL;
-
-		if (pChildCollider)
-			pCollider->Set_Child(pChildCollider);
-
 
 		if (m_bControl)
 			CCollisionManager::GetInstance()->Add_Colider(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]);
@@ -471,6 +500,7 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	pkt.set_bactive(pCollider->IsActive());
 	pkt.set_fradius(pCollider->Get_Radius());
 	pkt.set_iattacktype(pCollider->Get_AttackType());
+	pkt.set_iattack(pCollider->Get_Attack());
 	
 	auto vOffset = pkt.mutable_voffset();
 	vOffset->Resize(3, 0.0f);

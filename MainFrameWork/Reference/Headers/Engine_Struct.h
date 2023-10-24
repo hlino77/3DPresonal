@@ -238,6 +238,7 @@ namespace Engine
 	typedef struct tagTriangleDesc
 	{
 		Vec3 vPos0, vPos1, vPos2;
+		Vec3 vNormal;
 		_float fDist;
 	}TRIAGLEDESC;
 

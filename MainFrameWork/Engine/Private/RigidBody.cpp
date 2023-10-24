@@ -11,7 +11,7 @@ CRigidBody::CRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	, m_IsKinematic(false)
 	, m_fMass(1.f)
 	, m_fDrag(0.01f)
-	, m_fGroundDrag(0.05f)
+	, m_fGroundDrag(3.5f)
 	, m_fAngularDrag(0.01f)
 	, m_byConstraints(0)
 	, m_vLinearAcceleration(Vec3::Zero)
@@ -81,18 +81,24 @@ void CRigidBody::UseGravity(_bool UseGravity)
 	if (UseGravity)
 	{
 		m_UseGravity = true;
-		m_bGround = false;
 	}
 	else
 	{
 		m_UseGravity = false;
-		m_bGround = true;
 		if (m_vLinearVelocity.Length() > 0.0f)
 		{
 			Vec3 vGravityVel = m_vGravityDir * m_vLinearVelocity.Dot(m_vGravityDir);
 			m_vLinearVelocity -= vGravityVel;
 		}
 	}
+}
+
+void CRigidBody::SetCompareGruond(_bool bCompare)
+{
+	m_bCompareGround = bCompare;
+
+	if (!bCompare)
+		m_bGround = false;
 }
 
 void CRigidBody::KineticUpdate(const _float& fTimeDelta)
@@ -105,7 +111,7 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 
 	_float fAngularResistance = m_fAngularDrag;
 	_float fLinearResistance = m_fDrag;
-	_float fLinearGroundResistance = m_fGroundDrag;
+	_float fLinearGroundResistance = m_fGroundDrag * fTimeDelta;
 
 	//(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
 	//(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
@@ -132,8 +138,8 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 
 
 
-	UpdateGround(fTimeDelta);
-
+	if(m_bCompareGround)
+		UpdateGround(fTimeDelta);
 }
 
 void CRigidBody::KinematicUpdate(const _float& fTimeDelta)
@@ -156,14 +162,35 @@ void CRigidBody::UpdateTransform(const _float& fTimeDelta)
 void CRigidBody::UpdateGround(const _float& fTimeDelta)
 {
 	CTransform* pTransform = m_pOwner->Get_TransformCom();
+	Vec3 vPlayerPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	/*Vec3 vPos = vPlayerPos;
+	vPos.y = 200.0f;*/
 
-	Vec3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
-	
-	if (vPos.y < 0.0f)
+
+	TRIAGLEDESC tTriangle = m_pOwner->Get_Triangle();
+
+	Vec3 vDir = vPlayerPos - tTriangle.vPos0;
+
+	_float fDistance = vDir.Dot(tTriangle.vNormal);
+
+	Vec3 vDirPlane = -tTriangle.vNormal * fDistance;
+	Vec3 vPlanePos = vPlayerPos + vDirPlane;
+
+	if (vPlayerPos.y < vPlanePos.y)
 	{
-		vPos.y = 0.f;
-		pTransform->Set_State(CTransform::STATE_POSITION, vPos);
+		vPlayerPos.y = vPlanePos.y;
+		pTransform->Set_State(CTransform::STATE_POSITION, vPlayerPos);
 		UseGravity(false);
+		m_bGround = true;
+	}
+	else if (vPlayerPos.y > vPlanePos.y)
+	{
+		_float fDistance = vPlayerPos.y - vPlanePos.y;
+		if (fDistance > 0.01f)
+		{
+			UseGravity(true);
+			m_bGround = false;
+		}
 	}
 }
 

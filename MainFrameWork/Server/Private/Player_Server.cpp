@@ -125,8 +125,6 @@ void CPlayer_Server::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Get_Child()->Tick(fTimeDelta);
-
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
 }
@@ -200,14 +198,6 @@ HRESULT CPlayer_Server::Ready_Components()
 
 		m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 		CCollisionManager::GetInstance()->Add_Colider(pCollider);
-
-		COBBCollider* pChildCollider = nullptr;
-
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), TEXT("Com_ColliderBodyChild"), (CComponent**)&pChildCollider, &tColliderInfo)))
-			return E_FAIL;
-
-		if (pChildCollider)
-			pCollider->Set_Child(pChildCollider);
 	}
 
 	{

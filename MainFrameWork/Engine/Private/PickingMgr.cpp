@@ -35,6 +35,15 @@ void CPickingMgr::Update_PickingMgr()
 			}
 		}
 
+
+		if (tResult.fDist != -1.0f)
+		{
+			Vec3 vDir1 = tResult.vPos1 - tResult.vPos0;
+			Vec3 vDir2 = tResult.vPos2 - tResult.vPos1;
+
+			tResult.vNormal = vDir1.Cross(vDir2);
+			tResult.vNormal.Normalize();
+		}
 		
 		m_pPlayer->Set_Pick(tResult);
 	}
@@ -150,6 +159,7 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 						tTriangle->vPos0 = XMVector3TransformCoord(objVB[objIB[i]._0].vPosition, matTargetWorld);
 						tTriangle->vPos1 = XMVector3TransformCoord(objVB[objIB[i]._1].vPosition, matTargetWorld);
 						tTriangle->vPos2 = XMVector3TransformCoord(objVB[objIB[i]._2].vPosition, matTargetWorld);
+
 						tTriangle->fDist = fDist;
 					}
 				}

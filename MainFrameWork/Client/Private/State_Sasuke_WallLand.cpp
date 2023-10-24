@@ -41,9 +41,9 @@ void CState_Sasuke_WallLand::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iFallFront, 0.1f, 0, 0);
 
 	m_pPlayer->Get_RigidBody()->UseGravity(false);
-
-
-	
+	m_pPlayer->Set_Wall(true);
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
+	m_pPlayer->Get_RigidBody()->SetLinearVelocity(Vec3(0.0f, 0.0f, 0.0f));
 }
 
 void CState_Sasuke_WallLand::Tick_State(_float fTimeDelta)
@@ -57,15 +57,12 @@ void CState_Sasuke_WallLand::Exit_State()
 
 void CState_Sasuke_WallLand::Tick_State_Control(_float fTimeDelta)
 {
-	//if (m_pPlayer->Get_ModelCom()->Is_AnimationEnd(m_iLand))
-	//	m_pPlayer->Set_State(L"Idle");
+	CTransform* pTransform = m_pPlayer->Get_TransformCom();
 
 
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
-	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
-
-
+	Vec3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
 
 
 	Vec3 vDistance = vTargetPos - vPos;
@@ -73,42 +70,37 @@ void CState_Sasuke_WallLand::Tick_State_Control(_float fTimeDelta)
 	vDir.Normalize();
 
 
-	Vec3 vMove = vDir * 10.0f * fTimeDelta;
-	
+	Vec3 vMove = vDir * 15.0f * fTimeDelta;
+
 
 	if (vDistance.Length() <= vMove.Length())
 		vPos = vTargetPos;
 	else
 		vPos += vMove;
 
-	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
-	
-	m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
+	pTransform->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+
+	pTransform->Set_State(CTransform::STATE_POSITION, vPos);
+
+
+	TRIAGLEDESC tTriangle = m_pPlayer->Get_Triangle();
+	Vec3 vUp = pTransform->Get_State(CTransform::STATE_UP);
+	vUp = Vec3::Lerp(vUp, tTriangle.vNormal, 0.1f * fTimeDelta);
+
+	pTransform->Set_Up(vUp);
 
 
 	if (vPos == vTargetPos)
 	{
-
-		TRIAGLEDESC tTriangle = m_pPlayer->Get_Triangle();
-
-		Vec3 vDir1 = tTriangle.vPos1 - tTriangle.vPos0;
-		Vec3 vDir2 = tTriangle.vPos2 - tTriangle.vPos1;
-
-		Vec3 vNormal = vDir1.Cross(vDir2);
-		vNormal.Normalize();
-
-		m_pPlayer->Get_TransformCom()->Set_Up(vNormal);
-
-		m_pPlayer->Set_Wall(true);
 		m_pPlayer->Set_State(L"Idle");
-		
+
 		m_pPlayer->Set_Picking(true);
 	}
 }
 
 void CState_Sasuke_WallLand::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
+	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 void CState_Sasuke_WallLand::Free()

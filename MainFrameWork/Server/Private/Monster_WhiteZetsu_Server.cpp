@@ -11,7 +11,7 @@
 #include "State_WhiteZetsu_Attack_Normal_Server.h"
 #include "State_WhiteZetsu_Attack_Kick_Server.h"
 #include "State_WhiteZetsu_Attack_Punch_Server.h"
-
+#include "State_WhiteZetsu_Dying_Normal_Server.h"
 
 CMonster_WhiteZetsu_Server::CMonster_WhiteZetsu_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster_Server(pDevice, pContext)
@@ -34,7 +34,7 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-
+	m_iHp = 6;
 
     return S_OK;
 }
@@ -68,20 +68,33 @@ void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollid
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
-		{
-			m_pHitObject = pOther->Get_Owner();
-			Set_State(L"Hit_Middle");
-		}
+		Hit_Attack(pOther);
+		return;
+	}
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Add_CollisionStay(iColLayer, pOther);
+		return;
 	}
 }
 
 void CMonster_WhiteZetsu_Server::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 {
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Body_Collision(pOther->Get_Owner());
+	}
 }
 
 void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		Delete_CollisionStay(iColLayer, pOther);
+		return;
+	}
+
 }
 
 void CMonster_WhiteZetsu_Server::Send_MonsterInfo()
@@ -165,6 +178,7 @@ void CMonster_WhiteZetsu_Server::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Normal", new CState_WhiteZetsu_Attack_Normal_Server(L"Attack_Normal", this));
 	m_pStateMachine->Add_State(L"Attack_Kick", new CState_WhiteZetsu_Attack_Kick_Server(L"Attack_Kick", this));
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_WhiteZetsu_Attack_Punch_Server(L"Attack_Punch", this));
+	m_pStateMachine->Add_State(L"Dying_Normal", new CState_WhiteZetsu_Dying_Normal_Server(L"Dying_Normal", this));
 
 
 	m_pStateMachine->Change_State(L"Appear");

@@ -67,7 +67,7 @@ void CState_Naruto_WalkEnd::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_WalkEnd::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.01f, 0.1f);
+	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
 }
 
 
