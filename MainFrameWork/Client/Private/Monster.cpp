@@ -43,7 +43,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-	//CNavigationMgr::GetInstance()->SetUp_OnCell(this);
+	CNavigationMgr::GetInstance()->SetUp_OnCell(this);
 
 	m_pRigidBody->Tick(fTimeDelta);
 }

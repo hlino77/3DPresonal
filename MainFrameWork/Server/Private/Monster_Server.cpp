@@ -48,7 +48,7 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 
 void CMonster_Server::Tick(_float fTimeDelta)
 {
-	//CNavigationMgr::GetInstance()->SetUp_OnCell(this);
+	CNavigationMgr::GetInstance()->SetUp_OnCell(this);
 
 	m_pRigidBody->Tick(fTimeDelta);
 }
@@ -181,7 +181,7 @@ void CMonster_Server::Hit_Attack(CCollider* pCollider)
 {
 	if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
 	{
-		//m_iHp -= pCollider->Get_Attack();
+		m_iHp -= pCollider->Get_Attack();
 
 		if (m_iHp <= 0)
 		{

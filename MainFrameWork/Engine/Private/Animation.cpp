@@ -13,8 +13,10 @@ CAnimation::CAnimation(const CAnimation & rhs)
 	, m_fPlayTime(rhs.m_fPlayTime)
 	, m_iFrameCount(rhs.m_iFrameCount)
 	, m_fSpeed(rhs.m_fSpeed)
-	, m_KeyFrameBones(m_KeyFrameBones)
+	, m_KeyFrameBones(rhs.m_KeyFrameBones)
 	, m_tKeyDesc(rhs.m_tKeyDesc)
+	, m_szName(rhs.m_szName)
+	, m_iBoneSize(rhs.m_iBoneSize)
 {
 	ZeroMemory(&m_tKeyDesc, sizeof(KEY_DESC));
 	m_tKeyDesc.iNextFrame = 1;

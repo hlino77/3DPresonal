@@ -22,7 +22,6 @@ CModel::CModel(const CModel & rhs)
 	, m_Materials(rhs.m_Materials)
 	, m_eModelType(rhs.m_eModelType)
 	/*, m_HierarchyNodes(rhs.m_HierarchyNodes)*/
-	, m_Animations(rhs.m_Animations)
 	, m_iCurrAnim(rhs.m_iCurrAnim)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
@@ -38,6 +37,8 @@ CModel::CModel(const CModel & rhs)
 			Safe_AddRef(Material.pTexture[i]);
 	}
 
+	for (auto& Animation : rhs.m_Animations)
+		m_Animations.push_back(Animation->Clone(this));
 	//for (auto& pAnimation : m_Animations)
 	//	Safe_AddRef(pAnimation.second);
 	

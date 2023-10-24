@@ -108,9 +108,17 @@ HRESULT CLevel_Arena_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 
 HRESULT CLevel_Arena_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
-	if (FAILED(Broadcast_Monster(L"WhiteZetsu", Vec3(0.0f, 0.0f, 5.0f))))
-		return E_FAIL;
+	Vec3 vPos(0.0f, 0.0f, 5.0f);
 
+	for (_uint i = 0; i < 10; ++i)
+	{
+		if (FAILED(Broadcast_Monster(L"WhiteZetsu", vPos)))
+			return E_FAIL;
+
+
+		vPos.x += 2.0f;
+	}
+	
 	return S_OK;
 }
 

@@ -71,7 +71,6 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	Matrix matPlayerWorld = m_pPlayer->Get_TransformCom()->Get_WorldMatrix();
 	Vec3 vPlayerPos = Vec3(matPlayerWorld.m[3]) + m_vTargetOffset;
 
-
 	Matrix matRotWorld = m_pTransformCom->Get_WorldMatrix();
 	matRotWorld.Translation(vPlayerPos);
 	Matrix matLocal = matWorld * matRotWorld.Invert();
@@ -173,9 +172,12 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	Vec3 vCamLook = Vec3(matWorld.m[2]);
 	vCamLook.Normalize();
 
-	Vec3 vPos = Vec3::Lerp(vCamPos, vTargetPos, m_fCameraSpeed * fTimeDelta);
+	
+	_float fLerpSpeed = min(1.0f, m_fCameraSpeed * fTimeDelta);
 
-	Vec3 vLook = Vec3::Lerp(vCamLook, vTargetLook, m_fCameraSpeed * fTimeDelta);
+	Vec3 vPos = Vec3::Lerp(vCamPos, vTargetPos, fLerpSpeed);
+
+	Vec3 vLook = Vec3::Lerp(vCamLook, vTargetLook, fLerpSpeed);
 	vLook.Normalize();
 
 
