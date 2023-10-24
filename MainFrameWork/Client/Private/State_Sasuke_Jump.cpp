@@ -47,6 +47,8 @@ void CState_Sasuke_Jump::Enter_State()
 
 	Set_Jump();
 
+
+	m_pPlayer->Get_RigidBody()->UseGravity(false);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
 	m_pPlayer->Set_DoubleJump(false);
 	m_pPlayer->Set_Wall(false);
@@ -141,14 +143,14 @@ void CState_Sasuke_Jump::Set_Jump()
 		pTransform->LookAt_ForLandObject(vAt);
 		m_pPlayer->Set_Render(false);
 
-		vDir *= 30.0f;
+		vDir *= 15.0f;
 		m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 		m_pPlayer->Get_RigidBody()->AddForce(vDir, ForceMode::FORCE);
 		m_pPlayer->Reserve_Animation(m_iJump_Front, 0.1f, 0, 0);
 	}
 	else
 	{
-		vDir *= 25.0f;
+		vDir *= 15.0f;
 		m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 		m_pPlayer->Get_RigidBody()->AddForce(vDir, ForceMode::FORCE);
 		m_pPlayer->Reserve_Animation(m_iJump_Vertical, 0.1f, 0, 0);

@@ -258,9 +258,9 @@ void CPlayer::Follow_ServerPos(_float fDistance, _float fLerpSpeed)
 		Vec3 vServerUp(matTargetWorld.m[1]);
 
 		Vec3 vDistance = vServerUp - vCurrUp;
-		if (vDistance.Length() > 0.001f)
+		if (vDistance.Length() > 0.0001f)
 		{
-			vCurrUp = Vec3::Lerp(vCurrUp, vServerUp, fLerpSpeed);
+			vCurrUp = Vec3::Lerp(vCurrUp, vServerUp, fLerpSpeed * 1.5f);
 			m_pTransformCom->Set_Up(vCurrUp);
 		}
 	}
@@ -286,13 +286,14 @@ void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 	if (TriangleTests::Intersects(vRayPos, vDir, m_tTriangle.vPos0, m_tTriangle.vPos1, m_tTriangle.vPos2, fDist))
 	{
 		Vec3 vTargetPos = vRayPos + vDir * fDist;
+		vTargetPos += -vDir * 0.1f;
 
-		vPos = Vec3::Lerp(vPos, vTargetPos, 7.0f * fTimeDelta);
+		vPos = Vec3::Lerp(vPos, vTargetPos, 8.0f * fTimeDelta);
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 
-		vUp = Vec3::Lerp(vUp, m_tTriangle.vNormal, 5.0f * fTimeDelta);
+		vUp = Vec3::Lerp(vUp, m_tTriangle.vNormal, 8.0f * fTimeDelta);
 
 		m_pTransformCom->Set_Up(vUp);
 	}
