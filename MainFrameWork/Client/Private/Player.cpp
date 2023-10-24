@@ -73,7 +73,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	if (m_bWall)
+	if (m_bWall && m_bControl)
 		Set_PlayerToWall(fTimeDelta);
 
 
@@ -296,8 +296,8 @@ void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 
 		m_pTransformCom->Set_Up(vUp);
 	}
-	/*else
-		cout << "NO" << endl;*/
+	else
+		cout << "NO" << endl;
 
 }
 

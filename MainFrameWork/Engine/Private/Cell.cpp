@@ -113,7 +113,34 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 	Vec3 vPlayerPos = pObject->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	Vec3 vPos = vPlayerPos;
 	vPos.y = 0.0f;
+
 	
+	for (_int i = 0; i < LINE::LINE_END; ++i)
+	{
+		Vec3 vDir = vPos - m_Points[i];
+		vDir.Normalize();
+
+		_float fDot = vDir.Dot(m_vLineNormal[i]);
+		if (fDot > 0.0f)
+		{
+			if (m_iNeighbor[i] == -1)
+			{
+				Vec3 vDir = vPos - m_Points[i];
+				_float fLength = vDir.Dot(m_vLine[i]);
+
+			/*	if (fLength < 0.0f)
+					fLength = 0.0f;*/
+
+				Vec3 vLinePos = m_Points[i] + m_vLine[i] * fLength;
+
+				vPos = vLinePos;
+				vPos.y = vPlayerPos.y;
+
+				vPlayerPos = vPos;
+				vPos.y = 0.0f;
+			}
+		}
+	}
 
 	for (_int i = 0; i < LINE::LINE_END; ++i)
 	{
@@ -123,7 +150,7 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 			vDir.Normalize();
 
 			_float fDot = vDir.Dot(m_vLineNormal[i]);
-			if (fDot > 0.00001f)
+			if (fDot > 0.0f)
 			{
 				pObject->Set_CurrCell(m_iNeighbor[i]);
 				if (iCount < 15)
@@ -136,35 +163,6 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 	}
 
 
-	for (_int i = 0; i < LINE::LINE_END; ++i)
-	{
-		Vec3 vDir = vPos - m_Points[i];
-		vDir.Normalize();
-
-		_float fDot = vDir.Dot(m_vLineNormal[i]);
-		if (fDot > 0.001f)
-		{
-			if (m_iNeighbor[i] == -1)
-			{
-				Vec3 vDir = vPos - m_Points[i];
-				_float fLength = vDir.Dot(m_vLine[i]);
-
-				if (fLength < 0.0f)
-					fLength = 0.0f;
-
-				Vec3 vLinePos = m_Points[i] + m_vLine[i] * fLength;
-
-				vPos = vLinePos;
-				vPos.y = vPlayerPos.y;
-
-				vPlayerPos = vPos;
-				vPos.y = 0.0f;
-				i = -1;
-			}
-		}
-	}
-
-	
 
 
 
