@@ -114,7 +114,7 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
-	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
+	m_pPlayer->Follow_ServerPos(0.01f, 8.0f * fTimeDelta);
 }
 
 void CState_Naruto_RunLoop::Set_TargetPos(Vec3 vDir)

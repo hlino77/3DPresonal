@@ -57,7 +57,7 @@ void CState_Naruto_Land::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_Land::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
+	m_pPlayer->Follow_ServerPos(0.01f, 8.0f * fTimeDelta);
 }
 
 void CState_Naruto_Land::Free()
