@@ -61,7 +61,7 @@ void CState_Sasuke_HitMiddle::Tick_State_Control(_float fTimeDelta)
 void CState_Sasuke_HitMiddle::Tick_State_NoneControl(_float fTimeDelta)
 {
 	LookAt_HitObject(fTimeDelta);
-	m_pPlayer->Follow_ServerPos(0.01f, 8.0f * fTimeDelta);
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_Sasuke_HitMiddle::Knock_Back()

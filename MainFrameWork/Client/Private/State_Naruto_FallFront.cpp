@@ -74,7 +74,7 @@ void CState_Naruto_FallFront::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_FallFront::Tick_State_NoneControl(_float fTimeDelta)
 {
-	m_pPlayer->Follow_ServerPos(0.01f, 8.0f * fTimeDelta);
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_Naruto_FallFront::Set_Ray()

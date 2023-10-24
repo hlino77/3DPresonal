@@ -87,7 +87,7 @@ void CState_Naruto_DoubleJump::Tick_State_NoneControl(_float fTimeDelta)
 	if (m_bLookAt)
 		m_pPlayer->Get_TransformCom()->LookAt_Lerp(m_vDir, 10.0f, fTimeDelta);
 
-	m_pPlayer->Follow_ServerPos(0.01f, 8.0f * fTimeDelta);
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_Naruto_DoubleJump::Set_TargetPos()
