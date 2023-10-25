@@ -100,6 +100,7 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
 		Hit_Attack(pOther);
+		cout << "Hit" << endl;
 		return;
 	}
 
@@ -107,6 +108,7 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		Add_CollisionStay(iColLayer, pOther);
+		cout << "Body" << endl;
 		return;
 	}
 }

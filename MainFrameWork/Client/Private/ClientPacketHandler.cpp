@@ -337,7 +337,7 @@ bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION&
 	}
 
 	CGameObject* pOtherObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.iotherlayer(), pkt.iotherid());
-	if (pObject == nullptr)
+	if (pOtherObject == nullptr)
 	{
 		Safe_Release(pGameInstance);
 		return true;

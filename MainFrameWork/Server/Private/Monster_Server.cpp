@@ -56,9 +56,12 @@ void CMonster_Server::LateTick(_float fTimeDelta)
 {
 	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
 
-	for (auto& CollisionStay : m_CollisionList)
-		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
 
+	{
+		READ_LOCK
+			for (auto& CollisionStay : m_CollisionList)
+				OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
+	}
 	//m_pModelCom->Play_Animation(fTimeDelta);
 	
 	Set_Colliders(fTimeDelta);
@@ -178,14 +181,13 @@ void CMonster_Server::Body_Collision(CGameObject* pObject)
 	Vec3 vDir = vPos - vOtherPos;
 	_float fDistance = vDir.Length();
 
-
 	if (fDistance < 0.5f)
 	{
 		vDir.Normalize();
 		Vec3 vTargetPos = vOtherPos + vDir * 0.5f;
-		vPos = Vec3::Lerp(vPos, vTargetPos, 0.2f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTargetPos);
 	}
+
 }
 
 void CMonster_Server::Hit_Attack(CCollider* pCollider)
@@ -209,6 +211,10 @@ void CMonster_Server::Set_Die()
 {
 	for (auto& Collider : m_Coliders)
 		Collider.second->SetActive(false);
+
+
+
+	m_bDie = true;
 }
 
 void CMonster_Server::Find_NearTarget()

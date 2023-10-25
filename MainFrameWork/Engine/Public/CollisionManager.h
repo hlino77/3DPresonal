@@ -1,6 +1,8 @@
 #pragma once
 #include "Base.h"
 #include "MurmurHash3.h"
+#include "Lock.h"
+
 
 BEGIN(Engine)
 
@@ -32,6 +34,8 @@ private:
 	CCollisionManager();
 	virtual ~CCollisionManager() = default;
 
+
+	USE_LOCK
 public:
 	void	LateTick_Collision(const _float& fTimeDelta);
 
@@ -42,6 +46,7 @@ public:
 	//map<uint64, _bool>& GetMapColInfo() { return m_mapColInfo; }
 	//void SetMapColInfo(ULONGLONG ID, _bool bCollision) { m_mapColInfo[ID] = bCollision; }
 	void	Add_Colider(CSphereCollider* pCollider);
+	void	Out_Colider(CSphereCollider* pCollider);
 	void	Set_Stop(_bool bStop) { m_bStop = bStop; }
 	_bool	Is_Stop() { return m_bStop; }
 

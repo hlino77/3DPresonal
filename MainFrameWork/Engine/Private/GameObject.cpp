@@ -123,6 +123,7 @@ HRESULT CGameObject::Compute_CamZ(Vec4 vWorldPos)
 
 void CGameObject::Add_CollisionStay(_uint iColLayer, CCollider* pCollider)
 {
+	WRITE_LOCK
 	COLLISIONSTAY tCollision;
 	tCollision.iColLayer = iColLayer;
 	tCollision.pCollider = pCollider;
@@ -136,6 +137,7 @@ void CGameObject::Delete_CollisionStay(_uint iColLayer, CCollider* pCollider)
 	{
 		if (Collision->iColLayer == iColLayer && Collision->pCollider == pCollider)
 		{
+			WRITE_LOCK
 			Collision = m_CollisionList.erase(Collision);
 		}
 		else

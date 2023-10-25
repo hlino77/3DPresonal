@@ -17,7 +17,6 @@ public:
 	HRESULT Initialize_Prototype();
 	HRESULT Initialize(class CModel* pModel);
 	HRESULT	LoadData_FromAnimationFile(CAsFileUtils* pFileUtils, Matrix PivotMatrix);
-	HRESULT	LoadData_FromConverter(shared_ptr<asAnimation> pAnimation, Matrix PivotMatrix);
 
 
 	HRESULT Play_Animation(_float fTimeDelta);
@@ -31,7 +30,7 @@ public:
 	_uint	 Get_MaxFrame() { return m_iFrameCount - 1; }
 	
 
-	vector<ModelKeyframeData>& Get_KeyDatas(_uint iFrame) { return m_KeyFrameBones[iFrame]; }
+	vector<ModelKeyframeData>& Get_KeyDatas(_uint iFrame) { return (*m_KeyFrameBones)[iFrame]; }
 	HRESULT Make_KeyframeData(vector<shared_ptr<ModelKeyframe>>& KeyFrames);
 
 	HRESULT SetUpAnimation_OnShader(class CShader* pShader, const char* strMapname);
@@ -66,7 +65,8 @@ private: /* 복제된 애니메이션 마다 따로 가진다. */
 	_bool						m_bEnd = false;
 
 
-	vector<vector<ModelKeyframeData>> m_KeyFrameBones;
+	vector<vector<ModelKeyframeData>>* m_KeyFrameBones;
+
 public:
 	static CAnimation* Create();
 	CAnimation* Clone(class CModel* pModel);

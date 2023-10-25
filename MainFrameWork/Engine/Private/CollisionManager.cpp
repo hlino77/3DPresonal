@@ -18,7 +18,9 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 	if (m_Colliders.empty())	
 		return;
 
-	m_arrSorted.resize(m_iNumColLayers, false);
+	for (auto bSort : m_arrSorted)
+		bSort = false;
+
 
 	for (_uint iRow = 0; iRow < m_iNumColLayers; ++iRow)
 	{
@@ -26,6 +28,7 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 		{
 			if (m_arrCheck[iRow] & (1 << iCol))
 			{
+				READ_LOCK
 				CheckDynamicCollision(iRow, iCol, fTimeDelta);
 				//CheckStaticCollision(reinterpret_cast<LAYERTAG&>(iRow), fTimeDelta);
 			}
@@ -52,7 +55,18 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumColTypes)
 
 void CCollisionManager::Add_Colider(CSphereCollider* pCollider)
 {
+	WRITE_LOCK
 	m_Colliders[pCollider->Get_ColLayer()].push_back(pCollider);
+}
+
+void CCollisionManager::Out_Colider(CSphereCollider* pCollider)
+{
+	WRITE_LOCK;
+	for (auto iter = m_Colliders[pCollider->Get_ColLayer()].begin(); iter != m_Colliders[pCollider->Get_ColLayer()].end();)
+	{
+		if (*iter == pCollider)
+			iter = m_Colliders[pCollider->Get_ColLayer()].erase(iter);
+	}
 }
 
 void CCollisionManager::CheckGroup(_uint iLeft, _uint iRight)

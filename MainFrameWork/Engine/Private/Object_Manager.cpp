@@ -152,6 +152,9 @@ CGameObject* CObject_Manager::Find_NearGameObject(_uint iLevelIndex, const _uint
 
 	for (auto& Object : ObjectList)
 	{
+		if (Object->Is_Die() || Object->Is_Active() == false)
+			continue;
+
 		if (pFindObject == nullptr)
 		{
 			pFindObject = Object;

@@ -84,13 +84,16 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
 			return E_FAIL;
 
-		CGameInstance::GetInstance()->Set_Loading(false);
-		CGameInstance::GetInstance()->Set_LoadingNext(LEVELID::LEVEL_END);
-
 		Safe_Release(pGameInstance);
 	}
 
 
+	return S_OK;
+}
+
+HRESULT CLevel_Loading::Render_Debug()
+{
+	
 	return S_OK;
 }
 

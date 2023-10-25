@@ -21,6 +21,7 @@ public:
 	virtual HRESULT Initialize(LEVELID eNextLevel, const wstring& szBackGruond);
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
+	virtual HRESULT Render_Debug();
 
 private:
 	/* 로딩 다음레벨. */

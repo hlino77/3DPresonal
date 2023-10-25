@@ -127,6 +127,8 @@ void CMonster::Set_Die()
 {
 	for (auto& Collider : m_Coliders)
 		Collider.second->SetActive(false);
+
+	m_bDie = true;
 }
 
 HRESULT CMonster::Ready_Components()

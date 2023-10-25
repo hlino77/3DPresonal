@@ -68,6 +68,10 @@ public:
 	_bool						Is_Active() { return m_bActive; }
 	void						Set_Active(_bool bActive) { m_bActive = bActive; }
 
+	_bool						Is_Die() { return m_bDie; }
+	void						Set_Die(_bool bDie) { m_bDie = bDie; }
+
+
 	CGameObject*				Get_NearTarget() { return m_pNearTarget; }
 	void						Reset_NearTarget() { m_pNearTarget = nullptr; }
 	void						Set_NearTarget(CGameObject* pObject) { m_pNearTarget = pObject; }
@@ -135,6 +139,7 @@ protected:
 
 	_bool				m_bRender = true;
 	_bool				m_bActive = true;
+	_bool				m_bDie = false;
 
 	atomic<Vec3>		m_vTargetPos;
 	atomic<Matrix>		m_matTargetWorld;

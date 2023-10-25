@@ -72,44 +72,6 @@ HRESULT CAnimation::LoadData_FromAnimationFile(CAsFileUtils* pFileUtils, Matrix 
 	return S_OK;
 }
 
-HRESULT CAnimation::LoadData_FromConverter(shared_ptr<asAnimation> pAnimation, Matrix PivotMatrix)
-{
-	m_szName = CAsUtils::ToWString(pAnimation->name);
-	m_fDuration = pAnimation->duration;
-	m_fTickPerSecond = pAnimation->frameRate;
-	m_iFrameCount = pAnimation->frameCount;
-
-	uint32 iKeyframesCount = pAnimation->keyframes.size();
-	vector<shared_ptr<ModelKeyframe>>	KeyFrames;
-
-	for (uint32 i = 0; i < iKeyframesCount; i++)
-	{
-		shared_ptr<ModelKeyframe> Keyframe = make_shared<ModelKeyframe>();
-		Keyframe->szBoneName = CAsUtils::ToWString(pAnimation->keyframes[i]->boneName);
-
-		uint32 iSize = pAnimation->keyframes[i]->transforms.size();
-
-		if (iSize > 0)
-		{
-			Keyframe->KeyData.resize(iSize);
-			void* ptr = &Keyframe->KeyData[0];
-			memcpy(ptr, pAnimation->keyframes[i]->transforms.data(), sizeof(ModelKeyframeData) * iSize);
-		}
-
-		KeyFrames.push_back(Keyframe);
-	}
-
-	Make_KeyframeData(KeyFrames);
-
-	for (auto& ModelKey : KeyFrames)
-	{
-		ModelKey->KeyData.clear();
-		ModelKey = nullptr;
-	}
-
-	return S_OK;
-}
-
 
 HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 {
@@ -150,8 +112,10 @@ void CAnimation::Set_Frame(_uint iFrame)
 
 HRESULT CAnimation::Make_KeyframeData(vector<shared_ptr<ModelKeyframe>>& KeyFrames)
 {
-	m_KeyFrameBones.resize(m_iFrameCount);
-	for (auto& Bones : m_KeyFrameBones)
+	m_KeyFrameBones = new vector<vector<ModelKeyframeData>>();
+	m_KeyFrameBones->resize(m_iFrameCount);
+
+	for (auto& Bones : *m_KeyFrameBones)
 		Bones.reserve(KeyFrames.size());
 
 	for (_uint i = 0; i < m_iFrameCount; ++i)
@@ -161,9 +125,10 @@ HRESULT CAnimation::Make_KeyframeData(vector<shared_ptr<ModelKeyframe>>& KeyFram
 			ModelKeyframeData tModelKey;
 			tModelKey = KeyFrames[j]->KeyData[i];
 
-			m_KeyFrameBones[i].push_back(tModelKey);
+			(*m_KeyFrameBones)[i].push_back(tModelKey);
 		}
 	}
+	
 	return S_OK;
 }
 
@@ -212,6 +177,6 @@ CAnimation * CAnimation::Clone(CModel* pModel)
 
 void CAnimation::Free()
 {
-	for (auto& KeyData : m_KeyFrameBones)
+	for (auto& KeyData : *m_KeyFrameBones)
 		KeyData.clear();
 }

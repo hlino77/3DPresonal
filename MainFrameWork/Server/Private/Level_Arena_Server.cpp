@@ -20,6 +20,11 @@ HRESULT CLevel_Arena_Server::Initialize()
 {
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
 
+	m_iMonsterCount = 10;
+	m_iMaxMonster = 2;
+
+
+
 	Broadcast_LevelState(LEVELSTATE::INITREADY);
 	Wait_ClientLevelState(LEVELSTATE::INITREADY);
 	Broadcast_LevelState(LEVELSTATE::INITSTART);
@@ -62,6 +67,8 @@ HRESULT CLevel_Arena_Server::Initialize()
 
 HRESULT CLevel_Arena_Server::Tick(_float fTimeDelta)
 {
+	Spawn_Monster();
+
 	return S_OK;
 }
 
@@ -108,16 +115,16 @@ HRESULT CLevel_Arena_Server::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 
 HRESULT CLevel_Arena_Server::Ready_Layer_Monster(const LAYER_TYPE eLayerType)
 {
-	Vec3 vPos(-20.0f, 0.0f, 5.0f);
+	/*Vec3 vPos(-20.0f, 0.0f, 5.0f);
 
-	for (_uint i = 0; i < 10; ++i)
+	for (_uint i = 0; i < 5; ++i)
 	{
 		if (FAILED(Broadcast_Monster(L"WhiteZetsu", vPos)))
 			return E_FAIL;
 
 
-		vPos.x += 2.0f;
-	}
+		vPos.x += 0.01f;
+	}*/
 	
 	return S_OK;
 }
@@ -297,6 +304,85 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 
 
 	return S_OK;
+}
+
+void CLevel_Arena_Server::Check_Monster()
+{
+	if (m_iMonsterCount == 0)
+	{
+
+	}
+}
+
+void CLevel_Arena_Server::Spawn_Monster()
+{
+	if (m_iMonsterCount == 0)
+		return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	list<CGameObject*> MonsterList = pGameInstance->Find_GameObjects((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_MONSTER);
+	
+	_uint iMonsterCount = 0;
+	for (auto& Monster : MonsterList)
+	{
+		if (Monster->Is_Active())
+			++iMonsterCount;
+	}
+
+
+	if (iMonsterCount < m_iMaxMonster)
+	{
+		_uint iCreate = m_iMaxMonster - iMonsterCount;
+
+		for (_uint i = 0; i < iCreate; ++i)
+		{
+			Broadcast_Monster(L"WhiteZetsu", Find_MonsterSpawnPos());
+			--m_iMonsterCount;
+
+			if (m_iMonsterCount == 0)
+				break;
+		}
+	
+	}
+	Safe_Release(pGameInstance);
+}
+
+Vec3 CLevel_Arena_Server::Find_MonsterSpawnPos()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Vec3 vPos(0.0f, 0.0f, 0.0f);
+
+	list<CGameObject*>& PlayerList = pGameInstance->Find_GameObjects((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_PLAYER);
+
+
+	_uint iPlayerIndex = rand() % PlayerList.size();
+
+	_uint iIndex = 0;
+
+	for (auto& Player : PlayerList)
+	{
+		if (iIndex == iPlayerIndex)
+		{
+			Vec3 vPlayerPos = Player->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+
+
+			Vec3 vOffset(0.0f, 0.0f, 5.0f);
+
+			_float fAngle = (_float)(rand() % 360);
+
+			vOffset = XMVector3Rotate(vOffset, Quaternion::CreateFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), XMConvertToRadians(fAngle)));
+
+			vPos = vPlayerPos + vOffset;
+		}
+	}
+
+	Safe_Release(pGameInstance);
+	return vPos;
 }
 
 void CLevel_Arena_Server::Set_CheckGruop()

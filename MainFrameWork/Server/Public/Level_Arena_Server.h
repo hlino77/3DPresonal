@@ -36,6 +36,12 @@ private:
 	HRESULT			Broadcast_Monster(const wstring& szName, Vec3 vPos);
 
 
+	void			Check_Monster();
+	void			Spawn_Monster();
+	Vec3			Find_MonsterSpawnPos();
+
+
+
 	void			Set_CheckGruop();
 	void			Start_Collision();
 	void			End_Collision();
@@ -46,6 +52,9 @@ public:
 
 private:
 	_float m_fBroadcastTime = 0.0f;
+	_uint  m_iMonsterCount = 0;
+
+	_uint	m_iMaxMonster = 0;
 
 	thread* m_pCollisionThread = nullptr;
 };

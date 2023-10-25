@@ -81,9 +81,12 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 	if (nullptr == m_pRendererCom)
 		return;
-
-	for (auto& CollisionStay : m_CollisionList)
-		OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
+	{
+		READ_LOCK
+		for (auto& CollisionStay : m_CollisionList)
+			OnCollisionStay(CollisionStay.iColLayer, CollisionStay.pCollider);
+	}
+	
 
 	//m_pModelCom->Play_Animation(fTimeDelta);
 
