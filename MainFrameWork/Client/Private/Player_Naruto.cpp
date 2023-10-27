@@ -23,6 +23,11 @@
 #include "ColliderOBB.h"
 #include "State_Naruto_WallLand.h"
 #include "State_Naruto_HitMiddle.h"
+#include "State_Naruto_HitSpinBlow.h"
+#include "State_Naruto_FallBehind.h"
+#include "State_Naruto_DownToFloor.h"
+#include "State_Naruto_GetUp.h"
+
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -196,6 +201,10 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Walk_End", new CState_Naruto_WalkEnd(L"Walk_End", this));
 	m_pStateMachine->Add_State(L"WallLand", new CState_Naruto_WallLand(L"WallLand", this));
 	m_pStateMachine->Add_State(L"Hit_Middle", new CState_Naruto_HitMiddle(L"Hit_Middle", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlow", new CState_Naruto_HitSpinBlow(L"Hit_SpinBlow", this));
+	m_pStateMachine->Add_State(L"Fall_Behind", new CState_Naruto_FallBehind(L"Fall_Behind", this));
+	m_pStateMachine->Add_State(L"DownToFloor", new CState_Naruto_DownToFloor(L"DownToFloor", this));
+	m_pStateMachine->Add_State(L"GetUp", new CState_Naruto_GetUp(L"GetUp", this));
 
 
 

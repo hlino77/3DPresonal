@@ -29,7 +29,7 @@ HRESULT CSkill::Initialize(void* pArg)
 	m_strObjectTag = Desc->strFileName;
 	m_iObjectID = Desc->iObjectID;
 	m_iLayer = Desc->iLayer;
-
+	m_pSkillOwner = Desc->pOwner;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;

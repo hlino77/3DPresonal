@@ -483,6 +483,7 @@ bool Handel_S_SETSKILL_Client(PacketSessionRef& session, Protocol::S_SETSKILL& p
 	Desc.strFileName = CAsUtils::ToWString(pkt.szskillname());
 	Desc.iObjectID = pkt.iskillobjectid();
 	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+	Desc.pOwner = pObject;
 
 	wstring szProtoName = L"Prototype_GameObject_Skill_";
 	szProtoName += Desc.strFileName;

@@ -561,8 +561,8 @@ void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iSta
 {
 	m_pModelCom->Reserve_NextAnimation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 
-	if (m_bControl)
-		Send_Animation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
+	//if (m_bControl)
+		//Send_Animation(iAnimIndex, fChangeTime, iStartFrame, iChangeFrame);
 }
 
 

@@ -22,6 +22,7 @@ public:
 		wstring strFileName;
 		_int	iObjectID;
 		_uint	iLayer;
+		CGameObject* pOwner;
 	}MODELDESC;
 
 
@@ -84,6 +85,9 @@ protected:
 
 
 	_float							m_fFollowDistance = 0.0f;
+
+
+	CGameObject*					m_pSkillOwner = nullptr;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 

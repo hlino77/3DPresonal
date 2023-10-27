@@ -227,6 +227,7 @@ void CMonster_Server::Send_MakeSkill(const wstring& szSkillName, CGameObject** p
 	Desc.strFileName = szSkillName;
 	Desc.iObjectID = g_iObjectID++;
 	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+	Desc.pSkillOwner = this;
 
 	wstring szObjectName = L"Prototype_GameObject_Skill_" + szSkillName;
 	*pSkill = pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_SKILL, szObjectName, &Desc);

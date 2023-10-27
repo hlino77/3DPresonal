@@ -40,6 +40,9 @@ public:
 	_bool	IsKinematic()	const						{ return m_IsKinematic; }
 	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
 
+
+	_bool	Is_Gruond() { return m_bGround; }
+
 	void	SetCompareGruond(_bool bCompare);
 	_bool	IsCompareGruond() { return m_bCompareGround; }
 
