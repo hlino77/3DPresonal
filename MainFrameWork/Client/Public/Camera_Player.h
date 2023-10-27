@@ -63,6 +63,9 @@ private:
 	_float	m_fCurrShakeTime = 0.0f;
 	_float	m_fShakeForce = 0.0f;
 	_bool	m_bShake = false;
+	Vec3	m_vOriginPos;
+
+
 
 
 	class CPlayer* m_pPlayer = nullptr;

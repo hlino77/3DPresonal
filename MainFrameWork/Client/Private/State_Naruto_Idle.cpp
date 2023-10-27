@@ -5,6 +5,7 @@
 #include "StateMachine.h"
 #include "Key_Manager.h"
 #include "GameInstance.h"
+#include "Camera_Player.h"
 
 CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -68,6 +69,12 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 		
+
+	if (KEY_TAP(KEY::U))
+	{
+		m_pPlayer->Get_Camera()->Cam_Shake(0.002f, 0.5f);
+		return;
+	}
 }
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)
