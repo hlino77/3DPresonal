@@ -21,7 +21,7 @@ CState_Sasuke_Attack_cmb01::CState_Sasuke_Attack_cmb01(const CState& rhs, class 
 
 HRESULT CState_Sasuke_Attack_cmb01::Initialize()
 {
-	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_cmb01", 1.3f);
+	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_cmb01", 1.5f);
 	
 	if (m_iAnimIndex == -1)
 		return E_FAIL;

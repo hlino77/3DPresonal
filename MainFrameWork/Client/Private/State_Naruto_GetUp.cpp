@@ -88,8 +88,11 @@ void CState_Naruto_GetUp::Tick_State_NoneControl(_float fTimeDelta)
 
 	if (iAnimIndex == m_iDownLoop)
 	{
-		if (pModel->Is_AnimationEnd(m_iDownLoop))
+		if (m_bLoopEnd == false && pModel->Is_AnimationEnd(m_iDownLoop))
+		{
 			m_pPlayer->Reserve_Animation(m_iGetUp, 0.1f, 1, 0);
+			m_bLoopEnd = true;
+		}
 	}
 }
 
