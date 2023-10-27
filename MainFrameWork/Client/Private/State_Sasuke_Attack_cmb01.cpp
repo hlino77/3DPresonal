@@ -184,17 +184,19 @@ void CState_Sasuke_Attack_cmb01::Follow_TargetPos(_float fTimeDelta)
 	vMove.Normalize();
 	vMove *= m_fMoveSpeed * fTimeDelta;
 
-	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
+	
 
 	if (vDir.Length() > vMove.Length())
 	{
 		vPlayerPos += vMove;
 		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
+		m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 	}
 	else
 	{
 		vPlayerPos = vTargetPos;
 		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
+		m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 	}
 }
 
