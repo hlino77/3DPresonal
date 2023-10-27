@@ -136,30 +136,41 @@ void CState_Sasuke_Attack_cmb06::Update_Collider(_float fTimeDelta)
 
 void CState_Sasuke_Attack_cmb06::Follow_TargetPos(_float fTimeDelta)
 {
-	Vec3 vPlayerPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
+	CTransform* pTransform = m_pPlayer->Get_TransformCom();
+
+	Vec3 vPlayerPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
 	Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 
-	if (vPlayerPos == vTargetPos)
+
+	Vec3 vUp = pTransform->Get_State(CTransform::STATE::STATE_UP);
+	vUp.Normalize();
+	Vec3 vDir = vTargetPos - vPlayerPos;
+
+
+
+	_float fLength = vDir.Dot(vUp);
+
+	vTargetPos = vTargetPos - (vUp * fLength);
+	vDir = vTargetPos - vPlayerPos;
+
+	if (vDir.Length() < 0.001f)
 		return;
 
-	Vec3 vDir = vTargetPos - vPlayerPos;
 	Vec3 vMove = vDir;
 	vMove.Normalize();
 	vMove *= m_fMoveSpeed * fTimeDelta;
 
-	
+	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 
 	if (vDir.Length() > vMove.Length())
 	{
 		vPlayerPos += vMove;
 		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
-		m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 	}
 	else
 	{
 		vPlayerPos = vTargetPos;
 		m_pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPlayerPos);
-		m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 	}
 }
 
