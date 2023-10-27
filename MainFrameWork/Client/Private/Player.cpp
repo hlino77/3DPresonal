@@ -141,7 +141,14 @@ HRESULT CPlayer::Render()
 void CPlayer::Find_NearTarget()
 {
 	m_pNearTarget = nullptr;
-	m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_MONSTER, this);
+	CGameObject* pBoss = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, this);
+
+	if (pBoss)
+		m_pNearTarget = pBoss;
+	else
+	{
+		m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_MONSTER, this);
+	}
 }
 
 Vec3 CPlayer::Make_StraightDir()

@@ -38,6 +38,7 @@ public:
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) {};
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider * pOther) {};
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider * pOther) {};
+	virtual void	Set_Skill(CGameObject* pGameObject) {};
 public:
 	class CComponent*				Get_Component(const wstring & strComponentTag);
 
@@ -104,6 +105,9 @@ public:
 
 	void						Add_CollisionStay(_uint iColLayer, CCollider* pCollider);
 	void						Delete_CollisionStay(_uint iColLayer, CCollider* pCollider);
+
+
+	
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);

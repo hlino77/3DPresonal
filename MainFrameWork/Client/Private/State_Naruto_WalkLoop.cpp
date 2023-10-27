@@ -50,6 +50,7 @@ void CState_Naruto_WalkLoop::Enter_State()
 		Set_TargetPos(vDir);
 	}
 
+	m_pPlayer->Set_MoveSpeed(0.0f);
 }
 
 void CState_Naruto_WalkLoop::Tick_State(_float fTimeDelta)
@@ -105,7 +106,11 @@ void CState_Naruto_WalkLoop::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
-
+	if (KEY_TAP(KEY::LBTN))
+	{
+		m_pPlayer->Set_State(L"Attack_Normal_cmb01");
+		return;
+	}
 	
 }
 

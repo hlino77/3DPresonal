@@ -10,6 +10,7 @@
 #include "ThreadManager.h"
 #include "Struct.pb.h"
 #include "NavigationMgr.h"
+#include "Boss_Server.h"
 
 CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
@@ -20,7 +21,7 @@ HRESULT CLevel_Arena_Server::Initialize()
 {
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
 
-	m_iMonsterCount = 10;
+	m_iMonsterCount = 1;
 	m_iMaxMonster = 2;
 
 
@@ -68,6 +69,7 @@ HRESULT CLevel_Arena_Server::Initialize()
 HRESULT CLevel_Arena_Server::Tick(_float fTimeDelta)
 {
 	Spawn_Monster();
+	Check_Monster();
 
 	return S_OK;
 }
@@ -306,12 +308,113 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 	return S_OK;
 }
 
+HRESULT CLevel_Arena_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	{
+		Protocol::S_CREATE_OBJCECT pkt;
+		pkt.set_strname(CAsUtils::ToString(szName));
+		pkt.set_iobjectid(g_iObjectID++);
+		pkt.set_ilevel((uint32)LEVELID::LEVEL_ARENA);
+		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_BOSS);
+		pkt.set_iobjecttype((uint32)OBJ_TYPE::BOSS);
+
+		auto vPacketPos = pkt.mutable_vpos();
+		vPacketPos->Resize(3, 0.0f);
+		memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
+
+		/*auto tMonster = pkt.add_tmonsterinfo();
+		tMonster->set_ffollowdistance(10.0f);*/
+
+		SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+		CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+
+		CBoss_Server::MODELDESC Desc;
+		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
+
+		wstring szMonsterName = L"Prototype_GameObject_Boss_" + szName;
+		CBoss_Server* pBoss = dynamic_cast<CBoss_Server*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szMonsterName, &Desc));
+		if (pBoss == nullptr)
+			return E_FAIL;
+
+		pBoss->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+	}
+	
+
+	{
+		Protocol::S_CREATE_OBJCECT pkt;
+		pkt.set_strname(CAsUtils::ToString(L"C2Dragon"));
+		pkt.set_iobjectid(g_iObjectID++);
+		pkt.set_ilevel((uint32)LEVELID::LEVEL_ARENA);
+		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_MONSTER);
+		pkt.set_iobjecttype((uint32)OBJ_TYPE::MONSTER);
+
+
+		Vec3 vDragonPos = vPos + Vec3(0.0f, 0.0f, -1.5f);
+		auto vPacketPos = pkt.mutable_vpos();
+		vPacketPos->Resize(3, 0.0f);
+		memcpy(vPacketPos->mutable_data(), &vDragonPos, sizeof(Vec3));
+
+		/*auto tMonster = pkt.add_tmonsterinfo();
+		tMonster->set_ffollowdistance(10.0f);*/
+
+		SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+		CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+
+		CMonster_Server::MODELDESC Desc;
+		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
+
+		wstring szMonsterName = L"Prototype_GameObject_Monster_C2Dragon";
+		CMonster_Server* pMonster = dynamic_cast<CMonster_Server*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szMonsterName, &Desc));
+		if (pMonster == nullptr)
+			return E_FAIL;
+
+		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vDragonPos);
+		pMonster->Set_Skill(nullptr);
+	}
+
+
+	Safe_Release(pGameInstance);
+
+
+
+
+	return S_OK;
+}
+
 void CLevel_Arena_Server::Check_Monster()
 {
-	if (m_iMonsterCount == 0)
-	{
+	if (m_bBoss || m_iMonsterCount != 0)
+		return;
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	list<CGameObject*> MonsterList = pGameInstance->Find_GameObjects((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_MONSTER);
+
+	_uint iMonsterCount = 0;
+	for (auto& Monster : MonsterList)
+	{
+		if (Monster->Is_Active())
+			++iMonsterCount;
 	}
+
+	if (iMonsterCount == 0)
+	{
+		Broadcast_Boss(L"Deidara", Vec3(0.0f, 0.0f, 0.0f));
+		m_bBoss = true;
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 void CLevel_Arena_Server::Spawn_Monster()

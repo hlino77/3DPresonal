@@ -181,7 +181,26 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	vLook.Normalize();
 
 
+	
+
+
 	matWorld = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+
+
+	if (m_bShake)
+	{
+		Vec3 vUp(matWorld.m[1]);
+
+		_float fAngle = _float(rand() % 360);
+
+		Vec3 vDir = XMVector3Rotate(vUp, Quaternion::CreateFromAxisAngle(vLook, XMConvertToRadians(fAngle)));
+
+		_float fForce = _float(rand() % 20) * m_fShakeForce;
+
+		vDir *= fForce;
+
+		matWorld.Translation(vPos + vDir);
+	}
 
 
 	m_pTransformCom->Set_WorldMatrix(matWorld);
@@ -198,6 +217,11 @@ void CCamera_Player::LateTick(_float fTimeDelta)
 HRESULT CCamera_Player::Render()
 {
 	return S_OK;
+}
+
+void CCamera_Player::Cam_Shake(_float fForce, _float fTime)
+{
+
 }
 
 HRESULT CCamera_Player::Ready_Components()

@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[15]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[16]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -92,6 +92,9 @@ extern S_OBJECTINFODefaultTypeInternal _S_OBJECTINFO_default_instance_;
 class S_OPEN_LEVEL;
 struct S_OPEN_LEVELDefaultTypeInternal;
 extern S_OPEN_LEVELDefaultTypeInternal _S_OPEN_LEVEL_default_instance_;
+class S_SETSKILL;
+struct S_SETSKILLDefaultTypeInternal;
+extern S_SETSKILLDefaultTypeInternal _S_SETSKILL_default_instance_;
 class S_STATE;
 struct S_STATEDefaultTypeInternal;
 extern S_STATEDefaultTypeInternal _S_STATE_default_instance_;
@@ -115,6 +118,7 @@ template<> ::Protocol::S_NEARTARGET* Arena::CreateMaybeMessage<::Protocol::S_NEA
 template<> ::Protocol::S_NICKNAME* Arena::CreateMaybeMessage<::Protocol::S_NICKNAME>(Arena*);
 template<> ::Protocol::S_OBJECTINFO* Arena::CreateMaybeMessage<::Protocol::S_OBJECTINFO>(Arena*);
 template<> ::Protocol::S_OPEN_LEVEL* Arena::CreateMaybeMessage<::Protocol::S_OPEN_LEVEL>(Arena*);
+template<> ::Protocol::S_SETSKILL* Arena::CreateMaybeMessage<::Protocol::S_SETSKILL>(Arena*);
 template<> ::Protocol::S_STATE* Arena::CreateMaybeMessage<::Protocol::S_STATE>(Arena*);
 template<> ::Protocol::S_TIME* Arena::CreateMaybeMessage<::Protocol::S_TIME>(Arena*);
 template<> ::Protocol::S_USERINFO* Arena::CreateMaybeMessage<::Protocol::S_USERINFO>(Arena*);
@@ -2665,6 +2669,187 @@ class S_NEARTARGET final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_SETSKILL final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_SETSKILL) */ {
+ public:
+  inline S_SETSKILL() : S_SETSKILL(nullptr) {}
+  ~S_SETSKILL() override;
+  explicit constexpr S_SETSKILL(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_SETSKILL(const S_SETSKILL& from);
+  S_SETSKILL(S_SETSKILL&& from) noexcept
+    : S_SETSKILL() {
+    *this = ::std::move(from);
+  }
+
+  inline S_SETSKILL& operator=(const S_SETSKILL& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_SETSKILL& operator=(S_SETSKILL&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_SETSKILL& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_SETSKILL* internal_default_instance() {
+    return reinterpret_cast<const S_SETSKILL*>(
+               &_S_SETSKILL_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    15;
+
+  friend void swap(S_SETSKILL& a, S_SETSKILL& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_SETSKILL* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_SETSKILL* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_SETSKILL* New() const final {
+    return new S_SETSKILL();
+  }
+
+  S_SETSKILL* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_SETSKILL>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_SETSKILL& from);
+  void MergeFrom(const S_SETSKILL& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_SETSKILL* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_SETSKILL";
+  }
+  protected:
+  explicit S_SETSKILL(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSzSkillNameFieldNumber = 4,
+    kIObjectIDFieldNumber = 1,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kISkillObjectIDFieldNumber = 5,
+  };
+  // string szSkillName = 4;
+  void clear_szskillname();
+  const std::string& szskillname() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_szskillname(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_szskillname();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_szskillname();
+  void set_allocated_szskillname(std::string* szskillname);
+  private:
+  const std::string& _internal_szskillname() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_szskillname(const std::string& value);
+  std::string* _internal_mutable_szskillname();
+  public:
+
+  // int32 iObjectID = 1;
+  void clear_iobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
+  void set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iobjectid() const;
+  void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
+  void clear_ilayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
+  void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilayer() const;
+  void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iSkillObjectID = 5;
+  void clear_iskillobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iskillobjectid() const;
+  void set_iskillobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iskillobjectid() const;
+  void _internal_set_iskillobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_SETSKILL)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr szskillname_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iskillobjectid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -4176,9 +4361,140 @@ inline void S_NEARTARGET::set_itargetobjectid(::PROTOBUF_NAMESPACE_ID::int32 val
   // @@protoc_insertion_point(field_set:Protocol.S_NEARTARGET.iTargetObjectID)
 }
 
+// -------------------------------------------------------------------
+
+// S_SETSKILL
+
+// int32 iObjectID = 1;
+inline void S_SETSKILL::clear_iobjectid() {
+  iobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::_internal_iobjectid() const {
+  return iobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::iobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SETSKILL.iObjectID)
+  return _internal_iobjectid();
+}
+inline void S_SETSKILL::_internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iobjectid_ = value;
+}
+inline void S_SETSKILL::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.iObjectID)
+}
+
+// int32 iLevel = 2;
+inline void S_SETSKILL::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SETSKILL.iLevel)
+  return _internal_ilevel();
+}
+inline void S_SETSKILL::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_SETSKILL::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.iLevel)
+}
+
+// int32 iLayer = 3;
+inline void S_SETSKILL::clear_ilayer() {
+  ilayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::_internal_ilayer() const {
+  return ilayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::ilayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SETSKILL.iLayer)
+  return _internal_ilayer();
+}
+inline void S_SETSKILL::_internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilayer_ = value;
+}
+inline void S_SETSKILL::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.iLayer)
+}
+
+// string szSkillName = 4;
+inline void S_SETSKILL::clear_szskillname() {
+  szskillname_.ClearToEmpty();
+}
+inline const std::string& S_SETSKILL::szskillname() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SETSKILL.szSkillName)
+  return _internal_szskillname();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void S_SETSKILL::set_szskillname(ArgT0&& arg0, ArgT... args) {
+ 
+ szskillname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.szSkillName)
+}
+inline std::string* S_SETSKILL::mutable_szskillname() {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_SETSKILL.szSkillName)
+  return _internal_mutable_szskillname();
+}
+inline const std::string& S_SETSKILL::_internal_szskillname() const {
+  return szskillname_.Get();
+}
+inline void S_SETSKILL::_internal_set_szskillname(const std::string& value) {
+  
+  szskillname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* S_SETSKILL::_internal_mutable_szskillname() {
+  
+  return szskillname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* S_SETSKILL::release_szskillname() {
+  // @@protoc_insertion_point(field_release:Protocol.S_SETSKILL.szSkillName)
+  return szskillname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void S_SETSKILL::set_allocated_szskillname(std::string* szskillname) {
+  if (szskillname != nullptr) {
+    
+  } else {
+    
+  }
+  szskillname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), szskillname,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_SETSKILL.szSkillName)
+}
+
+// int32 iSkillObjectID = 5;
+inline void S_SETSKILL::clear_iskillobjectid() {
+  iskillobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::_internal_iskillobjectid() const {
+  return iskillobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SETSKILL::iskillobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SETSKILL.iSkillObjectID)
+  return _internal_iskillobjectid();
+}
+inline void S_SETSKILL::_internal_set_iskillobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iskillobjectid_ = value;
+}
+inline void S_SETSKILL::set_iskillobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iskillobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.iSkillObjectID)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

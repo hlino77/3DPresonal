@@ -34,28 +34,38 @@ private:
 	void			Wait_ClientLevelState(LEVELSTATE eState);
 	HRESULT			Broadcast_PlayerInfo();
 	HRESULT			Broadcast_Monster(const wstring& szName, Vec3 vPos);
-
-
-	void			Check_Monster();
-	void			Spawn_Monster();
-	Vec3			Find_MonsterSpawnPos();
+	HRESULT			Broadcast_Boss(const wstring& szName, Vec3 vPos);
 
 
 
-	void			Set_CheckGruop();
-	void			Start_Collision();
-	void			End_Collision();
 public:
 	static class CLevel_Arena_Server* Create();
 	virtual void Free() override;
 
 
 private:
+	Vec3			Find_MonsterSpawnPos();
+
+	void			Check_Monster();
+	void			Spawn_Monster();
+
+
+
+
+	void			Set_CheckGruop();
+	void			Start_Collision();
+	void			End_Collision();
+private:
 	_float m_fBroadcastTime = 0.0f;
 	_uint  m_iMonsterCount = 0;
 
 	_uint	m_iMaxMonster = 0;
 
+	_bool	m_bBoss = false;
+
+
+private:
+	
 	thread* m_pCollisionThread = nullptr;
 };
 

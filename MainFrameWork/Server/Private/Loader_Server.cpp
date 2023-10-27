@@ -5,6 +5,9 @@
 #include "Player_Server.h"
 #include "Monster_Server.h"
 #include "Monster_WhiteZetsu_Server.h"
+#include "Boss_Deidara_Server.h"
+#include "Monster_C2Dragon_Server.h"
+#include "Skill_Hiryu_Server.h"
 
 CLoader_Server::CLoader_Server()
 {
@@ -150,12 +153,45 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 			return E_FAIL;
 	}
 
+	{
+		wstring strFileName = L"Deidara";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"C2Dragon";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_WhiteZetsu"),
 		CMonster_WhiteZetsu_Server::Create(nullptr, nullptr))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Deidara"),
+		CBoss_Deidara_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_C2Dragon"),
+		CMonster_C2Dragon_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Hiryu"),
+		CSkill_Hiryu_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

@@ -23,6 +23,7 @@ enum : uint16
 	PKT_S_NICKNAME = 13,
 	PKT_S_USERINFO = 14,
 	PKT_S_NEARTARGET = 15,
+	PKT_S_SETSKILL = 16,
 };
 
 // TODO
@@ -41,6 +42,7 @@ bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION&
 bool Handel_S_NICKNAME_Client(PacketSessionRef& session, Protocol::S_NICKNAME& pkt);
 bool Handel_S_USERINFO_Client(PacketSessionRef& session, Protocol::S_USERINFO& pkt);
 bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGET& pkt);
+bool Handel_S_SETSKILL_Client(PacketSessionRef& session, Protocol::S_SETSKILL& pkt);
 
 
 
@@ -68,6 +70,7 @@ public:
 		GPacketHandler[PKT_S_NICKNAME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_NICKNAME>(Handel_S_NICKNAME_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_USERINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_USERINFO>(Handel_S_USERINFO_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_NEARTARGET] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_NEARTARGET>(Handel_S_NEARTARGET_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_SETSKILL] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SETSKILL>(Handel_S_SETSKILL_Client, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -92,6 +95,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_NICKNAME& pkt) { return MakeSendBuffer(pkt, PKT_S_NICKNAME); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_USERINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_USERINFO); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_NEARTARGET& pkt) { return MakeSendBuffer(pkt, PKT_S_NEARTARGET); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SETSKILL& pkt) { return MakeSendBuffer(pkt, PKT_S_SETSKILL); }
 
 
 private:

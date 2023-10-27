@@ -54,7 +54,7 @@ public:
 	void					Set_FollowDistance(_float fDistance) { m_fFollowDistance = fDistance; }
 	_float					Get_FollowDistance() { return m_fFollowDistance; }
 	
-
+	void					Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill);
 	
 	
 public:

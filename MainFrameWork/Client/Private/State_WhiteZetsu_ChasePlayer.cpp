@@ -58,7 +58,7 @@ void CState_WhiteZetsu_ChasePlayer::Tick_State(_float fTimeDelta)
 	m_pMonster->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
 
-	m_pMonster->Follow_ServerPos(0.01f, 4.0f * fTimeDelta);
+	m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_ChasePlayer::Exit_State()

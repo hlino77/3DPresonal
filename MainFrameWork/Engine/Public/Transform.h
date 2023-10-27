@@ -65,6 +65,8 @@ public:
 	void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f);
 	void Move_Dir(Vec3 vDir, _float fTimeDelta);
 	void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta);
+	void LookAt_Lerp_ForLand(Vec3 vAt, _float fSpeed, _float fTimeDelta);
+	void SetUp_Lerp(Vec3 vLook, _float fSpeed, _float fTimeDelta);
 	void Move_Pos(Vec3 vTargetPos);
 
 

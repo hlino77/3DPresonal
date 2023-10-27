@@ -31,15 +31,13 @@ public:
 
 
 public:
-	CTransform* Get_TransformCom() { return m_pTransformCom; }
+	void		Cam_Shake(_float fForce, _float fTime);
+
+
 
 protected:
 	virtual HRESULT Ready_Components() override;
 
-public:
-	static CCamera_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, wstring strObjTag);
-	virtual CGameObject* Clone(void* pArg);
-	virtual void Free() override;
 
 	
 private:
@@ -59,7 +57,22 @@ private:
 
 	_float m_fCameraLength;
 
+
+	//CamShake
+	_float	m_fShakeTime = 0.0f;
+	_float	m_fCurrShakeTime = 0.0f;
+	_float	m_fShakeForce = 0.0f;
+	_bool	m_bShake = false;
+
+
 	class CPlayer* m_pPlayer = nullptr;
+
+
+public:
+	static CCamera_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, wstring strObjTag);
+	virtual CGameObject* Clone(void* pArg);
+	virtual void Free() override;
+
 };
 
 END

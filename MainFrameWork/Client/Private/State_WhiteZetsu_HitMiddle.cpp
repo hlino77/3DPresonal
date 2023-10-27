@@ -37,7 +37,7 @@ void CState_WhiteZetsu_HitMiddle::Tick_State(_float fTimeDelta)
 {
 	LookAt_HitObject(fTimeDelta);
 
-	m_pMonster->Follow_ServerPos(0.05f, 4.0f * fTimeDelta);
+	m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_HitMiddle::Exit_State()

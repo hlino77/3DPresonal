@@ -35,7 +35,6 @@ public:
 
 
 protected:
-	class CTransform*			m_pTransformCom = nullptr;
 	CAMERADESC					m_CameraDesc;
 
 protected:

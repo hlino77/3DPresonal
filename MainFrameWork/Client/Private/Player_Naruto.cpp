@@ -109,6 +109,7 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		Add_CollisionStay(iColLayer, pOther);
 		cout << "Body" << endl;
+
 		return;
 	}
 }

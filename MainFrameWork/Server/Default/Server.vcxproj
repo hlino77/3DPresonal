@@ -150,6 +150,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Boss_Deidara_Server.cpp" />
+    <ClCompile Include="..\Private\Boss_Server.cpp" />
     <ClCompile Include="..\Private\Camera_Free_Server.cpp" />
     <ClCompile Include="..\Private\Enum.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -163,6 +165,7 @@
     <ClCompile Include="..\Private\Loader_Server.cpp" />
     <ClCompile Include="..\Private\LobbyUser_Server.cpp" />
     <ClCompile Include="..\Private\MainApp_Server.cpp" />
+    <ClCompile Include="..\Private\Monster_C2Dragon_Server.cpp" />
     <ClCompile Include="..\Private\Monster_Server.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu_Server.cpp" />
     <ClCompile Include="..\Private\Player_Server.cpp" />
@@ -171,6 +174,14 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\ServerPacketHandler.cpp" />
+    <ClCompile Include="..\Private\Skill_Hiryu_Server.cpp" />
+    <ClCompile Include="..\Private\Skill_Server.cpp" />
+    <ClCompile Include="..\Private\State_C2Dragon_Attack_Server.cpp" />
+    <ClCompile Include="..\Private\State_C2Dragon_Idle_Server.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Appear_Server.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_HitMiddle_Server.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Idle_Server.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Skill_C2Dragon_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Appear_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Punch_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Kick_Server.cpp" />
@@ -191,6 +202,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Boss_Deidara_Server.h" />
+    <ClInclude Include="..\Public\Boss_Server.h" />
     <ClInclude Include="..\Public\Camera_Free_Server.h" />
     <ClInclude Include="..\Public\Enum.pb.h" />
     <ClInclude Include="..\Public\GameSession.h" />
@@ -201,12 +214,21 @@
     <ClInclude Include="..\Public\Loader_Server.h" />
     <ClInclude Include="..\Public\LobbyUser_Server.h" />
     <ClInclude Include="..\Public\MainApp_Server.h" />
+    <ClInclude Include="..\Public\Monster_C2Dragon_Server.h" />
     <ClInclude Include="..\Public\Monster_Server.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu_Server.h" />
     <ClInclude Include="..\Public\Player_Server.h" />
     <ClInclude Include="..\Public\Protocol.pb.h" />
     <ClInclude Include="..\Public\ServerPacketHandler.h" />
     <ClInclude Include="..\Public\Server_Defines.h" />
+    <ClInclude Include="..\Public\Skill_Hiryu_Server.h" />
+    <ClInclude Include="..\Public\Skill_Server.h" />
+    <ClInclude Include="..\Public\State_C2Dragon_Attack_Server.h" />
+    <ClInclude Include="..\Public\State_C2Dragon_Idle_Server.h" />
+    <ClInclude Include="..\Public\State_Deidara_Appear_Server.h" />
+    <ClInclude Include="..\Public\State_Deidara_HitMiddle_Server.h" />
+    <ClInclude Include="..\Public\State_Deidara_Idle_Server.h" />
+    <ClInclude Include="..\Public\State_Deidara_Skill_C2Dragon_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Appear_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Punch_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Kick_Server.h" />

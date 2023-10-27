@@ -352,6 +352,130 @@ void CTransform::LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta)
 	}
 }
 
+void CTransform::LookAt_Lerp_ForLand(Vec3 vAt, _float fSpeed, _float fTimeDelta)
+{
+	Vec3 vPlayerLook = Get_State(CTransform::STATE_LOOK);
+	vPlayerLook.y = 0.0f;
+	vPlayerLook.Normalize();
+
+	Vec3 vTargetLook = vAt;
+	vTargetLook.y = 0.0f;
+	vTargetLook.Normalize();
+
+	Vec3 vUp = Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+
+	Vec3 vSkyUp(0.0f, 1.0f, 0.0f);
+
+
+	_float fRadian = acosf(min(1.0f, vTargetLook.Dot(vPlayerLook)));
+	if (fRadian <= fSpeed * fTimeDelta)
+	{
+		vPlayerLook = vTargetLook;
+
+		Vec3 vRight = vSkyUp.Cross(vPlayerLook);
+		vRight.Normalize();
+
+
+		vPlayerLook = vRight.Cross(vUp);
+		vPlayerLook.Normalize();
+
+		Vec3 vScale = Get_Scale();
+
+		vRight *= vScale.x;
+		vUp *= vScale.y;
+		vPlayerLook *= vScale.z;
+
+		WRITE_LOCK
+		Set_State(STATE::STATE_RIGHT, vRight);
+		Set_State(STATE::STATE_UP, vUp);
+		Set_State(STATE::STATE_LOOK, vPlayerLook);
+
+		return;
+	}
+
+	Vec3 vPlayerUp = Get_State(CTransform::STATE_UP);
+	Vec3 vCrossUp = vPlayerLook.Cross(vTargetLook);
+
+	if (vPlayerUp.Dot(vCrossUp) >= 0)
+	{
+		Turn_Speed(vSkyUp, fSpeed, fTimeDelta);
+	}
+	else
+	{
+		Turn_Speed(vSkyUp, -fSpeed, fTimeDelta);
+	}
+}
+
+void CTransform::SetUp_Lerp(Vec3 vLook, _float fSpeed, _float fTimeDelta)
+{
+	Vec3 vPlayerLook = Get_State(CTransform::STATE_LOOK);
+	vPlayerLook.Normalize();
+
+
+	Vec3 vUp = Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+
+	vLook.Normalize();
+
+
+	_float fDot = vUp.Dot(vLook);
+
+	Vec3 vTargetLook;
+
+	if (fDot == 0.0f)
+	{
+		_float fLookDot = vPlayerLook.Dot(vLook);
+		vTargetLook = vPlayerLook * fLookDot;
+	}
+	else
+	{
+		_float fLookDot = vPlayerLook.Dot(vLook);
+		vTargetLook = vPlayerLook * fLookDot + vUp * fDot;
+	}
+
+	vTargetLook.Normalize();
+
+
+	Vec3 vRight = Get_State(CTransform::STATE_RIGHT);
+	vRight.Normalize();
+
+	
+	_float fRadian = acosf(min(1.0f, vTargetLook.Dot(vPlayerLook)));
+	if (fRadian <= fSpeed * fTimeDelta)
+	{
+		vPlayerLook = vTargetLook;
+
+		Vec3 vUp = vPlayerLook.Cross(vRight);
+		vUp.Normalize();
+
+		Vec3 vScale = Get_Scale();
+
+		vRight *= vScale.x;
+		vUp *= vScale.y;
+		vPlayerLook *= vScale.z;
+
+		WRITE_LOCK
+		Set_State(STATE::STATE_RIGHT, vRight);
+		Set_State(STATE::STATE_UP, vUp);
+		Set_State(STATE::STATE_LOOK, vPlayerLook);
+
+		return;
+	}
+
+	Vec3 vPlayerRight = Get_State(CTransform::STATE_RIGHT);
+	Vec3 vCrossRight = vPlayerLook.Cross(vTargetLook);
+
+	if (vPlayerRight.Dot(vCrossRight) >= 0)
+	{
+		Turn_Speed(vRight, fSpeed, fTimeDelta);
+	}
+	else
+	{
+		Turn_Speed(vRight, -fSpeed, fTimeDelta);
+	}
+}
+
 void CTransform::Move_Pos(Vec3 vTargetPos)
 {
 	Vec3 vPos;

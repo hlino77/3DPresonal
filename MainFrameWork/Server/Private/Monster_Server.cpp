@@ -7,6 +7,7 @@
 #include "CollisionManager.h"
 #include "RigidBody.h"
 #include "NavigationMgr.h"
+#include "Skill_Server.h"
 
 CMonster_Server::CMonster_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Monster", OBJ_TYPE::MONSTER)
@@ -215,6 +216,36 @@ void CMonster_Server::Set_Die()
 
 
 	m_bDie = true;
+}
+
+void CMonster_Server::Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CSkill_Server::MODELDESC Desc;
+	Desc.strFileName = szSkillName;
+	Desc.iObjectID = g_iObjectID++;
+	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+
+	wstring szObjectName = L"Prototype_GameObject_Skill_" + szSkillName;
+	*pSkill = pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_SKILL, szObjectName, &Desc);
+
+
+
+	Protocol::S_SETSKILL pkt;
+
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_iobjectid(m_iObjectID);
+
+	pkt.set_szskillname(CAsUtils::ToString(szSkillName));
+	pkt.set_iskillobjectid(Desc.iObjectID);
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 void CMonster_Server::Find_NearTarget()

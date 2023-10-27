@@ -84,12 +84,23 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 
 
 	if (KEY_TAP(KEY::SPACE))
+	{
 		m_pPlayer->Set_State(L"Jump");
+		return;
+	}
+		
 
 
 	if (KEY_NONE(KEY::W) && KEY_NONE(KEY::A) && KEY_NONE(KEY::S) && KEY_NONE(KEY::D))
 	{
 		m_pPlayer->Set_State(L"Run_End");
+		return;
+	}
+
+	if (KEY_TAP(KEY::LBTN))
+	{
+		m_pPlayer->Set_State(L"Attack_Normal_cmb01");
+		return;
 	}
 }
 

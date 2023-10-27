@@ -6,7 +6,7 @@ BEGIN(Server)
 class CState_WhiteZetsu_Idle_Server : public CState
 {
 public:
-	CState_WhiteZetsu_Idle_Server(const wstring& strStateName, class CMonster_WhiteZetsu_Server* pPlayer);
+	CState_WhiteZetsu_Idle_Server(const wstring& strStateName, class CMonster_WhiteZetsu_Server* pMonster);
 	CState_WhiteZetsu_Idle_Server(const CState& rhs, class CStateMachine* pMachine);
 	virtual ~CState_WhiteZetsu_Idle_Server() = default;
 

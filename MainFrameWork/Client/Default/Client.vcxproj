@@ -168,6 +168,8 @@
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround_Loading.h" />
     <ClInclude Include="..\Public\BackGround_Lobby.h" />
+    <ClInclude Include="..\Public\Boss.h" />
+    <ClInclude Include="..\Public\Boss_Deidara.h" />
     <ClInclude Include="..\Public\ColMesh.h" />
     <ClInclude Include="..\Public\Level_Lobby.h" />
     <ClInclude Include="..\Public\LobbyUser.h" />
@@ -183,6 +185,7 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\Monster_C2Dragon.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Player_Lobby.h" />
@@ -191,6 +194,14 @@
     <ClInclude Include="..\Public\Protocol.pb.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="..\Public\ServerSessionManager.h" />
+    <ClInclude Include="..\Public\Skill.h" />
+    <ClInclude Include="..\Public\Skill_Hiryu.h" />
+    <ClInclude Include="..\Public\State_C2Dragon_Attack.h" />
+    <ClInclude Include="..\Public\State_C2Dragon_Idle.h" />
+    <ClInclude Include="..\Public\State_Deidara_Appear.h" />
+    <ClInclude Include="..\Public\State_Deidara_HitMiddle.h" />
+    <ClInclude Include="..\Public\State_Deidara_Idle.h" />
+    <ClInclude Include="..\Public\State_Deidara_Skill_C2Dragon.h" />
     <ClInclude Include="..\Public\State_Naruto_Attack_ElbowStrike.h" />
     <ClInclude Include="..\Public\State_Naruto_Attack_JumpDoubleKick.h" />
     <ClInclude Include="..\Public\State_Naruto_Attack_Punch_Left.h" />
@@ -249,6 +260,8 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround_Loading.cpp" />
     <ClCompile Include="..\Private\BackGround_Lobby.cpp" />
+    <ClCompile Include="..\Private\Boss.cpp" />
+    <ClCompile Include="..\Private\Boss_Deidara.cpp" />
     <ClCompile Include="..\Private\ColMesh.cpp" />
     <ClCompile Include="..\Private\Level_Lobby.cpp" />
     <ClCompile Include="..\Private\LobbyUser.cpp" />
@@ -266,6 +279,7 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\Monster_C2Dragon.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Player_Lobby.cpp" />
@@ -277,6 +291,14 @@
     </ClCompile>
     <ClCompile Include="..\Private\ServerSession.cpp" />
     <ClCompile Include="..\Private\ServerSessionManager.cpp" />
+    <ClCompile Include="..\Private\Skill.cpp" />
+    <ClCompile Include="..\Private\Skill_Hiryu.cpp" />
+    <ClCompile Include="..\Private\State_C2Dragon_Attack.cpp" />
+    <ClCompile Include="..\Private\State_C2Dragon_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Appear.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_HitMiddle.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Deidara_Skill_C2Dragon.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Attack_ElbowStrike.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Attack_JumpDoubleKick.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Attack_Punch_Left.cpp" />

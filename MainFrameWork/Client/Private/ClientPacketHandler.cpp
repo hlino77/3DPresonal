@@ -11,6 +11,8 @@
 #include "ColliderSphere.h"
 #include "Level_Lobby.h"
 #include "LobbyUser.h"
+#include "Boss.h"
+#include "Skill.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -146,8 +148,24 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 
 		break;
 	}
-	case OBJ_TYPE::PROP:
+	case OBJ_TYPE::BOSS:
+	{
+		CBoss::MODELDESC Desc;
+		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+		Desc.iObjectID = pkt.iobjectid();
+		Desc.iLayer = pkt.ilayer();
+
+		wstring szProtoName = L"Prototype_GameObject_Boss_" + Desc.strFileName;
+		CBoss* pBoss = dynamic_cast<CBoss*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
+		if (nullptr == pBoss)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pBoss->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
 		break;
+	}
+		
 	}
 
 	Safe_Release(pGameInstance);
@@ -443,5 +461,42 @@ bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGE
 
 	Safe_Release(pGameInstance);
 
+	return true;
+}
+
+bool Handel_S_SETSKILL_Client(PacketSessionRef& session, Protocol::S_SETSKILL& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+
+	CSkill::MODELDESC Desc;
+	Desc.strFileName = CAsUtils::ToWString(pkt.szskillname());
+	Desc.iObjectID = pkt.iskillobjectid();
+	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+
+	wstring szProtoName = L"Prototype_GameObject_Skill_";
+	szProtoName += Desc.strFileName;
+
+	CGameObject* pSkill = pGameInstance->Add_GameObject(pkt.ilevel(), Desc.iLayer, szProtoName, &Desc);
+	if (pSkill == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	pObject->Set_Skill(pSkill);
+
+	Safe_Release(pGameInstance);
 	return true;
 }

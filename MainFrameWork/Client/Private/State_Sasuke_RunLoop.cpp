@@ -98,6 +98,12 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Set_State(L"Run_End");
 		return;
 	}
+
+	if (KEY_TAP(KEY::LBTN))
+	{
+		m_pPlayer->Set_State(L"Attack_Normal_cmb01");
+		return;
+	}
 }
 
 void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)

@@ -330,3 +330,17 @@ bool Handel_S_NEARTARGET_Server(PacketSessionRef& session, Protocol::S_NEARTARGE
 {
 	return false;
 }
+
+bool Handel_S_SETSKILL_Server(PacketSessionRef& session, Protocol::S_SETSKILL& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+
+
+
+
+	Safe_Release(pGameInstance);
+	return true;
+}

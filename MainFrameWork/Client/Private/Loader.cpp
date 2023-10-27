@@ -26,6 +26,9 @@
 #include "UI_CharacterSelect.h"
 #include "Player_Lobby.h"
 #include "ColMesh.h"
+#include "Boss_Deidara.h"
+#include "Monster_C2Dragon.h"
+#include "Skill_Hiryu.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -178,12 +181,25 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CMonster_WhiteZetsu::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Deidara"),
+		CBoss_Deidara::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_C2Dragon"),
+		CMonster_C2Dragon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticModel"),
 		CStaticModel::Create(m_pDevice, m_pContext, PROP))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ColMesh"),
 		CColMesh::Create(m_pDevice, m_pContext, COLMESH))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Hiryu"),
+		CSkill_Hiryu::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -458,6 +474,37 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 	}
 
 
+	{
+		wstring strFileName = L"Deidara";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"C2Dragon";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Hiryu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 
