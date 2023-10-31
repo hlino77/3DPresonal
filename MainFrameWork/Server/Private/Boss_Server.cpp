@@ -319,6 +319,9 @@ void CBoss_Server::Send_NearTarget()
 	pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
 
 
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
 	Safe_Release(pGameInstance);
 }
 

@@ -459,6 +459,9 @@ bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGE
 	}
 	pObject->Set_NearTarget(pNearTarget);
 
+	//cout << CAsUtils::ToString(pObject->Get_ObjectTag()) << "  " << CAsUtils::ToString(pNearTarget->Get_ObjectTag()) << endl;
+
+
 	Safe_Release(pGameInstance);
 
 	return true;
