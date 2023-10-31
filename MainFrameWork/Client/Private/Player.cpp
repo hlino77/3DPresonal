@@ -389,7 +389,8 @@ void CPlayer::Set_SlowMotion(_bool bSlow)
 		m_pRigidBody->Set_Active(true);
 	}
 
-	Send_SlowMotion(bSlow);
+	if(m_bControl)
+		Send_SlowMotion(bSlow);
 }
 
 HRESULT CPlayer::Ready_Components()

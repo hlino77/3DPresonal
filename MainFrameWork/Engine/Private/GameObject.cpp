@@ -1,10 +1,9 @@
-#include "..\Public\GameObject.h"
+#include "GameObject.h"
 #include "GameInstance.h"
 #include "Component.h"
 #include "ColliderBase.h"
 #include "ColliderSphere.h"
 #include "StateMachine.h"
-#include "ColliderBase.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, wstring strObjectTag, _int iObjType)
 	: m_pDevice(pDevice)

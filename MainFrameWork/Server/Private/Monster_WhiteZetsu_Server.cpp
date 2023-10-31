@@ -42,7 +42,7 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 600;
+	m_iHp = 12;
 
     return S_OK;
 }

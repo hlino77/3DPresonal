@@ -60,13 +60,13 @@ void CState_Deidara_ChasePlayer_Server::Tick_State(_float fTimeDelta)
 
 	if (fDistance > m_pBoss->Get_FollowDistance())
 		m_pBoss->Set_State(L"Idle");
-	else if (fDistance <= 3.0f)
+	/*else if (fDistance <= 3.0f)
 	{	
 		if(m_pBoss->Get_CurrState() != L"Attack_cmb01")
 			m_pBoss->Set_State(L"Attack_cmb01");
 	}
 	else if (fDistance <= 10.0f && m_pBoss->Get_SkillReady(CBoss_Deidara_Server::DEIDARA_SKILL::TWINBIRD))
-		m_pBoss->Set_State(L"Skill_TwinBirds");
+		m_pBoss->Set_State(L"Skill_TwinBirds");*/
 	else
 	{
 		_float fCurrSpeed = m_pBoss->Get_MoveSpeed();

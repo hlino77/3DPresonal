@@ -74,10 +74,26 @@ public:
 	_bool						Is_Die() { return m_bDie; }
 	void						Set_Die(_bool bDie) { m_bDie = bDie; }
 
+	CGameObject*				Get_NearTarget()
+	{
+		READ_LOCK
+		return m_pNearTarget;
+	}
 
-	CGameObject*				Get_NearTarget() { return m_pNearTarget; }
-	void						Reset_NearTarget() { m_pNearTarget = nullptr; }
-	void						Set_NearTarget(CGameObject* pObject) { m_pNearTarget = pObject; }
+	void						Reset_NearTarget()
+	{
+		WRITE_LOCK
+		m_pNearTarget = nullptr;
+	}
+
+	void						Set_NearTarget(CGameObject* pObject)
+	{
+		WRITE_LOCK
+		m_pNearTarget = pObject;
+	}
+
+
+
 
 	CGameObject*				Get_HitObject() { return m_pHitObject; }
 	void						Reset_HitObject() { m_pHitObject = nullptr; }

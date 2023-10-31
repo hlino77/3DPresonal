@@ -243,6 +243,8 @@ void CMonster_Server::Hit_Attack(CCollider* pCollider)
 
 	if (pCollider->Get_SlowMotion())
 		Set_SlowMotion(true);
+
+	cout << "Hit" << endl;
 }
 
 void CMonster_Server::Set_Die()
