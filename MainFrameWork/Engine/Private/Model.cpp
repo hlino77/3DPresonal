@@ -224,7 +224,10 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 		if (m_tCurrChange.m_fSumTime >= m_tCurrChange.m_fChangeTime)
 			Change_NextAnimation();
 		else
+		{
+			m_Animations[m_tCurrChange.m_iNextAnim]->Play_Animation(fTimeDelta);
 			m_tCurrChange.m_fChangeRatio = m_tCurrChange.m_fSumTime / m_tCurrChange.m_fChangeTime;
+		}		
 	}
 	else
 	{
@@ -279,8 +282,9 @@ HRESULT CModel::Set_Animation_Transforms()
 
 HRESULT CModel::Set_AnimationBlend_Transforms()
 {
+	KEY_DESC tCurrKeyDesc = m_Animations[m_tCurrChange.m_iNextAnim]->Get_KeyDesc();
 	vector<ModelKeyframeData>& CurrKeyDatas = m_PrevKeyFrameDatas;
-	vector<ModelKeyframeData>& NextKeyDatas = m_Animations[m_tCurrChange.m_iNextAnim]->Get_KeyDatas(m_tCurrChange.m_iNextAnimFrame);
+	vector<ModelKeyframeData>& NextKeyDatas = m_Animations[m_tCurrChange.m_iNextAnim]->Get_KeyDatas(tCurrKeyDesc.iCurrFrame);
 	_float fRatio = m_tCurrChange.m_fChangeRatio;
 
 	Matrix matResult;

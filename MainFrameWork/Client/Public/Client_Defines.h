@@ -43,6 +43,8 @@ namespace Client
 		MIDDLE,
 		LEFT,
 		RIGHT,
+		SPINBLOWUP,
+		SPINBLOWDOWN,
 		ATTACK_END
 	};
 

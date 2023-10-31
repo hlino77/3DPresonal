@@ -15,6 +15,12 @@
 #include "State_WhiteZetsu_Attack_Kick.h"
 #include "State_WhiteZetsu_Attack_Punch.h"
 #include "State_WhiteZetsu_Dying_Normal.h"
+#include "State_WhiteZetsu_HitSpinBlowUp.h"
+#include "State_WhiteZetsu_GetUp.h"
+#include "State_WhiteZetsu_FallBehind.h"
+#include "State_WhiteZetsu_DownToFloor.h"
+#include "State_WhiteZetsu_HitSpinBlowDown.h"
+#include "State_WhiteZetsu_Die.h"
 
 CMonster_WhiteZetsu::CMonster_WhiteZetsu(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -95,6 +101,14 @@ HRESULT CMonster_WhiteZetsu::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Kick", new CState_WhiteZetsu_Attack_Kick(L"Attack_Kick", this));
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_WhiteZetsu_Attack_Punch(L"Attack_Punch", this));
 	m_pStateMachine->Add_State(L"Dying_Normal", new CState_WhiteZetsu_Dying_Normal(L"Dying_Normal", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlowUp", new CState_WhiteZetsu_HitSpinBlowUp(L"Hit_SpinBlowUp", this));
+	m_pStateMachine->Add_State(L"GetUp", new CState_WhiteZetsu_GetUp(L"GetUp", this));
+	m_pStateMachine->Add_State(L"Fall_Behind", new CState_WhiteZetsu_FallBehind(L"Fall_Behind", this));
+	m_pStateMachine->Add_State(L"DownToFloor", new CState_WhiteZetsu_DownToFloor(L"DownToFloor", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlowDown", new CState_WhiteZetsu_HitSpinBlowDown(L"Hit_SpinBlowDown", this));
+	m_pStateMachine->Add_State(L"Die", new CState_WhiteZetsu_Die(L"Die", this));
+
+
 
 	m_pStateMachine->Change_State(L"Appear");
 

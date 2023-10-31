@@ -41,6 +41,8 @@ public:
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
 
+
+	void Send_CamShake(_float fShakeForce, _float fShakeTime);
 public:
 	CShader* Get_ShaderCom() { return m_pShaderCom; }
 

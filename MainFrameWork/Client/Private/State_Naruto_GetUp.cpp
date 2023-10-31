@@ -94,6 +94,8 @@ void CState_Naruto_GetUp::Tick_State_NoneControl(_float fTimeDelta)
 			m_bLoopEnd = true;
 		}
 	}
+
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 

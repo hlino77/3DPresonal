@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[16]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[18]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -59,6 +59,9 @@ namespace Protocol {
 class S_ANIMATION;
 struct S_ANIMATIONDefaultTypeInternal;
 extern S_ANIMATIONDefaultTypeInternal _S_ANIMATION_default_instance_;
+class S_CAMSHAKE;
+struct S_CAMSHAKEDefaultTypeInternal;
+extern S_CAMSHAKEDefaultTypeInternal _S_CAMSHAKE_default_instance_;
 class S_CHARACTER_NAME;
 struct S_CHARACTER_NAMEDefaultTypeInternal;
 extern S_CHARACTER_NAMEDefaultTypeInternal _S_CHARACTER_NAME_default_instance_;
@@ -95,6 +98,9 @@ extern S_OPEN_LEVELDefaultTypeInternal _S_OPEN_LEVEL_default_instance_;
 class S_SETSKILL;
 struct S_SETSKILLDefaultTypeInternal;
 extern S_SETSKILLDefaultTypeInternal _S_SETSKILL_default_instance_;
+class S_SLOWMOTION;
+struct S_SLOWMOTIONDefaultTypeInternal;
+extern S_SLOWMOTIONDefaultTypeInternal _S_SLOWMOTION_default_instance_;
 class S_STATE;
 struct S_STATEDefaultTypeInternal;
 extern S_STATEDefaultTypeInternal _S_STATE_default_instance_;
@@ -107,6 +113,7 @@ extern S_USERINFODefaultTypeInternal _S_USERINFO_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::S_ANIMATION* Arena::CreateMaybeMessage<::Protocol::S_ANIMATION>(Arena*);
+template<> ::Protocol::S_CAMSHAKE* Arena::CreateMaybeMessage<::Protocol::S_CAMSHAKE>(Arena*);
 template<> ::Protocol::S_CHARACTER_NAME* Arena::CreateMaybeMessage<::Protocol::S_CHARACTER_NAME>(Arena*);
 template<> ::Protocol::S_COLLIDERSTATE* Arena::CreateMaybeMessage<::Protocol::S_COLLIDERSTATE>(Arena*);
 template<> ::Protocol::S_COLLISION* Arena::CreateMaybeMessage<::Protocol::S_COLLISION>(Arena*);
@@ -119,6 +126,7 @@ template<> ::Protocol::S_NICKNAME* Arena::CreateMaybeMessage<::Protocol::S_NICKN
 template<> ::Protocol::S_OBJECTINFO* Arena::CreateMaybeMessage<::Protocol::S_OBJECTINFO>(Arena*);
 template<> ::Protocol::S_OPEN_LEVEL* Arena::CreateMaybeMessage<::Protocol::S_OPEN_LEVEL>(Arena*);
 template<> ::Protocol::S_SETSKILL* Arena::CreateMaybeMessage<::Protocol::S_SETSKILL>(Arena*);
+template<> ::Protocol::S_SLOWMOTION* Arena::CreateMaybeMessage<::Protocol::S_SLOWMOTION>(Arena*);
 template<> ::Protocol::S_STATE* Arena::CreateMaybeMessage<::Protocol::S_STATE>(Arena*);
 template<> ::Protocol::S_TIME* Arena::CreateMaybeMessage<::Protocol::S_TIME>(Arena*);
 template<> ::Protocol::S_USERINFO* Arena::CreateMaybeMessage<::Protocol::S_USERINFO>(Arena*);
@@ -1864,14 +1872,15 @@ class S_COLLIDERSTATE final :
 
   enum : int {
     kVOffsetFieldNumber = 6,
-    kTChildFieldNumber = 10,
+    kTChildFieldNumber = 11,
     kIObjectIDFieldNumber = 1,
     kILevelFieldNumber = 2,
     kILayerFieldNumber = 3,
     kIColLayerFieldNumber = 4,
     kFRadiusFieldNumber = 5,
-    kBActiveFieldNumber = 7,
     kIAttackTypeFieldNumber = 8,
+    kBActiveFieldNumber = 7,
+    kBSlowFieldNumber = 10,
     kIAttackFieldNumber = 9,
   };
   // repeated float vOffset = 6 [packed = true];
@@ -1896,7 +1905,7 @@ class S_COLLIDERSTATE final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float >*
       mutable_voffset();
 
-  // repeated .Protocol.ChildCollider tChild = 10;
+  // repeated .Protocol.ChildCollider tChild = 11;
   int tchild_size() const;
   private:
   int _internal_tchild_size() const;
@@ -1959,6 +1968,15 @@ class S_COLLIDERSTATE final :
   void _internal_set_fradius(float value);
   public:
 
+  // int32 iAttackType = 8;
+  void clear_iattacktype();
+  ::PROTOBUF_NAMESPACE_ID::int32 iattacktype() const;
+  void set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iattacktype() const;
+  void _internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // bool bActive = 7;
   void clear_bactive();
   bool bactive() const;
@@ -1968,13 +1986,13 @@ class S_COLLIDERSTATE final :
   void _internal_set_bactive(bool value);
   public:
 
-  // int32 iAttackType = 8;
-  void clear_iattacktype();
-  ::PROTOBUF_NAMESPACE_ID::int32 iattacktype() const;
-  void set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // bool bSlow = 10;
+  void clear_bslow();
+  bool bslow() const;
+  void set_bslow(bool value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iattacktype() const;
-  void _internal_set_iattacktype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  bool _internal_bslow() const;
+  void _internal_set_bslow(bool value);
   public:
 
   // int32 iAttack = 9;
@@ -2000,8 +2018,9 @@ class S_COLLIDERSTATE final :
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   ::PROTOBUF_NAMESPACE_ID::int32 icollayer_;
   float fradius_;
-  bool bactive_;
   ::PROTOBUF_NAMESPACE_ID::int32 iattacktype_;
+  bool bactive_;
+  bool bslow_;
   ::PROTOBUF_NAMESPACE_ID::int32 iattack_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
@@ -2847,6 +2866,314 @@ class S_SETSKILL final :
   ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
   ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
   ::PROTOBUF_NAMESPACE_ID::int32 iskillobjectid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S_SLOWMOTION final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_SLOWMOTION) */ {
+ public:
+  inline S_SLOWMOTION() : S_SLOWMOTION(nullptr) {}
+  ~S_SLOWMOTION() override;
+  explicit constexpr S_SLOWMOTION(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_SLOWMOTION(const S_SLOWMOTION& from);
+  S_SLOWMOTION(S_SLOWMOTION&& from) noexcept
+    : S_SLOWMOTION() {
+    *this = ::std::move(from);
+  }
+
+  inline S_SLOWMOTION& operator=(const S_SLOWMOTION& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_SLOWMOTION& operator=(S_SLOWMOTION&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_SLOWMOTION& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_SLOWMOTION* internal_default_instance() {
+    return reinterpret_cast<const S_SLOWMOTION*>(
+               &_S_SLOWMOTION_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    16;
+
+  friend void swap(S_SLOWMOTION& a, S_SLOWMOTION& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_SLOWMOTION* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_SLOWMOTION* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_SLOWMOTION* New() const final {
+    return new S_SLOWMOTION();
+  }
+
+  S_SLOWMOTION* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_SLOWMOTION>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_SLOWMOTION& from);
+  void MergeFrom(const S_SLOWMOTION& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_SLOWMOTION* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_SLOWMOTION";
+  }
+  protected:
+  explicit S_SLOWMOTION(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIObjectIDFieldNumber = 1,
+    kILevelFieldNumber = 2,
+    kILayerFieldNumber = 3,
+    kBSlowFieldNumber = 4,
+  };
+  // int32 iObjectID = 1;
+  void clear_iobjectid();
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid() const;
+  void set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_iobjectid() const;
+  void _internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLevel = 2;
+  void clear_ilevel();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel() const;
+  void set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilevel() const;
+  void _internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iLayer = 3;
+  void clear_ilayer();
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer() const;
+  void set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ilayer() const;
+  void _internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // bool bSlow = 4;
+  void clear_bslow();
+  bool bslow() const;
+  void set_bslow(bool value);
+  private:
+  bool _internal_bslow() const;
+  void _internal_set_bslow(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_SLOWMOTION)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 iobjectid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilevel_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ilayer_;
+  bool bslow_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S_CAMSHAKE final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_CAMSHAKE) */ {
+ public:
+  inline S_CAMSHAKE() : S_CAMSHAKE(nullptr) {}
+  ~S_CAMSHAKE() override;
+  explicit constexpr S_CAMSHAKE(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_CAMSHAKE(const S_CAMSHAKE& from);
+  S_CAMSHAKE(S_CAMSHAKE&& from) noexcept
+    : S_CAMSHAKE() {
+    *this = ::std::move(from);
+  }
+
+  inline S_CAMSHAKE& operator=(const S_CAMSHAKE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_CAMSHAKE& operator=(S_CAMSHAKE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_CAMSHAKE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_CAMSHAKE* internal_default_instance() {
+    return reinterpret_cast<const S_CAMSHAKE*>(
+               &_S_CAMSHAKE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(S_CAMSHAKE& a, S_CAMSHAKE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_CAMSHAKE* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_CAMSHAKE* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_CAMSHAKE* New() const final {
+    return new S_CAMSHAKE();
+  }
+
+  S_CAMSHAKE* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_CAMSHAKE>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_CAMSHAKE& from);
+  void MergeFrom(const S_CAMSHAKE& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_CAMSHAKE* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_CAMSHAKE";
+  }
+  protected:
+  explicit S_CAMSHAKE(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFCamShakeFieldNumber = 1,
+    kFShakeTimeFieldNumber = 2,
+  };
+  // float fCamShake = 1;
+  void clear_fcamshake();
+  float fcamshake() const;
+  void set_fcamshake(float value);
+  private:
+  float _internal_fcamshake() const;
+  void _internal_set_fcamshake(float value);
+  public:
+
+  // float fShakeTime = 2;
+  void clear_fshaketime();
+  float fshaketime() const;
+  void set_fshaketime(float value);
+  private:
+  float _internal_fshaketime() const;
+  void _internal_set_fshaketime(float value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_CAMSHAKE)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  float fcamshake_;
+  float fshaketime_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
@@ -3968,7 +4295,27 @@ inline void S_COLLIDERSTATE::set_iattack(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.iAttack)
 }
 
-// repeated .Protocol.ChildCollider tChild = 10;
+// bool bSlow = 10;
+inline void S_COLLIDERSTATE::clear_bslow() {
+  bslow_ = false;
+}
+inline bool S_COLLIDERSTATE::_internal_bslow() const {
+  return bslow_;
+}
+inline bool S_COLLIDERSTATE::bslow() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_COLLIDERSTATE.bSlow)
+  return _internal_bslow();
+}
+inline void S_COLLIDERSTATE::_internal_set_bslow(bool value) {
+  
+  bslow_ = value;
+}
+inline void S_COLLIDERSTATE::set_bslow(bool value) {
+  _internal_set_bslow(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_COLLIDERSTATE.bSlow)
+}
+
+// repeated .Protocol.ChildCollider tChild = 11;
 inline int S_COLLIDERSTATE::_internal_tchild_size() const {
   return tchild_.size();
 }
@@ -4490,9 +4837,141 @@ inline void S_SETSKILL::set_iskillobjectid(::PROTOBUF_NAMESPACE_ID::int32 value)
   // @@protoc_insertion_point(field_set:Protocol.S_SETSKILL.iSkillObjectID)
 }
 
+// -------------------------------------------------------------------
+
+// S_SLOWMOTION
+
+// int32 iObjectID = 1;
+inline void S_SLOWMOTION::clear_iobjectid() {
+  iobjectid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::_internal_iobjectid() const {
+  return iobjectid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::iobjectid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SLOWMOTION.iObjectID)
+  return _internal_iobjectid();
+}
+inline void S_SLOWMOTION::_internal_set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  iobjectid_ = value;
+}
+inline void S_SLOWMOTION::set_iobjectid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_iobjectid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SLOWMOTION.iObjectID)
+}
+
+// int32 iLevel = 2;
+inline void S_SLOWMOTION::clear_ilevel() {
+  ilevel_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::_internal_ilevel() const {
+  return ilevel_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::ilevel() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SLOWMOTION.iLevel)
+  return _internal_ilevel();
+}
+inline void S_SLOWMOTION::_internal_set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilevel_ = value;
+}
+inline void S_SLOWMOTION::set_ilevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilevel(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SLOWMOTION.iLevel)
+}
+
+// int32 iLayer = 3;
+inline void S_SLOWMOTION::clear_ilayer() {
+  ilayer_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::_internal_ilayer() const {
+  return ilayer_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_SLOWMOTION::ilayer() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SLOWMOTION.iLayer)
+  return _internal_ilayer();
+}
+inline void S_SLOWMOTION::_internal_set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ilayer_ = value;
+}
+inline void S_SLOWMOTION::set_ilayer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ilayer(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SLOWMOTION.iLayer)
+}
+
+// bool bSlow = 4;
+inline void S_SLOWMOTION::clear_bslow() {
+  bslow_ = false;
+}
+inline bool S_SLOWMOTION::_internal_bslow() const {
+  return bslow_;
+}
+inline bool S_SLOWMOTION::bslow() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SLOWMOTION.bSlow)
+  return _internal_bslow();
+}
+inline void S_SLOWMOTION::_internal_set_bslow(bool value) {
+  
+  bslow_ = value;
+}
+inline void S_SLOWMOTION::set_bslow(bool value) {
+  _internal_set_bslow(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_SLOWMOTION.bSlow)
+}
+
+// -------------------------------------------------------------------
+
+// S_CAMSHAKE
+
+// float fCamShake = 1;
+inline void S_CAMSHAKE::clear_fcamshake() {
+  fcamshake_ = 0;
+}
+inline float S_CAMSHAKE::_internal_fcamshake() const {
+  return fcamshake_;
+}
+inline float S_CAMSHAKE::fcamshake() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_CAMSHAKE.fCamShake)
+  return _internal_fcamshake();
+}
+inline void S_CAMSHAKE::_internal_set_fcamshake(float value) {
+  
+  fcamshake_ = value;
+}
+inline void S_CAMSHAKE::set_fcamshake(float value) {
+  _internal_set_fcamshake(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_CAMSHAKE.fCamShake)
+}
+
+// float fShakeTime = 2;
+inline void S_CAMSHAKE::clear_fshaketime() {
+  fshaketime_ = 0;
+}
+inline float S_CAMSHAKE::_internal_fshaketime() const {
+  return fshaketime_;
+}
+inline float S_CAMSHAKE::fshaketime() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_CAMSHAKE.fShakeTime)
+  return _internal_fshaketime();
+}
+inline void S_CAMSHAKE::_internal_set_fshaketime(float value) {
+  
+  fshaketime_ = value;
+}
+inline void S_CAMSHAKE::set_fshaketime(float value) {
+  _internal_set_fshaketime(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_CAMSHAKE.fShakeTime)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

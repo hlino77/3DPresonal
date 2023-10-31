@@ -235,9 +235,8 @@ bool Handel_S_COLLIDERSTATE_Server(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->SetActive(pkt.bactive());
 	pCollider->Set_Radius(pkt.fradius());
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
-	pCollider->Set_AttackType(pkt.iattacktype());
 	pCollider->Set_Center();
-	pCollider->Set_Attack(pkt.iattack());
+	pCollider->Set_AttackCollider(pkt.iattack(), pkt.iattacktype(), pkt.bslow());
 
 	if (pkt.tchild_size() > 0)
 	{
@@ -337,10 +336,32 @@ bool Handel_S_SETSKILL_Server(PacketSessionRef& session, Protocol::S_SETSKILL& p
 	Safe_AddRef(pGameInstance);
 
 
+	
 
+
+	
 
 
 
 	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_SLOWMOTION_Server(PacketSessionRef& session, Protocol::S_SLOWMOTION& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
+
+
+	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_CAMSHAKE_Server(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt)
+{
+
 	return true;
 }

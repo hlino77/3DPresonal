@@ -24,6 +24,8 @@ enum : uint16
 	PKT_S_USERINFO = 14,
 	PKT_S_NEARTARGET = 15,
 	PKT_S_SETSKILL = 16,
+	PKT_S_SLOWMOTION = 17,
+	PKT_S_CAMSHAKE = 18,
 };
 
 // TODO
@@ -43,7 +45,8 @@ bool Handel_S_NICKNAME_Client(PacketSessionRef& session, Protocol::S_NICKNAME& p
 bool Handel_S_USERINFO_Client(PacketSessionRef& session, Protocol::S_USERINFO& pkt);
 bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGET& pkt);
 bool Handel_S_SETSKILL_Client(PacketSessionRef& session, Protocol::S_SETSKILL& pkt);
-
+bool Handel_S_SLOWMOTION_Client(PacketSessionRef& session, Protocol::S_SLOWMOTION& pkt);
+bool Handel_S_CAMSHAKE_Client(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt);
 
 
 
@@ -71,6 +74,8 @@ public:
 		GPacketHandler[PKT_S_USERINFO] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_USERINFO>(Handel_S_USERINFO_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_NEARTARGET] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_NEARTARGET>(Handel_S_NEARTARGET_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_SETSKILL] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SETSKILL>(Handel_S_SETSKILL_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_SLOWMOTION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SLOWMOTION>(Handel_S_SLOWMOTION_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_CAMSHAKE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CAMSHAKE>(Handel_S_CAMSHAKE_Client, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -96,6 +101,8 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_USERINFO& pkt) { return MakeSendBuffer(pkt, PKT_S_USERINFO); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_NEARTARGET& pkt) { return MakeSendBuffer(pkt, PKT_S_NEARTARGET); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_SETSKILL& pkt) { return MakeSendBuffer(pkt, PKT_S_SETSKILL); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SLOWMOTION& pkt) { return MakeSendBuffer(pkt, PKT_S_SLOWMOTION); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_CAMSHAKE& pkt) { return MakeSendBuffer(pkt, PKT_S_CAMSHAKE); }
 
 
 private:

@@ -177,8 +177,6 @@ void CSkill_Server::Set_Die()
 	for (auto& Collider : m_Coliders)
 		Collider.second->SetActive(false);
 
-
-
 	m_bDie = true;
 }
 
@@ -238,6 +236,7 @@ void CSkill_Server::Send_ColliderState(const _uint& iLayer)
 	pkt.set_fradius(pCollider->Get_Radius());
 	pkt.set_iattacktype(pCollider->Get_AttackType());
 	pkt.set_iattack(pCollider->Get_Attack());
+	pkt.set_bslow(pCollider->Get_SlowMotion());
 
 
 	auto vOffset = pkt.mutable_voffset();

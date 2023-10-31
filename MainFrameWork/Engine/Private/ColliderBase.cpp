@@ -96,6 +96,20 @@ void CCollider::OnCollisionExit(CCollider* pOther)
 	m_pOwner->OnCollisionExit(m_iColLayer, pOther);
 }
 
+void CCollider::Set_AttackCollider(_uint iAttack, _uint iAttackType, _bool bSlow)
+{
+	m_iAttack = iAttack;
+	m_iAttackType = iAttackType;
+	m_bSlowMotion = bSlow;
+}
+
+void CCollider::Reset_Attack()
+{
+	m_iAttackType = 0;
+	m_iAttack = 0;
+	m_bSlowMotion = false;
+}
+
 void CCollider::Free()
 {
 	Super::Free();

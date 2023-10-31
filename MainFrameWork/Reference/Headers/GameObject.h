@@ -39,6 +39,8 @@ public:
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider * pOther) {};
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider * pOther) {};
 	virtual void	Set_Skill(CGameObject* pGameObject) {};
+	virtual void	Set_SlowMotion(_bool bSlow) {};
+
 public:
 	class CComponent*				Get_Component(const wstring & strComponentTag);
 

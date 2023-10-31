@@ -30,11 +30,15 @@ HRESULT CState_WhiteZetsu_HitMiddle_Server::Initialize()
 void CState_WhiteZetsu_HitMiddle_Server::Enter_State()
 {
 	m_pMonster->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
-	Knock_Back();
+	m_bKnockBack = false;
 }
 
 void CState_WhiteZetsu_HitMiddle_Server::Tick_State(_float fTimeDelta)
 {
+	if (!m_bKnockBack)
+		Knock_Back();
+
+
 	CModel* pModel = m_pMonster->Get_ModelCom();
 	if (pModel == nullptr || pModel->Get_CurrAnim() != m_iAnimIndex)
 		return;
@@ -59,7 +63,10 @@ void CState_WhiteZetsu_HitMiddle_Server::Knock_Back()
 
 	vDir.Normalize();
 
-	m_pMonster->Get_RigidBody()->AddForce(vDir * 6.f, ForceMode::FORCE);
+	m_pMonster->Get_RigidBody()->ClearForce(ForceMode::IMPULSE);
+	m_pMonster->Get_RigidBody()->AddForce(vDir * 10.0f, ForceMode::FORCE);
+
+	m_bKnockBack = true;
 }
 
 void CState_WhiteZetsu_HitMiddle_Server::LookAt_HitObject(_float fTimeDelta)

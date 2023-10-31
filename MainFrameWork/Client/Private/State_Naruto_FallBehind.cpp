@@ -57,7 +57,7 @@ void CState_Naruto_FallBehind::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_FallBehind::Tick_State_NoneControl(_float fTimeDelta)
 {
-
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 

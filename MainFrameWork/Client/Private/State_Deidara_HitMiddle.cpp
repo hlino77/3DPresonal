@@ -30,11 +30,16 @@ HRESULT CState_Deidara_HitMiddle::Initialize()
 void CState_Deidara_HitMiddle::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
-	Knock_Back();
+	m_bKnockBack = false;
+	
 }
 
 void CState_Deidara_HitMiddle::Tick_State(_float fTimeDelta)
 {
+	if (m_bKnockBack == false)
+		Knock_Back();
+
+
 	LookAt_HitObject(fTimeDelta);
 
 	m_pBoss->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
@@ -53,7 +58,11 @@ void CState_Deidara_HitMiddle::Knock_Back()
 
 	vDir.Normalize();
 
-	m_pBoss->Get_RigidBody()->AddForce(vDir * 6.f, ForceMode::FORCE);
+
+	m_pBoss->Get_RigidBody()->ClearForce(ForceMode::IMPULSE);
+	m_pBoss->Get_RigidBody()->AddForce(vDir * 10.0f, ForceMode::FORCE);
+
+	m_bKnockBack = true;
 }
 
 void CState_Deidara_HitMiddle::LookAt_HitObject(_float fTimeDelta)

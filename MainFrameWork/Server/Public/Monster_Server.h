@@ -39,7 +39,7 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	virtual void Set_SlowMotion(_bool bSlow) override;
 
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
@@ -56,6 +56,9 @@ public:
 	
 	void					Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill);
 	
+
+	_int					Get_Hp() { return m_iHp; }
+
 	
 public:
 
@@ -71,6 +74,7 @@ public:
 	void				Set_State(const wstring& szName);
 	void				Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void				Send_ColliderState(const _uint& iLayer);
+	void				Send_SlowMotion(_bool bSlow);
 
 	void				Set_Colliders(_float fTimeDelta);
 	HRESULT				Ready_Coliders();
@@ -82,6 +86,8 @@ public:
 	void				Hit_Attack(CCollider* pCollider);
 
 	void				Set_Die();
+
+
 protected:
 	virtual HRESULT		Ready_Components();
 
@@ -92,6 +98,8 @@ protected:
 	std::future<HRESULT>			m_PlayAnimation;
 
 	_float							m_fMoveSpeed = 0.0f;
+	_float							m_fAttackMoveSpeed = 0.0f;
+	_float							m_fAnimationSpeed = 1.0f;
 
 	unordered_map<wstring, _uint>	m_BoneIndex;
 

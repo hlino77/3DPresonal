@@ -52,6 +52,8 @@ public:
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
 
+	CGameObject*			Get_SkillOwner() { return m_pSkillOwner; }
+
 public:
 
 
@@ -70,6 +72,9 @@ public:
 	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 
 	void					Set_Die();
+
+
+	
 protected:
 	virtual HRESULT			Ready_Components();
 

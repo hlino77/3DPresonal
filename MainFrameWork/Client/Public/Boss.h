@@ -43,6 +43,8 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual void Set_SlowMotion(_bool bSlow) override;
+
 
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
@@ -52,6 +54,11 @@ public:
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
+
+
+	void					Set_AttackMoveSpeed(_float fSpeed) { m_fAttackMoveSpeed = fSpeed; }
+	_float					Get_AttackMoveSpeed() { return m_fAttackMoveSpeed; }
+
 
 	_bool					Is_Control() { return m_bControl; }
 public:
@@ -73,7 +80,8 @@ protected:
 protected:
 
 	_float							m_fMoveSpeed = 0.0f;
-
+	_float							m_fAttackMoveSpeed = 0.0f;
+	_float							m_fAnimationSpeed = 1.0f;
 
 	unordered_map<wstring, _uint>	m_BoneIndex;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */

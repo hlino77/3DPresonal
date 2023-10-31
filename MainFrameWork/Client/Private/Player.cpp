@@ -12,6 +12,7 @@
 #include "PickingMgr.h"
 #include "Struct.pb.h"
 #include "NavigationMgr.h"
+#include "Skill.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -73,7 +74,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta * m_fAnimationSpeed);
 
 	if (m_bWall && m_bControl)
 		Set_PlayerToWall(fTimeDelta);
@@ -336,11 +337,59 @@ void CPlayer::Body_Collision(CGameObject* pObject)
 
 void CPlayer::Hit_Attack(CCollider* pCollider)
 {
-	if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+	CGameObject* pOwner = pCollider->Get_Owner();
+
+	_uint iObjType = pOwner->Get_ObjectType();
+	
+	if (iObjType == OBJ_TYPE::PLAYER)
+		return;
+
+	if (iObjType == OBJ_TYPE::SKILL)
 	{
+		_uint iSkillOwnerType = dynamic_cast<CSkill*>(pOwner)->Get_SkillOwner()->Get_ObjectType();
+		if (iSkillOwnerType == OBJ_TYPE::PLAYER)
+			return;
+	}
+
+
+	_uint iAttackType = pCollider->Get_AttackType();
+
+
+	switch (iAttackType)
+	{
+	case (_uint)COLLIDER_ATTACK::MIDDLE:
 		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_Middle");
+		if(iObjType != OBJ_TYPE::SKILL)
+			m_pCamera->Cam_Shake(0.001f, 0.1f);
+		break;
+	case (_uint)COLLIDER_ATTACK::SPINBLOWUP:
+		m_pHitObject = pCollider->Get_Owner();
+		Set_State(L"Hit_SpinBlowUp");
+		if (iObjType != OBJ_TYPE::SKILL)
+			m_pCamera->Cam_Shake(0.002f, 0.15f);
+		break;
 	}
+	
+	Set_SlowMotion(pCollider->Get_SlowMotion());
+}
+
+void CPlayer::Set_SlowMotion(_bool bSlow)
+{
+	if (bSlow)
+	{
+		m_fAttackMoveSpeed = 0.1f;
+		m_fAnimationSpeed = 0.01f;
+		m_pRigidBody->Set_Active(false);
+	}
+	else
+	{
+		m_fAttackMoveSpeed = 8.0f;
+		m_fAnimationSpeed = 1.0f;
+		m_pRigidBody->Set_Active(true);
+	}
+
+	Send_SlowMotion(bSlow);
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -515,7 +564,8 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	pkt.set_fradius(pCollider->Get_Radius());
 	pkt.set_iattacktype(pCollider->Get_AttackType());
 	pkt.set_iattack(pCollider->Get_Attack());
-	
+	pkt.set_bslow(pCollider->Get_SlowMotion());
+
 	auto vOffset = pkt.mutable_voffset();
 	vOffset->Resize(3, 0.0f);
 	Vec3 vColliderOffset = pCollider->Get_Offset();
@@ -547,6 +597,21 @@ void CPlayer::Send_ColliderState(const _uint& iLayer)
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 
 	Safe_Release(pGameInstance);
+}
+
+void CPlayer::Send_SlowMotion(_bool bSlow)
+{
+	Protocol::S_SLOWMOTION pkt;
+
+
+	pkt.set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_bslow(bSlow);
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
 

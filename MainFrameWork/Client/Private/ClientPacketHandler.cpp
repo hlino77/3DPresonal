@@ -13,6 +13,7 @@
 #include "LobbyUser.h"
 #include "Boss.h"
 #include "Skill.h"
+#include "Camera_Player.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -332,9 +333,8 @@ bool Handel_S_COLLIDERSTATE_Client(PacketSessionRef& session, Protocol::S_COLLID
 	pCollider->SetActive(pkt.bactive());
 	pCollider->Set_Radius(pkt.fradius());
 	pCollider->Set_Offset(Vec3(pkt.voffset().data()));
-	pCollider->Set_AttackType(pkt.iattacktype());
 	pCollider->Set_Center();
-	pCollider->Set_Attack(pkt.iattack());
+	pCollider->Set_AttackCollider(pkt.iattack(), pkt.iattacktype(), pkt.bslow());
 
 	Safe_Release(pGameInstance);
 
@@ -499,5 +499,30 @@ bool Handel_S_SETSKILL_Client(PacketSessionRef& session, Protocol::S_SETSKILL& p
 	pObject->Set_Skill(pSkill);
 
 	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_SLOWMOTION_Client(PacketSessionRef& session, Protocol::S_SLOWMOTION& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pObject->Set_SlowMotion(pkt.bslow());
+
+	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_CAMSHAKE_Client(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt)
+{
+	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(pkt.fcamshake(), pkt.fshaketime());
 	return true;
 }

@@ -21,7 +21,7 @@ public:
 	void		Tick_State_Control(_float fTimeDelta);
 	void		Tick_State_NoneControl(_float fTimeDelta);
 
-	void		Update_Collider(_float fTimeDelta, _uint iColliderFrame);
+	void		Update_Collider(_float fTimeDelta, _uint iColliderFrame, COLLIDER_ATTACK eAttackType);
 
 	void		Follow_TargetPos(_float fTimeDelta);
 	void		Set_TargetPos();
@@ -40,9 +40,12 @@ private:
 	_uint	m_iColliderFrame2 = 0;
 
 
-	_float	m_fMoveSpeed = 0.0f;
 
 	_bool	m_bSetTargetPos = false;
+	_bool	m_bAttack = false;
+
+	_float	m_fCollierTime = 0.0f;
+	_float	m_fCurrTime = 0.0f;
 public:
 	virtual void Free() override;
 };

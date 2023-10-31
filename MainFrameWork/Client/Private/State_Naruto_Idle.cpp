@@ -69,18 +69,6 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 		
-
-	if (KEY_TAP(KEY::U))
-	{
-		m_pPlayer->Get_Camera()->Cam_Shake(0.002f, 0.5f);
-		return;
-	}
-
-	if (KEY_TAP(KEY::I))
-	{
-		m_pPlayer->Set_State(L"Hit_SpinBlow");
-		return;
-	}
 }
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)

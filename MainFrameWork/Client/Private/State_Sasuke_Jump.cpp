@@ -62,6 +62,7 @@ void CState_Sasuke_Jump::Tick_State(_float fTimeDelta)
 void CState_Sasuke_Jump::Exit_State()
 {
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
+	m_pPlayer->Set_Render(true);
 }
 
 void CState_Sasuke_Jump::Tick_State_Control(_float fTimeDelta)

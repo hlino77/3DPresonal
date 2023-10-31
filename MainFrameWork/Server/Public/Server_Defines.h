@@ -39,6 +39,8 @@ namespace Server
 		MIDDLE,
 		LEFT,
 		RIGHT,
+		SPINBLOWUP,
+		SPINBLOWDOWN,
 		ATTACK_END
 	};
 

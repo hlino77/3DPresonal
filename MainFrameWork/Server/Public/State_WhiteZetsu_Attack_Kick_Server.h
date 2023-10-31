@@ -19,13 +19,13 @@ public:
 	virtual void Exit_State() override;
 
 
-	void			Update_Collider();
+	void			Update_Collider(_float fTimeDelta, _uint iColliderFrame);
 private:
 	class CMonster_WhiteZetsu_Server* m_pMonster = nullptr;
 
 private:
 	//Animation
-	_int m_iAttack_JumpTurnKick = 0;
+	_int m_iAnimIndex = 0;
 
 	_uint m_iColliderFrame1 = 0;
 	_uint m_iColliderFrame2 = 0;
@@ -33,6 +33,10 @@ private:
 
 	_uint	m_iNextFrame = 0;
 
+	_bool	m_bAttack = false;
+
+	_float	m_fCollierTime = 0.0f;
+	_float	m_fCurrTime = 0.0f;
 public:
 	virtual void Free() override;
 };

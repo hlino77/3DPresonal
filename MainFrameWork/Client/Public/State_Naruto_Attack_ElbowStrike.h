@@ -40,9 +40,11 @@ private:
 	_uint	m_iColliderFrame1 = 0;
 	_uint	m_iColliderFrame2 = 0;
 
-	_float	m_fMoveSpeed = 0.0f;
-
 	_bool	m_bSetTargetPos = false;
+	_bool	m_bAttack = false;
+
+	_float	m_fCollierTime = 0.0f;
+	_float	m_fCurrTime = 0.0f;
 public:
 	virtual void Free() override;
 };

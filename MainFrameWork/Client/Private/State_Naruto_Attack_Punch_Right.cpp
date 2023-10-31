@@ -28,11 +28,12 @@ HRESULT CState_Naruto_Attack_Punch_Right::Initialize()
 
 	m_iNextFrame = 17;
 	m_iChangeFrame = 16;
-	m_iInputNext = m_iNextFrame - 5;
+	m_iInputNext = m_iNextFrame - 2;
 	m_iStartFrame = 0;
-	m_iColliderFrame = 7;
+	m_iColliderFrame = 12;
 
-	m_fMoveSpeed = 5.0f;
+	m_fCollierTime = 0.1f;
+
 
 	if (m_pPlayer->Is_Control())
 		m_TickFunc = &CState_Naruto_Attack_Punch_Right::Tick_State_Control;
@@ -63,7 +64,7 @@ void CState_Naruto_Attack_Punch_Right::Exit_State()
 	{
 		CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 		pCollider->SetActive(false);
-		pCollider->Set_AttackType(0);
+		pCollider->Reset_Attack();
 		m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 	}
 }
@@ -71,8 +72,6 @@ void CState_Naruto_Attack_Punch_Right::Exit_State()
 void CState_Naruto_Attack_Punch_Right::Tick_State_Control(_float fTimeDelta)
 {
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
-	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
-		return;
 
 	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
 
@@ -112,32 +111,45 @@ void CState_Naruto_Attack_Punch_Right::Tick_State_NoneControl(_float fTimeDelta)
 void CState_Naruto_Attack_Punch_Right::Update_Collider(_float fTimeDelta)
 {
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
-	if (pPlayerModel->Get_CurrAnim() != m_iAnimIndex)
-		return;
 
 	CSphereCollider* pCollider = m_pPlayer->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
 	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
 
-	if (iFrame >= m_iColliderFrame && iFrame < m_iNextFrame)
+	if (iFrame < m_iColliderFrame)
 	{
-		if (pCollider->IsActive() == false)
-		{
-			pCollider->SetActive(true);
-			pCollider->Set_AttackType((_uint)COLLIDER_ATTACK::MIDDLE);
-			pCollider->Set_Attack(1);
-			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
-		}
+		m_bAttack = false;
+		return;
 	}
 
-	if (iFrame >= m_iNextFrame)
+
+	if (m_bAttack == false)
+	{
+		if (iFrame >= m_iColliderFrame)
+		{
+			if (pCollider->IsActive() == false)
+			{
+				pCollider->SetActive(true);
+				pCollider->Set_AttackCollider(1, (_uint)COLLIDER_ATTACK::MIDDLE, true);
+				m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+				m_fCurrTime = 0.0f;
+				m_bAttack = true;
+			}
+		}
+	}
+	else
 	{
 		if (pCollider->IsActive() == true)
 		{
-			pCollider->SetActive(false);
-			pCollider->Set_AttackType(0);
-			pCollider->Set_Attack(0);
-			m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+			m_fCurrTime += fTimeDelta;
+
+			if (m_fCurrTime >= m_fCollierTime)
+			{
+				pCollider->SetActive(false);
+				pCollider->Reset_Attack();
+				m_pPlayer->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+			}
 		}
 	}
 }
@@ -145,6 +157,11 @@ void CState_Naruto_Attack_Punch_Right::Update_Collider(_float fTimeDelta)
 
 void CState_Naruto_Attack_Punch_Right::Follow_TargetPos(_float fTimeDelta)
 {
+	_float fMoveSpeed = m_pPlayer->Get_AttackMoveSpeed();
+
+	if (fMoveSpeed <= 0.0f)
+		return;
+
 	CTransform* pTransform = m_pPlayer->Get_TransformCom();
 
 	Vec3 vPlayerPos = pTransform->Get_State(CTransform::STATE::STATE_POSITION);
@@ -167,7 +184,7 @@ void CState_Naruto_Attack_Punch_Right::Follow_TargetPos(_float fTimeDelta)
 
 	Vec3 vMove = vDir;
 	vMove.Normalize();
-	vMove *= m_fMoveSpeed * fTimeDelta;
+	vMove *= fMoveSpeed * fTimeDelta;
 
 	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 7.0f, fTimeDelta);
 
@@ -193,7 +210,7 @@ void CState_Naruto_Attack_Punch_Right::Set_TargetPos()
 
 		Vec3 vDistance = vPlayerPos - vTargetObjectPos;
 
-		if (vDistance.Length() <= 3.0f)
+		if (vDistance.Length() <= 4.0f)
 		{
 			vDistance.Normalize();
 			vDistance *= 0.6f;

@@ -53,14 +53,8 @@ HRESULT CRigidBody::Initialize(void* pArg)
 
 void CRigidBody::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 RigidBody의 업데이트를 가장 우선 호출해야 함.
 {
-	if (m_IsSleeping)
+	if (m_bActive == false)
 		return;
-
-	//if (m_fSleepThreshold > m_vLinearVelocity.Length() && m_fSleepThreshold > 180.f * XM_1DIVPI * m_vAngularVelocity.Length())
-	//{
-	//	Sleep();
-	//	return;
-	//}
 
 	if (m_IsKinematic)	// Kinematic
 		KinematicUpdate(fTimeDelta);
@@ -117,7 +111,7 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 	//(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
 
 
-	if (m_bGround)
+	if (m_bGround && m_bDrag)
 		(fLinearGroundResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearGroundResistance)) : (m_vLinearVelocity = Vec3::Zero);
 
 	// Constraints Check
@@ -211,8 +205,6 @@ void CRigidBody::AddForce(const Vec3& vForce, ForceMode eMode)
 		m_vLinearVelocity += vForce;
 		break;
 	}
-
-	WakeUp();
 }
 
 void CRigidBody::AddTorque(const Vec3& vTorque, ForceMode eMode)
@@ -232,8 +224,6 @@ void CRigidBody::AddTorque(const Vec3& vTorque, ForceMode eMode)
 		m_vAngularVelocity += vTorque;
 		break;
 	}
-
-	WakeUp();
 }
 
 void CRigidBody::SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, ForceMode eMode)
@@ -257,8 +247,6 @@ void CRigidBody::SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, Forc
 		m_vAngularVelocity = vTorque;
 		break;
 	}
-
-	WakeUp();
 }
 
 void CRigidBody::ClearForce(ForceMode eMode)
@@ -310,15 +298,12 @@ void CRigidBody::ClearNetPower()
 void CRigidBody::SetLinearVelocity(const Vec3& vLinearVelocity)
 {
 	m_vLinearVelocity = vLinearVelocity;
-
-	WakeUp();
 }
 
 void CRigidBody::SetAngularVelocity(const Vec3& vAngularVelocity)
 {
 	m_vAngularVelocity = vAngularVelocity;
 
-	WakeUp();
 }
 
 CRigidBody* CRigidBody::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

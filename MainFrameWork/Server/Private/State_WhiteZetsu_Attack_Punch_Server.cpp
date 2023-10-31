@@ -19,27 +19,29 @@ CState_WhiteZetsu_Attack_Punch_Server::CState_WhiteZetsu_Attack_Punch_Server(con
 }
 HRESULT CState_WhiteZetsu_Attack_Punch_Server::Initialize()
 {
-	m_iAttack_Punch = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.2f);
+	m_iAnimIndex = m_pMonster->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch", 1.2f);
 
-	if (m_iAttack_Punch == -1)
+	if (m_iAnimIndex == -1)
 		return E_FAIL;
 
-	m_iColliderFrame = 13;
+	m_iColliderFrame = 15;
 
+
+	m_fCollierTime = 0.1f;
 
 	return S_OK;
 }
 
 void CState_WhiteZetsu_Attack_Punch_Server::Enter_State()
 {
-	m_pMonster->Reserve_Animation(m_iAttack_Punch, 0.1f, 0, 0);
+	m_pMonster->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 }
 
 void CState_WhiteZetsu_Attack_Punch_Server::Tick_State(_float fTimeDelta)
 {
-	Update_Collider();
+	Update_Collider(fTimeDelta);
 
-	if (m_pMonster->Get_ModelCom()->Is_AnimationEnd(m_iAttack_Punch))
+	if (m_pMonster->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
 		m_pMonster->Set_State(L"Idle");
 }
 
@@ -47,31 +49,52 @@ void CState_WhiteZetsu_Attack_Punch_Server::Exit_State()
 {
 	CSphereCollider* pCollider = m_pMonster->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 	pCollider->SetActive(false);
+	pCollider->Reset_Attack();
 	m_pMonster->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 }
 
-void CState_WhiteZetsu_Attack_Punch_Server::Update_Collider()
+void CState_WhiteZetsu_Attack_Punch_Server::Update_Collider(_float fTimeDelta)
 {
-	_uint iFrame = m_pMonster->Get_ModelCom()->Get_Anim_Frame(m_iAttack_Punch);
+	CModel* pMonsterModel = m_pMonster->Get_ModelCom();
+
 	CSphereCollider* pCollider = m_pMonster->Get_Colider((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
-	if (iFrame >= m_iColliderFrame && iFrame < m_iColliderFrame + 3)
+	_uint iFrame = pMonsterModel->Get_Anim_Frame(m_iAnimIndex);
+
+	if (iFrame < m_iColliderFrame)
 	{
-		if (pCollider->IsActive() == false)
-		{
-			pCollider->SetActive(true);
-			pCollider->Set_AttackType((_uint)COLLIDER_ATTACK::MIDDLE);
-			m_pMonster->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
-		}
+		m_bAttack = false;
+		return;
 	}
 
 
-	if (iFrame >= m_iColliderFrame + 3)
+	if (m_bAttack == false)
 	{
-		if (pCollider->IsActive())
+		if (iFrame >= m_iColliderFrame)
 		{
-			pCollider->SetActive(false);
-			m_pMonster->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+			if (pCollider->IsActive() == false)
+			{
+				pCollider->SetActive(true);
+				pCollider->Set_AttackCollider(1, (_uint)COLLIDER_ATTACK::MIDDLE, true);
+				m_pMonster->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+				m_fCurrTime = 0.0f;
+				m_bAttack = true;
+			}
+		}
+	}
+	else
+	{
+		if (pCollider->IsActive() == true)
+		{
+			m_fCurrTime += fTimeDelta;
+
+			if (m_fCurrTime >= m_fCollierTime)
+			{
+				pCollider->SetActive(false);
+				pCollider->Reset_Attack();
+				m_pMonster->Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+			}
 		}
 	}
 }

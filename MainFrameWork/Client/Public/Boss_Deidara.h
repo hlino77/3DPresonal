@@ -3,6 +3,7 @@
 
 BEGIN(Client)
 class CMonster_C2Dragon;
+class CSkill_TwinBird;
 
 class CBoss_Deidara : public CBoss
 {
@@ -17,11 +18,13 @@ public:
 	virtual void		Tick(_float fTimeDelta);
 	virtual void		LateTick(_float fTimeDelta);
 	virtual HRESULT		Render();
+	virtual void		Set_Skill(CGameObject* pGameObject) override;
+
 
 	void				Set_Colliders();
 	void				Set_C2Dragon(CMonster_C2Dragon* pDragon) { m_pC2Dragon = pDragon; }
 	void				Spawn_C2Dragon();
-
+	void				Shoot_TwinBirds();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();
@@ -32,6 +35,9 @@ private:
 
 
 	CMonster_C2Dragon* m_pC2Dragon = nullptr;
+
+
+	CSkill_TwinBird* m_pTwinBird[2];
 
 public:
 	static CBoss_Deidara* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

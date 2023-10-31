@@ -61,6 +61,7 @@ void CState_Naruto_Jump::Tick_State(_float fTimeDelta)
 
 void CState_Naruto_Jump::Exit_State()
 {
+	m_pPlayer->Set_Render(true);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 }
 

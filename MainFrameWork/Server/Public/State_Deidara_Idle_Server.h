@@ -25,8 +25,6 @@ private:
 	//Animation
 	_int m_iAnimIndex = 0;
 
-	_bool m_bTemp = false;
-
 public:
 	virtual void Free() override;
 };

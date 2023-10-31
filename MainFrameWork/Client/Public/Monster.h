@@ -43,7 +43,7 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	virtual void Set_SlowMotion(_bool bSlow) override;
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
 
@@ -73,6 +73,8 @@ protected:
 protected:
 
 	_float							m_fMoveSpeed = 0.0f;
+	_float							m_fAttackMoveSpeed = 0.0f;
+	_float							m_fAnimationSpeed = 1.0f;
 
 
 	unordered_map<wstring, _uint>	m_BoneIndex;

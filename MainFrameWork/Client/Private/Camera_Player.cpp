@@ -67,18 +67,23 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	//오프셋을 매번 업데이트 한다
 	// 속도로 회전 
 	
+	Matrix matWorld = m_pTransformCom->Get_WorldMatrix();
+
+
 	if (m_bShake)
 	{
-		if(m_vOriginPos.Length() > 0.0f)
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_vOriginPos);
+		if (m_vOriginLook.Length() > 0.0f)
+		{
+			Vec3 vPos(matWorld.m[3]);
+			matWorld = Matrix::CreateWorld(vPos, -m_vOriginLook, Vec3(0.0f, 1.0f, 0.0f));
+		}
+
 
 		m_fCurrShakeTime += fTimeDelta;
 		if (m_fCurrShakeTime >= m_fShakeTime)
 			m_bShake = false;
 	}
-		
 
-	Matrix matWorld = m_pTransformCom->Get_WorldMatrix();
 
 	Matrix matPlayerWorld = m_pPlayer->Get_TransformCom()->Get_WorldMatrix();
 	Vec3 vPlayerPos = Vec3(matPlayerWorld.m[3]) + m_vTargetOffset;
@@ -201,7 +206,7 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 	if (m_bShake)
 	{
-		m_vOriginPos = vPos;
+		m_vOriginLook = vLook;
 
 		Vec3 vUp(matWorld.m[1]);
 
@@ -213,7 +218,10 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 		vDir *= fForce;
 
-		matWorld.Translation(vPos + vDir);
+		Vec3 vShakeLook = vLook + vDir;
+		vShakeLook.Normalize();
+
+		matWorld = Matrix::CreateWorld(vPos, -vShakeLook, Vec3(0.0f, 1.0f, 0.0f));
 	}
 
 
@@ -240,7 +248,7 @@ void CCamera_Player::Cam_Shake(_float fForce, _float fTime)
 	m_fShakeForce = fForce;
 	m_fShakeTime = fTime;
 	m_fCurrShakeTime = 0.0f;
-	m_vOriginPos = Vec3(0.0f, 0.0f, 0.0f);
+	m_vOriginLook = Vec3(0.0f, 0.0f, 0.0f);
 }
 
 HRESULT CCamera_Player::Ready_Components()

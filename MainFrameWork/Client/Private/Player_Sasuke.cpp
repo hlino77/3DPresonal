@@ -25,6 +25,10 @@
 #include "PickingMgr.h"
 #include "State_Sasuke_WallLand.h"
 #include "State_Sasuke_HitMiddle.h"
+#include "State_Sasuke_HitSpinBlowUp.h"
+#include "State_Sasuke_FallBehind.h"
+#include "State_Sasuke_GetUp.h"
+#include "State_Sasuke_DownToFloor.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -48,6 +52,8 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 	Ready_State();
 
 	Ready_Coliders();
+
+	m_fAttackMoveSpeed = 8.0f;
 
 
 	return S_OK;
@@ -104,6 +110,19 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		return;
 	}
 
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+
+			if (pOther->Get_AttackType() == (_uint)COLLIDER_ATTACK::MIDDLE)
+				m_pCamera->Cam_Shake(0.001f, 0.1f);
+			else if (pOther->Get_AttackType() == (_uint)COLLIDER_ATTACK::SPINBLOWDOWN)
+				m_pCamera->Cam_Shake(0.002f, 0.15f);
+		}
+		return;
+	}
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
@@ -139,9 +158,26 @@ void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 		return;
 	}
 
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			Set_SlowMotion(false);
+		}
+		return;
+	}
+
+
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		Delete_CollisionStay(iColLayer, pOther);
+		return;
+	}
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+			Set_SlowMotion(false);
 		return;
 	}
 }
@@ -202,6 +238,12 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Walk_End", new CState_Sasuke_WalkEnd(L"Walk_End", this));
 	m_pStateMachine->Add_State(L"WallLand", new CState_Sasuke_WallLand(L"WallLand", this));
 	m_pStateMachine->Add_State(L"Hit_Middle", new CState_Sasuke_HitMiddle(L"Hit_Middle", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlowUp", new CState_Sasuke_HitSpinBlowUp(L"Hit_SpinBlowUp", this));
+	m_pStateMachine->Add_State(L"Fall_Behind", new CState_Sasuke_FallBehind(L"Fall_Behind", this));
+	m_pStateMachine->Add_State(L"GetUp", new CState_Sasuke_GetUp(L"GetUp", this));
+	m_pStateMachine->Add_State(L"DownToFloor", new CState_Sasuke_DownToFloor(L"DownToFloor", this));
+
+
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));

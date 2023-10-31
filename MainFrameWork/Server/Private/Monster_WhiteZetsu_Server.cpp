@@ -12,6 +12,14 @@
 #include "State_WhiteZetsu_Attack_Kick_Server.h"
 #include "State_WhiteZetsu_Attack_Punch_Server.h"
 #include "State_WhiteZetsu_Dying_Normal_Server.h"
+#include "State_WhiteZetsu_HitSpinBlowUp_Server.h"
+#include "State_WhiteZetsu_GetUp_Server.h"
+#include "State_WhiteZetsu_FallBehind_Server.h"
+#include "State_WhiteZetsu_DownToFloor_Server.h"
+#include "State_WhiteZetsu_HitSpinBlowDown_Server.h"
+#include "State_WhiteZetsu_Die_Server.h"
+
+
 
 CMonster_WhiteZetsu_Server::CMonster_WhiteZetsu_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster_Server(pDevice, pContext)
@@ -34,7 +42,7 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 6;
+	m_iHp = 600;
 
     return S_OK;
 }
@@ -68,6 +76,13 @@ HRESULT CMonster_WhiteZetsu_Server::Render()
 
 void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+		return;
+	}
+
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
 		Hit_Attack(pOther);
@@ -97,6 +112,20 @@ void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollide
 		return;
 	}
 
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+			Set_SlowMotion(false);
+		return;
+	}
+
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+			Set_SlowMotion(false);
+		return;
+	}
 }
 
 void CMonster_WhiteZetsu_Server::Send_MonsterInfo()
@@ -181,6 +210,14 @@ void CMonster_WhiteZetsu_Server::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Kick", new CState_WhiteZetsu_Attack_Kick_Server(L"Attack_Kick", this));
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_WhiteZetsu_Attack_Punch_Server(L"Attack_Punch", this));
 	m_pStateMachine->Add_State(L"Dying_Normal", new CState_WhiteZetsu_Dying_Normal_Server(L"Dying_Normal", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlowUp", new CState_WhiteZetsu_HitSpinBlowUp_Server(L"Hit_SpinBlowUp", this));
+	m_pStateMachine->Add_State(L"GetUp", new CState_WhiteZetsu_GetUp_Server(L"GetUp", this));
+	m_pStateMachine->Add_State(L"Fall_Behind", new CState_WhiteZetsu_FallBehind_Server(L"Fall_Behind", this));
+	m_pStateMachine->Add_State(L"DownToFloor", new CState_WhiteZetsu_DownToFloor_Server(L"DownToFloor", this));
+	m_pStateMachine->Add_State(L"Hit_SpinBlowDown", new CState_WhiteZetsu_HitSpinBlowDown_Server(L"Hit_SpinBlowDown", this));
+	m_pStateMachine->Add_State(L"Die", new CState_WhiteZetsu_Die_Server(L"Die", this));
+
+
 
 
 	m_pStateMachine->Change_State(L"Appear");

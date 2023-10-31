@@ -57,7 +57,7 @@ public:
 	void			Set_Offset(Vec3 vOffset) { m_vOffset = vOffset; }
 
 	_uint			Get_AttackType() { return m_iAttackType; }
-	void			Set_AttackType(_uint iAttackType) { m_iAttackType = iAttackType; }
+	//void			Set_AttackType(_uint iAttackType) { m_iAttackType = iAttackType; }
 
 	void			OnCollisionEnter(CCollider* pOther);
 	void			OnCollisionExit(CCollider* pOther);
@@ -67,8 +67,14 @@ public:
 	void			Set_Child(CCollider* pChild) { m_pChild = pChild; }
 
 	_uint			Get_Attack() { return m_iAttack; }
-	void			Set_Attack(_uint iAttack) { m_iAttack = iAttack; }
+	//void			Set_Attack(_uint iAttack) { m_iAttack = iAttack; }
 
+
+	_bool			Get_SlowMotion() { return m_bSlowMotion; }
+	//void			Set_SlowMotion(_bool bSlow) { m_bSlowMotion = bSlow; }
+
+	void			Set_AttackCollider(_uint iAttack, _uint iAttackType, _bool bSlow);
+	void			Reset_Attack();
 protected:
 	CRigidBody*				m_pRigidBody;
 
@@ -89,6 +95,8 @@ private:
 	_uint					m_iAttackType = 0;
 	_uint					m_iAttack = 0;
 
+
+	_bool					m_bSlowMotion = false;
 	//_int			m_iCol;
 
 

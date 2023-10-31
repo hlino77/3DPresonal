@@ -35,10 +35,17 @@ public:
 public:
 
 #pragma region Property
+	_bool	IsActive() { return m_bActive; }
+	void	Set_Active(_bool bActive) { m_bActive = bActive; }
+
+
 	_bool	UseGravity()	const						{ return m_UseGravity; }
 	void	UseGravity(_bool UseGravity);
 	_bool	IsKinematic()	const						{ return m_IsKinematic; }
 	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
+
+	void	UseDrag(_bool bDrag) { m_bDrag = bDrag; }
+	_bool	IsDrag() { return m_bDrag; }
 
 
 	_bool	Is_Gruond() { return m_bGround; }
@@ -49,6 +56,12 @@ public:
 
 	_float	GetMass()	const							{ return m_fMass; }
 	void	SetMass(_float fMass)						{ m_fMass = fMass; }
+
+	void	Set_GruondDrag(_float fDrag)				{ m_fGroundDrag = fDrag; }
+	_float	Get_GruondDrag()							{ return m_fGroundDrag; }
+
+
+
 	_float	GetDrag()	const							{ return m_fDrag; }
 	_float	GetAngularDrag()	const					{ return m_fAngularDrag; }
 
@@ -104,6 +117,8 @@ private:
 	_bool	m_IsKinematic;
 	_bool	m_bGround = true;
 	_bool	m_bCompareGround = true;
+	_bool	m_bDrag = true;
+	_bool	m_bActive = true;
 
 	_float	m_fMass;
 	_float	m_fDrag;

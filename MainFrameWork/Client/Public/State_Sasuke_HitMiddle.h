@@ -38,6 +38,8 @@ private:
 
 	Vec3 m_vHitPos;
 
+	_bool m_bKnockBack = false;
+
 public:
 	virtual void Free() override;
 };

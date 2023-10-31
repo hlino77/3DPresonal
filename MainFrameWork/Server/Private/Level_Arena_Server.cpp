@@ -343,6 +343,7 @@ HRESULT CLevel_Arena_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
 			return E_FAIL;
 
 		pBoss->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+		pBoss->Set_Skill(nullptr);
 	}
 	
 

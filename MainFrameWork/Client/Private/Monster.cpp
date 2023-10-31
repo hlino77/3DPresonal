@@ -50,7 +50,7 @@ void CMonster::Tick(_float fTimeDelta)
 
 void CMonster::LateTick(_float fTimeDelta)
 {
-	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta * m_fAnimationSpeed);
 
 	if (nullptr == m_pRendererCom)
 		return;
@@ -99,6 +99,22 @@ HRESULT CMonster::Render()
 
 
     return S_OK;
+}
+
+void CMonster::Set_SlowMotion(_bool bSlow)
+{
+	if (bSlow)
+	{
+		m_fAttackMoveSpeed = 0.1f;
+		m_fAnimationSpeed = 0.01f;
+		m_pRigidBody->Set_Active(false);
+	}
+	else
+	{
+		m_fAttackMoveSpeed = 8.0f;
+		m_fAnimationSpeed = 1.0f;
+		m_pRigidBody->Set_Active(true);
+	}
 }
 
 

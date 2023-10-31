@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CState_Naruto_HitSpinBlow : public CState
+class CState_Sasuke_HitSpinBlowUp : public CState
 {
 public:
-	CState_Naruto_HitSpinBlow(const wstring& strStateName, class CPlayer_Naruto* pPlayer);
-	CState_Naruto_HitSpinBlow(const CState& rhs, class CStateMachine* pMachine);
-	virtual ~CState_Naruto_HitSpinBlow() = default;
+	CState_Sasuke_HitSpinBlowUp(const wstring& strStateName, class CPlayer_Sasuke* pPlayer);
+	CState_Sasuke_HitSpinBlowUp(const CState& rhs, class CStateMachine* pMachine);
+	virtual ~CState_Sasuke_HitSpinBlowUp() = default;
 
 
 public:
@@ -26,9 +26,9 @@ public:
 	void		 Knock_Back();
 	void		 LookAt_HitObject(_float fTimeDelta);
 private:
-	class CPlayer_Naruto* m_pPlayer = nullptr;
+	class CPlayer_Sasuke* m_pPlayer = nullptr;
 
-	std::function<void(CState_Naruto_HitSpinBlow&, _float)> m_TickFunc;
+	std::function<void(CState_Sasuke_HitSpinBlowUp&, _float)> m_TickFunc;
 
 	
 
@@ -38,6 +38,8 @@ private:
 
 	Vec3 m_vHitPos;
 
+
+	_bool m_bKnockBack = false;
 public:
 	virtual void Free() override;
 };

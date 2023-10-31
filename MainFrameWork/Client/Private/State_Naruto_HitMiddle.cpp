@@ -37,7 +37,7 @@ HRESULT CState_Naruto_HitMiddle::Initialize()
 void CState_Naruto_HitMiddle::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 1, 0);
-	Knock_Back();
+	m_bKnockBack = false;
 }
 
 void CState_Naruto_HitMiddle::Tick_State(_float fTimeDelta)
@@ -52,6 +52,9 @@ void CState_Naruto_HitMiddle::Exit_State()
 
 void CState_Naruto_HitMiddle::Tick_State_Control(_float fTimeDelta)
 {
+	if (!m_bKnockBack)
+		Knock_Back();
+
 	LookAt_HitObject(fTimeDelta);
 
 	if (m_pPlayer->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
@@ -60,6 +63,9 @@ void CState_Naruto_HitMiddle::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_HitMiddle::Tick_State_NoneControl(_float fTimeDelta)
 {
+	if (!m_bKnockBack)
+		Knock_Back();
+
 	LookAt_HitObject(fTimeDelta);
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
@@ -72,7 +78,10 @@ void CState_Naruto_HitMiddle::Knock_Back()
 
 	vDir.Normalize();
 
-	m_pPlayer->Get_RigidBody()->AddForce(vDir * 6.f, ForceMode::FORCE);
+	m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::IMPULSE);
+	m_pPlayer->Get_RigidBody()->AddForce(vDir * 10.0f, ForceMode::FORCE);
+
+	m_bKnockBack = true;
 }
 
 void CState_Naruto_HitMiddle::LookAt_HitObject(_float fTimeDelta)

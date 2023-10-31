@@ -8,6 +8,7 @@
 #include "Boss_Deidara_Server.h"
 #include "Monster_C2Dragon_Server.h"
 #include "Skill_Hiryu_Server.h"
+#include "Skill_TwinBird_Server.h"
 
 CLoader_Server::CLoader_Server()
 {
@@ -191,6 +192,10 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Hiryu"),
 		CSkill_Hiryu_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_TwinBird"),
+		CSkill_TwinBird_Server::Create(nullptr, nullptr))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

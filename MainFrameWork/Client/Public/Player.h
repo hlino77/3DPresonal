@@ -43,20 +43,22 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	virtual void Set_SlowMotion(_bool bSlow) override;
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
 
 	void					Set_Camera(class CCamera_Player* pCamera) { m_pCamera = pCamera; }
 	class CCamera_Player*	Get_Camera() { return m_pCamera; }
 
-	
-
-
 	void					Set_MoveSpeed(_float fSpeed) { m_fMoveSpeed = fSpeed; }
 	_float					Get_MoveSpeed() { return m_fMoveSpeed; }
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
 
+	void					Set_AttackMoveSpeed(_float fSpeed) { m_fAttackMoveSpeed = fSpeed; }
+	_float					Get_AttackMoveSpeed() { return m_fAttackMoveSpeed; }
+
+	void					Set_AnimationSpeed(_float fSpeed) { m_fAnimationSpeed = fSpeed; }
+	_float					Get_AnimationSpeed() { return m_fAnimationSpeed; }
 
 	void					Set_DoubleJump(_bool bJump) { m_bDoubleJump = bJump; }
 	_bool					Is_DoubleJump() { return m_bDoubleJump; }
@@ -67,6 +69,8 @@ public:
 	void			Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void			Send_State(const wstring& szName);
 	void			Send_ColliderState(const _uint& iLayer);
+	void			Send_SlowMotion(_bool bSlow);
+
 
 	void			Set_State(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
@@ -103,6 +107,9 @@ public:
 	void			Body_Collision(CGameObject* pObject);
 	void			Hit_Attack(CCollider* pCollider);
 
+
+	
+
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -114,7 +121,8 @@ protected:
 	
 
 	_float							m_fMoveSpeed = 0.0f;
-
+	_float							m_fAttackMoveSpeed = 0.0f;
+	_float							m_fAnimationSpeed = 1.0f;
 
 	unordered_map<wstring, _uint>	m_BoneIndex;
 	_bool							m_bDoubleJump = true;

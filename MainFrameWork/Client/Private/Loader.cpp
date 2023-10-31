@@ -29,6 +29,7 @@
 #include "Boss_Deidara.h"
 #include "Monster_C2Dragon.h"
 #include "Skill_Hiryu.h"
+#include "Skill_TwinBird.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -200,6 +201,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Hiryu"),
 		CSkill_Hiryu::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_TwinBird"),
+		CSkill_TwinBird::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -498,6 +503,16 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 
 	{
 		wstring strFileName = L"Hiryu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"TwinBirds";
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 

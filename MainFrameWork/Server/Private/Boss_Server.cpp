@@ -7,6 +7,7 @@
 #include "CollisionManager.h"
 #include "RigidBody.h"
 #include "NavigationMgr.h"
+#include "Skill_Server.h"
 
 CBoss_Server::CBoss_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Boss", OBJ_TYPE::BOSS)
@@ -54,7 +55,7 @@ void CBoss_Server::Tick(_float fTimeDelta)
 
 void CBoss_Server::LateTick(_float fTimeDelta)
 {
-	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta);
+	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta * m_fAnimationSpeed);
 
 
 	{
@@ -76,6 +77,24 @@ HRESULT CBoss_Server::Render()
 	m_PlayAnimation.get();
 
 	return S_OK;
+}
+
+void CBoss_Server::Set_SlowMotion(_bool bSlow)
+{
+	if (bSlow)
+	{
+		m_fAttackMoveSpeed = 0.1f;
+		m_fAnimationSpeed = 0.01f;
+		m_pRigidBody->Set_Active(false);
+	}
+	else
+	{
+		m_fAttackMoveSpeed = 8.0f;
+		m_fAnimationSpeed = 1.0f;
+		m_pRigidBody->Set_Active(true);
+	}
+
+	Send_SlowMotion(bSlow);
 }
 
 void CBoss_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
@@ -192,19 +211,49 @@ void CBoss_Server::Body_Collision(CGameObject* pObject)
 
 void CBoss_Server::Hit_Attack(CCollider* pCollider)
 {
-	if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
-	{
-	/*	m_iHp -= pCollider->Get_Attack();
+	CGameObject* pOwner = pCollider->Get_Owner();
 
+	_uint iObjType = pOwner->Get_ObjectType();
+
+	if (iObjType != OBJ_TYPE::PLAYER)
+		return;
+
+	if (iObjType == OBJ_TYPE::SKILL)
+	{
+		_uint iSkillOwnerType = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner()->Get_ObjectType();
+		if (iSkillOwnerType != OBJ_TYPE::PLAYER)
+			return;
+	}
+
+
+	m_iHp -= pCollider->Get_Attack();
+
+	_uint iAttackType = pCollider->Get_AttackType();
+
+
+	switch (iAttackType)
+	{
+	case (_uint)COLLIDER_ATTACK::MIDDLE:
 		if (m_iHp <= 0)
 		{
 			Set_State(L"Dying_Normal");
-			return;
-		}*/
-
+			break;
+		}
 		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_Middle");
+		break;
+	case (_uint)COLLIDER_ATTACK::SPINBLOWUP:
+		m_pHitObject = pCollider->Get_Owner();
+		Set_State(L"Hit_SpinBlowUp");
+	case (_uint)COLLIDER_ATTACK::SPINBLOWDOWN:
+		m_pHitObject = pCollider->Get_Owner();
+		Set_State(L"Hit_SpinBlowDown");
+		break;
 	}
+
+
+	if (pCollider->Get_SlowMotion())
+		Set_SlowMotion(true);
 }
 
 void CBoss_Server::Set_Die()
@@ -215,6 +264,37 @@ void CBoss_Server::Set_Die()
 
 
 	m_bDie = true;
+}
+
+void CBoss_Server::Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CSkill_Server::MODELDESC Desc;
+	Desc.strFileName = szSkillName;
+	Desc.iObjectID = g_iObjectID++;
+	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+	Desc.pSkillOwner = this;
+
+	wstring szObjectName = L"Prototype_GameObject_Skill_" + szSkillName;
+	*pSkill = pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_SKILL, szObjectName, &Desc);
+
+
+
+	Protocol::S_SETSKILL pkt;
+
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_iobjectid(m_iObjectID);
+
+	pkt.set_szskillname(CAsUtils::ToString(szSkillName));
+	pkt.set_iskillobjectid(Desc.iObjectID);
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 void CBoss_Server::Find_NearTarget()
@@ -330,6 +410,7 @@ void CBoss_Server::Send_ColliderState(const _uint& iLayer)
 	pkt.set_fradius(pCollider->Get_Radius());
 	pkt.set_iattacktype(pCollider->Get_AttackType());
 	pkt.set_iattack(pCollider->Get_Attack());
+	pkt.set_bslow(pCollider->Get_SlowMotion());
 
 
 	auto vOffset = pkt.mutable_voffset();
@@ -341,6 +422,20 @@ void CBoss_Server::Send_ColliderState(const _uint& iLayer)
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 
 	Safe_Release(pGameInstance);
+}
+
+void CBoss_Server::Send_SlowMotion(_bool bSlow)
+{
+	Protocol::S_SLOWMOTION pkt;
+
+
+	pkt.set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_bslow(bSlow);
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 }
 
 void CBoss_Server::Set_Colliders(_float fTimeDelta)

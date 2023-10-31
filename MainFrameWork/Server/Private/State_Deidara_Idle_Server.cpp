@@ -29,16 +29,18 @@ HRESULT CState_Deidara_Idle_Server::Initialize()
 void CState_Deidara_Idle_Server::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
+	m_pBoss->Reset_FindTargetTime();
 }
 
 void CState_Deidara_Idle_Server::Tick_State(_float fTimeDelta)
 {
-	if (!m_bTemp)
+	if (m_pBoss->Get_SkillReady(CBoss_Deidara_Server::DEIDARA_SKILL::C2DRAGON))
 	{
 		m_pBoss->Set_State(L"Skill_C2Dragon");
-		m_bTemp = true;
+		return;
 	}
-		
+
+	m_pBoss->Update_NearTarget(fTimeDelta);
 }
 
 void CState_Deidara_Idle_Server::Exit_State()

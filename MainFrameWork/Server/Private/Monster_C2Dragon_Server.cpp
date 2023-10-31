@@ -144,8 +144,9 @@ void CMonster_C2Dragon_Server::Update_NearTarget(_float fTimeDelta)
 void CMonster_C2Dragon_Server::Spawn()
 {
 	Set_Active(true);
-	m_fAttackDelay = 0.0f;
+	Set_State(L"Idle");
 
+	m_fAttackDelay = 0.0f;
 	m_fSpawnTime = 32.0f;
 }
 

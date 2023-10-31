@@ -55,7 +55,7 @@ public:
 	void					Add_MoveSpeed(_float fSpeed, _float fMaxSpeed) { m_fMoveSpeed += fSpeed; m_fMoveSpeed = min(m_fMoveSpeed, fMaxSpeed); }
 	
 
-	CGameObject* Get_SkillOwner() { m_pSkillOwner; }
+	CGameObject*			Get_SkillOwner() { return m_pSkillOwner; }
 
 public:
 
