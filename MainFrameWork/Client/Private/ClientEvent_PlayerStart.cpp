@@ -100,7 +100,7 @@ void CClientEvent_PlayerStart::Tick(_float fTimeDelta)
 	{
 		Vec3 vPos = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 
-		if (vPos.x >= vEndPos.x)
+		if (vPos.x <= vEndPos.x)
 		{
 			m_fCurrTime += fTimeDelta;
 			if (m_fCurrTime >= m_fCameraTime)
@@ -111,7 +111,7 @@ void CClientEvent_PlayerStart::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			vPos.x -= 5.0f * fTimeDelta;
+			vPos.x -= 1.0f * fTimeDelta;
 			m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 	}

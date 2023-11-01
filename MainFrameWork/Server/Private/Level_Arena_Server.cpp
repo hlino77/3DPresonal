@@ -156,6 +156,11 @@ HRESULT CLevel_Arena_Server::Broadcast_Character()
 	Vec3 vPos(0.0f, 0.0f, -10.0f);
 
 	set<GameSessionRef>& Sessions = CGameSessionManager::GetInstance()->Get_Sessions();
+
+	_uint iPlayerCount = Sessions.size();
+
+	vPos.x -= (iPlayerCount - 1) * 3.0f * 0.5f;
+
 	for (auto& OwnerSession : Sessions)
 	{
 		wstring strCharacter = OwnerSession->Get_CharacterName();
@@ -194,7 +199,7 @@ HRESULT CLevel_Arena_Server::Broadcast_Character()
 			return E_FAIL;
 		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 
-		vPos.x += 5.0f;
+		vPos.x += 3.0f;
 	}
 
 	Safe_Release(pGameInstance);
