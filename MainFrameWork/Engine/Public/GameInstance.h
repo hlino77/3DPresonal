@@ -93,6 +93,7 @@ public:
 
 
 	/* For. NavigationManager */
+
 public:
 
 
@@ -117,6 +118,7 @@ private:
 	class CUtils*					m_pUtilities = { nullptr };
 
 	class CNavigationMgr*			m_pNavigationMgr = { nullptr };
+	class CEventMgr*				m_pEventMgr = { nullptr };
 public:
 	static void Release_Engine();
 	virtual void Free() override;

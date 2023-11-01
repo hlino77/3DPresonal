@@ -14,6 +14,8 @@
 #include "Boss.h"
 #include "Skill.h"
 #include "Camera_Player.h"
+#include "EventMgr.h"
+#include "Event.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -527,5 +529,23 @@ bool Handel_S_SLOWMOTION_Client(PacketSessionRef& session, Protocol::S_SLOWMOTIO
 bool Handel_S_CAMSHAKE_Client(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt)
 {
 	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(pkt.fcamshake(), pkt.fshaketime());
+	return true;
+}
+
+bool Handel_S_EVENT_Client(PacketSessionRef& session, Protocol::S_EVENT& pkt)
+{
+	if (pkt.istate() == (_uint)EVENTSTATE::READY)
+	{
+		CEventMgr::GetInstance()->Start_Event(pkt.ieventid());
+	}
+	else if (pkt.istate() == (_uint)EVENTSTATE::EVENT)
+	{
+		CEventMgr::GetInstance()->Get_Event(pkt.ieventid())->Set_State(pkt.istate());
+	}
+	else if (pkt.istate() == (_uint)EVENTSTATE::SETEND)
+	{
+		CEventMgr::GetInstance()->End_Event(pkt.ieventid());
+	}
+
 	return true;
 }

@@ -27,6 +27,7 @@ enum : uint16
 	PKT_S_SETSKILL = 16,
 	PKT_S_SLOWMOTION = 17,
 	PKT_S_CAMSHAKE = 18,
+	PKT_S_EVENT = 19,
 };
 
 //TODO
@@ -48,6 +49,7 @@ bool Handel_S_NEARTARGET_Server(PacketSessionRef& session, Protocol::S_NEARTARGE
 bool Handel_S_SETSKILL_Server(PacketSessionRef& session, Protocol::S_SETSKILL& pkt);
 bool Handel_S_SLOWMOTION_Server(PacketSessionRef& session, Protocol::S_SLOWMOTION& pkt);
 bool Handel_S_CAMSHAKE_Server(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt);
+bool Handel_S_EVENT_Server(PacketSessionRef& session, Protocol::S_EVENT& pkt);
 
 
 class CServerPacketHandler
@@ -76,6 +78,7 @@ public:
 		GPacketHandler[PKT_S_SETSKILL] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SETSKILL>(Handel_S_SETSKILL_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_SLOWMOTION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SLOWMOTION>(Handel_S_SLOWMOTION_Server, session, buffer, len); };
 		GPacketHandler[PKT_S_CAMSHAKE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CAMSHAKE>(Handel_S_CAMSHAKE_Server, session, buffer, len); };
+		GPacketHandler[PKT_S_EVENT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_EVENT>(Handel_S_EVENT_Server, session, buffer, len); };
 		
 
 	}
@@ -104,6 +107,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_SETSKILL& pkt) { return MakeSendBuffer(pkt, PKT_S_SETSKILL); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_SLOWMOTION& pkt) { return MakeSendBuffer(pkt, PKT_S_SLOWMOTION); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_CAMSHAKE& pkt) { return MakeSendBuffer(pkt, PKT_S_CAMSHAKE); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_EVENT& pkt) { return MakeSendBuffer(pkt, PKT_S_EVENT); }
 
 
 private:

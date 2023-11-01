@@ -170,6 +170,9 @@
     <ClInclude Include="..\Public\BackGround_Lobby.h" />
     <ClInclude Include="..\Public\Boss.h" />
     <ClInclude Include="..\Public\Boss_Deidara.h" />
+    <ClInclude Include="..\Public\ClientEvent.h" />
+    <ClInclude Include="..\Public\ClientEvent_ArenaStart.h" />
+    <ClInclude Include="..\Public\ClientEvent_PlayerStart.h" />
     <ClInclude Include="..\Public\ColMesh.h" />
     <ClInclude Include="..\Public\Level_Lobby.h" />
     <ClInclude Include="..\Public\LobbyUser.h" />
@@ -288,6 +291,9 @@
     <ClCompile Include="..\Private\BackGround_Lobby.cpp" />
     <ClCompile Include="..\Private\Boss.cpp" />
     <ClCompile Include="..\Private\Boss_Deidara.cpp" />
+    <ClCompile Include="..\Private\ClientEvent.cpp" />
+    <ClCompile Include="..\Private\ClientEvent_ArenaStart.cpp" />
+    <ClCompile Include="..\Private\ClientEvent_PlayerStart.cpp" />
     <ClCompile Include="..\Private\ColMesh.cpp" />
     <ClCompile Include="..\Private\Level_Lobby.cpp" />
     <ClCompile Include="..\Private\LobbyUser.cpp" />

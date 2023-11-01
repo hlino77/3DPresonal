@@ -45,6 +45,16 @@ namespace Server
 	};
 
 	enum LEVELSTATE { LOADING, INITREADY, INITSTART, INITEND, GAMEPLAY, STATEEND };
+
+	enum class EVENTSTATE { EVENTSTART, READY, EVENT, EVENTEND, SETEND, TYPEEND };
+
+	enum class EVENT
+	{
+		ARENASTART,
+		PLAYERSTART,
+		EVENTEND
+	};
+
 }
 
 extern atomic<_uint> g_iObjectID;

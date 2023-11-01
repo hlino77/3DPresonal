@@ -16,6 +16,9 @@
 #include "CollisionManager.h"
 #include "PickingMgr.h"
 #include "NavigationMgr.h"
+#include "EventMgr.h"
+#include "ClientEvent_ArenaStart.h"
+#include "ClientEvent_PlayerStart.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -25,6 +28,8 @@ CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContex
 HRESULT CLevel_Arena::Initialize()
 {
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
+
+	Ready_Events();
 
 	Send_LevelState(LEVELSTATE::INITREADY);
 	Wait_ServerLevelState(LEVELSTATE::INITSTART);
@@ -54,10 +59,13 @@ HRESULT CLevel_Arena::Initialize()
 		return E_FAIL;
 
 	Send_LevelState(LEVELSTATE::INITEND);
-	Wait_ServerLevelState(LEVELSTATE::INITEND);
 
 	if (FAILED(Ready_Player_Camera(LAYER_TYPE::LAYER_CAMERA)))
 		return E_FAIL;
+
+	Wait_ServerLevelState(LEVELSTATE::INITEND);
+
+	
 
 
 
@@ -384,6 +392,14 @@ HRESULT CLevel_Arena::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
 	}
 
 	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_Arena::Ready_Events()
+{
+	CEventMgr::GetInstance()->Add_Event(new CClientEvent_ArenaStart((_uint)EVENT::ARENASTART, m_pDevice, m_pContext));
+	CEventMgr::GetInstance()->Add_Event(new CClientEvent_PlayerStart((_uint)EVENT::PLAYERSTART, m_pDevice, m_pContext));
+
 	return S_OK;
 }
 

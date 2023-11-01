@@ -11,6 +11,9 @@
 #include "Struct.pb.h"
 #include "NavigationMgr.h"
 #include "Boss_Server.h"
+#include "EventMgr.h"
+#include "ServerEvent_ArenaStart.h"
+#include "ServerEvent_PlayerStart.h"
 
 CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
@@ -24,6 +27,7 @@ HRESULT CLevel_Arena_Server::Initialize()
 	m_iMonsterCount = 1;
 	m_iMaxMonster = 2;
 
+	Ready_Events();
 
 
 	Broadcast_LevelState(LEVELSTATE::INITREADY);
@@ -57,9 +61,12 @@ HRESULT CLevel_Arena_Server::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
 		return E_FAIL;
 
-
 	Wait_ClientLevelState(LEVELSTATE::INITEND);
+
+	CEventMgr::GetInstance()->Start_Event((_uint)EVENT::ARENASTART);
+
 	Broadcast_LevelState(LEVELSTATE::INITEND);
+
 
 	Start_Collision();
 
@@ -391,6 +398,16 @@ HRESULT CLevel_Arena_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
 	return S_OK;
 }
 
+HRESULT CLevel_Arena_Server::Ready_Events()
+{
+	CEventMgr::GetInstance()->Add_Event(new CServerEvent_ArenaStart((_uint)EVENT::ARENASTART, nullptr, nullptr));
+	CEventMgr::GetInstance()->Add_Event(new CServerEvent_PlayerStart((_uint)EVENT::PLAYERSTART, nullptr, nullptr));
+
+
+
+	return S_OK;
+}
+
 void CLevel_Arena_Server::Check_Monster()
 {
 	if (m_bBoss || m_iMonsterCount != 0)
@@ -420,7 +437,7 @@ void CLevel_Arena_Server::Check_Monster()
 
 void CLevel_Arena_Server::Spawn_Monster()
 {
-	if (m_iMonsterCount == 0)
+	if (m_bMonsterSpawn == false)
 		return;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -447,10 +464,14 @@ void CLevel_Arena_Server::Spawn_Monster()
 			--m_iMonsterCount;
 
 			if (m_iMonsterCount == 0)
+			{
+				m_bMonsterSpawn = false;
 				break;
+			}
 		}
 	
 	}
+
 	Safe_Release(pGameInstance);
 }
 

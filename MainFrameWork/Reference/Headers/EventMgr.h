@@ -5,58 +5,49 @@
 
 BEGIN(Engine)
 
-class CTransform;
-class CGameObject;
+class CEvent;
 
-class ENGINE_DLL CPickingMgr : public CBase
+class ENGINE_DLL CEventMgr : public CBase
 {
-	DECLARE_SINGLETON(CPickingMgr);
-
-public:
-	explicit CPickingMgr();
-	virtual ~CPickingMgr() = default;
-
-public:
-	HRESULT Ready_PickingMgr();
-	void	Update_PickingMgr();
-
-
-	void	Add_ColMesh(CGameObject* pObj);
-	void	Delete_ColMesh(CGameObject* pObj);
-
-	void	Set_Ray(Vec3 vRayPos, Vec3 vRayDir);
-	void	Get_Ray(Vec3& vRayPos, Vec3& vRayDir) { vRayPos = m_vRayPos; vRayDir = m_vRayDir; }
-
-
-	void	Reset();
-
-	void	Set_Stop(_bool bStop) { m_bStop = bStop; }
-	_bool	Is_Stop() { return m_bStop; }
-
-	void	Set_Player(CGameObject* pPlayer) { m_pPlayer = pPlayer; }
+	DECLARE_SINGLETON(CEventMgr);
 
 private:
-	void	Compute_LocalLayInfo(Vec3* pDir, Vec3* pRayPos, CTransform* pTransform);
+	explicit CEventMgr();
+	virtual ~CEventMgr() = default;
 
 
-	CGameObject* Find_ColMesh(CGameObject* pObj);
-public:
-	BOOL	IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle);
-
-private:
 	USE_LOCK
+public:
+	HRESULT		Reserve_EventMgr(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+	void		Tick(_float fTimeDelta);
+	void		LateTick(_float fTimeDelta);
+	HRESULT		Render();
 
 
-	Vec3 m_vRayDir;
-	Vec3 m_vRayPos;
+	HRESULT		Add_Event(CEvent* pEvent);
+	HRESULT		Start_Event(_uint iEventID);
+	HRESULT		End_Event(_uint iEventID);
 
 
 
-	list<CGameObject*> m_ColMeshList;
+	CEvent*		Get_Event(_uint iEventID);
 
-	_bool				m_bStop = false;
 
-	CGameObject*		m_pPlayer = nullptr;
+private:
+
+
+
+
+public:
+
+
+private:
+	unordered_map<_uint, CEvent*> m_Events;
+	CEvent* m_pCurrEvent = nullptr;
+
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 public:
 	virtual void Free() override;
 };

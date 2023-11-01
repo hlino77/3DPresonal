@@ -15,6 +15,7 @@
 #include "ColliderOBB.h"
 #include "CollisionManager.h"
 #include "NavigationMgr.h"
+#include "EventMgr.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -121,6 +122,8 @@ HRESULT CMainApp::Initialize_Client()
 	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
 
 	CNavigationMgr::GetInstance()->Reserve_Manager(m_pDevice, m_pContext);
+
+	CEventMgr::GetInstance()->Reserve_EventMgr(m_pDevice, m_pContext);
 	
 	// Manager Reserve
 	return S_OK;

@@ -21,6 +21,7 @@
 #include "ColliderOBB.h"
 #include "NavigationMgr.h"
 #include "Renderer.h"
+#include "EventMgr.h"
 
 
 CMainApp_Server::CMainApp_Server()
@@ -93,6 +94,8 @@ HRESULT CMainApp_Server::Initiailize_Server()
 {
 	CNavigationMgr::GetInstance()->Reserve_Manager(nullptr, nullptr);
 	CCollisionManager::GetInstance()->Reserve_Manager((_uint)LAYER_COLLIDER::LAYER_END);
+	CEventMgr::GetInstance()->Reserve_EventMgr(nullptr, nullptr);
+
 	return S_OK;
 }
 

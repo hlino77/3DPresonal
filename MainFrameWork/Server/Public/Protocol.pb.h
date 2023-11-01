@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[18]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[19]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -74,6 +74,9 @@ extern S_COLLISIONDefaultTypeInternal _S_COLLISION_default_instance_;
 class S_CREATE_OBJCECT;
 struct S_CREATE_OBJCECTDefaultTypeInternal;
 extern S_CREATE_OBJCECTDefaultTypeInternal _S_CREATE_OBJCECT_default_instance_;
+class S_EVENT;
+struct S_EVENTDefaultTypeInternal;
+extern S_EVENTDefaultTypeInternal _S_EVENT_default_instance_;
 class S_LEVEL_STATE;
 struct S_LEVEL_STATEDefaultTypeInternal;
 extern S_LEVEL_STATEDefaultTypeInternal _S_LEVEL_STATE_default_instance_;
@@ -118,6 +121,7 @@ template<> ::Protocol::S_CHARACTER_NAME* Arena::CreateMaybeMessage<::Protocol::S
 template<> ::Protocol::S_COLLIDERSTATE* Arena::CreateMaybeMessage<::Protocol::S_COLLIDERSTATE>(Arena*);
 template<> ::Protocol::S_COLLISION* Arena::CreateMaybeMessage<::Protocol::S_COLLISION>(Arena*);
 template<> ::Protocol::S_CREATE_OBJCECT* Arena::CreateMaybeMessage<::Protocol::S_CREATE_OBJCECT>(Arena*);
+template<> ::Protocol::S_EVENT* Arena::CreateMaybeMessage<::Protocol::S_EVENT>(Arena*);
 template<> ::Protocol::S_LEVEL_STATE* Arena::CreateMaybeMessage<::Protocol::S_LEVEL_STATE>(Arena*);
 template<> ::Protocol::S_LOGIN* Arena::CreateMaybeMessage<::Protocol::S_LOGIN>(Arena*);
 template<> ::Protocol::S_MATRIX* Arena::CreateMaybeMessage<::Protocol::S_MATRIX>(Arena*);
@@ -3177,6 +3181,149 @@ class S_CAMSHAKE final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_EVENT final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_EVENT) */ {
+ public:
+  inline S_EVENT() : S_EVENT(nullptr) {}
+  ~S_EVENT() override;
+  explicit constexpr S_EVENT(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_EVENT(const S_EVENT& from);
+  S_EVENT(S_EVENT&& from) noexcept
+    : S_EVENT() {
+    *this = ::std::move(from);
+  }
+
+  inline S_EVENT& operator=(const S_EVENT& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_EVENT& operator=(S_EVENT&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_EVENT& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_EVENT* internal_default_instance() {
+    return reinterpret_cast<const S_EVENT*>(
+               &_S_EVENT_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    18;
+
+  friend void swap(S_EVENT& a, S_EVENT& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_EVENT* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_EVENT* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_EVENT* New() const final {
+    return new S_EVENT();
+  }
+
+  S_EVENT* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_EVENT>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_EVENT& from);
+  void MergeFrom(const S_EVENT& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_EVENT* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_EVENT";
+  }
+  protected:
+  explicit S_EVENT(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIEventIDFieldNumber = 1,
+    kIStateFieldNumber = 2,
+  };
+  // int32 iEventID = 1;
+  void clear_ieventid();
+  ::PROTOBUF_NAMESPACE_ID::int32 ieventid() const;
+  void set_ieventid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ieventid() const;
+  void _internal_set_ieventid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 iState = 2;
+  void clear_istate();
+  ::PROTOBUF_NAMESPACE_ID::int32 istate() const;
+  void set_istate(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_istate() const;
+  void _internal_set_istate(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_EVENT)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ieventid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 istate_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -4965,9 +5112,55 @@ inline void S_CAMSHAKE::set_fshaketime(float value) {
   // @@protoc_insertion_point(field_set:Protocol.S_CAMSHAKE.fShakeTime)
 }
 
+// -------------------------------------------------------------------
+
+// S_EVENT
+
+// int32 iEventID = 1;
+inline void S_EVENT::clear_ieventid() {
+  ieventid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_EVENT::_internal_ieventid() const {
+  return ieventid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_EVENT::ieventid() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_EVENT.iEventID)
+  return _internal_ieventid();
+}
+inline void S_EVENT::_internal_set_ieventid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ieventid_ = value;
+}
+inline void S_EVENT::set_ieventid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ieventid(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_EVENT.iEventID)
+}
+
+// int32 iState = 2;
+inline void S_EVENT::clear_istate() {
+  istate_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_EVENT::_internal_istate() const {
+  return istate_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 S_EVENT::istate() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_EVENT.iState)
+  return _internal_istate();
+}
+inline void S_EVENT::_internal_set_istate(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  istate_ = value;
+}
+inline void S_EVENT::set_istate(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_istate(value);
+  // @@protoc_insertion_point(field_set:Protocol.S_EVENT.iState)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

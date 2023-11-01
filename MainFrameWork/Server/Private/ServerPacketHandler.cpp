@@ -11,6 +11,9 @@
 #include "Level_Ready_Server.h"
 #include "LobbyUser_Server.h"
 #include "ColliderOBB.h"
+#include "EventMgr.h"
+#include "ServerEvent.h"
+
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -362,6 +365,13 @@ bool Handel_S_SLOWMOTION_Server(PacketSessionRef& session, Protocol::S_SLOWMOTIO
 
 bool Handel_S_CAMSHAKE_Server(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt)
 {
+
+	return true;
+}
+
+bool Handel_S_EVENT_Server(PacketSessionRef& session, Protocol::S_EVENT& pkt)
+{
+	dynamic_cast<CServerEvent*>(CEventMgr::GetInstance()->Get_Event(pkt.ieventid()))->Set_ClientState(session->GetSessionID(), (EVENTSTATE)pkt.istate());
 
 	return true;
 }

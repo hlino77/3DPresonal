@@ -10,6 +10,7 @@
 #include "Utils.h"
 #include "Text_Manager.h"
 #include "NavigationMgr.h"
+#include "EventMgr.h"
 
 
 IMPLEMENT_SINGLETON(CGameInstance)
@@ -27,6 +28,7 @@ CGameInstance::CGameInstance()
 	, m_pKey_Manager(CKey_Manager::GetInstance())
 	, m_pText_Manager(CText_Manager::GetInstance())
 	, m_pNavigationMgr(CNavigationMgr::GetInstance())
+	, m_pEventMgr(CEventMgr::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -39,7 +41,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pKey_Manager);
 	Safe_AddRef(m_pText_Manager);
 	Safe_AddRef(m_pNavigationMgr);
-
+	Safe_AddRef(m_pEventMgr);
 
 	Safe_AddRef(m_pUtilities);
 
@@ -100,21 +102,25 @@ void CGameInstance::Tick(_float fTimeDelta)
 {
 	m_pInput_Device->Update();
 	m_pKey_Manager->Tick(fTimeDelta);
+	m_pEventMgr->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pPipeLine->Update();
 
 
+	m_pEventMgr->LateTick(fTimeDelta);
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
 }
 
 void CGameInstance::Tick_Server(_float fTimeDelta)
 {
+	m_pEventMgr->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
 
 
+	m_pEventMgr->LateTick(fTimeDelta);
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
 }

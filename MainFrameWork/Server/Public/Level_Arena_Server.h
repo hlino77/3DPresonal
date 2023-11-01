@@ -18,6 +18,10 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
 	virtual HRESULT Exit() override;
+
+
+	void			Set_MonsterSpawn(_bool bSpawn) { m_bMonsterSpawn = bSpawn; }
+
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(const LAYER_TYPE eLayerType);
@@ -36,7 +40,7 @@ private:
 	HRESULT			Broadcast_Monster(const wstring& szName, Vec3 vPos);
 	HRESULT			Broadcast_Boss(const wstring& szName, Vec3 vPos);
 
-
+	HRESULT			Ready_Events();
 
 public:
 	static class CLevel_Arena_Server* Create();
@@ -62,6 +66,10 @@ private:
 	_uint	m_iMaxMonster = 0;
 
 	_bool	m_bBoss = false;
+	
+
+	_bool	m_bMonsterSpawn = false;
+
 
 
 private:

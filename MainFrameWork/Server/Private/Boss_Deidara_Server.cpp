@@ -213,11 +213,11 @@ void CBoss_Deidara_Server::Update_NearTarget(_float fTimeDelta)
 		{
 			_float fDistance = Get_NearTargetDistance();
 
-			/*if (fDistance <= 3.0f)
+			if (fDistance <= 3.0f)
 			{
 				Set_State(L"Attack_cmb01");
 			}
-			else*/ if (fDistance <= m_fFollowDistance)
+			else if (fDistance <= m_fFollowDistance)
 			{
 				if (m_pStateMachine->Get_CurrState() != L"ChaseTarget" && fDistance > 3.0f)
 					Set_State(L"ChaseTarget");

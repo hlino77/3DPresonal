@@ -173,6 +173,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
+    <ClCompile Include="..\Private\ServerEvent.cpp" />
+    <ClCompile Include="..\Private\ServerEvent_ArenaStart.cpp" />
+    <ClCompile Include="..\Private\ServerEvent_PlayerStart.cpp" />
     <ClCompile Include="..\Private\ServerPacketHandler.cpp" />
     <ClCompile Include="..\Private\Skill_Hiryu_Server.cpp" />
     <ClCompile Include="..\Private\Skill_Server.cpp" />
@@ -237,6 +240,9 @@
     <ClInclude Include="..\Public\Monster_WhiteZetsu_Server.h" />
     <ClInclude Include="..\Public\Player_Server.h" />
     <ClInclude Include="..\Public\Protocol.pb.h" />
+    <ClInclude Include="..\Public\ServerEvent.h" />
+    <ClInclude Include="..\Public\ServerEvent_ArenaStart.h" />
+    <ClInclude Include="..\Public\ServerEvent_PlayerStart.h" />
     <ClInclude Include="..\Public\ServerPacketHandler.h" />
     <ClInclude Include="..\Public\Server_Defines.h" />
     <ClInclude Include="..\Public\Skill_Hiryu_Server.h" />
