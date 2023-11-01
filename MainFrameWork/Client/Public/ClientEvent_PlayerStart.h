@@ -36,7 +36,7 @@ protected:
 	_float m_fCurrTime = 0.0f;
 
 
-	Vec3 vEndPos;
+	Vec3 m_vEndPos;
 
 public:
 	virtual void Free();

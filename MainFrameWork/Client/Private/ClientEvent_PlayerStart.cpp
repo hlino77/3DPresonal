@@ -47,9 +47,9 @@ void CClientEvent_PlayerStart::Enter_Event()
 	Vec3 vAt = vStartPos + Vec3(0.0f, 0.0f, -1.0f);
 
 	
-	Vec3 vEndPos = Players.front()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_vEndPos = Players.front()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 
-	vEndPos += Vec3(0.0f, 1.0f, 2.0f);
+	m_vEndPos += Vec3(0.0f, 1.0f, 2.0f);
 
 	m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vStartPos);
 	m_pCamera->Get_TransformCom()->LookAt_ForLandObject(vAt);
@@ -100,8 +100,11 @@ void CClientEvent_PlayerStart::Tick(_float fTimeDelta)
 	{
 		Vec3 vPos = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 
-		if (vPos.x <= vEndPos.x)
+		if (vPos.x <= m_vEndPos.x)
 		{
+			vPos.x = m_vEndPos.x;
+			m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
+
 			m_fCurrTime += fTimeDelta;
 			if (m_fCurrTime >= m_fCameraTime)
 			{
