@@ -59,6 +59,15 @@ HRESULT CLevel_Arena::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
 		return E_FAIL;
 
+	while (true)
+	{
+		CPlayer* pPlayer = CServerSessionManager::GetInstance()->Get_Player();
+		if (pPlayer)
+			break;
+	}
+	
+
+
 	Send_LevelState(LEVELSTATE::INITEND);
 
 	if (FAILED(Ready_Player_Camera(LAYER_TYPE::LAYER_CAMERA)))
