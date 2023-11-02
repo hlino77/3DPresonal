@@ -21,7 +21,7 @@ HRESULT CRenderer::Initialize_Prototype()
 
 
 		// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
-		BufferDesc.ByteWidth = sizeof(VTXINSTANCE) * 300;
+		BufferDesc.ByteWidth = sizeof(VTXINSTANCE) * 500;
 		BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
 		BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -32,11 +32,12 @@ HRESULT CRenderer::Initialize_Prototype()
 
 		vector<Matrix> InitMatrix;
 
-		InitMatrix.resize(300, XMMatrixIdentity());
+		InitMatrix.resize(500, XMMatrixIdentity());
 
 		InitialData.pSysMem = InitMatrix.data();
 
-		m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pInstanceBuffer);
+		if(FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pInstanceBuffer)))
+			return E_FAIL;
 	}
 	
 	return S_OK;
@@ -58,6 +59,13 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 		Safe_AddRef(pGameObject);
 		return S_OK;
 	}
+	else if (eRenderGroup == RENDERGROUP::RENDER_EFFECT_INSTANCE)
+	{
+		m_EffectInstance[pGameObject->Get_ModelName()].push_back(pGameObject);
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
+
 
 
 	m_RenderObjects[eRenderGroup].push_back(pGameObject);
@@ -76,6 +84,7 @@ HRESULT CRenderer::Draw()
 	Render_Blend();
 	Render_NonLight();
 	Render_AlphaBlend();
+	Render_EffectInstance();
 	Render_UI();
 
 	return S_OK;
@@ -98,7 +107,7 @@ HRESULT CRenderer::Render_StaticInstance()
 {
 	for (auto& iter : m_StaticInstance)
 	{
-		Render_Instancing(iter.first);
+		Render_ModelInstancing(iter.first);
 		iter.second.clear();
 	}
 
@@ -170,6 +179,20 @@ HRESULT CRenderer::Render_AlphaBlend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_EffectInstance()
+{
+	for (auto& iter : m_EffectInstance)
+	{
+		if (!iter.second.empty())
+		{
+			Render_EffectInstancing(iter.first);
+			iter.second.clear();
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_UI()
 {
 	for (auto& iter : m_RenderObjects[RENDERGROUP::RENDER_UI])
@@ -183,14 +206,14 @@ HRESULT CRenderer::Render_UI()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Instancing(const wstring& szModelName)
+HRESULT CRenderer::Render_ModelInstancing(const wstring& szModelName)
 {
 	if (nullptr == m_pInstanceShader)
 		return S_OK;
 
 
 	vector<Matrix> WorldMatrix;
-	WorldMatrix.reserve(300);
+	WorldMatrix.reserve(500);
 
 	for (auto& Model : m_StaticInstance[szModelName])
 	{
@@ -199,7 +222,7 @@ HRESULT CRenderer::Render_Instancing(const wstring& szModelName)
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
 
-	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 
 	memcpy(SubResource.pData, WorldMatrix.data(), sizeof(Matrix) * WorldMatrix.size());
 
@@ -234,6 +257,29 @@ HRESULT CRenderer::Render_Instancing(const wstring& szModelName)
 
 	Safe_Release(pGameInstance);
 
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_EffectInstancing(const wstring& szModelName)
+{
+	vector<Matrix> WorldMatrix;
+	WorldMatrix.reserve(500);
+
+	for (auto& Object : m_EffectInstance[szModelName])
+	{
+		Object->Add_InstanceData(WorldMatrix);
+	}
+
+	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
+
+	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	memcpy(SubResource.pData, WorldMatrix.data(), sizeof(Matrix) * WorldMatrix.size());
+
+	m_pContext->Unmap(m_pInstanceBuffer, 0);
+
+	m_EffectInstance[szModelName].front()->Render_Instance(m_pInstanceBuffer, WorldMatrix.size());
 
 	return S_OK;
 }

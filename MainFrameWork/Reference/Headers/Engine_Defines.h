@@ -14,6 +14,8 @@
 
 #endif
 
+#include <random>
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <FX11/d3dx11effect.h>

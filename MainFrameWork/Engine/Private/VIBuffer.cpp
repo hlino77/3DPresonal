@@ -90,7 +90,7 @@ HRESULT CVIBuffer::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize)
 
 	/* 버텍스 버퍼들을 할당한다. */
 	/* 그리기용 정점버퍼 + 상태변환용 정점버퍼 */
-	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
+	m_pContext->IASetVertexBuffers(0, 2, pVertexBuffers, iStrides, iOffsets);
 
 	/* 인덱스 버퍼를 할당한다. */
 	/* 그리고자 하는 인스턴스의 갯수만큼 확대되어있는 인덱스 버퍼. */

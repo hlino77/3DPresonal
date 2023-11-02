@@ -6,6 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Camera_Player.h"
+#include "LineCircle.h"
 
 CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)

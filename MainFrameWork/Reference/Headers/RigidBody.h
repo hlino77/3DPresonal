@@ -41,6 +41,9 @@ public:
 
 	_bool	UseGravity()	const						{ return m_UseGravity; }
 	void	UseGravity(_bool UseGravity);
+
+	void	Set_Gravity(_bool bGravity) { m_UseGravity = bGravity; }
+
 	_bool	IsKinematic()	const						{ return m_IsKinematic; }
 	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
 

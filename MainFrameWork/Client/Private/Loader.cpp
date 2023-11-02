@@ -34,6 +34,7 @@
 #include "UI_Hits.h"
 #include "UI_SP_Base.h"
 #include "UI_HP_Base.h"
+#include "LineCircle.h"
 
 
 
@@ -187,6 +188,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_GaugeMask.png"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Circle"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Circle.png"))))
+		return E_FAIL;
+
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
@@ -254,6 +259,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HP_Base"), CUI_HP_Base::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LineCircle"),
+		CLineCircle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

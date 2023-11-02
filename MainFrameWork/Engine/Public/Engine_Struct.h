@@ -258,11 +258,34 @@ namespace Engine
 	}VTXINSTANCE;
 
 
+	typedef struct ENGINE_DLL tagVertex_Effect_Instance
+	{
+		XMFLOAT4		vTranslation;
+		XMFLOAT4		vDirection;
+		XMFLOAT4		vScale;
+		XMFLOAT4		vColor;
+
+
+		/* 셰이더에 이러한 정점이 잘 들어가냐? 라는 검증을 위해 */
+		/* 이 정점 뿐만아니라 그리기용 정점도 같이 받아야되지. */
+		/*static const unsigned int				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];*/
+	}VTXINSTANCE_EFFECT;
+
+
 	typedef struct ENGINE_DLL tagVertex_Model_Instance
 	{
 		static const unsigned int				iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTX_MODEL_INSTANCE;
+
+
+
+	typedef struct ENGINE_DLL tagVertex_LineCircle_Instance
+	{
+		static const unsigned int				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTX_LINECIRCLE_INSTANCE;
 
 }
 

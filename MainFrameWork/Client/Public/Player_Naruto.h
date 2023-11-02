@@ -3,6 +3,8 @@
 
 BEGIN(Client)
 
+class CLineCircle;
+
 class CPlayer_Naruto : public CPlayer
 {
 private:
@@ -26,12 +28,18 @@ public:
 	void				Send_PlayerInfo();
 
 	void				Set_Colliders(_float fTimeDelta);
+
+
+	void				Effect_Temp();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();
 	HRESULT			Ready_Coliders();
 private:
 	_float	m_fSendInfoTime = 0.0f;
+
+
+	vector<CLineCircle*> m_Effects;
 
 public:
 	static CPlayer_Naruto* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

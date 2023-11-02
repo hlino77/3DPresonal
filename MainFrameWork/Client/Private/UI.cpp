@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UI.h"
-
+#include "VIBuffer_Point.h"
 #include "GameInstance.h"
 
 CUI::CUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
