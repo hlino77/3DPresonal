@@ -19,6 +19,7 @@
 #include "EventMgr.h"
 #include "ClientEvent_ArenaStart.h"
 #include "ClientEvent_PlayerStart.h"
+#include "ClientEvent_BattleStart.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -190,6 +191,19 @@ HRESULT CLevel_Arena::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 			return E_FAIL;
 
 	} */
+
+
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_BattleStart")))
+		return E_FAIL;
+
+
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_SP_Base")))
+		return E_FAIL;
+
+
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_HP_Base")))
+		return E_FAIL;
+
 
 	Safe_Release(pGameInstance);
 
@@ -399,6 +413,7 @@ HRESULT CLevel_Arena::Ready_Events()
 {
 	CEventMgr::GetInstance()->Add_Event(new CClientEvent_ArenaStart((_uint)EVENT::ARENASTART, m_pDevice, m_pContext));
 	CEventMgr::GetInstance()->Add_Event(new CClientEvent_PlayerStart((_uint)EVENT::PLAYERSTART, m_pDevice, m_pContext));
+	CEventMgr::GetInstance()->Add_Event(new CClientEvent_BattleStart((_uint)EVENT::BATTLESTART, m_pDevice, m_pContext));
 
 	return S_OK;
 }

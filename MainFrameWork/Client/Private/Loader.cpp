@@ -30,6 +30,11 @@
 #include "Monster_C2Dragon.h"
 #include "Skill_Hiryu.h"
 #include "Skill_TwinBird.h"
+#include "UI_BattleStart.h"
+#include "UI_Hits.h"
+#include "UI_SP_Base.h"
+#include "UI_HP_Base.h"
+
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -132,8 +137,6 @@ HRESULT CLoader::Loading_For_Level_Logo()
 		return E_FAIL;
 
 
-
-
 	Safe_Release(pGameInstance);
 
 	m_strLoading = TEXT("로딩 끝.");
@@ -151,6 +154,39 @@ HRESULT CLoader::Loading_For_Level_Arena()
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
 	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_BattleStart"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/BattleStart.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HitCount"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HitCount_%d.png", 10))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Hit"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Hit_%d.png", 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_SP_Base"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/SP_Base.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_Base"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_Base.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_Back"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_Back.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_Gauge"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_Gauge.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_GaugeMask"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_GaugeMask.png"))))
+		return E_FAIL;
+
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
@@ -205,6 +241,19 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_TwinBird"),
 		CSkill_TwinBird::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleStart"), CUI_BattleStart::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Hits"), CUI_Hits::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SP_Base"), CUI_SP_Base::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HP_Base"), CUI_HP_Base::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

@@ -5,11 +5,11 @@ BEGIN(Server)
 
 class CLevel_Arena_Server;
 
-class CServerEvent_ArenaStart : public CServerEvent
+class CServerEvent_BattleStart : public CServerEvent
 {
 public:
-	CServerEvent_ArenaStart(_uint iID, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CServerEvent_ArenaStart() = default;
+	CServerEvent_BattleStart(_uint iID, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CLevel_Arena_Server* pLevel);
+	virtual ~CServerEvent_BattleStart() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -22,11 +22,11 @@ public:
 	virtual HRESULT Render() override;
 protected:
 	EVENTSTATE eState;
+	CLevel_Arena_Server* m_pLevel = nullptr;
 
 
-
-
-
+	_float m_fDelayTime = 0.0f;
+	_bool m_bEnd = false;
 public:
 	virtual void Free();
 

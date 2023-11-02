@@ -41,8 +41,7 @@ void CServerEvent_PlayerStart::Tick(_float fTimeDelta)
 {
 	if (Check_ClientState(EVENTSTATE::EVENTEND))
 	{
-		Send_State(EVENTSTATE::SETEND);
-		CEventMgr::GetInstance()->End_Event(m_iEventID);
+		CEventMgr::GetInstance()->Start_Event((_uint)EVENT::BATTLESTART);
 	}
 }
 

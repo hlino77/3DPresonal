@@ -14,6 +14,9 @@
 #include "EventMgr.h"
 #include "ServerEvent_ArenaStart.h"
 #include "ServerEvent_PlayerStart.h"
+#include "ServerEvent_BattleStart.h"
+
+
 
 CLevel_Arena_Server::CLevel_Arena_Server()
 	: CLevel(nullptr, nullptr)
@@ -407,6 +410,7 @@ HRESULT CLevel_Arena_Server::Ready_Events()
 {
 	CEventMgr::GetInstance()->Add_Event(new CServerEvent_ArenaStart((_uint)EVENT::ARENASTART, nullptr, nullptr));
 	CEventMgr::GetInstance()->Add_Event(new CServerEvent_PlayerStart((_uint)EVENT::PLAYERSTART, nullptr, nullptr));
+	CEventMgr::GetInstance()->Add_Event(new CServerEvent_BattleStart((_uint)EVENT::BATTLESTART, nullptr, nullptr, this));
 
 
 
@@ -508,6 +512,7 @@ Vec3 CLevel_Arena_Server::Find_MonsterSpawnPos()
 			vOffset = XMVector3Rotate(vOffset, Quaternion::CreateFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), XMConvertToRadians(fAngle)));
 
 			vPos = vPlayerPos + vOffset;
+			vPos.y = 0.0f;
 		}
 	}
 

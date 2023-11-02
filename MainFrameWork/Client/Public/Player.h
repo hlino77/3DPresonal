@@ -18,6 +18,9 @@ END
 
 
 BEGIN(Client)
+
+class CUI_Hits;
+
 class CPlayer : public CGameObject
 {
 public:
@@ -107,7 +110,7 @@ public:
 	void			Body_Collision(CGameObject* pObject);
 	void			Hit_Attack(CCollider* pCollider);
 
-
+	void			Add_Hit();
 	
 
 protected:
@@ -117,7 +120,7 @@ protected:
 
 protected:
 	class CCamera_Player*			m_pCamera = nullptr;
-
+	class CUI_Hits*					m_pHitUI = nullptr;
 	
 
 	_float							m_fMoveSpeed = 0.0f;

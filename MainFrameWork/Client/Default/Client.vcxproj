@@ -172,6 +172,7 @@
     <ClInclude Include="..\Public\Boss_Deidara.h" />
     <ClInclude Include="..\Public\ClientEvent.h" />
     <ClInclude Include="..\Public\ClientEvent_ArenaStart.h" />
+    <ClInclude Include="..\Public\ClientEvent_BattleStart.h" />
     <ClInclude Include="..\Public\ClientEvent_PlayerStart.h" />
     <ClInclude Include="..\Public\ColMesh.h" />
     <ClInclude Include="..\Public\Level_Lobby.h" />
@@ -272,12 +273,16 @@
     <ClInclude Include="..\Public\StaticModel.h" />
     <ClInclude Include="..\Public\Struct.pb.h" />
     <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_BattleStart.h" />
     <ClInclude Include="..\Public\UI_CharacterSelect.h" />
+    <ClInclude Include="..\Public\UI_Hits.h" />
+    <ClInclude Include="..\Public\UI_HP_Base.h" />
     <ClInclude Include="..\Public\UI_NickName.h" />
     <ClInclude Include="..\Public\UI_NickNameInput.h" />
     <ClInclude Include="..\Public\UI_PlayerInfo.h" />
     <ClInclude Include="..\Public\UI_PlayerWindow.h" />
     <ClInclude Include="..\Public\UI_PlayerWindowTitle.h" />
+    <ClInclude Include="..\Public\UI_SP_Base.h" />
     <ClInclude Include="..\Public\UI_Title.h" />
     <ClInclude Include="..\Public\UI_TitleCloud.h" />
     <ClInclude Include="..\Public\UI_TitleSymbol.h" />
@@ -293,6 +298,7 @@
     <ClCompile Include="..\Private\Boss_Deidara.cpp" />
     <ClCompile Include="..\Private\ClientEvent.cpp" />
     <ClCompile Include="..\Private\ClientEvent_ArenaStart.cpp" />
+    <ClCompile Include="..\Private\ClientEvent_BattleStart.cpp" />
     <ClCompile Include="..\Private\ClientEvent_PlayerStart.cpp" />
     <ClCompile Include="..\Private\ColMesh.cpp" />
     <ClCompile Include="..\Private\Level_Lobby.cpp" />
@@ -401,12 +407,16 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_BattleStart.cpp" />
     <ClCompile Include="..\Private\UI_CharacterSelect.cpp" />
+    <ClCompile Include="..\Private\UI_Hits.cpp" />
+    <ClCompile Include="..\Private\UI_HP_Base.cpp" />
     <ClCompile Include="..\Private\UI_NickName.cpp" />
     <ClCompile Include="..\Private\UI_NickNameInput.cpp" />
     <ClCompile Include="..\Private\UI_PlayerInfo.cpp" />
     <ClCompile Include="..\Private\UI_PlayerWindow.cpp" />
     <ClCompile Include="..\Private\UI_PlayerWindowTitle.cpp" />
+    <ClCompile Include="..\Private\UI_SP_Base.cpp" />
     <ClCompile Include="..\Private\UI_Title.cpp" />
     <ClCompile Include="..\Private\UI_TitleCloud.cpp" />
     <ClCompile Include="..\Private\UI_TitleSymbol.cpp" />
@@ -428,6 +438,7 @@
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtx_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
   </ItemGroup>

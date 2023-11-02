@@ -56,7 +56,7 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
 	CVIBuffer_Rect*			m_pVIBufferCom = { nullptr };
-	CTransform*				m_pTransformCom = { nullptr };
+
 
 protected:
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;

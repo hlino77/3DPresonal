@@ -56,6 +56,7 @@ namespace Client
 	{
 		ARENASTART,
 		PLAYERSTART,
+		BATTLESTART,
 		EVENTEND
 	};
 

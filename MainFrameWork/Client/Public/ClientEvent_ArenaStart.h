@@ -30,6 +30,16 @@ protected:
 
 	_bool m_bEnd = false;
 	_float m_fDelayTime = 0.0f;
+
+private:
+	Vec3 m_vTargetPos[3];
+	Vec3 m_vAt;
+	_float m_fSpeed;
+	_float m_fLerp;
+
+
+	_float m_fCameraTime = 0.0f;
+
 public:
 	virtual void Free();
 };

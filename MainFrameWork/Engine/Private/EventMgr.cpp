@@ -49,6 +49,12 @@ HRESULT CEventMgr::Start_Event(_uint iEventID)
 	if (iEventID >= m_Events.size())
 		return E_FAIL;
 
+	if (m_pCurrEvent)
+	{
+		m_pCurrEvent->Exit_Event();
+		m_pCurrEvent = nullptr;
+	}
+
 	m_pCurrEvent = m_Events[iEventID];
 	m_pCurrEvent->Enter_Event();
 

@@ -68,7 +68,7 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Set_State(L"Jump");
 		return;
 	}
-		
+
 }
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)

@@ -42,7 +42,6 @@ void CServerEvent_ArenaStart::Tick(_float fTimeDelta)
 {
 	if (Check_ClientState(EVENTSTATE::EVENTEND))
 	{
-		Send_State(EVENTSTATE::SETEND);
 		CEventMgr::GetInstance()->Start_Event((_uint)EVENT::PLAYERSTART);
 	}
 }

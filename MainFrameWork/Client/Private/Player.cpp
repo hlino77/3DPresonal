@@ -13,6 +13,10 @@
 #include "Struct.pb.h"
 #include "NavigationMgr.h"
 #include "Skill.h"
+#include "UI_Hits.h"
+
+
+
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -48,6 +52,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Reset_Triangle();
 
 	CNavigationMgr::GetInstance()->Find_FirstCell(this);
+
+
+	if (m_bControl)
+	{
+		m_pHitUI = dynamic_cast<CUI_Hits*>(CGameInstance::GetInstance()->Add_GameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_Hits")));
+
+		if (m_pHitUI == nullptr)
+			return E_FAIL;
+	}
 
     return S_OK;
 }
@@ -372,6 +385,12 @@ void CPlayer::Hit_Attack(CCollider* pCollider)
 	}
 	
 	Set_SlowMotion(pCollider->Get_SlowMotion());
+}
+
+void CPlayer::Add_Hit()
+{
+	if (m_bControl)
+		m_pHitUI->Add_Hit();
 }
 
 void CPlayer::Set_SlowMotion(_bool bSlow)

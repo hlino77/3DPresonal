@@ -7,10 +7,12 @@
 
 BEGIN(Engine)
 
+class CShader;
+
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, RENDER_NONBLEND, RENDER_BLEND, RENDER_ALPHABLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, INSTANCE_STATIC, RENDER_NONBLEND, RENDER_BLEND, RENDER_ALPHABLEND, RENDER_UI, RENDER_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
@@ -25,13 +27,11 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Draw();
 
-private:
-	class CShader* m_pShader = { nullptr };
-
 
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonAlphaBlend();
+	HRESULT Render_StaticInstance();
 	HRESULT Render_Lights();
 	HRESULT Render_Blend();
 	HRESULT Render_NonLight();
@@ -39,7 +39,18 @@ private:
 	HRESULT Render_UI();
 
 private:
+	HRESULT Render_Instancing(const wstring& szModelName);
+
+
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
+	unordered_map<wstring, list<class CGameObject*>> m_StaticInstance;
+
+
+private:
+	
+	CShader* m_pInstanceShader = nullptr;
+
+	ID3D11Buffer* m_pInstanceBuffer = nullptr;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

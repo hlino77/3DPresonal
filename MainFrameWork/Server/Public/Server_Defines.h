@@ -52,6 +52,7 @@ namespace Server
 	{
 		ARENASTART,
 		PLAYERSTART,
+		BATTLESTART,
 		EVENTEND
 	};
 

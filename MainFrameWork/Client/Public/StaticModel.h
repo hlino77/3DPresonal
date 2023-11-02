@@ -1,12 +1,12 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Renderer.h"
 
 BEGIN(Engine)
 class CModel;
 class CShader;
 class CTexture;
-class CRenderer;
 class CTransform;
 class CPipeLine;
 END
@@ -54,7 +54,7 @@ private: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CRenderer* m_pRendererCom = nullptr;
 
 private:
-
+	CRenderer::RENDERGROUP m_eRenderGroup;
 
 
 private:

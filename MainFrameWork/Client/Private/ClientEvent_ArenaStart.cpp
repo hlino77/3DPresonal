@@ -27,6 +27,14 @@ HRESULT CClientEvent_ArenaStart::Initialize()
 
 	m_pCamera = dynamic_cast<CCamera_Free*>(pCamera);
 
+
+	m_vAt = Vec3(45.0f, 30.0f, -45.0f);
+	m_vTargetPos[0] = Vec3(16.0f, 67.0f, 50.0f);
+	m_vTargetPos[1] = Vec3(-16.0f, 56.0f, 55.0f);
+	m_vTargetPos[2] = Vec3(-40.0f, 40.0f, 20.0f);
+
+	m_fSpeed = 0.4f;
+
 	return S_OK;
 }
 
@@ -64,7 +72,7 @@ void CClientEvent_ArenaStart::Enter_Event()
 	}
 
 
-	m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, Vec3(0.0f, 50.0f, 0.0f));
+	m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vTargetPos[0]);
 	
 	Send_State(EVENTSTATE::READY);
 	m_iState = (_uint)EVENTSTATE::READY;
@@ -73,6 +81,9 @@ void CClientEvent_ArenaStart::Enter_Event()
 	m_pCamera->Set_Active(true);
 	m_fDelayTime = 1.0f;
 	m_bEnd = false;
+	m_fLerp = 0.0f;
+
+	m_fCameraTime = 3.0f;
 }
 
 void CClientEvent_ArenaStart::Exit_Event()
@@ -91,6 +102,27 @@ void CClientEvent_ArenaStart::Tick(_float fTimeDelta)
 	if (m_iState != (_uint)EVENTSTATE::EVENT)
 		return;
 
+
+	_float fSpeed = (m_fSpeed * fTimeDelta) * (1.0f - m_fLerp);
+
+	m_fLerp += fSpeed;
+
+	if (m_fLerp > 1.0f)
+		m_fLerp = 1.0f;
+
+
+	Vec3 vPos = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+
+
+	Vec3 vTargetPos1 = Vec3::Lerp(m_vTargetPos[0], m_vTargetPos[1], m_fLerp);
+	Vec3 vTargetPos2 = Vec3::Lerp(m_vTargetPos[1], m_vTargetPos[2], m_fLerp);
+	Vec3 vResultPos = Vec3::Lerp(vTargetPos1, vTargetPos2, m_fLerp);
+
+
+	m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vResultPos);
+	m_pCamera->Get_TransformCom()->LookAt(m_vAt);
+	
+
 	if (m_bEnd)
 	{
 		m_fDelayTime -= fTimeDelta;
@@ -103,12 +135,9 @@ void CClientEvent_ArenaStart::Tick(_float fTimeDelta)
 		return;
 	}
 
+	m_fCameraTime -= fTimeDelta;
 
-	Vec3 vPos = m_pCamera->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
-
-	vPos.y -= 10.0f * fTimeDelta;
-
-	if (vPos.y <= 10.0f)
+	if (m_fCameraTime <= 0.0f)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
@@ -120,18 +149,10 @@ void CClientEvent_ArenaStart::Tick(_float fTimeDelta)
 			Player->Set_Active(true);
 		}
 
-		m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
-
 		Safe_Release(pGameInstance);
 
 		m_bEnd = true;
 	}
-	else
-	{
-		m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
-
-	}
-		
 
 
 }

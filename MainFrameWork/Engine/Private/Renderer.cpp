@@ -1,5 +1,7 @@
 #include "..\Public\Renderer.h"
 #include "GameObject.h"
+#include "Shader.h"
+#include "GameInstance.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -8,6 +10,35 @@ CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CRenderer::Initialize_Prototype()
 {
+	if (m_pDevice)
+	{
+		m_pInstanceShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_Instance.hlsl"), VTX_MODEL_INSTANCE::Elements, VTX_MODEL_INSTANCE::iNumElements);
+
+
+		D3D11_BUFFER_DESC			BufferDesc;
+
+		ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+
+		// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
+		BufferDesc.ByteWidth = sizeof(VTXINSTANCE) * 300;
+		BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+		BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		BufferDesc.MiscFlags = 0;
+		BufferDesc.StructureByteStride = sizeof(VTXINSTANCE);
+
+		D3D11_SUBRESOURCE_DATA		InitialData;
+
+		vector<Matrix> InitMatrix;
+
+		InitMatrix.resize(300, XMMatrixIdentity());
+
+		InitialData.pSysMem = InitMatrix.data();
+
+		m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pInstanceBuffer);
+	}
+	
 	return S_OK;
 }
 
@@ -21,6 +52,14 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 	if (eRenderGroup >= RENDER_END)
 		return E_FAIL;
 
+	if (eRenderGroup == RENDERGROUP::INSTANCE_STATIC)
+	{
+		m_StaticInstance[pGameObject->Get_ModelName()].push_back(pGameObject);
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
+
+
 	m_RenderObjects[eRenderGroup].push_back(pGameObject);
 
 	Safe_AddRef(pGameObject);
@@ -32,6 +71,7 @@ HRESULT CRenderer::Draw()
 {
 	Render_Priority();
 	Render_NonAlphaBlend();
+	Render_StaticInstance();
 	Render_Lights();
 	Render_Blend();
 	Render_NonLight();
@@ -50,6 +90,17 @@ HRESULT CRenderer::Render_Priority()
 		Safe_Release(iter);
 	}
 	m_RenderObjects[RENDER_PRIORITY].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_StaticInstance()
+{
+	for (auto& iter : m_StaticInstance)
+	{
+		Render_Instancing(iter.first);
+		iter.second.clear();
+	}
 
 	return S_OK;
 }
@@ -131,6 +182,62 @@ HRESULT CRenderer::Render_UI()
 
 	return S_OK;
 }
+
+HRESULT CRenderer::Render_Instancing(const wstring& szModelName)
+{
+	if (nullptr == m_pInstanceShader)
+		return S_OK;
+
+
+	vector<Matrix> WorldMatrix;
+	WorldMatrix.reserve(300);
+
+	for (auto& Model : m_StaticInstance[szModelName])
+	{
+		WorldMatrix.push_back(Model->Get_TransformCom()->Get_WorldMatrix());
+	}
+
+	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
+
+	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	memcpy(SubResource.pData, WorldMatrix.data(), sizeof(Matrix) * WorldMatrix.size());
+
+	m_pContext->Unmap(m_pInstanceBuffer, 0);
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	if (FAILED(m_pInstanceShader->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
+		return S_OK;
+	if (FAILED(m_pInstanceShader->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	CModel* pModel = m_StaticInstance[szModelName].front()->Get_ModelCom();
+
+	_uint		iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(pModel->SetUp_OnShader(m_pInstanceShader, pModel->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;
+
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;*/
+
+
+		if (FAILED(pModel->Render_Instance(m_pInstanceBuffer, WorldMatrix.size(), m_pInstanceShader, i)))
+			return S_OK;
+	}
+
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
+}
+
 
 CRenderer * CRenderer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

@@ -29,6 +29,11 @@ HRESULT CStaticModel::Initialize(void* pArg)
 		return E_FAIL;
 
 	
+	if (m_szModelName == L"SM_ENV_TCHEXA_Tree_A")
+		m_eRenderGroup = CRenderer::RENDERGROUP::INSTANCE_STATIC;
+	else
+		m_eRenderGroup = CRenderer::RENDERGROUP::RENDER_NONBLEND;
+
 
     return S_OK;
 }
@@ -44,7 +49,7 @@ void CStaticModel::LateTick(_float fTimeDelta)
 		return;
 
 	if(m_bRender)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 }
 
 HRESULT CStaticModel::Render()

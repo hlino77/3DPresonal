@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Camera_Player.h"
 #include "Camera_Free.h"
+#include "UI_SP_Base.h"
+#include "UI_HP_Base.h"
 
 CClientEvent_PlayerStart::CClientEvent_PlayerStart(_uint iID, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CClientEvent(iID, pDevice, pContext)
@@ -75,6 +77,14 @@ void CClientEvent_PlayerStart::Exit_Event()
 	Safe_AddRef(pGameInstance);
 
 	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Set_Active(true);
+
+
+	CUI_SP_Base* pSPBase = dynamic_cast<CUI_SP_Base*>(pGameInstance->GetInstance()->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"SP_Base"));
+	pSPBase->Appear();
+
+	CUI_HP_Base* pHPBase = dynamic_cast<CUI_HP_Base*>(pGameInstance->GetInstance()->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"HP_Base"));
+	pHPBase->Appear();
+
 
 	m_pCamera->Set_Active(false);
 

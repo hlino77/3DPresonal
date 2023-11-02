@@ -120,6 +120,8 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 				m_pCamera->Cam_Shake(0.001f, 0.1f);
 			else if (pOther->Get_AttackType() == (_uint)COLLIDER_ATTACK::SPINBLOWDOWN)
 				m_pCamera->Cam_Shake(0.002f, 0.15f);
+
+			Add_Hit();
 		}
 		return;
 	}

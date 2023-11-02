@@ -22,7 +22,6 @@ public:
 	virtual HRESULT Render() override;
 protected:
 	EVENTSTATE eState;
-	map<_uint, EVENTSTATE> m_ClientEventState;
 
 
 public:

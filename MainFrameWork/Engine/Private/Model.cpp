@@ -327,6 +327,17 @@ HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 }
 
 
+HRESULT CModel::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
+{
+	pShader->Begin(0);
+
+	m_Meshes[iMeshIndex]->Render_Instance(pInstanceBuffer, iSize);
+
+	return S_OK;
+}
+
+
+
 HRESULT CModel::Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient, _bool bColMesh)
 {
 	m_strFileName = pFileName;

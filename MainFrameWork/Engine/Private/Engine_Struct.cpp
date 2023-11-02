@@ -44,46 +44,18 @@ namespace Engine
 
 	};
 
-	//const D3D11_INPUT_ELEMENT_DESC VTXRECTINSTANCE_DECLARATION::Elements[] = {
-	//	/* 그리기위한 정점. */
-	//	/* 인스턴스하나(사각형)를 그리기위해 이 정보는 여섯번 VS_IN에 전달된다. */
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-	//	/* 인스턴스당 상태를 표현해주기위한 인스턴스데이터.  */
-	//	/* 마지막인자 : 인스턴스당(DrawIndexedInstance함수의 첫번째인자 == 인스턴스하나는 몇개의 인덱스를 사용하는지(6)) 한번씩 전달된다. */
-	//	/* 인스턴스하나(사각형)를 그리기위해 이 정보는 한번 VS_IN에 전달된다. */
-	//	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	const D3D11_INPUT_ELEMENT_DESC VTX_MODEL_INSTANCE::Elements[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }, /* 위치벡터에 대한 묘사. */
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }, /* 노말벡터에 대한 묘사. */
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },	/* 텍스쿠드 벡터에 대한 묘사. */
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },	/* 텍스쿠드 벡터에 대한 묘사. */
 
-
-	//};
-
-	//const D3D11_INPUT_ELEMENT_DESC VTXPOINTINSTANCE_DECLARATION::Elements[] = {
-	//	/* 그리기위한 정점. */
-	//	/* 인스턴스하나(사각형)를 그리기위해 이 정보는 여섯번 VS_IN에 전달된다. */
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//	{ "PSIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-
-	//	/* 인스턴스당 상태를 표현해주기위한 인스턴스데이터.  */
-	//	/* 마지막인자 : 인스턴스당(DrawIndexedInstance함수의 첫번째인자 == 인스턴스하나는 몇개의 인덱스를 사용하는지(6)) 한번씩 전달된다. */
-	//	/* 인스턴스하나(사각형)를 그리기위해 이 정보는 한번 VS_IN에 전달된다. */
-	//	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	//	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-
-
-	//};
-
-
-
-
-
-
-
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },	/* 인스턴스 버퍼 정점(행렬)의 Right. */
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },	/* 인스턴스 버퍼 정점(행렬)의 Up.*/
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },	/* 인스턴스 버퍼 정점(행렬)의 Look. */
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },	/* 인스턴스 버퍼 정점(행렬)의 Translation. */
+	};
 
 
 }
