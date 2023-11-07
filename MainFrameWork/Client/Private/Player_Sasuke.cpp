@@ -29,6 +29,7 @@
 #include "State_Sasuke_FallBehind.h"
 #include "State_Sasuke_GetUp.h"
 #include "State_Sasuke_DownToFloor.h"
+#include "PhysXMgr.h"
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -106,7 +107,9 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
-		CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+		if (m_bControl)
+			CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+		CPhysXMgr::GetInstance()->Add_ColMesh(m_iObjectID, pOther->Get_Owner()->Get_ModelName());
 		return;
 	}
 
@@ -156,7 +159,9 @@ void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
-		CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+		if (m_bControl)
+			CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+		CPhysXMgr::GetInstance()->Delete_ColMesh(m_iObjectID, pOther->Get_Owner()->Get_ModelName());
 		return;
 	}
 

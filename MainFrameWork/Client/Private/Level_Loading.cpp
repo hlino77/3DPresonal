@@ -7,6 +7,7 @@
 #include "Level_Logo.h"
 #include "Level_Arena.h"
 #include "Level_Lobby.h"
+#include "Level_Konoha.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -18,6 +19,11 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevel, const wstring& szBackGruo
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
+	CLevel* pLevel = pGameInstance->Get_CurrLevel();
+	if (pLevel)
+		pLevel->Exit();
+
 
 	m_eNextLevel = eNextLevel;
 
@@ -75,6 +81,9 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 			break;
 		case LEVEL_ARENA:
 			pNewLevel = CLevel_Arena::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL_KONOHA:
+			pNewLevel = CLevel_Konoha::Create(m_pDevice, m_pContext);
 			break;
 		}
 

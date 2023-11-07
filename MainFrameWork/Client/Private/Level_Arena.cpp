@@ -20,6 +20,8 @@
 #include "ClientEvent_ArenaStart.h"
 #include "ClientEvent_PlayerStart.h"
 #include "ClientEvent_BattleStart.h"
+#include "PhysXMgr.h"
+#include "RigidBody.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -81,6 +83,7 @@ HRESULT CLevel_Arena::Initialize()
 
 	Start_Collision();
 	Start_Picking();
+	Start_PhysX();
 
 	return S_OK;
 }
@@ -99,6 +102,9 @@ HRESULT CLevel_Arena::Exit()
 {
 	End_Collision();
 	End_Picking();
+	CServerSessionManager::GetInstance()->Set_Player(nullptr);
+	CPhysXMgr::GetInstance()->Reset();
+
 	return S_OK;
 }
 
@@ -326,6 +332,52 @@ HRESULT CLevel_Arena::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 			}
 
 			pObject->Get_TransformCom()->Set_WorldMatrix(matWorld);
+
+
+			_uint iColliderCount = file->Read<_uint>();
+			CStaticModel* pStaticModel = dynamic_cast<CStaticModel*>(pObject);
+
+
+			for (_uint i = 0; i < iColliderCount; ++i)
+			{
+				pStaticModel->Add_Collider();
+
+				CSphereCollider* pCollider = pStaticModel->Get_StaticCollider(i);
+
+				{
+					Vec3 vOffset = file->Read<Vec3>();
+					pCollider->Set_Offset(vOffset);
+
+
+					_float fRadius = file->Read<_float>();
+					pCollider->Set_Radius(fRadius);
+
+
+					pCollider->Set_Center();
+				}
+
+				_bool bChild = file->Read<_bool>();
+
+				if (bChild)
+				{
+					pStaticModel->Add_ChildCollider(i);
+
+					COBBCollider* pChild = dynamic_cast<COBBCollider*>(pCollider->Get_Child());
+
+
+					Vec3 vOffset = file->Read<Vec3>();
+					pChild->Set_Offset(vOffset);
+
+					Vec3 vScale = file->Read<Vec3>();
+					pChild->Set_Scale(vScale);
+
+					Quaternion vQuat = file->Read<Quaternion>();
+					pChild->Set_Orientation(vQuat);
+
+					pChild->Set_StaticBoundingBox();
+				}
+			}
+
 		}
 	}
 
@@ -362,7 +414,7 @@ HRESULT CLevel_Arena::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
 		}
 
 		pObject->Get_TransformCom()->Set_WorldMatrix(matWorld);
-
+		CPhysXMgr::GetInstance()->Register_ColMesh(pObject);
 
 
 		_uint iColliderCount = file->Read<_uint>();
@@ -447,10 +499,10 @@ void CLevel_Arena::Start_Collision()
 			CCollisionManager* pCollisionManager = CCollisionManager::GetInstance();
 			pCollisionManager->AddRef();
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Default"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Arena"))))
 				return FALSE;
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60_Arena"))))
 				return FALSE;
 
 			_float		fTimeAcc = 0.f;
@@ -458,11 +510,11 @@ void CLevel_Arena::Start_Collision()
 
 			while (!pCollisionManager->Is_Stop())
 			{
-				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Default"));
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Arena"));
 
 				if (fTimeAcc >= 1.f / 60.0f)
 				{
-					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60")));
+					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60_Arena")));
 					fTimeAcc = 0.f;
 				}
 			}
@@ -490,10 +542,10 @@ void CLevel_Arena::Start_Picking()
 
 			pPickingMgr->Set_Player(CServerSessionManager::GetInstance()->Get_Player());
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_Default"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_Arena"))))
 				return FALSE;
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_60"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking_60_Arena"))))
 				return FALSE;
 
 			_float		fTimeAcc = 0.f;
@@ -501,7 +553,7 @@ void CLevel_Arena::Start_Picking()
 
 			while (!pPickingMgr->Is_Stop())
 			{
-				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking_Default"));
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking_Arena"));
 
 				if (fTimeAcc >= 1.f / 60.0f)
 				{
@@ -517,6 +569,21 @@ void CLevel_Arena::Start_Picking()
 			ThreadManager::GetInstance()->DestroyTLS();
 		});
 
+}
+
+void CLevel_Arena::Start_PhysX()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	list<CGameObject*>& PlayerList = pGameInstance->Find_GameObjects(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_PLAYER);
+
+	for (auto& Player : PlayerList)
+	{
+		CPhysXMgr::GetInstance()->Add_PlayObject(Player);
+	}
+	Safe_Release(pGameInstance);
 }
 
 void CLevel_Arena::End_Picking()

@@ -41,6 +41,7 @@ private:
 	void			Set_CheckGruop();
 	void			Start_Collision();
 	void			Start_Picking();
+	void			Start_PhysX();
 	void			End_Picking();
 	void			End_Collision();
 

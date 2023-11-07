@@ -47,7 +47,8 @@ void CState_Naruto_Jump::Enter_State()
 
 	Set_Jump();
 
-	
+	m_pPlayer->Set_Gravity(false);
+	m_pPlayer->Get_RigidBody()->UseDrag(false);
 	m_pPlayer->Get_RigidBody()->UseGravity(false);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
 	m_pPlayer->Set_DoubleJump(false);
@@ -61,6 +62,8 @@ void CState_Naruto_Jump::Tick_State(_float fTimeDelta)
 
 void CState_Naruto_Jump::Exit_State()
 {
+	m_pPlayer->Get_RigidBody()->UseDrag(true);
+	m_pPlayer->Set_Gravity(true);
 	m_pPlayer->Set_Render(true);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 }

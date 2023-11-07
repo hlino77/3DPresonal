@@ -79,7 +79,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pRigidBody->AddForce(Vec3(0.0f, 0.0f, 300.0f), ForceMode::FORCE);
 	}*/
 
-	if(!m_bWall)
+	if(!m_bWall && m_bNavi)
 		CNavigationMgr::GetInstance()->SetUp_OnCell(this);
 
 	m_pRigidBody->Tick(fTimeDelta);
@@ -91,6 +91,8 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 	if (m_bWall && m_bControl)
 		Set_PlayerToWall(fTimeDelta);
+	else if (m_bWall == false && m_bControl)
+		Set_PlayerUp(fTimeDelta);
 
 
 	if (nullptr == m_pRendererCom)
@@ -319,13 +321,51 @@ void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
-
 		vUp = Vec3::Lerp(vUp, m_tTriangle.vNormal, 8.0f * fTimeDelta);
 
 		m_pTransformCom->Set_Up(vUp);
+
+		_float fAngle = XMConvertToDegrees(acosf(m_tTriangle.vNormal.Dot(Vec3(0.0f, 1.0f, 0.0f))));
+
+		if (fAngle < 45.0f)
+		{
+			m_bWall = false;
+			m_bGravity = true;
+		}
 	}
 	else
 		cout << "NO" << endl;
+
+}
+
+void CPlayer::Set_PlayerUp(_float fTimeDelta)
+{
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+	Vec3 vTargetUp(0.0f, 1.0f, 0.0f);
+
+
+	if (vUp.Dot(vTargetUp) != 1.0f)
+	{
+		Vec3 vDir = vTargetUp - vUp;
+
+		_float fDistance = vDir.Length();
+		_float fSpeed = 8.0f * fTimeDelta;
+
+		if (fDistance <= fSpeed)
+		{
+			vUp = vTargetUp;
+		}
+		else
+		{
+			vDir.Normalize();
+			vUp += vDir * fSpeed;
+		}
+
+
+		m_pTransformCom->Set_Up(vUp);
+	}
+	
 
 }
 
@@ -445,7 +485,7 @@ HRESULT CPlayer::Ready_Components()
 
 	///* For.Com_Model */
 	wstring strComName = L"Prototype_Component_Model_" + m_strObjectTag;
-	if (FAILED(__super::Add_Component(pGameInstance->Get_CurrLevelIndex(), strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strComName, TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 
@@ -461,8 +501,7 @@ HRESULT CPlayer::Ready_Components()
 		if(pCollider)
 			m_Coliders.emplace((_uint)LAYER_COLLIDER::LAYER_BODY, pCollider);
 
-		if (m_bControl)
-			CCollisionManager::GetInstance()->Add_Colider(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]);
+		CCollisionManager::GetInstance()->Add_Colider(m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]);
 	}
 
 

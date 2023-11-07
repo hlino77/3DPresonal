@@ -61,6 +61,8 @@ public:
 
 
 	const wstring&		Get_CurrState() { return m_pStateMachine->Get_CurrState(); }
+
+	virtual void		Set_Die();
 protected:
 	virtual HRESULT		Ready_Components();
 

@@ -23,6 +23,7 @@ public:
 	void	Add_Navigation(const wstring& szFileName);
 	void	SetUp_OnCell(CGameObject * pObject);
 	void	Find_FirstCell(CGameObject * pObject);
+	void	Reset_Navigation();
 
 private:
 	CNavigation* m_pNavigation;

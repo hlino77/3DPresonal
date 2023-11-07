@@ -44,7 +44,7 @@ HRESULT CBoss_Deidara_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 500;
+	m_iHp = 1;
 
 	m_fFollowDistance = 40.0f;
 
@@ -289,6 +289,19 @@ void CBoss_Deidara_Server::Shoot_TwinBirds()
 	}
 
 	m_SkillInfo[DEIDARA_SKILL::TWINBIRD].m_bReady = false;
+}
+
+void CBoss_Deidara_Server::Set_Die()
+{
+	for (auto& Collider : m_Coliders)
+		Collider.second->SetActive(false);
+
+	m_pC2Dragon->Set_Die();
+	m_pTwinBird[0]->Set_Die();
+	m_pTwinBird[1]->Set_Die();
+
+
+	m_bDie = true;
 }
 
 HRESULT CBoss_Deidara_Server::Ready_Components()

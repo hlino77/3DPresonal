@@ -113,6 +113,12 @@ void CMonster_C2Dragon::Shoot_Hiryu()
 	m_pHiryu->Shoot_Hiryu(m_pNearTarget, vPos, vLook);
 }
 
+void CMonster_C2Dragon::Set_Die()
+{
+	m_pHiryu->Set_Die();
+	Set_Active(false);
+}
+
 HRESULT CMonster_C2Dragon::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "GameInstance.h"
 #include "StaticModel.h"
-
+#include "ColliderSphere.h"
+#include "ColliderOBB.h"
 
 CStaticModel::CStaticModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, OBJ_TYPE eObjType)
 	: CGameObject(pDevice, pContext, L"StaticModel", eObjType)
@@ -94,6 +95,59 @@ HRESULT CStaticModel::Add_ModelComponent(const wstring& strComName)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CStaticModel::Add_Collider()
+{
+	CSphereCollider* pCollider = nullptr;
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CSphereCollider::ColliderInfo tInfo;
+	tInfo.m_bActive = true;
+	tInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_BODY;
+
+	CComponent* pComponent = pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_SphereColider"), &tInfo);
+	if (nullptr == pComponent)
+		return;
+
+	pCollider = dynamic_cast<CSphereCollider*>(pComponent);
+	if (nullptr == pCollider)
+		return;
+
+	m_StaticColliders.push_back(pCollider);
+
+	Safe_Release(pGameInstance);
+}
+
+void CStaticModel::Add_ChildCollider(_uint iIndex)
+{
+	COBBCollider* pCollider = nullptr;
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CCollider::ColliderInfo tInfo;
+	tInfo.m_bActive = true;
+	tInfo.m_iLayer = (_uint)LAYER_COLLIDER::LAYER_END;
+
+	CComponent* pComponent = pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_OBBColider"), &tInfo);
+	if (nullptr == pComponent)
+		return;
+
+	pCollider = dynamic_cast<COBBCollider*>(pComponent);
+	if (nullptr == pCollider)
+		return;
+
+
+	m_StaticColliders[iIndex]->Set_Child(pCollider);
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CStaticModel::Ready_Components()

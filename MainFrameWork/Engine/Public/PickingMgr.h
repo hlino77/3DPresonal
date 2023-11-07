@@ -38,7 +38,6 @@ public:
 private:
 	void	Compute_LocalLayInfo(Vec3* pDir, Vec3* pRayPos, CTransform* pTransform);
 
-
 	CGameObject* Find_ColMesh(CGameObject* pObj);
 public:
 	BOOL	IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle);

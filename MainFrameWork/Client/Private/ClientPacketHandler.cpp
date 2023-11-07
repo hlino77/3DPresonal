@@ -234,7 +234,10 @@ bool Handel_S_OBJECTINFO_Client(PacketSessionRef& session, Protocol::S_OBJECTINF
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	_uint iUserPlayerID = CServerSessionManager::GetInstance()->Get_Player()->Get_ObjectID();
+	CGameObject* pPlayer = CServerSessionManager::GetInstance()->Get_Player();
+	if (pPlayer == nullptr)
+		return true;
+	_uint iUserPlayerID = pPlayer->Get_ObjectID();
 
 
 	for (_uint i = 0; i < pkt.tobject_size(); ++i)

@@ -87,7 +87,7 @@ public:
 	void				Body_Collision(CGameObject* pObject);
 	void				Hit_Attack(CCollider* pCollider);
 
-	void				Set_Die();
+	virtual void				Set_Die();
 protected:
 	virtual HRESULT		Ready_Components();
 

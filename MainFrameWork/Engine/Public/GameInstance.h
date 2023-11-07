@@ -119,6 +119,7 @@ private:
 
 	class CNavigationMgr*			m_pNavigationMgr = { nullptr };
 	class CEventMgr*				m_pEventMgr = { nullptr };
+	class CPhysXMgr*				m_pPhysXMgr = { nullptr };
 public:
 	static void Release_Engine();
 	virtual void Free() override;

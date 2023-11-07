@@ -52,6 +52,7 @@ private:
 
 	void			Check_Monster();
 	void			Spawn_Monster();
+	void			Check_Boss(_float fTimeDelta);
 
 
 
@@ -71,7 +72,7 @@ private:
 	_bool	m_bMonsterSpawn = false;
 
 
-
+	_float m_fNextLevelDelay = 0.0f;
 private:
 	
 	thread* m_pCollisionThread = nullptr;

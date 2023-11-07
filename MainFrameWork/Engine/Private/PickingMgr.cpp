@@ -19,33 +19,37 @@ HRESULT CPickingMgr::Ready_PickingMgr()
 
 void CPickingMgr::Update_PickingMgr()
 {
-	if (m_pPlayer->Is_Picking())
+	if (m_pPlayer)
 	{
-		WRITE_LOCK
-		TRIAGLEDESC tResult;
-		tResult.fDist = -1.0f;
-
-		for (auto& ColMesh : m_ColMeshList)
+		if (m_pPlayer->Is_Picking())
 		{
-			TRIAGLEDESC tTriangle;
-			if (IsPicking(ColMesh, &tTriangle))
+			WRITE_LOCK
+			TRIAGLEDESC tResult;
+			tResult.fDist = -1.0f;
+
+			for (auto& ColMesh : m_ColMeshList)
 			{
-				if (tResult.fDist == -1.0f || tTriangle.fDist < tResult.fDist)
-					tResult = tTriangle;
+				TRIAGLEDESC tTriangle;
+				tTriangle.fDist = -1.0f;
+				if (IsPicking(ColMesh, &tTriangle))
+				{
+					if (tResult.fDist == -1.0f || tTriangle.fDist < tResult.fDist)
+						tResult = tTriangle;
+				}
 			}
+
+
+			if (tResult.fDist != -1.0f)
+			{
+				Vec3 vDir1 = tResult.vPos1 - tResult.vPos0;
+				Vec3 vDir2 = tResult.vPos2 - tResult.vPos1;
+
+				tResult.vNormal = vDir1.Cross(vDir2);
+				tResult.vNormal.Normalize();
+			}
+
+			m_pPlayer->Set_Pick(tResult);
 		}
-
-
-		if (tResult.fDist != -1.0f)
-		{
-			Vec3 vDir1 = tResult.vPos1 - tResult.vPos0;
-			Vec3 vDir2 = tResult.vPos2 - tResult.vPos1;
-
-			tResult.vNormal = vDir1.Cross(vDir2);
-			tResult.vNormal.Normalize();
-		}
-		
-		m_pPlayer->Set_Pick(tResult);
 	}
 }
 
@@ -82,17 +86,17 @@ void CPickingMgr::Set_Ray(Vec3 vRayPos, Vec3 vRayDir)
 void CPickingMgr::Reset()
 {
 	m_ColMeshList.clear();
-	m_bStop = true;
+	m_bStop = false;
 }
 
 void CPickingMgr::Compute_LocalLayInfo(Vec3* pDir, Vec3* pRayPos, CTransform* pTransform)
 {
-	WRITE_LOCK
 	Matrix matWorldInv = pTransform->Get_WorldMatrixInverse();
 
 	*pRayPos = XMVector3TransformCoord(m_vRayPos, matWorldInv);
 	*pDir = XMVector3TransformNormal(m_vRayDir, matWorldInv);
 }
+
 
 CGameObject* CPickingMgr::Find_ColMesh(CGameObject* pObj)
 {
@@ -140,7 +144,7 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 		_float fU, fV, fDist;
 
 		_float fResultDist = -1.0f;
-		_float fMinDistance = 6.f;
+		_float fMinDistance = 8.f;
 
 		for (_uint i = 0; i < iNumPrimitives; ++i)
 		{
@@ -149,8 +153,6 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 				XMLoadFloat3(&objVB[objIB[i]._1].vPosition),
 				XMLoadFloat3(&objVB[objIB[i]._2].vPosition), fDist))
 			{
-				bRayHit = true;
-
 				if (fResultDist == -1.0f || fDist < fResultDist)
 				{
 					if (fDist < fMinDistance)
@@ -161,6 +163,8 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 						tTriangle->vPos2 = XMVector3TransformCoord(objVB[objIB[i]._2].vPosition, matTargetWorld);
 
 						tTriangle->fDist = fDist;
+
+						bRayHit = true;
 					}
 				}
 			}
@@ -171,6 +175,7 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 
 	return bRayHit;
 }
+
 
 void CPickingMgr::Free()
 {

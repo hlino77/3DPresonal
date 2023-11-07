@@ -229,6 +229,13 @@ void CMonster_C2Dragon_Server::Set_ToDeidara()
 	Safe_Release(pGameInstance);
 }
 
+void CMonster_C2Dragon_Server::Set_Die()
+{
+	m_pHiryu->Set_Die();
+
+	Set_Active(false);
+}
+
 CMonster_C2Dragon_Server* CMonster_C2Dragon_Server::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMonster_C2Dragon_Server* pInstance = new CMonster_C2Dragon_Server(pDevice, pContext);

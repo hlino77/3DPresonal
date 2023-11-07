@@ -17,6 +17,7 @@
 #include "NavigationMgr.h"
 #include "EventMgr.h"
 #include "VIBuffer_Point.h"
+#include "PhysXMgr.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -126,6 +127,8 @@ HRESULT CMainApp::Initialize_Client()
 
 	CEventMgr::GetInstance()->Reserve_EventMgr(m_pDevice, m_pContext);
 	
+	CPhysXMgr::GetInstance()->ReserveManager();
+
 	// Manager Reserve
 	return S_OK;
 }

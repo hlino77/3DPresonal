@@ -49,6 +49,12 @@ void CNavigationMgr::Find_FirstCell(CGameObject* pObject)
 		m_pNavigation->Find_FirstCell(pObject);
 }
 
+void CNavigationMgr::Reset_Navigation()
+{
+	Safe_Release(m_pNavigation);
+	m_pNavigation = nullptr;
+}
+
 
 
 

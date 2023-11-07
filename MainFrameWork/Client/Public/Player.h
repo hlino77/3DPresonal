@@ -106,6 +106,7 @@ public:
 
 
 	void			Set_PlayerToWall(_float fTimeDelta);
+	void			Set_PlayerUp(_float fTimeDelta);
 
 	void			Body_Collision(CGameObject* pObject);
 	void			Hit_Attack(CCollider* pCollider);
@@ -139,6 +140,7 @@ protected:
 	_uint							m_iHp;
 
 	std::future<HRESULT>			m_PlayAnimation;
+
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

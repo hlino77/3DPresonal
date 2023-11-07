@@ -9,6 +9,7 @@ class CShader;
 class CTexture;
 class CTransform;
 class CPipeLine;
+class CSphereCollider;
 END
 
 
@@ -46,6 +47,15 @@ public:
 
 
 	HRESULT Add_ModelComponent(const wstring& strComName);
+
+
+	void	Add_Collider();
+	void	Add_ChildCollider(_uint iIndex);
+
+	vector<CSphereCollider*>& Get_StaticColliders() { return m_StaticColliders; }
+
+	CSphereCollider* Get_StaticCollider(_uint iIndex) { return m_StaticColliders[iIndex]; }
+
 protected:
 	virtual HRESULT Ready_Components() override;
 
@@ -55,7 +65,7 @@ private: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 private:
 	CRenderer::RENDERGROUP m_eRenderGroup;
-
+	vector<CSphereCollider*> m_StaticColliders;
 
 private:
 

@@ -126,6 +126,12 @@ public:
 	void						Delete_CollisionStay(_uint iColLayer, CCollider* pCollider);
 
 
+	void						Set_Navi(_bool bNavi) { m_bNavi = bNavi; }
+	_bool						Is_Navi() { return m_bNavi; }
+
+
+	void						Set_Gravity(_bool bGravity) { m_bGravity = bGravity; }
+	_bool						Is_Gravity() { return m_bGravity; }
 	
 protected:
 	virtual HRESULT Ready_Components() PURE;
@@ -163,6 +169,8 @@ protected:
 	_bool				m_bRender = true;
 	_bool				m_bActive = true;
 	_bool				m_bDie = false;
+	_bool				m_bNavi = true;
+	_bool				m_bGravity = false;
 
 	atomic<Vec3>		m_vTargetPos;
 	atomic<Matrix>		m_matTargetWorld;

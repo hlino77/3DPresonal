@@ -54,6 +54,9 @@ _int CLoader_Server::Loading()
 	case LEVEL_ARENA:
 		hr = Loading_For_Level_Arena();
 		break;
+	case LEVEL_KONOHA:
+		hr = Loading_For_Level_Konoha();
+		break;
 	}
 
 	if (FAILED(hr))
@@ -108,6 +111,30 @@ HRESULT CLoader_Server::Loading_For_Level_Arena()
 	return S_OK;
 }
 
+HRESULT CLoader_Server::Loading_For_Level_Konoha()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	cout << "GamePlay Loading" << endl;
+
+	Protocol::S_LEVEL_STATE pkt;
+	pkt.set_ilevelstate((uint32)LEVELSTATE::LOADING);
+
+	SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
+
+
+	Loading_Model_For_Level_Arena();
+
+
+	Safe_Release(pGameInstance);
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
 HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -139,7 +166,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
 			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -149,7 +176,7 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
 			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -203,6 +230,28 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 
 
 	return S_OK;
+}
+
+HRESULT CLoader_Server::Loading_Model_For_Level_Konoha()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+	{
+		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_KONOHA, strComponentName,
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	
+	Safe_Release(pGameInstance);
 }
 
 CLoader_Server* CLoader_Server::Create(LEVELID eNextLevel)

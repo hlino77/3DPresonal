@@ -64,7 +64,7 @@ public:
 	void					Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta);
 
 
-	void					Set_Die();
+	virtual void			Set_Die();
 protected:
 	virtual HRESULT Ready_Components();
 

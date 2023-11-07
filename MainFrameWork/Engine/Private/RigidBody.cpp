@@ -79,11 +79,11 @@ void CRigidBody::UseGravity(_bool UseGravity)
 	else
 	{
 		m_UseGravity = false;
-		if (m_vLinearVelocity.Length() > 0.0f)
+		/*if (m_vLinearVelocity.Length() > 0.0f)
 		{
 			Vec3 vGravityVel = m_vGravityDir * m_vLinearVelocity.Dot(m_vGravityDir);
 			m_vLinearVelocity -= vGravityVel;
-		}
+		}*/
 	}
 }
 
@@ -132,7 +132,7 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 
 
 
-	if(m_bCompareGround)
+	if(m_bCompareGround && m_bPhysX == false)
 		UpdateGround(fTimeDelta);
 }
 

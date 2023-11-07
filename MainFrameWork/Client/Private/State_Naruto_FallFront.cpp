@@ -60,7 +60,7 @@ void CState_Naruto_FallFront::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
-	if (m_pPlayer->Get_RigidBody()->UseGravity() == false)
+	if (m_pPlayer->Get_RigidBody()->Is_Gruond() == true)
 	{
 		m_pPlayer->Set_State(L"Land");
 		return;
@@ -106,6 +106,8 @@ void CState_Naruto_FallFront::Set_Ray()
 	if (vDir.Length() > 0.0f)
 	{
 		vDir.Normalize();
+		vPos.y += 0.4f;
+		vPos -= vDir * 0.5f;
 
 		CPickingMgr::GetInstance()->Set_Ray(vPos, vDir);
 		m_pPlayer->Set_Picking(true);

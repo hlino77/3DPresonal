@@ -160,6 +160,7 @@
     <ClCompile Include="..\Private\GameSession.cpp" />
     <ClCompile Include="..\Private\GameSessionManager.cpp" />
     <ClCompile Include="..\Private\Level_Arena_Server.cpp" />
+    <ClCompile Include="..\Private\Level_Konoha_Server.cpp" />
     <ClCompile Include="..\Private\Level_Loading_Server.cpp" />
     <ClCompile Include="..\Private\Level_Ready_Server.cpp" />
     <ClCompile Include="..\Private\Loader_Server.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="..\Public\GameSession.h" />
     <ClInclude Include="..\Public\GameSessionManager.h" />
     <ClInclude Include="..\Public\Level_Arena_Server.h" />
+    <ClInclude Include="..\Public\Level_Konoha_Server.h" />
     <ClInclude Include="..\Public\Level_Loading_Server.h" />
     <ClInclude Include="..\Public\Level_Ready_Server.h" />
     <ClInclude Include="..\Public\Loader_Server.h" />

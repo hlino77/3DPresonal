@@ -39,10 +39,10 @@ private:
 private:
 	HRESULT Loading_For_Level_Ready();
 	HRESULT Loading_For_Level_Arena();
-
+	HRESULT Loading_For_Level_Konoha();
 
 	HRESULT Loading_Model_For_Level_Arena();
-
+	HRESULT Loading_Model_For_Level_Konoha();
 public:
 	static CLoader_Server* Create(LEVELID eNextLevel);
 	virtual void Free() override;

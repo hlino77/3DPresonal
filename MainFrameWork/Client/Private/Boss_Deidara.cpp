@@ -141,6 +141,18 @@ void CBoss_Deidara::Shoot_TwinBirds()
 	}
 }
 
+void CBoss_Deidara::Set_Die()
+{
+	for (auto& Collider : m_Coliders)
+		Collider.second->SetActive(false);
+
+	m_pC2Dragon->Set_Die();
+	m_pTwinBird[0]->Set_Die();
+	m_pTwinBird[1]->Set_Die();
+
+	m_bDie = true;
+}
+
 
 
 HRESULT CBoss_Deidara::Ready_Components()

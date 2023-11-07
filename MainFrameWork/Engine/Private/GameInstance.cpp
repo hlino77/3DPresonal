@@ -11,7 +11,7 @@
 #include "Text_Manager.h"
 #include "NavigationMgr.h"
 #include "EventMgr.h"
-
+#include "PhysXMgr.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -29,6 +29,7 @@ CGameInstance::CGameInstance()
 	, m_pText_Manager(CText_Manager::GetInstance())
 	, m_pNavigationMgr(CNavigationMgr::GetInstance())
 	, m_pEventMgr(CEventMgr::GetInstance())
+	, m_pPhysXMgr(CPhysXMgr::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -44,6 +45,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pEventMgr);
 
 	Safe_AddRef(m_pUtilities);
+	Safe_AddRef(m_pPhysXMgr);
 
 
 }
@@ -110,6 +112,7 @@ void CGameInstance::Tick(_float fTimeDelta)
 
 	m_pEventMgr->LateTick(fTimeDelta);
 	m_pObject_Manager->LateTick(fTimeDelta);
+	m_pPhysXMgr->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
 }
 

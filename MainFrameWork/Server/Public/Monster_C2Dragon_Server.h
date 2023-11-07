@@ -43,6 +43,7 @@ public:
 	void				Set_AttackDelay(_float fTimeDelta) { m_fAttackDelay = fTimeDelta; }
 	_float				Get_AttackDelay() { return m_fAttackDelay; }
 
+	virtual void		Set_Die();
 protected:
 	virtual HRESULT		Ready_Components();
 
@@ -52,6 +53,7 @@ private:
 
 	void				Set_ToDeidara();
 
+	
 private:
 	_float	m_fSendInfoTime = 0.0f;
 

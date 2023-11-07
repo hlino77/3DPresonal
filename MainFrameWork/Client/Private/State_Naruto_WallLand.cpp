@@ -40,6 +40,7 @@ void CState_Naruto_WallLand::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iFallFront, 0.1f, 0, 0);
 
+	m_pPlayer->Set_Gravity(false);
 	m_pPlayer->Get_RigidBody()->UseGravity(false);
 	m_pPlayer->Set_Wall(true);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
@@ -77,7 +78,10 @@ void CState_Naruto_WallLand::Tick_State_Control(_float fTimeDelta)
 	
 
 	if (vDistance.Length() <= vMove.Length())
-		vPos = vTargetPos;
+	{
+		m_pPlayer->Set_State(L"Idle");
+		m_pPlayer->Set_Picking(true);
+	}
 	else
 		vPos += vMove;
 
@@ -91,14 +95,6 @@ void CState_Naruto_WallLand::Tick_State_Control(_float fTimeDelta)
 	vUp = Vec3::Lerp(vUp, tTriangle.vNormal, 0.1f * fTimeDelta);
 
 	pTransform->Set_Up(vUp);
-
-
-	if (vPos == vTargetPos)
-	{
-		m_pPlayer->Set_State(L"Idle");
-		
-		m_pPlayer->Set_Picking(true);
-	}
 }
 
 void CState_Naruto_WallLand::Tick_State_NoneControl(_float fTimeDelta)

@@ -94,6 +94,9 @@ _int CLoader::Loading()
 	case LEVEL_ARENA:
 		hr = Loading_For_Level_Arena();
 		break;
+	case LEVEL_KONOHA:
+		hr = Loading_For_Level_Konoha();
+		break;
 	}
 
 	if (FAILED(hr))
@@ -406,6 +409,44 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_For_Level_Konoha()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+
+	m_strLoading = TEXT("객체 원형을 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_Camera_Free */
+
+
+	m_strLoading = TEXT("모델을 로딩 중 입니다.");
+	Loading_Model_For_Level_Konoha();
+
+
+
+	Load_MapData(LEVEL_KONOHA, L"../Bin/Resources/MapData/Kono.data");
+	Load_ColMesh(LEVEL_KONOHA, L"../Bin/Resources/ColMeshData/Kono.data");
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 HRESULT CLoader::Load_MapData(LEVELID eLevel, const wstring& szFilePath)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -430,12 +471,46 @@ HRESULT CLoader::Load_MapData(LEVELID eLevel, const wstring& szFilePath)
 		wstring strComponentName = L"Prototype_Component_Model_" + szModelName;
 
 		if (FAILED(pGameInstance->Check_Prototype(eLevel, strComponentName)))
+		{
+			_uint iColCount = file->Read<_uint>();
+			for (_uint i = 0; i < iColCount; ++i)
+			{
+				Vec3 vOffset = file->Read<Vec3>();
+				_float fRadius = file->Read<_float>();
+
+
+				if (file->Read<_bool>())
+				{
+					Vec3 vOffset = file->Read<Vec3>();
+					Vec3 vScale = file->Read<Vec3>();
+					Quaternion vQuat = file->Read<Quaternion>();
+				}
+			}
 			continue;
+		}
+			
 
 
 		if (FAILED(pGameInstance->Add_Prototype(eLevel, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, szModelPath, szModelName, true, false, PivotMatrix))))
-			continue;
+			return E_FAIL;
+
+
+		_uint iColCount = file->Read<_uint>();
+
+		for (_uint i = 0; i < iColCount; ++i)
+		{
+			Vec3 vOffset = file->Read<Vec3>();
+			_float fRadius = file->Read<_float>();
+
+
+			if (file->Read<_bool>())
+			{
+				Vec3 vOffset = file->Read<Vec3>();
+				Vec3 vScale = file->Read<Vec3>();
+				Quaternion vQuat = file->Read<Quaternion>();
+			}
+		}
 	}
 
 	Safe_Release(pGameInstance);
@@ -466,7 +541,23 @@ HRESULT CLoader::Load_ColMesh(LEVELID eLevel, const wstring& szFilePath)
 		wstring strComponentName = L"Prototype_Component_Model_" + szModelName;
 
 		if (FAILED(pGameInstance->Check_Prototype(eLevel, strComponentName)))
+		{
+			_uint iColCount = file->Read<_uint>();
+			for (_uint i = 0; i < iColCount; ++i)
+			{
+				Vec3 vOffset = file->Read<Vec3>();
+				_float fRadius = file->Read<_float>();
+
+
+				if (file->Read<_bool>())
+				{
+					Vec3 vOffset = file->Read<Vec3>();
+					Vec3 vScale = file->Read<Vec3>();
+					Quaternion vQuat = file->Read<Quaternion>();
+				}
+			}
 			continue;
+		}
 
 
 		if (FAILED(pGameInstance->Add_Prototype(eLevel, strComponentName,
@@ -510,7 +601,7 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , false, PivotMatrix))))
 			return E_FAIL;
 	}
@@ -520,7 +611,7 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_ARENA, strComponentName,
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true , false,  PivotMatrix))))
 			return E_FAIL;
 	}
@@ -581,6 +672,31 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Model_For_Level_Konoha()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Matrix		PivotMatrix = XMMatrixIdentity();
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+
+	{
+		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_KONOHA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

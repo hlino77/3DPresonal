@@ -25,6 +25,8 @@ public:
 	void				Set_C2Dragon(CMonster_C2Dragon* pDragon) { m_pC2Dragon = pDragon; }
 	void				Spawn_C2Dragon();
 	void				Shoot_TwinBirds();
+
+	virtual void		Set_Die();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();

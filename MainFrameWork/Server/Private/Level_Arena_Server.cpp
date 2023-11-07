@@ -15,7 +15,8 @@
 #include "ServerEvent_ArenaStart.h"
 #include "ServerEvent_PlayerStart.h"
 #include "ServerEvent_BattleStart.h"
-
+#include "Level_Konoha_Server.h"
+#include "Level_Loading_Server.h"
 
 
 CLevel_Arena_Server::CLevel_Arena_Server()
@@ -73,6 +74,8 @@ HRESULT CLevel_Arena_Server::Initialize()
 
 	Start_Collision();
 
+	m_fNextLevelDelay = 3.0f;
+
 	return S_OK;
 }
 
@@ -80,6 +83,7 @@ HRESULT CLevel_Arena_Server::Tick(_float fTimeDelta)
 {
 	Spawn_Monster();
 	Check_Monster();
+	Check_Boss(fTimeDelta);
 
 	return S_OK;
 }
@@ -480,6 +484,45 @@ void CLevel_Arena_Server::Spawn_Monster()
 		}
 	
 	}
+
+	Safe_Release(pGameInstance);
+}
+
+void CLevel_Arena_Server::Check_Boss(float fTimeDelta)
+{
+	if (!m_bBoss || m_iMonsterCount != 0)
+		return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pBoss = pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, L"Deidara");
+
+	if (pBoss)
+	{
+		if (pBoss->Is_Active() == false)
+		{
+			m_fNextLevelDelay -= fTimeDelta;
+
+			if (m_fNextLevelDelay <= 0.0f)
+			{
+				CGameInstance* pGameInstance = CGameInstance::GetInstance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading_Server::Create(LEVEL_KONOHA))))
+					return;
+
+				Protocol::S_OPEN_LEVEL pkt;
+				pkt.set_ilevelid((uint64)LEVELID::LEVEL_KONOHA);
+
+				SendBufferRef sendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+				CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
+
+				Safe_Release(pGameInstance);
+			}
+		}
+	}
+
 
 	Safe_Release(pGameInstance);
 }

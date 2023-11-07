@@ -211,6 +211,8 @@ HRESULT CRenderer::Render_ModelInstancing(const wstring& szModelName)
 	if (nullptr == m_pInstanceShader)
 		return S_OK;
 
+	if (m_StaticInstance[szModelName].empty())
+		return S_OK;
 
 	vector<Matrix> WorldMatrix;
 	WorldMatrix.reserve(500);

@@ -18,7 +18,7 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 	if (m_Colliders.empty())	
 		return;
 
-	for (auto bSort : m_arrSorted)
+	for (auto& bSort : m_arrSorted)
 		bSort = false;
 
 
@@ -92,6 +92,10 @@ void CCollisionManager::CheckGroup(_uint iLeft, _uint iRight)
 
 void CCollisionManager::Reset()
 {
+	m_arrCheck.clear();
+	m_arrSorted.clear();
+
+
 	m_arrCheck.resize(m_iNumColLayers, 0);
 	m_arrSorted.resize(m_iNumColLayers, false);
 
@@ -99,6 +103,7 @@ void CCollisionManager::Reset()
 	{
 		iter.clear();
 	}
+	m_bStop = false;
 }
 
 bool CCollisionManager::IsCollided(CSphereCollider* pLeft, CSphereCollider* pRight)
