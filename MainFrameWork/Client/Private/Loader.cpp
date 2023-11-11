@@ -35,6 +35,7 @@
 #include "UI_SP_Base.h"
 #include "UI_HP_Base.h"
 #include "LineCircle.h"
+#include "FootTrail.h"
 
 
 
@@ -266,6 +267,11 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LineCircle"),
 		CLineCircle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_FootTrail"),
+		CFootTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

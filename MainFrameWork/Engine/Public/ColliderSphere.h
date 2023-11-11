@@ -23,6 +23,7 @@ public:
 
 	
 	void			Set_Center();
+	void			Set_Center(Vec3 vPos) { m_tBoundingSphere.Center = vPos; }
 	void			Set_Center_ToBone();
 
 	Vec3			Get_Center() { return m_tBoundingSphere.Center; }

@@ -29,16 +29,39 @@ HRESULT CState_WhiteZetsu_Appear::Initialize()
 void CState_WhiteZetsu_Appear::Enter_State()
 {
 	m_pMonster->Reserve_Animation(m_iAppear, 0.1f, 0, 0);
+
+	m_bLookAt = false;
 }
 
 void CState_WhiteZetsu_Appear::Tick_State(_float fTimeDelta)
 {
+	if (m_bLookAt == false)
+	{
+		Set_LookAt_Player();
+		m_bLookAt = true;
+	}
+		
+
 	m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_Appear::Exit_State()
 {
 
+}
+
+void CState_WhiteZetsu_Appear::Set_LookAt_Player()
+{
+	m_pMonster->Find_NearTarget();
+
+
+	CGameObject* pPlayer = m_pMonster->Get_NearTarget();
+
+	if (pPlayer)
+	{
+		Vec3 vPos = pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		m_pMonster->Get_TransformCom()->LookAt_ForLandObject(vPos);
+	}
 }
 
 

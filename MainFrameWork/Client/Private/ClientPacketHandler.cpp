@@ -16,6 +16,8 @@
 #include "Camera_Player.h"
 #include "EventMgr.h"
 #include "Event.h"
+#include "MonsterSpawner.h"
+#include "NavigationMgr.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -131,6 +133,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 		
 		
 		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+		CNavigationMgr::GetInstance()->Find_FirstCell(pPlayer);
 		break;
 	}
 	case OBJ_TYPE::MONSTER:
@@ -148,7 +151,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			return true;
 		}
 		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
-
+		CNavigationMgr::GetInstance()->Find_FirstCell(pMonster);
 		break;
 	}
 	case OBJ_TYPE::BOSS:
@@ -166,8 +169,25 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			return true;
 		}
 		pBoss->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
+		CNavigationMgr::GetInstance()->Find_FirstCell(pBoss);
 		break;
 	}
+	case OBJ_TYPE::SPAWNER:
+	{
+		wstring szProtoName = L"Prototype_GameObject_MonsterSpawner";
+		_uint iObjectID = pkt.iobjectid();
+
+		CMonsterSpawner* pSpawner = dynamic_cast<CMonsterSpawner*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &iObjectID));
+		if (nullptr == pSpawner)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pSpawner->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
+		break;
+	}
+
+
 		
 	}
 

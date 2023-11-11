@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "VIBuffer_Point.h"
 #include "RigidBody.h"
+#include "Pool.h"
 
 CLineCircle::CLineCircle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect(pDevice, pContext)
@@ -49,7 +50,7 @@ HRESULT CLineCircle::Initialize(void* pArg)
 
 
 	m_RandomDir = uniform_real_distribution<float>(-1.0f, 1.0f);
-	m_RandomLifeTime = uniform_real_distribution<float>(1.5f, 2.5f);
+	m_RandomLifeTime = uniform_real_distribution<float>(0.5f, 1.5f);
 
 
 	return S_OK;
@@ -69,7 +70,10 @@ void CLineCircle::Tick(_float fTimeDelta)
 
 
 		if (vVelocity.Length() <= 0.1f)
+		{
 			Set_Active(false);
+			CPool<CLineCircle>::Return_Obj(this);
+		}
 	}
 
 
@@ -91,9 +95,6 @@ void CLineCircle::Tick(_float fTimeDelta)
 	vVelocity *= 1.0f - (10.f * fTimeDelta);
 
 	m_pRigidBody->SetLinearVelocity(vVelocity);
-
-
-
 
 
 }

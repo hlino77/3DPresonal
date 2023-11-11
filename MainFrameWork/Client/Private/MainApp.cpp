@@ -86,8 +86,6 @@ HRESULT CMainApp::Render()
 
 	m_pRenderer_Com->Draw();
 
-	CNavigationMgr::GetInstance()->Render();
-
 	m_pGameInstance->Render_Debug();
 	/* 초기화한 장면에 객체들을 그린다. */
 	m_pGameInstance->Present();
@@ -219,6 +217,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_Point_Effect_Instance.hlsl"), VTX_LINECIRCLE_INSTANCE::Elements, VTX_LINECIRCLE_INSTANCE::iNumElements))))
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect_Trail_Instance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_Point_Trail_Instance.hlsl"), VTX_LINECIRCLE_INSTANCE::Elements, VTX_LINECIRCLE_INSTANCE::iNumElements))))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -20,6 +20,8 @@ CNavigation::CNavigation(const CNavigation& rhs)
 
 HRESULT CNavigation::Render()
 {
+	if (m_pDevice == nullptr)
+		return S_OK;
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
@@ -42,7 +44,7 @@ HRESULT CNavigation::Render()
 	{
 		for (auto& Cell : m_Cells)
 		{
-			vector<Vec3> Points = Cell->Get_Points();
+			vector<Vec3> Points = Cell->Get_OriginPoints();
 
 			Points[0].y += 0.01f;
 			Points[1].y += 0.01f;

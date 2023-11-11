@@ -22,7 +22,7 @@ private:
 	virtual ~CPhysXMgr() = default;
 
 
-	//USE_LOCK
+	USE_LOCK
 public:
 	HRESULT ReserveManager();
 

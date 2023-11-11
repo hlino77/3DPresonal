@@ -77,6 +77,9 @@ public: /* For. Componenet_Manager */
 public: /* For.Light_Manager */
 	const LIGHTDESC* Get_LightDesc(_uint iIndex);
 	HRESULT Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc);
+	void Ready_LightMatrix(Matrix matWorld);
+	Matrix Get_DirectionLightMatrix();
+
 	HRESULT Reset_Lights();
 
 

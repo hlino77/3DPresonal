@@ -37,11 +37,10 @@ private:
 	void			Broadcast_LevelState(LEVELSTATE eState);
 	void			Wait_ClientLevelState(LEVELSTATE eState);
 	HRESULT			Broadcast_PlayerInfo();
-	HRESULT			Broadcast_Monster(const wstring& szName, Vec3 vPos);
 	HRESULT			Broadcast_Boss(const wstring& szName, Vec3 vPos);
 
 	HRESULT			Ready_Events();
-
+	void			Ready_Spawners();
 public:
 	static class CLevel_Konoha_Server* Create();
 	virtual void Free() override;

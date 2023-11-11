@@ -102,6 +102,9 @@ void CClientEvent_ArenaStart::Tick(_float fTimeDelta)
 	if (m_iState != (_uint)EVENTSTATE::EVENT)
 		return;
 
+	if (fTimeDelta > 1.0f)
+		return;
+
 
 	_float fSpeed = (m_fSpeed * fTimeDelta) * (1.0f - m_fLerp);
 

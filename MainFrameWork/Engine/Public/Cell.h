@@ -28,7 +28,7 @@ public:
 	_int*					Get_Neighbor() { return m_iNeighbor; }
 
 	vector<Vec3>&			Get_Points() { return m_Points; }
-
+	vector<Vec3>&			Get_OriginPoints() { return m_OriginPoint; }
 
 	void					Set_Normal();
 

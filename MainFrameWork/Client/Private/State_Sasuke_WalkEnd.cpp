@@ -39,6 +39,9 @@ void CState_Sasuke_WalkEnd::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iWalk_End, 0.1f, 5, 0);
 
 	m_pPlayer->Set_MoveSpeed(0.0f);
+
+	if (m_pPlayer->Is_Wall())
+		m_pPlayer->DisAppear_FootTrail();
 }
 
 void CState_Sasuke_WalkEnd::Tick_State(_float fTimeDelta)

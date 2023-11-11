@@ -39,6 +39,7 @@ HRESULT CLight_Manager::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 HRESULT CLight_Manager::Reset_Lights()
 {
 	Free();
+	m_DirectionLightMatrix = XMMatrixIdentity();
 	return S_OK;
 }
 

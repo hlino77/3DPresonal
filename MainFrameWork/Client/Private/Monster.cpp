@@ -36,7 +36,6 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	m_pRigidBody->SetMass(2.0f);
 
-	CNavigationMgr::GetInstance()->Find_FirstCell(this);
 
     return S_OK;
 }
@@ -115,6 +114,12 @@ void CMonster::Set_SlowMotion(_bool bSlow)
 		m_fAnimationSpeed = 1.0f;
 		m_pRigidBody->Set_Active(true);
 	}
+}
+
+void CMonster::Find_NearTarget()
+{
+	m_pNearTarget = nullptr;
+	m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_PLAYER, this);
 }
 
 

@@ -15,7 +15,7 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
-
+	virtual HRESULT Exit() override;
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(const LAYER_TYPE eLayerType);

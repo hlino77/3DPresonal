@@ -41,7 +41,6 @@ HRESULT CMonster_Server::Initialize(void* pArg)
 
 	m_pRigidBody->SetMass(2.0f);
 
-	CNavigationMgr::GetInstance()->Find_FirstCell(this);
 
     return S_OK;
 }

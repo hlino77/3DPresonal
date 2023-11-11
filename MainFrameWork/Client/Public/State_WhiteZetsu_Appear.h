@@ -18,6 +18,9 @@ public:
 	virtual void Tick_State(_float fTimeDelta) override;
 	virtual void Exit_State() override;
 
+
+
+	void		Set_LookAt_Player();
 private:
 	class CMonster_WhiteZetsu* m_pMonster = nullptr;
 
@@ -25,6 +28,7 @@ private:
 	//Animation
 	_int m_iAppear = 0;
 
+	_bool m_bLookAt = false;
 public:
 	virtual void Free() override;
 };

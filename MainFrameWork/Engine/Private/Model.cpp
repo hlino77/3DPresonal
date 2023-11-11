@@ -319,7 +319,7 @@ HRESULT CModel::Set_AnimationBlend_Transforms()
 
 HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 {
-	pShader->Begin(0);
+	pShader->Begin(iPassIndex);
 
 	m_Meshes[iMeshIndex]->Render();
 

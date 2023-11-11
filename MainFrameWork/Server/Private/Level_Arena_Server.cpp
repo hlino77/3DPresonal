@@ -102,6 +102,7 @@ HRESULT CLevel_Arena_Server::LateTick(_float fTimeDelta)
 
 HRESULT CLevel_Arena_Server::Exit()
 {
+	CNavigationMgr::GetInstance()->Reset_Navigation();
 	End_Collision();
 	return S_OK;
 }
@@ -320,6 +321,8 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 
 	pMonster->Set_FollowDistance(10.0f);
+	CNavigationMgr::GetInstance()->Find_FirstCell(pMonster);
+
 
 	Safe_Release(pGameInstance);
 
@@ -363,6 +366,7 @@ HRESULT CLevel_Arena_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
 
 		pBoss->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 		pBoss->Set_Skill(nullptr);
+		CNavigationMgr::GetInstance()->Find_FirstCell(pBoss);
 	}
 	
 
@@ -488,7 +492,8 @@ void CLevel_Arena_Server::Spawn_Monster()
 	Safe_Release(pGameInstance);
 }
 
-void CLevel_Arena_Server::Check_Boss(float fTimeDelta)
+
+void CLevel_Arena_Server::Check_Boss(_float fTimeDelta)
 {
 	if (!m_bBoss || m_iMonsterCount != 0)
 		return;
@@ -583,10 +588,10 @@ void CLevel_Arena_Server::Start_Collision()
 			CCollisionManager* pCollisionManager = CCollisionManager::GetInstance();
 			pCollisionManager->AddRef();
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Default"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Arena"))))
 				return FALSE;
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60_Arena"))))
 				return FALSE;
 
 			_float		fTimeAcc = 0.f;
@@ -594,11 +599,11 @@ void CLevel_Arena_Server::Start_Collision()
 
 			while (!pCollisionManager->Is_Stop())
 			{
-				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Default"));
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Arena"));
 
 				if (fTimeAcc >= 1.f / 60.0f)
 				{
-					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60")));
+					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60_Arena")));
 					fTimeAcc = 0.f;
 				}
 			}

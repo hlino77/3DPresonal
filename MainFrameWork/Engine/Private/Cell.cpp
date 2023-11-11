@@ -189,7 +189,7 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 _bool CCell::Intersects(Vec3 vOrigin, Vec3 vDir)
 {
 	_float fDist;
-	return TriangleTests::Intersects(vOrigin, vDir, m_Points[0], m_Points[1], m_Points[2], fDist);
+	return TriangleTests::Intersects(vOrigin, vDir, m_OriginPoint[0], m_OriginPoint[1], m_OriginPoint[2], fDist);
 }
 
 CCell* CCell::Create(CNavigation* pNavigation, _uint iIndex)

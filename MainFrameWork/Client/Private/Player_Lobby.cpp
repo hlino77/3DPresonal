@@ -32,7 +32,7 @@ HRESULT CPlayer_Lobby::Initialize(void* pArg)
 
 	m_matView = XMMatrixIdentity();
 
-	m_matProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinSizeX / g_iWinSizeY, 0.2f, 1000.0f);
+	m_matProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinSizeX / g_iWinSizeY, 0.2f, 1200.0f);
 
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, Vec3(0.38f, -1.0f, 1.08f));

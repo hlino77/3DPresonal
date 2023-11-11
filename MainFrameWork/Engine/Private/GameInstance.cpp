@@ -340,6 +340,18 @@ HRESULT CGameInstance::Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc);
 }
 
+void CGameInstance::Ready_LightMatrix(Matrix matWorld)
+{
+	m_pLight_Manager->Ready_LightMatrix(matWorld);
+}
+
+Matrix CGameInstance::Get_DirectionLightMatrix()
+{
+	return m_pLight_Manager->Get_DirectionLightMatrix();
+}
+
+
+
 HRESULT CGameInstance::Reset_Lights()
 {
 	return m_pLight_Manager->Reset_Lights();

@@ -52,6 +52,10 @@ void CState_Naruto_RunEnd::Enter_State()
 		m_vStopPos = m_pPlayer->Get_TargetPos();
 
 	m_pPlayer->Set_MoveSpeed(0.0f);
+
+
+	if (m_pPlayer->Is_Wall())
+		m_pPlayer->DisAppear_FootTrail();
 }
 
 void CState_Naruto_RunEnd::Tick_State(_float fTimeDelta)

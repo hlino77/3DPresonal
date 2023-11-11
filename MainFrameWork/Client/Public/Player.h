@@ -20,6 +20,7 @@ END
 BEGIN(Client)
 
 class CUI_Hits;
+class CFootTrail;
 
 class CPlayer : public CGameObject
 {
@@ -112,12 +113,16 @@ public:
 	void			Hit_Attack(CCollider* pCollider);
 
 	void			Add_Hit();
-	
 
+	void			DisAppear_FootTrail();
+	void			Appear_FootTrail();
+
+
+	void			Set_HitEffect(_bool bHitEffect) { m_bHitEffect = bHitEffect; }
 protected:
 	virtual HRESULT Ready_Components();
-
-
+	
+	
 
 protected:
 	class CCamera_Player*			m_pCamera = nullptr;
@@ -134,12 +139,16 @@ protected:
 
 	_bool							m_bWall = false;
 	
-
-
+	_bool							m_bHitEffect = false;
 
 	_uint							m_iHp;
 
 	std::future<HRESULT>			m_PlayAnimation;
+
+
+	CFootTrail*						m_pFootTrail[2];
+	_uint							m_iFootBoneIndex[2];
+
 
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;

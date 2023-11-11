@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Engine_Defines.h"
 #include "Base.h"
+#include "Lock.h"
 
 BEGIN(Engine)
 
@@ -26,6 +27,7 @@ public:
 	void	Reset_Navigation();
 
 private:
+	USE_LOCK
 	CNavigation* m_pNavigation;
 
 private:

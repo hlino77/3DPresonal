@@ -26,6 +26,7 @@ HRESULT CNavigationMgr::Reserve_Manager(ID3D11Device* pDevice, ID3D11DeviceConte
 
 void CNavigationMgr::Render()
 {
+	READ_LOCK
 	if (m_pNavigation)
 		m_pNavigation->Render();
 }
@@ -51,6 +52,7 @@ void CNavigationMgr::Find_FirstCell(CGameObject* pObject)
 
 void CNavigationMgr::Reset_Navigation()
 {
+	WRITE_LOCK;
 	Safe_Release(m_pNavigation);
 	m_pNavigation = nullptr;
 }

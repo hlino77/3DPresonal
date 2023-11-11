@@ -51,6 +51,9 @@ void CState_Naruto_WalkLoop::Enter_State()
 	}
 
 	m_pPlayer->Set_MoveSpeed(0.0f);
+
+	if (m_pPlayer->Is_Wall())
+		m_pPlayer->Appear_FootTrail();
 }
 
 void CState_Naruto_WalkLoop::Tick_State(_float fTimeDelta)

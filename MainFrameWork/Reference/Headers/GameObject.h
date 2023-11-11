@@ -34,6 +34,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize) { return S_OK; }
+	virtual HRESULT Render_ShadowDepth() { return S_OK; }
 	virtual void	Add_InstanceData(vector<Matrix>& BufferData) {};
 
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) {};

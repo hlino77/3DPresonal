@@ -85,9 +85,10 @@ HRESULT CBoss_Deidara::Render()
 
 void CBoss_Deidara::Set_Skill(CGameObject* pGameObject)
 {
-	if (pGameObject->Get_ObjectTag() == L"TwinBird")
+	WRITE_LOCK
+	if (m_pTwinBird[0] == nullptr)
 		m_pTwinBird[0] = dynamic_cast<CSkill_TwinBird*>(pGameObject);
-	else if (pGameObject->Get_ObjectTag() == L"TwinBird_1")
+	else
 		m_pTwinBird[1] = dynamic_cast<CSkill_TwinBird*>(pGameObject);
 }
 

@@ -45,6 +45,8 @@ public:
 	virtual HRESULT Render();
 	virtual void Set_SlowMotion(_bool bSlow) override;
 public:
+	void					Find_NearTarget();
+
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
 
 

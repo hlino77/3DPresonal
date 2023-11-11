@@ -121,7 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../Reference/Headers/;../Public/;../../ThirdParty/;../../Reference/Include/;../Default/</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,6 +166,7 @@
     <ClCompile Include="..\Private\Loader_Server.cpp" />
     <ClCompile Include="..\Private\LobbyUser_Server.cpp" />
     <ClCompile Include="..\Private\MainApp_Server.cpp" />
+    <ClCompile Include="..\Private\MonsterSpawner_Server.cpp" />
     <ClCompile Include="..\Private\Monster_C2Dragon_Server.cpp" />
     <ClCompile Include="..\Private\Monster_Server.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu_Server.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="..\Public\Loader_Server.h" />
     <ClInclude Include="..\Public\LobbyUser_Server.h" />
     <ClInclude Include="..\Public\MainApp_Server.h" />
+    <ClInclude Include="..\Public\MonsterSpawner_Server.h" />
     <ClInclude Include="..\Public\Monster_C2Dragon_Server.h" />
     <ClInclude Include="..\Public\Monster_Server.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu_Server.h" />

@@ -38,6 +38,15 @@ void CState_Sasuke_HitSpinBlowUp::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 	m_bKnockBack = false;
+	m_pPlayer->Get_TransformCom()->Set_Up(Vec3(0.0f, 1.0f, 0.0f));
+
+
+	m_pPlayer->Set_Gravity(true);
+	//m_pPlayer->Get_RigidBody()->UseDrag(false);
+	m_pPlayer->Get_RigidBody()->UseGravity(true);
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
+	m_pPlayer->Set_Wall(false);
+	m_pPlayer->DisAppear_FootTrail();
 }
 
 void CState_Sasuke_HitSpinBlowUp::Tick_State(_float fTimeDelta)

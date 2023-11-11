@@ -166,6 +166,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\BackGround_Loading.h" />
     <ClInclude Include="..\Public\BackGround_Lobby.h" />
     <ClInclude Include="..\Public\Boss.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\Public\ClientEvent_PlayerStart.h" />
     <ClInclude Include="..\Public\ColMesh.h" />
     <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\FootTrail.h" />
     <ClInclude Include="..\Public\Level_Konoha.h" />
     <ClInclude Include="..\Public\Level_Lobby.h" />
     <ClInclude Include="..\Public\LineCircle.h" />
@@ -192,12 +194,14 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\MonsterSpawner.h" />
     <ClInclude Include="..\Public\Monster_C2Dragon.h" />
     <ClInclude Include="..\Public\Monster_WhiteZetsu.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Player_Lobby.h" />
     <ClInclude Include="..\Public\Player_Naruto.h" />
     <ClInclude Include="..\Public\Player_Sasuke.h" />
+    <ClInclude Include="..\Public\Pool.h" />
     <ClInclude Include="..\Public\Protocol.pb.h" />
     <ClInclude Include="..\Public\ServerSession.h" />
     <ClInclude Include="..\Public\ServerSessionManager.h" />
@@ -305,6 +309,7 @@
     <ClCompile Include="..\Private\ClientEvent_PlayerStart.cpp" />
     <ClCompile Include="..\Private\ColMesh.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\FootTrail.cpp" />
     <ClCompile Include="..\Private\Level_Konoha.cpp" />
     <ClCompile Include="..\Private\Level_Lobby.cpp" />
     <ClCompile Include="..\Private\LineCircle.cpp" />
@@ -323,6 +328,7 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\MonsterSpawner.cpp" />
     <ClCompile Include="..\Private\Monster_C2Dragon.cpp" />
     <ClCompile Include="..\Private\Monster_WhiteZetsu.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
@@ -442,12 +448,14 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtx_Point_Effect_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtx_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtx_Point_Trail_Instance.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Protobuf\bin\Enum.proto" />

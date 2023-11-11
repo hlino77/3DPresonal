@@ -238,10 +238,24 @@ HRESULT CMesh::Ready_Vertices(VTXANIMMODEL* pVertices, Matrix PivotMatrix)
 {
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
-		_float fY = *&pVertices[i].vPosition.y;
-		*&pVertices[i].vPosition.y = -*&pVertices[i].vPosition.z;
-		*&pVertices[i].vPosition.z = fY;
-
+		{
+			_float fY = *&pVertices[i].vPosition.y;
+			*&pVertices[i].vPosition.y = -*&pVertices[i].vPosition.z;
+			*&pVertices[i].vPosition.z = fY;
+		}
+		
+		{
+			_float fY = *&pVertices[i].vNormal.y;
+			*&pVertices[i].vNormal.y = -*&pVertices[i].vNormal.z;
+			*&pVertices[i].vNormal.z = fY;
+		}
+		
+		{
+			_float fY = *&pVertices[i].vTangent.y;
+			*&pVertices[i].vTangent.y = -*&pVertices[i].vTangent.z;
+			*&pVertices[i].vTangent.z = fY;
+		}
+	
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PivotMatrix));
 		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));

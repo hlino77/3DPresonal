@@ -14,7 +14,7 @@
 #include "NavigationMgr.h"
 #include "Skill.h"
 #include "UI_Hits.h"
-
+#include "FootTrail.h"
 
 
 
@@ -51,8 +51,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Reset_Triangle();
 
-	CNavigationMgr::GetInstance()->Find_FirstCell(this);
-
 
 	if (m_bControl)
 	{
@@ -61,6 +59,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 		if (m_pHitUI == nullptr)
 			return E_FAIL;
 	}
+
+
+	m_iFootBoneIndex[0] = m_pModelCom->Find_BoneIndex(L"LeftToeBase_end");
+	m_iFootBoneIndex[1] = m_pModelCom->Find_BoneIndex(L"RightToeBase_end");
 
     return S_OK;
 }
@@ -72,12 +74,9 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	m_pRigidBody->AddForce(Vec3(0.0f, 1000.0f, 0.0f), ForceMode::FORCE);
 	//	m_pRigidBody->UseGravity(true);
 	//}
-	
 
-	/*if (KEY_TAP(KEY::P))
-	{
-		m_pRigidBody->AddForce(Vec3(0.0f, 0.0f, 300.0f), ForceMode::FORCE);
-	}*/
+
+
 
 	if(!m_bWall && m_bNavi)
 		CNavigationMgr::GetInstance()->SetUp_OnCell(this);
@@ -329,12 +328,11 @@ void CPlayer::Set_PlayerToWall(_float fTimeDelta)
 
 		if (fAngle < 45.0f)
 		{
+			DisAppear_FootTrail();
 			m_bWall = false;
 			m_bGravity = true;
 		}
 	}
-	else
-		cout << "NO" << endl;
 
 }
 
@@ -530,6 +528,42 @@ HRESULT CPlayer::Ready_Components()
 
     return S_OK;
 }
+
+void CPlayer::Appear_FootTrail()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+
+	for (_uint i = 0; i < 2; ++i)
+	{
+		if (m_pFootTrail[i] == nullptr)
+		{
+			m_pFootTrail[i] = dynamic_cast<CFootTrail*>(pGameInstance->GetInstance()->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_FootTrail"));
+			m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(0.035f, 0.69f, 0.95f, 1.0f), Vec4(0.074f, 0.24f, 0.58f, 1.0f));
+			//m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+			//m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(1.0f, 0.0f, 0.0f, 1.0f), Vec4(0.074f, 0.24f, 0.58f, 1.0f));
+		}
+	}
+
+
+	Safe_Release(pGameInstance);
+
+}
+
+void CPlayer::DisAppear_FootTrail()
+{
+	for (_uint i = 0; i < 2; ++i)
+	{
+		if (m_pFootTrail[i])
+		{
+			m_pFootTrail[i]->Disappear();
+			m_pFootTrail[i] = nullptr;
+		}
+	}
+}
+
 
 void CPlayer::Send_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)
 {

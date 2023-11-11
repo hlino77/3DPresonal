@@ -84,7 +84,7 @@ void CMainApp_Server::Tick(_float fTimeDelta)
 
 HRESULT CMainApp_Server::Render()
 {
-	m_pRenderer_Com->Draw();
+	m_pRenderer_Com->Draw_Server();
 
 	m_pGameInstance->Render_Debug();
 	return S_OK;

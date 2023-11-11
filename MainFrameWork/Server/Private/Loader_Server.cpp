@@ -9,6 +9,7 @@
 #include "Monster_C2Dragon_Server.h"
 #include "Skill_Hiryu_Server.h"
 #include "Skill_TwinBird_Server.h"
+#include "MonsterSpawner_Server.h"
 
 CLoader_Server::CLoader_Server()
 {
@@ -125,7 +126,15 @@ HRESULT CLoader_Server::Loading_For_Level_Konoha()
 	CGameSessionManager::GetInstance()->Broadcast(sendBuffer);
 
 
-	Loading_Model_For_Level_Arena();
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(L"Prototype_GameObject_MonsterSpawner",
+		CMonsterSpawner_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	Loading_Model_For_Level_Konoha();
+
 
 
 	Safe_Release(pGameInstance);

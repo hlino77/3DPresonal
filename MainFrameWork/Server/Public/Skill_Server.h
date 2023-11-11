@@ -40,9 +40,9 @@ public:
 	virtual HRESULT Render() = 0;
 
 
-	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
-	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
-	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther);
+	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther);
+	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther);
 	void			Send_Collision(_uint iColLayer, CCollider* pOther, _bool bEnter);
 
 

@@ -15,7 +15,9 @@
 #include "ServerEvent_ArenaStart.h"
 #include "ServerEvent_PlayerStart.h"
 #include "ServerEvent_BattleStart.h"
-
+#include "AsFileUtils.h"
+#include <filesystem>
+#include "MonsterSpawner_Server.h"
 
 
 CLevel_Konoha_Server::CLevel_Konoha_Server()
@@ -25,6 +27,8 @@ CLevel_Konoha_Server::CLevel_Konoha_Server()
 
 HRESULT CLevel_Konoha_Server::Initialize()
 {
+	CNavigationMgr::GetInstance()->Add_Navigation(L"Kono.navi");
+
 	Ready_Events();
 
 
@@ -58,6 +62,9 @@ HRESULT CLevel_Konoha_Server::Initialize()
 
 	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
 		return E_FAIL;
+
+
+	Ready_Spawners();
 
 	Wait_ClientLevelState(LEVELSTATE::INITEND);
 
@@ -232,7 +239,7 @@ void CLevel_Konoha_Server::Wait_ClientLevelState(LEVELSTATE eState)
 
 HRESULT CLevel_Konoha_Server::Broadcast_PlayerInfo()
 {
-	auto& ObjectList = CGameInstance::GetInstance()->Find_GameObjects(LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_PLAYER);
+	auto& ObjectList = CGameInstance::GetInstance()->Find_GameObjects(LEVELID::LEVEL_KONOHA, (_uint)LAYER_TYPE::LAYER_PLAYER);
 
 	if (ObjectList.size() == 0)
 		return S_OK;
@@ -268,50 +275,6 @@ HRESULT CLevel_Konoha_Server::Broadcast_PlayerInfo()
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
-
-
-	return S_OK;
-}
-
-HRESULT CLevel_Konoha_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-
-	Protocol::S_CREATE_OBJCECT pkt;
-	pkt.set_strname(CAsUtils::ToString(szName));
-	pkt.set_iobjectid(g_iObjectID++);
-	pkt.set_ilevel((uint32)LEVELID::LEVEL_KONOHA);
-	pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_MONSTER);
-	pkt.set_iobjecttype((uint32)OBJ_TYPE::MONSTER);
-
-	auto vPacketPos = pkt.mutable_vpos();
-	vPacketPos->Resize(3, 0.0f);
-	memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
-
-	/*auto tMonster = pkt.add_tmonsterinfo();
-	tMonster->set_ffollowdistance(10.0f);*/
-
-	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
-
-
-	CMonster_Server::MODELDESC Desc;
-	Desc.strFileName = CAsUtils::ToWString(pkt.strname());
-	Desc.iObjectID = pkt.iobjectid();
-	Desc.iLayer = pkt.ilayer();
-
-	wstring szMonsterName = L"Prototype_GameObject_Monster_" + szName;
-	CMonster_Server* pMonster = dynamic_cast<CMonster_Server*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szMonsterName, &Desc));
-	if (pMonster == nullptr)
-		return E_FAIL;
-
-	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
-
-	pMonster->Set_FollowDistance(10.0f);
-
-	Safe_Release(pGameInstance);
 
 
 	return S_OK;
@@ -366,6 +329,60 @@ HRESULT CLevel_Konoha_Server::Ready_Events()
 	return S_OK;
 }
 
+void CLevel_Konoha_Server::Ready_Spawners()
+{	
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	shared_ptr<CAsFileUtils> file = make_shared<CAsFileUtils>();
+	file->Open(L"../Bin/Resources/SpawnerData/KonoSpawner.data", FileMode::Read);
+
+	_uint iSpawnerCount = file->Read<_uint>();
+
+	//Prototype_GameObject_MonsterSpawner
+	
+	for (_uint i = 0; i < iSpawnerCount; ++i)
+	{
+		_uint iObjecID = g_iObjectID++;
+		CMonsterSpawner_Server* pSpawner = dynamic_cast<CMonsterSpawner_Server*>(pGameInstance->Add_GameObject((_uint)LEVEL_KONOHA, (_uint)LAYER_TYPE::LAYER_BACKGROUND, L"Prototype_GameObject_MonsterSpawner", &iObjecID));
+
+		Vec3 vPos = file->Read<Vec3>();
+		_float fRadius = file->Read<_float>();
+		pSpawner->Set_Spawner(vPos, fRadius);
+
+		_uint iMonsterCount = file->Read<_uint>();
+
+
+		for (_uint i = 0; i < iMonsterCount; ++i)
+		{
+			pSpawner->Add_MonsterPos(file->Read<Vec3>());
+		}
+
+
+		Protocol::S_CREATE_OBJCECT pkt;
+		pkt.set_strname("MonsterSpawner");
+		pkt.set_iobjectid(iObjecID);
+		pkt.set_ilevel((uint32)LEVELID::LEVEL_KONOHA);
+		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_BACKGROUND);
+		pkt.set_iobjecttype((uint32)OBJ_TYPE::SPAWNER);
+
+		auto vPacketPos = pkt.mutable_vpos();
+		vPacketPos->Resize(3, 0.0f);
+		memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
+
+		/*auto tMonster = pkt.add_tmonsterinfo();
+		tMonster->set_ffollowdistance(10.0f);*/
+
+		SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+		CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+	}
+
+
+
+	Safe_Release(pGameInstance);
+}
+
 
 void CLevel_Konoha_Server::Set_CheckGruop()
 {
@@ -387,10 +404,10 @@ void CLevel_Konoha_Server::Start_Collision()
 			CCollisionManager* pCollisionManager = CCollisionManager::GetInstance();
 			pCollisionManager->AddRef();
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Default"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_Konoha"))))
 				return FALSE;
 
-			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60"))))
+			if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Collision_60_Konoha"))))
 				return FALSE;
 
 			_float		fTimeAcc = 0.f;
@@ -398,11 +415,11 @@ void CLevel_Konoha_Server::Start_Collision()
 
 			while (!pCollisionManager->Is_Stop())
 			{
-				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Default"));
+				fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_Konoha"));
 
 				if (fTimeAcc >= 1.f / 60.0f)
 				{
-					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60")));
+					pCollisionManager->LateTick_Collision(pGameInstance->Compute_TimeDelta(TEXT("Timer_Collision_60_Konoha")));
 					fTimeAcc = 0.f;
 				}
 			}

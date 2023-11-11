@@ -49,6 +49,9 @@ void CState_Naruto_RunLoop::Enter_State()
 		vDir.Normalize();
 		Set_TargetPos(vDir);
 	}
+
+	if (m_pPlayer->Is_Wall())
+		m_pPlayer->Appear_FootTrail();
 }
 
 void CState_Naruto_RunLoop::Tick_State(_float fTimeDelta)

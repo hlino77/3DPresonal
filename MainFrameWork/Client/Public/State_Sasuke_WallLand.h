@@ -29,6 +29,7 @@ private:
 	//Animation
 	_int m_iFallFront = 0;
 
+	Vec3 m_vPrevPos;
 public:
 	virtual void Free() override;
 };

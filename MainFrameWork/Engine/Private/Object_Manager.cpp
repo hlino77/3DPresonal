@@ -38,6 +38,9 @@ HRESULT CObject_Manager::Add_Prototype(const wstring & strPrototypeTag, CGameObj
 	return S_OK;
 }
 
+
+
+
 CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _uint iLayerType, const wstring & strPrototypeTag, void * pArg)
 {
 	/* 복제할 사본을 차즌ㄷ나. */
@@ -53,29 +56,29 @@ CGameObject* CObject_Manager::Add_GameObject(_uint iLevelIndex, const _uint iLay
 	if (nullptr == pLayer)
 		return nullptr;
 
-	wstring szObjectTag = pGameObject->Get_ObjectTag();
+	//wstring szObjectTag = pGameObject->Get_ObjectTag();
 
 
-	CGameObject* pObject = pLayer->Find_GameObject(szObjectTag);
-	_uint iIndex = 0;
+	//CGameObject* pObject = pLayer->Find_GameObject(szObjectTag);
+	//_uint iIndex = 0;
 
-	while (pObject)
-	{
-		pObject = pLayer->Find_GameObject(szObjectTag);
+	//while (pObject)
+	//{
+	//	pObject = pLayer->Find_GameObject(szObjectTag);
 
-		if (pObject)
-		{
-			++iIndex;
-			_tchar			szName[MAX_PATH] = TEXT("");
-			szObjectTag = pGameObject->Get_ObjectTag();
-			szObjectTag += L"_%d";
+	//	if (pObject)
+	//	{
+	//		++iIndex;
+	//		_tchar			szName[MAX_PATH] = TEXT("");
+	//		szObjectTag = pGameObject->Get_ObjectTag();
+	//		szObjectTag += L"_%d";
 
-			wsprintf(szName, szObjectTag.c_str(), iIndex);
-			szObjectTag = szName;
-		}
-		else
-			pGameObject->Set_ObjectTag(szObjectTag);
-	}
+	//		wsprintf(szName, szObjectTag.c_str(), iIndex);
+	//		szObjectTag = szName;
+	//	}
+	//	else
+	//		pGameObject->Set_ObjectTag(szObjectTag);
+	//}
 
 	
 	pLayer->Add_GameObject(pGameObject);

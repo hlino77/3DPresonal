@@ -63,16 +63,24 @@ HRESULT CStaticModel::Render()
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
 		return S_OK;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
-		return S_OK;
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
 		return S_OK;
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
+		return S_OK;
+
+	Matrix matVeiw = pGameInstance->Get_DirectionLightMatrix();
+	Matrix matWorld = matVeiw.Invert();
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ShadowViewMatrix", &matVeiw)))
+		return S_OK;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		
 		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return S_OK;
 
@@ -87,6 +95,50 @@ HRESULT CStaticModel::Render()
 	Safe_Release(pGameInstance);
 
     return S_OK;
+}
+
+HRESULT CStaticModel::Render_ShadowDepth()
+{
+	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+		return S_OK;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return S_OK;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
+		return S_OK;
+
+	Matrix matVeiw = pGameInstance->Get_DirectionLightMatrix();
+	Matrix matWorld = matVeiw.Invert();
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ShadowViewMatrix", &matVeiw)))
+		return S_OK;
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;
+
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;*/
+
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 1)))
+			return S_OK;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 HRESULT CStaticModel::Add_ModelComponent(const wstring& strComName)

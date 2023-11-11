@@ -29,6 +29,8 @@
 #include "State_Naruto_GetUp.h"
 #include "LineCircle.h"
 #include "PhysXMgr.h"
+#include "Pool.h"
+
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -55,11 +57,6 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 
 	m_fAttackMoveSpeed = 8.0f;
 
-	for (_uint i = 0; i < 100; ++i)
-	{
-		CLineCircle* pObject = dynamic_cast<CLineCircle*>(CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_LineCircle"));
-		m_Effects.push_back(pObject);
-	}
 	
 
 	return S_OK;
@@ -124,7 +121,12 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 				m_pCamera->Cam_Shake(0.002f, 0.15f);
 
 			Add_Hit();
-			Effect_Temp();
+
+			if (m_bHitEffect == false)
+			{
+				Effect_Hit();
+				m_bHitEffect = true;
+			}
 		}
 		return;
 	}
@@ -226,7 +228,7 @@ void CPlayer_Naruto::Set_Colliders(_float fTimeDelta)
 }
 
 
-void CPlayer_Naruto::Effect_Temp()
+void CPlayer_Naruto::Effect_Hit()
 {
 	Vec3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -237,12 +239,18 @@ void CPlayer_Naruto::Effect_Temp()
 	vPos += vLook * 1.0f;
 
 
-	Vec3 vColor(1.0f, 0.81f, 0.25f);
+	Vec3 vColor(0.93f, 0.41f, 0.05f);
 
-	for (auto& Effect : m_Effects)
+
+	for (_uint i = 0; i < 50; ++i)
 	{
-		Effect->Appear(vLook, vPos, vColor, 1.0f);
+		CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
+		if (pLineCircle)
+		{
+			pLineCircle->Appear(vLook, vPos, vColor, 1.0f);
+		}
 	}
+
 }
 
 HRESULT CPlayer_Naruto::Ready_Components()

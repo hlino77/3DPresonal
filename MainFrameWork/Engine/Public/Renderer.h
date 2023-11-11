@@ -26,19 +26,33 @@ public:
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Draw();
-
+	HRESULT Draw_Server();
 
 private:
 	HRESULT Render_Priority();
+
+
 	HRESULT Render_NonAlphaBlend();
 	HRESULT Render_StaticInstance();
+	HRESULT	Render_ShadowDepth();
 	HRESULT Render_Lights();
+	HRESULT Render_LightAcc();
+	HRESULT Render_Deferred();
+
+
 	HRESULT Render_Blend();
 	HRESULT Render_NonLight();
 	HRESULT Render_AlphaBlend();
 	HRESULT	Render_EffectInstance();
+
+	HRESULT Render_EffectAcc();
+	HRESULT Render_Deferred_Effects();
+
+
 	HRESULT Render_UI();
 
+
+	HRESULT Render_Debug();
 private:
 	HRESULT Render_ModelInstancing(const wstring& szModelName);
 	HRESULT Render_EffectInstancing(const wstring& szModelName);
@@ -55,6 +69,27 @@ private:
 
 
 	_uint	m_iBufferSize = 0;
+
+
+	//RenderTarget
+	class CTarget_Manager* m_pTarget_Manager = { nullptr };
+	class CLight_Manager* m_pLight_Manager = { nullptr };
+
+	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
+	class CShader* m_pMRTShader = { nullptr };
+
+	Matrix					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+
+
+
+	//Blur
+	void	Ready_BlurData();
+
+	Vec2	m_vPixelSize;
+	_int	m_iKernelSize;
+	vector<_float> m_BlurWeights;
+
+
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pObject, void* pArg) override;

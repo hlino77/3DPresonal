@@ -72,6 +72,12 @@ HRESULT CLevel_Lobby::LateTick(_float fTimeDelta)
 	return S_OK;
 }
 
+HRESULT CLevel_Lobby::Exit()
+{
+	CGameInstance::GetInstance()->Reset_Lights();
+	return S_OK;
+}
+
 HRESULT CLevel_Lobby::Ready_Lights()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -79,37 +85,43 @@ HRESULT CLevel_Lobby::Ready_Lights()
 
 	LIGHTDESC			LightDesc;
 
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = Vec4(15.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = Vec4(1.f, 0.0f, 0.f, 1.f);
-	LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	//LightDesc.vPosition = Vec4(15.0f, 5.0f, 15.0f, 1.f);
+	//LightDesc.fRange = 10.f;
+	//LightDesc.vDiffuse = Vec4(1.f, 0.0f, 0.f, 1.f);
+	//LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
+	//	return E_FAIL;
 
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = Vec4(25.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = Vec4(0.0f, 1.f, 0.f, 1.f);
-	LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	//LightDesc.vPosition = Vec4(25.0f, 5.0f, 15.0f, 1.f);
+	//LightDesc.fRange = 10.f;
+	//LightDesc.vDiffuse = Vec4(0.0f, 1.f, 0.f, 1.f);
+	//LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
+	//	return E_FAIL;
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = Vec4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = Vec4(0.5, 0.5, 0.5, 1.f);
-	LightDesc.vAmbient = Vec4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vDiffuse = Vec4(1.0f, 1.0f, 1.0f, 1.f);
+	LightDesc.vAmbient = Vec4(1.0f, 1.0f, 1.0f, 1.f);
 	LightDesc.vSpecular = Vec4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
 		return E_FAIL;
+
+	Vec3 vLook = LightDesc.vDirection;
+	vLook.Normalize();
+	Vec3 vPos = -vLook * 500.0f;
+	Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+	pGameInstance->Ready_LightMatrix(matLightView.Invert());
 
 	Safe_Release(pGameInstance);
 

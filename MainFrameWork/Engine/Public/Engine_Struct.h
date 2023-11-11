@@ -32,6 +32,8 @@ namespace Engine
 
 	}LIGHTDESC;
 
+
+
 	typedef struct tagMaterialDesc
 	{
 		char			strName[MAX_PATH];

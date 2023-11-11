@@ -53,6 +53,7 @@ void CState_Sasuke_Jump::Enter_State()
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
 	m_pPlayer->Set_DoubleJump(false);
 	m_pPlayer->Set_Wall(false);
+	m_pPlayer->DisAppear_FootTrail();
 }
 
 void CState_Sasuke_Jump::Tick_State(_float fTimeDelta)

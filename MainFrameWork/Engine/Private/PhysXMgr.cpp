@@ -151,13 +151,14 @@ HRESULT CPhysXMgr::Register_ColMesh(CGameObject* pObject)
 
 HRESULT CPhysXMgr::Add_ColMesh(_uint iObjectID, const wstring szModelName)
 {
+	WRITE_LOCK
+
 	if (m_ColMesheGeom.find(szModelName) == m_ColMesheGeom.end())
 		return S_OK;
 
 
 	if (Find_ColMeshName(iObjectID, szModelName))
 		return S_OK;
-
 
 	m_ColMeshes[iObjectID].push_back(szModelName);
 
@@ -166,6 +167,8 @@ HRESULT CPhysXMgr::Add_ColMesh(_uint iObjectID, const wstring szModelName)
 
 HRESULT CPhysXMgr::Delete_ColMesh(_uint iObjectID, const wstring szModelName)
 {
+	WRITE_LOCK
+
 	for (auto iter = m_ColMeshes[iObjectID].begin(); iter != m_ColMeshes[iObjectID].end();)
 	{
 		if (*iter == szModelName)
@@ -179,6 +182,8 @@ HRESULT CPhysXMgr::Delete_ColMesh(_uint iObjectID, const wstring szModelName)
 
 void CPhysXMgr::LateTick(_float fTimeDelta)
 {
+	READ_LOCK
+
 	_uint iIndex = 0;
 	for (auto& Player : m_Players)
 	{

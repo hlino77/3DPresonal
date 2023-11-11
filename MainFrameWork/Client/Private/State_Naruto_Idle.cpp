@@ -70,6 +70,12 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+
+	if (KEY_TAP(KEY::P))
+	{
+		m_pPlayer->Effect_Hit();
+	}
+
 }
 
 void CState_Naruto_Idle::Tick_State_NoneControl(_float fTimeDelta)

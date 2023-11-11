@@ -22,6 +22,8 @@
 #include "ClientEvent_BattleStart.h"
 #include "PhysXMgr.h"
 #include "RigidBody.h"
+#include "LineCircle.h"
+#include "Pool.h"
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -104,7 +106,8 @@ HRESULT CLevel_Arena::Exit()
 	End_Picking();
 	CServerSessionManager::GetInstance()->Set_Player(nullptr);
 	CPhysXMgr::GetInstance()->Reset();
-
+	CNavigationMgr::GetInstance()->Reset_Navigation();
+	CGameInstance::GetInstance()->Reset_Lights();
 	return S_OK;
 }
 
@@ -115,37 +118,45 @@ HRESULT CLevel_Arena::Ready_Lights()
 
 	LIGHTDESC			LightDesc;
 
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = Vec4(15.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = Vec4(1.f, 0.0f, 0.f, 1.f);
-	LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	//LightDesc.vPosition = Vec4(15.0f, 5.0f, 15.0f, 1.f);
+	//LightDesc.fRange = 10.f;
+	//LightDesc.vDiffuse = Vec4(1.f, 0.0f, 0.f, 1.f);
+	//LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
+	//	return E_FAIL;
 
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = Vec4(25.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = Vec4(0.0f, 1.f, 0.f, 1.f);
-	LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	//LightDesc.vPosition = Vec4(25.0f, 5.0f, 15.0f, 1.f);
+	//LightDesc.fRange = 10.f;
+	//LightDesc.vDiffuse = Vec4(0.0f, 1.f, 0.f, 1.f);
+	//LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
+	//	return E_FAIL;
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = Vec4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = Vec4(0.5, 0.5, 0.5, 1.f);
-	LightDesc.vAmbient = Vec4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vDiffuse = Vec4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = Vec4(1.0f, 1.0f, 1.0f, 1.f);
 	LightDesc.vSpecular = Vec4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
 		return E_FAIL;
+
+
+
+	Vec3 vLook = LightDesc.vDirection;
+	vLook.Normalize();
+	Vec3 vPos = -vLook * 200.0f;
+	Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+	pGameInstance->Ready_LightMatrix(matLightView.Invert());
 
 	Safe_Release(pGameInstance);
 
@@ -232,6 +243,13 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	CPool<CLineCircle>();
+	for (_uint i = 0; i < 1000; ++i)
+	{
+		CLineCircle* pObject = dynamic_cast<CLineCircle*>(CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_LineCircle"));
+		CPool<CLineCircle>::Return_Obj(pObject);
+	}
+	
 
 	Safe_Release(pGameInstance);
 
@@ -257,7 +275,7 @@ HRESULT CLevel_Arena::Ready_Player_Camera(const LAYER_TYPE eLayerType)
 	CameraDesc.tCameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.tCameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.tCameraDesc.fNear = 0.2f;
-	CameraDesc.tCameraDesc.fFar = 1000.0f;
+	CameraDesc.tCameraDesc.fFar = 1200.0f;
 
 	CameraDesc.tCameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.tCameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
