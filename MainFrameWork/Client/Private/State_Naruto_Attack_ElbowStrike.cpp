@@ -52,7 +52,6 @@ void CState_Naruto_Attack_ElbowStrike::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, m_iStartFrame, m_iChangeFrame);
 	m_bSetTargetPos = false;
 
-
 	if (m_pPlayer->Is_Control())
 		m_pPlayer->Set_TargetPos(m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
 
@@ -159,7 +158,6 @@ void CState_Naruto_Attack_ElbowStrike::Update_Collider(_float fTimeDelta, _uint 
 
 				m_fCurrTime = 0.0f;
 				m_bAttack = true;
-				m_pPlayer->Set_HitEffect(false);
 			}
 		}
 	}

@@ -30,6 +30,9 @@
 #include "State_Sasuke_GetUp.h"
 #include "State_Sasuke_DownToFloor.h"
 #include "PhysXMgr.h"
+#include "LineCircle.h"
+#include "Pool.h"
+
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -103,7 +106,8 @@ HRESULT CPlayer_Sasuke::Render()
 
 void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
-	int i = 0;
+	if (!m_bControl)
+		OnCollisionEnter_NoneControl(iColLayer, pOther);
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
@@ -125,6 +129,12 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 				m_pCamera->Cam_Shake(0.002f, 0.15f);
 
 			Add_Hit();
+
+			if (m_bHitEffect == false)
+			{
+				Effect_Hit();
+				m_bHitEffect = true;
+			}
 		}
 		return;
 	}
@@ -155,7 +165,8 @@ void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
-	int i = 0;
+	if (!m_bControl)
+		OnCollisionExit_NoneControl(iColLayer, pOther);
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
@@ -170,6 +181,7 @@ void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
 		{
 			Set_SlowMotion(false);
+			m_bHitEffect = false;
 		}
 		return;
 	}
@@ -189,12 +201,67 @@ void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	}
 }
 
+void CPlayer_Sasuke::OnCollisionEnter_NoneControl(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			if (m_bHitEffect == false)
+			{
+				Effect_Hit();
+				m_bHitEffect = true;
+			}
+		}
+		return;
+	}
+}
+
+void CPlayer_Sasuke::OnCollisionExit_NoneControl(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			m_bHitEffect = false;
+		}
+		return;
+	}
+}
+
 void CPlayer_Sasuke::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
 
 	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
 		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
+}
+
+void CPlayer_Sasuke::Effect_Hit()
+{
+	Vec3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+	vLook.Normalize();
+	vPos += vUp * 0.7f;
+	vPos += vLook * 1.0f;
+
+	
+	/*Vec3 vColor(0.19f, 0.2f, 0.29f);
+	vColor *= 0.5f;*/
+
+	Vec3 vColor(0.19f, 0.0f, 0.69f);
+
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
+		if (pLineCircle)
+		{
+			pLineCircle->Appear(vLook, vPos, vColor, 1.0f);
+		}
+	}
 }
 
 void CPlayer_Sasuke::Send_PlayerInfo()

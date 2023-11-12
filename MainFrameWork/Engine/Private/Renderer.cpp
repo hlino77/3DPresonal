@@ -102,10 +102,14 @@ HRESULT CRenderer::Initialize_Prototype()
 		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_EffectBlurX"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
 
 	/* For.Target_EffectShade */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_EffectShade"),
-		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(1.f, 1.f, 1.f, 0.f))))
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 
@@ -132,6 +136,10 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_EffectBlur"), 225.f, 525.f, 150.0f, 150.0f)))
 		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_EffectBlurX"), 525.f, 525.f, 150.0f, 150.0f)))
+		return E_FAIL;
+
 
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_EffectShade"), 375.f, 525.f, 150.0f, 150.0f)))
 		return E_FAIL;
@@ -172,6 +180,13 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Effects"), TEXT("Target_EffectBlur"))))
 		return E_FAIL;
 
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_EffectBlurX"), TEXT("Target_EffectBlurX"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_EffectBlurY"), TEXT("Target_EffectBlur"))))
+		return E_FAIL;
+
+
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_EffectShade"), TEXT("Target_EffectShade"))))
 		return E_FAIL;
 
@@ -183,6 +198,10 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	m_pMRTShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
 	if (nullptr == m_pMRTShader)
+		return E_FAIL;
+
+	m_pEffectShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred_Effect.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	if (nullptr == m_pEffectShader)
 		return E_FAIL;
 
 
@@ -254,7 +273,7 @@ HRESULT CRenderer::Draw()
 	Render_AlphaBlend();
 	Render_EffectInstance();
 
-
+	Render_EffectBlur();
 	Render_EffectAcc();
 	Render_Deferred_Effects();
 	Render_UI();
@@ -483,6 +502,70 @@ HRESULT CRenderer::Render_EffectInstance()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_EffectBlur()
+{
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_EffectBlurX"))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectBlur"), "g_BlurTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pEffectShader->Bind_RawValue("g_PixelSize", &m_vPixelSize, sizeof(Vec2))))
+		return E_FAIL;
+
+	if (FAILED(m_pEffectShader->Bind_RawValue("g_KernelSize", &m_iKernelSize, sizeof(_int))))
+		return E_FAIL;
+
+	_float fCenterWeight = 0.30f;
+	_float fWeightAtt = 0.03;
+
+	if (FAILED(m_pEffectShader->Bind_RawValue("g_CenterWeight", &fCenterWeight, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pEffectShader->Bind_RawValue("g_WeightAtt", &fWeightAtt, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pEffectShader->Begin(2)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+
+	/* 다시 장치의 0번째 소켓에 백 버퍼를 올린다. */
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_EffectBlurY"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectBlurX"), "g_BlurTexture")))
+		return E_FAIL;
+	
+
+	if (FAILED(m_pEffectShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_EffectAcc()
 {
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_EffectShade"))))
@@ -490,44 +573,23 @@ HRESULT CRenderer::Render_EffectAcc()
 
 
 	/* 사각형 버퍼를 직교투영으로 Shade타겟의 사이즈만큼 꽉 채워서 그릴꺼야. */
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_EffectDiffuse"), "g_DiffuseTexture")))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_EffectBlur"), "g_BlurTexture")))
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectDiffuse"), "g_DiffuseTexture")))
 		return E_FAIL;
 
-
-
-
-	if (FAILED(m_pMRTShader->Bind_RawValue("g_PixelSize", &m_vPixelSize, sizeof(Vec2))))
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectBlur"), "g_BlurTexture")))
 		return E_FAIL;
-
-	if (FAILED(m_pMRTShader->Bind_RawValue("g_KernelSize", &m_iKernelSize, sizeof(_int))))
-		return E_FAIL;
-
-	_float fCenterWeight = 0.25f;
-	_float fWeightAtt = 0.025f;
-
-	if (FAILED(m_pMRTShader->Bind_RawValue("g_CenterWeight", &fCenterWeight, sizeof(_float))))
-		return E_FAIL;
-
-	if (FAILED(m_pMRTShader->Bind_RawValue("g_WeightAtt", &fWeightAtt, sizeof(_float))))
-		return E_FAIL;
-
-	/*if (FAILED(m_pMRTShader->Bind_RawValue("g_Weights", m_BlurWeights.data(), sizeof(_float) * m_BlurWeights.size())))
-		return E_FAIL;*/
 
 	
 
 
-	if (FAILED(m_pMRTShader->Begin(4)))
+	if (FAILED(m_pEffectShader->Begin(1)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -547,17 +609,17 @@ HRESULT CRenderer::Render_EffectAcc()
 HRESULT CRenderer::Render_Deferred_Effects()
 {
 
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_EffectShade"), "g_ShadeTexture")))
+	if (FAILED(m_pEffectShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pMRTShader->Begin(5)))
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectShade"), "g_ShadeTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pEffectShader->Begin(0)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -587,15 +649,15 @@ HRESULT CRenderer::Render_Debug()
 	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	/*if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_GameObjects"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;*/
-	/*if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Lights"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_GameObjects"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Lights"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Effects"), m_pMRTShader, m_pVIBuffer)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_EffectShade"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_ShadowDepth"), m_pMRTShader, m_pVIBuffer)))
 		return E_FAIL;

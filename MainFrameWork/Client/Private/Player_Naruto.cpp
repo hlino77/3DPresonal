@@ -101,6 +101,9 @@ HRESULT CPlayer_Naruto::Render()
 
 void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
+	if (!m_bControl)
+		OnCollisionEnter_NoneControl(iColLayer, pOther);
+
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
 		if(m_bControl)
@@ -160,6 +163,9 @@ void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 
 void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
+	if (!m_bControl)
+		OnCollisionExit_NoneControl(iColLayer, pOther);
+
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
 		if(m_bControl)
@@ -173,6 +179,7 @@ void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
 		{
 			Set_SlowMotion(false);
+			m_bHitEffect = false;
 		}
 		return;
 	}
@@ -188,6 +195,34 @@ void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
 			Set_SlowMotion(false);
+		return;
+	}
+}
+
+void CPlayer_Naruto::OnCollisionEnter_NoneControl(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			if (m_bHitEffect == false)
+			{
+				Effect_Hit();
+				m_bHitEffect = true;
+			}
+		}
+		return;
+	}
+}
+
+void CPlayer_Naruto::OnCollisionExit_NoneControl(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
+		{
+			m_bHitEffect = false;
+		}
 		return;
 	}
 }
@@ -239,8 +274,11 @@ void CPlayer_Naruto::Effect_Hit()
 	vPos += vLook * 1.0f;
 
 
-	Vec3 vColor(0.93f, 0.41f, 0.05f);
+	//Vec3 vColor(0.93f, 0.41f, 0.05f);
 
+	Vec3 vColor(0.63f, 0.11f, 0.0f);
+
+	//Vec3 vColor(1.0f , 0.0f, 0.0f);
 
 	for (_uint i = 0; i < 50; ++i)
 	{

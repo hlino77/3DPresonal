@@ -726,21 +726,6 @@ void CPlayer::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iSta
 
 
 
-
-
-CGameObject* CPlayer::Clone(void* pArg)
-{
-	CPlayer* pInstance = new CPlayer(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed To Cloned : CPlayer");
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
 void CPlayer::Free()
 {
 	__super::Free();

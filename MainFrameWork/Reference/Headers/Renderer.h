@@ -45,6 +45,7 @@ private:
 	HRESULT Render_AlphaBlend();
 	HRESULT	Render_EffectInstance();
 
+	HRESULT Render_EffectBlur();
 	HRESULT Render_EffectAcc();
 	HRESULT Render_Deferred_Effects();
 
@@ -77,6 +78,8 @@ private:
 
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 	class CShader* m_pMRTShader = { nullptr };
+	class CShader* m_pEffectShader = { nullptr };
+
 
 	Matrix					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 

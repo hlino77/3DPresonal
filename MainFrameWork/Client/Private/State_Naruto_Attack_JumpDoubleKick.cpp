@@ -149,7 +149,6 @@ void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _ui
 
 				m_fCurrTime = 0.0f;
 				m_bAttack = true;
-				m_pPlayer->Set_HitEffect(false);
 			}
 		}
 	}

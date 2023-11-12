@@ -7,7 +7,7 @@
 #include "ColliderSphere.h"
 #include "GameSession.h"
 #include "ColliderOBB.h"
-
+#include "GameSessionManager.h"
 
 CPlayer_Server::CPlayer_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -89,7 +89,7 @@ void CPlayer_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	pkt.set_iothercollayer(pOther->Get_ColLayer());
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	m_pGameSession->Send(pSendBuffer);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 
 	Safe_Release(pGameInstance);
 }
@@ -120,7 +120,7 @@ void CPlayer_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	pkt.set_iothercollayer(pOther->Get_ColLayer());
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
-	m_pGameSession->Send(pSendBuffer);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
 
 	Safe_Release(pGameInstance);
 }

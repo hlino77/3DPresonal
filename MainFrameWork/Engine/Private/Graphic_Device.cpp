@@ -81,7 +81,7 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(Vec4 vClearColor)
 	/* 백버퍼를 초기화한다.  */
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, (_float*)&vClearColor);
 
- 	return S_OK;
+  	return S_OK;
 }
 
 HRESULT CGraphic_Device::Clear_DepthStencil_View()

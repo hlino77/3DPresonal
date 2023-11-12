@@ -48,6 +48,10 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual void Set_SlowMotion(_bool bSlow) override;
+
+
+	virtual	void	OnCollisionEnter_NoneControl(const _uint iColLayer, class CCollider* pOther) PURE;
+	virtual	void	OnCollisionExit_NoneControl(const _uint iColLayer, class CCollider* pOther) PURE;
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
 
@@ -156,7 +160,6 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 
 public:
-	virtual CGameObject* Clone(void* pArg);
 	virtual void Free();
 
 

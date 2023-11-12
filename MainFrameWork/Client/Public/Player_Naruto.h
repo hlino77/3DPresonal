@@ -24,6 +24,9 @@ public:
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
+
+	virtual	void	OnCollisionEnter_NoneControl(const _uint iColLayer, class CCollider* pOther);
+	virtual	void	OnCollisionExit_NoneControl(const _uint iColLayer, class CCollider* pOther);
 public:
 	void				Send_PlayerInfo();
 
