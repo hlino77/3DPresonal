@@ -102,7 +102,11 @@ HRESULT CPlayer_Naruto::Render()
 void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
 	if (!m_bControl)
+	{
 		OnCollisionEnter_NoneControl(iColLayer, pOther);
+		return;
+	}
+		
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
@@ -164,7 +168,11 @@ void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 void CPlayer_Naruto::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
 	if (!m_bControl)
+	{
 		OnCollisionExit_NoneControl(iColLayer, pOther);
+		return;
+	}
+		
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{

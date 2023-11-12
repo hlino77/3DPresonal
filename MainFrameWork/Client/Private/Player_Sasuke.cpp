@@ -107,7 +107,11 @@ HRESULT CPlayer_Sasuke::Render()
 void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
 	if (!m_bControl)
+	{
 		OnCollisionEnter_NoneControl(iColLayer, pOther);
+		return;
+	}
+		
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
@@ -166,7 +170,11 @@ void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
 	if (!m_bControl)
+	{
 		OnCollisionExit_NoneControl(iColLayer, pOther);
+		return;
+	}
+		
 
 	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
 	{
