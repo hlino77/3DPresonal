@@ -141,7 +141,8 @@ void CSkill_Chidori::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		m_pSkillOwner->Set_SlowMotion(true);
 		m_fCurrTime = m_fAttackTime;
-		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 10.0f);
+		if(m_pSkillOwner->Is_Control())
+			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 10.0f);
 		m_bEffect = true;
 		m_bAttackTime = true;
 		m_eState = CHIDORISTATE::HITEXPLOSION;
