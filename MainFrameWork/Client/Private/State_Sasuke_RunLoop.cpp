@@ -89,6 +89,12 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 	else
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Chidori_Start");
+		return;
+	}
+
 
 	if (KEY_TAP(KEY::SPACE))
 	{

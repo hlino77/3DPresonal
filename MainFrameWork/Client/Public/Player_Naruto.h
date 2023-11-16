@@ -5,6 +5,9 @@ BEGIN(Client)
 
 class CLineCircle;
 
+
+class CSkill_Rasengun;
+
 class CPlayer_Naruto : public CPlayer
 {
 private:
@@ -27,19 +30,31 @@ public:
 
 	virtual	void	OnCollisionEnter_NoneControl(const _uint iColLayer, class CCollider* pOther);
 	virtual	void	OnCollisionExit_NoneControl(const _uint iColLayer, class CCollider* pOther);
+	virtual void	Set_Skill(CGameObject* pGameObject) override;
+
+
 public:
 	void				Send_PlayerInfo();
 
 	void				Set_Colliders(_float fTimeDelta);
 
 	void				Effect_Hit();
+
+
+	CSkill_Rasengun*	Get_Rasengun() { return m_pRasengun; }
+
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();
 	HRESULT			Ready_Coliders();
+
+
 private:
 	_float	m_fSendInfoTime = 0.0f;
 
+
+
+	CSkill_Rasengun* m_pRasengun = nullptr;
 
 public:
 	static CPlayer_Naruto* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

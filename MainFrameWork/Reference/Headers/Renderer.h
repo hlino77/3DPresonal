@@ -12,7 +12,7 @@ class CShader;
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, INSTANCE_STATIC, RENDER_NONBLEND, RENDER_BLEND, RENDER_ALPHABLEND, RENDER_EFFECT_INSTANCE, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, INSTANCE_STATIC, RENDER_NONBLEND, RENDER_BLEND, RENDER_ALPHABLEND, RENDER_MODELEFFECT_INSTANCE, RENDER_EFFECT_INSTANCE, RENDER_UI, RENDER_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
@@ -43,6 +43,7 @@ private:
 	HRESULT Render_Blend();
 	HRESULT Render_NonLight();
 	HRESULT Render_AlphaBlend();
+	HRESULT Render_ModelEffectInstance();
 	HRESULT	Render_EffectInstance();
 
 	HRESULT Render_EffectBlur();
@@ -57,17 +58,24 @@ private:
 private:
 	HRESULT Render_ModelInstancing(const wstring& szModelName);
 	HRESULT Render_EffectInstancing(const wstring& szModelName);
+	HRESULT Render_ModelEffectInstancing(const wstring& szModelName);
+
+
+
+	HRESULT Ready_InstanceBuffer();
+
 
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
 	unordered_map<wstring, list<class CGameObject*>> m_StaticInstance;
 	unordered_map<wstring, list<class CGameObject*>> m_EffectInstance;
-
+	unordered_map<wstring, list<class CGameObject*>> m_ModelEffectInstance;
 private:
 	
 	CShader* m_pInstanceShader = nullptr;
 
 	ID3D11Buffer* m_pInstanceBuffer = nullptr;
-
+	ID3D11Buffer* m_pPointEffect_InstanceBuffer = nullptr;
+	ID3D11Buffer* m_pModelEffect_InstanceBuffer = nullptr;
 
 	_uint	m_iBufferSize = 0;
 

@@ -150,7 +150,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BossSpawner_Server.cpp" />
     <ClCompile Include="..\Private\Boss_Deidara_Server.cpp" />
+    <ClCompile Include="..\Private\Boss_Madara_Server.cpp" />
     <ClCompile Include="..\Private\Boss_Server.cpp" />
     <ClCompile Include="..\Private\Camera_Free_Server.cpp" />
     <ClCompile Include="..\Private\Enum.pb.cc">
@@ -180,7 +182,9 @@
     <ClCompile Include="..\Private\ServerEvent_BattleStart.cpp" />
     <ClCompile Include="..\Private\ServerEvent_PlayerStart.cpp" />
     <ClCompile Include="..\Private\ServerPacketHandler.cpp" />
+    <ClCompile Include="..\Private\Skill_Chidori_Server.cpp" />
     <ClCompile Include="..\Private\Skill_Hiryu_Server.cpp" />
+    <ClCompile Include="..\Private\Skill_Rasengun_Server.cpp" />
     <ClCompile Include="..\Private\Skill_Server.cpp" />
     <ClCompile Include="..\Private\Skill_TwinBird_Server.cpp" />
     <ClCompile Include="..\Private\State_C2Dragon_Attack_Server.cpp" />
@@ -195,6 +199,18 @@
     <ClCompile Include="..\Private\State_Deidara_Idle_Server.cpp" />
     <ClCompile Include="..\Private\State_Deidara_Skill_C2Dragon_Server.cpp" />
     <ClCompile Include="..\Private\State_Deidara_Skill_TwinBirds_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_Appear_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_Attack_DoubleTurnKick_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_Attack_Punch_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_Attack_TurnKick_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_DownToFloor_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_FallBehind_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_GetUp_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_HitMiddle_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_HitSpinBlowDown_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_HitSpinBlowUp_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_Idle_Server.cpp" />
+    <ClCompile Include="..\Private\State_Madara_TeleportAttack_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Die_Server.cpp" />
     <ClCompile Include="..\Private\State_Deidara_DownToFloor_Server.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_DownToFloor_Server.cpp" />
@@ -226,7 +242,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\BossSpawner_Server.h" />
     <ClInclude Include="..\Public\Boss_Deidara_Server.h" />
+    <ClInclude Include="..\Public\Boss_Madara_Server.h" />
     <ClInclude Include="..\Public\Boss_Server.h" />
     <ClInclude Include="..\Public\Camera_Free_Server.h" />
     <ClInclude Include="..\Public\Enum.pb.h" />
@@ -251,7 +269,9 @@
     <ClInclude Include="..\Public\ServerEvent_PlayerStart.h" />
     <ClInclude Include="..\Public\ServerPacketHandler.h" />
     <ClInclude Include="..\Public\Server_Defines.h" />
+    <ClInclude Include="..\Public\Skill_Chidori_Server.h" />
     <ClInclude Include="..\Public\Skill_Hiryu_Server.h" />
+    <ClInclude Include="..\Public\Skill_Rasengun_Server.h" />
     <ClInclude Include="..\Public\Skill_Server.h" />
     <ClInclude Include="..\Public\Skill_TwinBird_Server.h" />
     <ClInclude Include="..\Public\State_C2Dragon_Attack_Server.h" />
@@ -266,6 +286,18 @@
     <ClInclude Include="..\Public\State_Deidara_Idle_Server.h" />
     <ClInclude Include="..\Public\State_Deidara_Skill_C2Dragon_Server.h" />
     <ClInclude Include="..\Public\State_Deidara_Skill_TwinBirds_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_Appear_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_Attack_DoubleTurnKick_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_Attack_Punch_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_Attack_TurnKick_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_DownToFloor_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_FallBehind_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_GetUp_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_HitMiddle_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_HitSpinBlowDown_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_HitSpinBlowUp_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_Idle_Server.h" />
+    <ClInclude Include="..\Public\State_Madara_TeleportAttack_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Die_Server.h" />
     <ClInclude Include="..\Public\State_Deidara_DownToFloor_Server.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_DownToFloor_Server.h" />

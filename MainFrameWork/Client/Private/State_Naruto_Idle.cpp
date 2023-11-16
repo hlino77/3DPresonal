@@ -7,6 +7,10 @@
 #include "GameInstance.h"
 #include "Camera_Player.h"
 #include "LineCircle.h"
+#include "RasenganCircle.h"
+#include "SmokeRing.h"
+#include "Pool.h"
+
 
 CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -74,6 +78,21 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 	if (KEY_TAP(KEY::P))
 	{
 		m_pPlayer->Effect_Hit();
+	}
+
+
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Rasengun_Start");
+		return;
+	}
+
+
+
+
+	if (KEY_TAP(KEY::O))
+	{
+		
 	}
 
 }

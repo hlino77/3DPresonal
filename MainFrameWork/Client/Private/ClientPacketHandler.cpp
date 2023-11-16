@@ -19,6 +19,7 @@
 #include "MonsterSpawner.h"
 #include "NavigationMgr.h"
 
+
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 bool Handle_INVALID_Client(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -174,10 +175,13 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 	}
 	case OBJ_TYPE::SPAWNER:
 	{
-		wstring szProtoName = L"Prototype_GameObject_MonsterSpawner";
+		wstring szProtoName = L"Prototype_GameObject_";
+		wstring szSpawnerName = CAsUtils::ToWString(pkt.strname());
+		szProtoName += szSpawnerName;
+
 		_uint iObjectID = pkt.iobjectid();
 
-		CMonsterSpawner* pSpawner = dynamic_cast<CMonsterSpawner*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &iObjectID));
+		CGameObject* pSpawner = pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &iObjectID);
 		if (nullptr == pSpawner)
 		{
 			Safe_Release(pGameInstance);
@@ -389,11 +393,14 @@ bool Handel_S_COLLISION_Client(PacketSessionRef& session, Protocol::S_COLLISION&
 
 	CCollider* pOtherCollider = pOtherObject->Get_Colider(pkt.iothercollayer());
 
-	if (pkt.benter())
-		pObject->OnCollisionEnter(pkt.icollayer(), pOtherCollider);
-	else
-		pObject->OnCollisionExit(pkt.icollayer(), pOtherCollider);
 
+	if (pOtherCollider)
+	{
+		if (pkt.benter())
+			pObject->OnCollisionEnter(pkt.icollayer(), pOtherCollider);
+		else
+			pObject->OnCollisionExit(pkt.icollayer(), pOtherCollider);
+	}
 
 	Safe_Release(pGameInstance);
 
@@ -475,17 +482,22 @@ bool Handel_S_NEARTARGET_Client(PacketSessionRef& session, Protocol::S_NEARTARGE
 		return true;
 	}
 
+	_int iTargetID = pkt.itargetobjectid();
 
-	CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.itargetobjectlayer(), pkt.itargetobjectid());
-	if (pNearTarget == nullptr)
+	if (iTargetID == -1)
+		pObject->Set_NearTarget(nullptr);
+	else
 	{
-		Safe_Release(pGameInstance);
-		return true;
+		CGameObject* pNearTarget = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.itargetobjectlayer(), iTargetID);
+		if (pNearTarget == nullptr)
+		{
+			Safe_Release(pGameInstance);
+			return true;
+		}
+		pObject->Set_NearTarget(pNearTarget);
 	}
-	pObject->Set_NearTarget(pNearTarget);
 
 	//cout << CAsUtils::ToString(pObject->Get_ObjectTag()) << "  " << CAsUtils::ToString(pNearTarget->Get_ObjectTag()) << endl;
-
 
 	Safe_Release(pGameInstance);
 
@@ -570,5 +582,33 @@ bool Handel_S_EVENT_Client(PacketSessionRef& session, Protocol::S_EVENT& pkt)
 		CEventMgr::GetInstance()->End_Event(pkt.ieventid());
 	}
 
+	return true;
+}
+
+bool Handel_S_SKILLEXPLOSION_Client(PacketSessionRef& session, Protocol::S_SKILLEXPLOSION& pkt)
+{
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	auto tObject = pkt.mutable_tobject();
+
+	_uint iObjectID = tObject->iobjectid();
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(tObject->ilevel(), tObject->ilayer(), iObjectID);
+	CSkill* pSkill = dynamic_cast<CSkill*>(pObject);
+
+	if (pSkill == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pSkill->Set_TargetPos(Vec3(tObject->mutable_vtargetpos()->mutable_data()));
+	pSkill->Set_TargetMatrix(Matrix(tObject->mutable_matworld()->mutable_data()));
+
+	pSkill->Explosion();
+
+	Safe_Release(pGameInstance);
 	return true;
 }

@@ -19,6 +19,7 @@ public:
 public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize);
+	virtual HRESULT Render_Instance(ID3D11Buffer * pInstanceBuffer, _uint iSize, _uint iStride);
 
 	_uint Get_NumVertices() { return m_iNumVertices; }
 	_uint Get_NumPrimitives() { return m_iNumPrimitives; }

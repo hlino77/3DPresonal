@@ -33,6 +33,8 @@ HRESULT CMonsterSpawner_Server::Initialize(void* pArg)
 	m_iObjectID = *pObjectID;
 	m_fSpawnDelay = 1.0f;
 	m_bSpawn = false;
+	m_iLayer = (_uint)LAYER_TYPE::LAYER_BACKGROUND;
+
     return S_OK;
 }
 
@@ -46,6 +48,7 @@ void CMonsterSpawner_Server::Tick(_float fTimeDelta)
 		{
 			Spawn_Monsters();
 			m_bSpawn = false;
+			Set_Active(false);
 		}
 	}
 }
@@ -66,6 +69,8 @@ void CMonsterSpawner_Server::OnCollisionEnter(const _uint iColLayer, CCollider* 
 	{
 		m_bSpawn = true;
 		Set_Die();
+
+		Send_Collision(iColLayer, pOther, true);
 	}
 }
 

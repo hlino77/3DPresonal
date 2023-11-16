@@ -25,7 +25,7 @@ private:
 	CModel(const CModel& rhs);
 	virtual ~CModel() = default;
 
-	USE_LOCK
+	
 public:
 
 	_uint Get_NumMeshes() const {
@@ -78,7 +78,7 @@ public:
 	HRESULT Set_AnimationBlend_Transforms();
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 	HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
-
+	HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, class CShader* pShader, _uint iMeshIndex, _uint iStride, _uint iPassIndex = 0);
 
 	HRESULT Load_AssetFile_FromBinary(const wstring& pFilePath, const wstring& pFileName, _bool bClient, _bool bColMesh);
 
@@ -137,7 +137,7 @@ private:
 
 	_bool								m_bClient = true;
 private:
-
+	USE_LOCK
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,const wstring& strFilePath, const wstring& strFileName, _bool bClient, _bool bColMesh, Matrix PivotMatrix = XMMatrixIdentity());

@@ -46,6 +46,8 @@ public:
 	void			Send_Collision(_uint iColLayer, CCollider* pOther, _bool bEnter);
 
 
+	virtual void	Explosion() PURE;
+
 	virtual HRESULT					Ready_Coliders() = 0;
 public:
 

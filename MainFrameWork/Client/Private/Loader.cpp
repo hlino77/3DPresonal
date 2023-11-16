@@ -36,6 +36,24 @@
 #include "UI_HP_Base.h"
 #include "LineCircle.h"
 #include "FootTrail.h"
+#include "MonsterSpawner.h"
+#include "BossSpawner.h"
+#include "Boss_Madara.h"
+#include "RasenganCircle.h"
+#include "Skill_Rasengun.h"
+#include "SmokeRing.h"
+#include "ChidoriCenter.h"
+#include "Skill_Chidori.h"
+#include "Lightning_A_01.h"
+#include "Lightning_A_02.h"
+#include "Lightning_B_01.h"
+#include "Lightning_B_02.h"
+#include "Lightning_B_03.h"
+#include "Lightning_C_01.h"
+#include "Lightning_Chidori.h"
+#include "LightningTrail.h"
+#include "Rasengan_StartSmoke.h"
+#include "Rasengan_RunSmoke.h"
 
 
 
@@ -196,6 +214,32 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Circle.png"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_RasenganCircle"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/RasenganCircle.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Ring"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Ring.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_SmokeRing"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/SmokeRing.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_ChidoriCenter"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/ChidoriCenter.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Lightning"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Lightning.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_LineSmoke"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/LineSmoke.png"))))
+		return E_FAIL;
+
+
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
@@ -252,6 +296,76 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CSkill_TwinBird::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MonsterSpawner"),
+		CMonsterSpawner::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossSpawner"),
+		CBossSpawner::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_RasenganCircle"),
+		CRasenganCircle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Rasengun"),
+		CSkill_Rasengun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Chidori"),
+		CSkill_Chidori::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_SmokeRing"),
+		CSmokeRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_ChidoriCenter"),
+		CChidoriCenter::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_A_01"),
+		CLightning_A_01::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_A_02"),
+		CLightning_A_02::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_B_01"),
+		CLightning_B_01::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_B_02"),
+		CLightning_B_02::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_B_03"),
+		CLightning_B_03::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_C_01"),
+		CLightning_C_01::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Lightning_Chidori"),
+		CLightning_Chidori::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Rasengan_StartSmoke"),
+		CRasengan_StartSmoke::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Rasengan_RunSmoke"),
+		CRasengan_RunSmoke::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleStart"), CUI_BattleStart::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -272,6 +386,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_FootTrail"),
 		CFootTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LightningTrail"),
+		CLightningTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -438,6 +556,11 @@ HRESULT CLoader::Loading_For_Level_Konoha()
 
 	m_strLoading = TEXT("모델을 로딩 중 입니다.");
 	Loading_Model_For_Level_Konoha();
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Madara"),
+		CBoss_Madara::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 
@@ -676,6 +799,137 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 			return E_FAIL;
 	}
 
+
+	{
+		wstring strFileName = L"AreaCircle";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"SmokeRing";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Lightning_A_01";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"Lightning_A_02";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"Lightning_B_01";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Lightning_B_02";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Lightning_B_03";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+
+	{
+		wstring strFileName = L"Lightning_C_01";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Lightning_Chidori";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"RasenganStartSmoke";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"RasenganRunSmoke";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -692,6 +946,16 @@ HRESULT CLoader::Loading_Model_For_Level_Konoha()
 
 	{
 		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_KONOHA, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"Madara";
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 

@@ -24,6 +24,9 @@ public:
 	void	Add_Navigation(const wstring& szFileName);
 	void	SetUp_OnCell(CGameObject * pObject);
 	void	Find_FirstCell(CGameObject * pObject);
+	_int	Check_Pos_InCell(Vec3 vPos);
+
+
 	void	Reset_Navigation();
 
 private:

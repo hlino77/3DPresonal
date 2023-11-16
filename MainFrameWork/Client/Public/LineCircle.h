@@ -25,9 +25,9 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize);
-	virtual void Add_InstanceData(vector<Matrix>& BufferData);
+	virtual void Add_InstanceData(vector<Vec4>& BufferData) override;
 
-	void		Appear(Vec3 vLook, Vec3 vPos, Vec3 vColor, _float fForce);
+	void		Appear(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor,_float fForce);
 
 protected: 
 
@@ -45,6 +45,7 @@ private:
 
 	Vec2			m_vScale;
 	Vec4			m_vColor;
+	Vec4			m_vBlurColor;
 
 
 	mt19937_64								m_RandomNumber;

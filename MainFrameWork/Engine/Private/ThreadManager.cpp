@@ -1,6 +1,7 @@
 #include "ThreadManager.h"
 #include "Engine_Defines.h"
 
+
 IMPLEMENT_SINGLETON(ThreadManager)
 /*------------------
 	ThreadManager
@@ -56,10 +57,15 @@ void ThreadManager::DestroyTLS()
 
 void ThreadManager::Push_TLS(MTLS tTLS)
 {
+	std::lock_guard<mutex> lock(_lock);
+
+
 	m_TLS.emplace(this_thread::get_id(), tTLS);
 }
 
 ThreadManager::MTLS& ThreadManager::Get_TLS(thread::id ThreadID)
 {
+	std::lock_guard<mutex> lock(_lock);
+
 	return m_TLS[ThreadID];
 }

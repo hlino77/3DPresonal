@@ -38,7 +38,10 @@ HRESULT CSkill_Server::Initialize(void* pArg)
 	if (FAILED(Ready_Coliders()))
 		return E_FAIL;
 
-	m_pRigidBody->SetMass(2.0f);
+
+	if(m_pRigidBody)
+		m_pRigidBody->SetMass(2.0f);
+
     return S_OK;
 }
 

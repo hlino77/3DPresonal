@@ -161,14 +161,21 @@ void CCamera_Player::Tick(_float fTimeDelta)
 		m_fCameraAngle = acosf(vUp.Dot(vOffset));
 
 	_float fAngle = XMConvertToDegrees(m_fCameraAngle);
+
+	_float fDownAngle;
+	if (m_pPlayer->Is_Wall())
+		fDownAngle = 150.0f;
+	else
+		fDownAngle = 87.0f;
+
 	if (fAngle < 30.0f)
 	{
 		m_fCameraAngle = XMConvertToRadians(30.0f);
 		m_fCurrSpeedY = 0.0f;
 	}
-	if (fAngle > 150.0f)
+	if (fAngle > fDownAngle)
 	{
-		m_fCameraAngle = XMConvertToRadians(150.0f);
+		m_fCameraAngle = XMConvertToRadians(fDownAngle);
 		m_fCurrSpeedY = 0.0f;
 	}
 

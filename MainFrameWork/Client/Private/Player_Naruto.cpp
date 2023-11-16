@@ -30,7 +30,14 @@
 #include "LineCircle.h"
 #include "PhysXMgr.h"
 #include "Pool.h"
-
+#include "RasenganCircle.h"
+#include "State_Naruto_Skill_Rasengun_Charging.h"
+#include "State_Naruto_Skill_Rasengun_Loop.h"
+#include "State_Naruto_Skill_Rasengun_Start.h"
+#include "State_Naruto_Skill_Rasengun_Attack.h"
+#include "State_Naruto_Skill_Rasengun_RunLoop.h"
+#include "State_Naruto_Skill_Rasengun_RunStart.h"
+#include "Skill_Rasengun.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -58,6 +65,7 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 	m_fAttackMoveSpeed = 8.0f;
 
 	
+	Send_MakeSkill(L"Rasengun");
 
 	return S_OK;
 }
@@ -141,8 +149,8 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		Hit_Attack(pOther);
-		cout << "Hit" << endl;
+		if (m_bInvincible == false)
+			Hit_Attack(pOther);
 		return;
 	}
 
@@ -150,7 +158,6 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		Add_CollisionStay(iColLayer, pOther);
-		cout << "Body" << endl;
 
 		return;
 	}
@@ -160,6 +167,9 @@ void CPlayer_Naruto::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS)
+			m_bEnemyBodyHit = true;
+
 		Body_Collision(pOther->Get_Owner());
 		return;
 	}
@@ -235,6 +245,14 @@ void CPlayer_Naruto::OnCollisionExit_NoneControl(const _uint iColLayer, CCollide
 	}
 }
 
+void CPlayer_Naruto::Set_Skill(CGameObject* pGameObject)
+{
+	WRITE_LOCK
+	if (pGameObject->Get_ModelName() == L"Rasengun")
+		m_pRasengun = dynamic_cast<CSkill_Rasengun*>(pGameObject);
+
+}
+
 void CPlayer_Naruto::Send_PlayerInfo()
 {
 	Protocol::S_OBJECTINFO pkt;
@@ -284,8 +302,11 @@ void CPlayer_Naruto::Effect_Hit()
 
 	//Vec3 vColor(0.93f, 0.41f, 0.05f);
 
-	Vec3 vColor(0.63f, 0.11f, 0.0f);
+	//Vec3 vColor(0.63f, 0.11f, 0.0f);
 
+	Vec4 vColor(1.0f, 1.0f, 1.0f, 1.0f);
+	Vec4 vBlurColor(0.99f, 0.41f, 0.094f, 1.0f);
+	
 	//Vec3 vColor(1.0f , 0.0f, 0.0f);
 
 	for (_uint i = 0; i < 50; ++i)
@@ -293,10 +314,9 @@ void CPlayer_Naruto::Effect_Hit()
 		CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
 		if (pLineCircle)
 		{
-			pLineCircle->Appear(vLook, vPos, vColor, 1.0f);
+			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
 		}
 	}
-
 }
 
 HRESULT CPlayer_Naruto::Ready_Components()
@@ -323,8 +343,12 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"DownToFloor", new CState_Naruto_DownToFloor(L"DownToFloor", this));
 	m_pStateMachine->Add_State(L"GetUp", new CState_Naruto_GetUp(L"GetUp", this));
 
-
-
+	m_pStateMachine->Add_State(L"Rasengun_Start", new CState_Naruto_Skill_Rasengun_Start(L"Rasengun_Start", this));
+	m_pStateMachine->Add_State(L"Rasengun_Charge", new CState_Naruto_Skill_Rasengun_Charging(L"Rasengun_Charge", this));
+	m_pStateMachine->Add_State(L"Rasengun_Loop", new CState_Naruto_Skill_Rasengun_Loop(L"Rasengun_Loop", this));
+	m_pStateMachine->Add_State(L"Rasengun_RunStart", new CState_Naruto_Skill_Rasengun_RunStart(L"Rasengun_RunStart", this));
+	m_pStateMachine->Add_State(L"Rasengun_RunLoop", new CState_Naruto_Skill_Rasengun_RunLoop(L"Rasengun_RunLoop", this));
+	m_pStateMachine->Add_State(L"Rasengun_Attack", new CState_Naruto_Skill_Rasengun_Attack(L"Rasengun_Attack", this));
 
 
 
@@ -359,6 +383,7 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 
 	return S_OK;
 }
+
 
 
 CPlayer_Naruto* CPlayer_Naruto::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

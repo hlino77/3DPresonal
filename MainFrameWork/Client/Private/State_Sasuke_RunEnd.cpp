@@ -83,6 +83,12 @@ void CState_Sasuke_RunEnd::Tick_State_Control(_float fTimeDelta)
 		pTransform->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 	}
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Chidori_Start");
+		return;
+	}
+
 	if (KEY_HOLD(KEY::W) || KEY_HOLD(KEY::A) || KEY_HOLD(KEY::S) || KEY_HOLD(KEY::D))
 	{
 		m_pPlayer->Set_State(L"Walk_Loop");

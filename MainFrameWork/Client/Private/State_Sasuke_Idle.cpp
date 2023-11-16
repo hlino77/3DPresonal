@@ -6,6 +6,15 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "PickingMgr.h"
+#include "Pool.h"
+#include "Lightning_A_01.h"
+#include "Lightning_A_02.h"
+#include "Lightning_B_01.h"
+#include "Lightning_B_02.h"
+#include "Lightning_B_03.h"
+#include "Lightning_C_01.h"
+#include "Lightning_Chidori.h"
+
 
 CState_Sasuke_Idle::CState_Sasuke_Idle(const wstring& strStateName, class CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
@@ -74,6 +83,28 @@ void CState_Sasuke_Idle::Tick_State_Control(_float fTimeDelta)
 	{
 		m_pPlayer->Effect_Hit();
 	}
+
+
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Chidori_Start");
+		return;
+	}
+
+
+
+	if (KEY_TAP(KEY::O))
+	{
+		Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		vPos.y += 1.0f;
+
+		CLightning_Chidori* pLightning = CPool<CLightning_Chidori>::Get_Obj();
+
+		pLightning->Appear(vPos);
+	}
+
+
+
 
 }
 

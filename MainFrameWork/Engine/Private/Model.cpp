@@ -329,7 +329,7 @@ HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 
 HRESULT CModel::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 {
-	pShader->Begin(0);
+	pShader->Begin(iPassIndex);
 
 	m_Meshes[iMeshIndex]->Render_Instance(pInstanceBuffer, iSize);
 
@@ -698,4 +698,13 @@ CTexture* CModel::Create_Texture(const wstring& szFullPath)
 
 	Safe_Release(pGameInstance);
 	return pTexture;
+}
+
+HRESULT CModel::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, CShader* pShader, _uint iMeshIndex, _uint iStride, _uint iPassIndex)
+{
+	pShader->Begin(iPassIndex);
+
+	m_Meshes[iMeshIndex]->Render_Instance(pInstanceBuffer, iSize, iStride);
+
+	return S_OK;
 }

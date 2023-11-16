@@ -63,11 +63,21 @@ void CState_Naruto_WalkEnd::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Rasengun_Start");
+		return;
+	}
+
+
+
 	if (KEY_HOLD(KEY::W) || KEY_HOLD(KEY::A) || KEY_HOLD(KEY::S) || KEY_HOLD(KEY::D))
 	{
 		m_pPlayer->Set_State(L"Walk_Loop");
 		return;
 	}
+
+
 
 	if (KEY_TAP(KEY::LBTN))
 	{

@@ -41,6 +41,22 @@ private:
 	virtual HRESULT			Ready_Components() override;
 
 
+
+private:
+	CRenderer* m_pRendererCom = nullptr;
+	CShader* m_pShaderCom = nullptr;
+
+
+private:
+
+	Vec4 m_vColor;
+	Vec4 m_vBlurColor;
+
+	_float m_fTurnSpeed;
+
+	_bool m_bEnter = false;
+
+	Vec3 m_vTargetScale;
 public:
 	virtual void Free();
 	static	CMonsterSpawner* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

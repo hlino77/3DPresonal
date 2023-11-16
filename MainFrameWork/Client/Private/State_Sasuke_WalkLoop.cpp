@@ -97,6 +97,13 @@ void CState_Sasuke_WalkLoop::Tick_State_Control(_float fTimeDelta)
 	}
 
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Chidori_Start");
+		return;
+	}
+
+
 	if (KEY_TAP(KEY::SPACE))
 	{
 		m_pPlayer->Set_State(L"Jump");

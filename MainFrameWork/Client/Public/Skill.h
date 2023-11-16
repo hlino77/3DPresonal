@@ -43,6 +43,10 @@ public:
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
 
+	virtual void	Explosion() PURE;
+
+
+	void			Send_Explosion();
 
 	virtual HRESULT					Ready_Coliders() = 0;
 public:

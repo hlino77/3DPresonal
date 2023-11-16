@@ -10,6 +10,11 @@
 #include "Skill_Hiryu_Server.h"
 #include "Skill_TwinBird_Server.h"
 #include "MonsterSpawner_Server.h"
+#include "BossSpawner_Server.h"
+#include "Boss_Madara_Server.h"
+#include "Skill_Rasengun_Server.h"
+#include "Skill_Chidori_Server.h"
+
 
 CLoader_Server::CLoader_Server()
 {
@@ -127,6 +132,10 @@ HRESULT CLoader_Server::Loading_For_Level_Konoha()
 
 
 
+	if (FAILED(pGameInstance->Add_Prototype(L"Prototype_GameObject_BossSpawner",
+		CBossSpawner_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
 
 
 	if (FAILED(pGameInstance->Add_Prototype(L"Prototype_GameObject_MonsterSpawner",
@@ -135,6 +144,10 @@ HRESULT CLoader_Server::Loading_For_Level_Konoha()
 
 	Loading_Model_For_Level_Konoha();
 
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Madara"),
+		CBoss_Madara_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
 
 
 	Safe_Release(pGameInstance);
@@ -234,6 +247,14 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 		CSkill_TwinBird_Server::Create(nullptr, nullptr))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Rasengun"),
+		CSkill_Rasengun_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Chidori"),
+		CSkill_Chidori_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 
@@ -251,6 +272,17 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Konoha()
 
 	{
 		wstring strFileName = L"WhiteZetsu";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_KONOHA, strComponentName,
+			CModel::Create(nullptr, nullptr, strFilePath, strFileName, false, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Madara";
 		wstring strFilePath = L"../Bin/Resources/Meshes/";
 		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
 

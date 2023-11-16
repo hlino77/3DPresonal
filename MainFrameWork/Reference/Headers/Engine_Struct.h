@@ -260,6 +260,37 @@ namespace Engine
 	}VTXINSTANCE;
 
 
+	typedef struct ENGINE_DLL tagVertex_PointEffect_Instance
+	{
+		XMFLOAT4		vTranslation;
+		XMFLOAT4		vDirection;
+		XMFLOAT4		vScale;
+		XMFLOAT4		vColor;
+		XMFLOAT4		vBlurColor;
+
+		/* 셰이더에 이러한 정점이 잘 들어가냐? 라는 검증을 위해 */
+		/* 이 정점 뿐만아니라 그리기용 정점도 같이 받아야되지. */
+		/*static const unsigned int				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];*/
+	}VTXINSTANCE_POINTEFFECT;
+
+
+	typedef struct ENGINE_DLL tagVertex_ModelEffect_Instance
+	{
+		XMFLOAT4		vRight;
+		XMFLOAT4		vUp;
+		XMFLOAT4		vLook;
+		XMFLOAT4		vTranslation;
+		XMFLOAT4		vColor;
+		XMFLOAT4		vBlurColor;
+
+		/* 셰이더에 이러한 정점이 잘 들어가냐? 라는 검증을 위해 */
+		/* 이 정점 뿐만아니라 그리기용 정점도 같이 받아야되지. */
+		/*static const unsigned int				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];*/
+	}VTXINSTANCE_MODELEFFECT;
+
+
 	typedef struct ENGINE_DLL tagVertex_Effect_Instance
 	{
 		XMFLOAT4		vTranslation;
@@ -285,9 +316,25 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagVertex_LineCircle_Instance
 	{
-		static const unsigned int				iNumElements = 4;
+		static const unsigned int				iNumElements = 5;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTX_LINECIRCLE_INSTANCE;
+
+
+	typedef struct ENGINE_DLL tagVertex_Trail_Instance
+	{
+		static const unsigned int				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTX_TRAIL_INSTANCE;
+
+
+
+	typedef struct ENGINE_DLL tagVertex_ModelEffect_Declaration
+	{
+		static const unsigned int				iNumElements = 10;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTX_MODELEFFECT_DECLARATION;
+
 
 }
 

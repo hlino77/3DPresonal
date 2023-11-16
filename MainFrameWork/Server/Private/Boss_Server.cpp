@@ -214,16 +214,18 @@ void CBoss_Server::Hit_Attack(CCollider* pCollider)
 
 	_uint iObjType = pOwner->Get_ObjectType();
 
-	if (iObjType != OBJ_TYPE::PLAYER)
-		return;
-
 	if (iObjType == OBJ_TYPE::SKILL)
 	{
 		_uint iSkillOwnerType = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner()->Get_ObjectType();
 		if (iSkillOwnerType != OBJ_TYPE::PLAYER)
 			return;
-	}
 
+		m_pHitObject = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner();
+	}
+	else if (iObjType != OBJ_TYPE::PLAYER)
+		return;
+	else if (iObjType == OBJ_TYPE::PLAYER)
+		m_pHitObject = pOwner;
 
 	m_iHp -= pCollider->Get_Attack();
 
@@ -238,18 +240,15 @@ void CBoss_Server::Hit_Attack(CCollider* pCollider)
 			Set_State(L"Dying_Normal");
 			break;
 		}
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_Middle");
 		break;
 	case (_uint)COLLIDER_ATTACK::SPINBLOWUP:
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_SpinBlowUp");
+		break;
 	case (_uint)COLLIDER_ATTACK::SPINBLOWDOWN:
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_SpinBlowDown");
 		break;
 	}
-
 
 	if (pCollider->Get_SlowMotion())
 		Set_SlowMotion(true);
@@ -438,6 +437,32 @@ void CBoss_Server::Send_SlowMotion(_bool bSlow)
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+}
+
+void CBoss_Server::Send_Collision(const _uint iColLayer, CCollider* pOther, _bool bEnter)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	pGameInstance->AddRef();
+
+	Protocol::S_COLLISION pkt;
+
+	pkt.set_benter(bEnter);
+
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_BOSS);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_icollayer(iColLayer);
+
+
+	CGameObject* pOtherObject = pOther->Get_Owner();
+	pkt.set_iotherid(pOtherObject->Get_ObjectID());
+	pkt.set_iotherlayer(pOtherObject->Get_ObjectLayer());
+	pkt.set_iothercollayer(pOther->Get_ColLayer());
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 void CBoss_Server::Set_Colliders(_float fTimeDelta)

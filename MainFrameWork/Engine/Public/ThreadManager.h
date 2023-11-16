@@ -5,6 +5,7 @@
 #include <stack>
 #include <map>
 #include "Base.h"
+#include "Lock.h"
 
 
 BEGIN(Engine)
@@ -29,8 +30,6 @@ public:
 private:
 	ThreadManager();
 	~ThreadManager();
-
-
 
 public:
 

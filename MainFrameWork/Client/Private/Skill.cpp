@@ -30,6 +30,7 @@ HRESULT CSkill::Initialize(void* pArg)
 	m_iObjectID = Desc->iObjectID;
 	m_iLayer = Desc->iLayer;
 	m_pSkillOwner = Desc->pOwner;
+	m_szModelName = Desc->strFileName;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -38,8 +39,9 @@ HRESULT CSkill::Initialize(void* pArg)
 	if (FAILED(Ready_Coliders()))
 		return E_FAIL;
 
-	m_pRigidBody->SetMass(2.0f);
-
+	if(m_pRigidBody)
+		m_pRigidBody->SetMass(2.0f);
+	
     return S_OK;
 }
 
@@ -71,6 +73,33 @@ void CSkill::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 void CSkill::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
 	
+}
+
+void CSkill::Send_Explosion()
+{
+	Protocol::S_SKILLEXPLOSION pkt;
+
+	auto tObjectInfo = pkt.mutable_tobject();
+
+	tObjectInfo->set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	tObjectInfo->set_ilayer((_uint)LAYER_TYPE::LAYER_SKILL);
+	tObjectInfo->set_iobjectid(m_iObjectID);
+
+
+	auto vTargetPos = tObjectInfo->mutable_vtargetpos();
+	vTargetPos->Resize(3, 0.0f);
+	Vec3 vPlayerTargetPos = m_vTargetPos.load();
+	memcpy(vTargetPos->mutable_data(), &vPlayerTargetPos, sizeof(Vec3));
+
+
+	auto matWorld = tObjectInfo->mutable_matworld();
+	matWorld->Resize(16, 0.0f);
+	Matrix matPlayerWorld = m_pTransformCom->Get_WorldMatrix();
+	memcpy(matWorld->mutable_data(), &matPlayerWorld, sizeof(Matrix));
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
 

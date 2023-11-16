@@ -18,7 +18,7 @@
 #include "State_WhiteZetsu_DownToFloor_Server.h"
 #include "State_WhiteZetsu_HitSpinBlowDown_Server.h"
 #include "State_WhiteZetsu_Die_Server.h"
-
+#include "Skill_Server.h"
 
 
 CMonster_WhiteZetsu_Server::CMonster_WhiteZetsu_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -42,7 +42,7 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 100;
+	m_iHp = 15;
 
     return S_OK;
 }
@@ -114,11 +114,21 @@ void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollide
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
+		CGameObject* pOwner = pOther->Get_Owner();
+
+		_uint iObjType = pOwner->Get_ObjectType();
+
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
 			Set_SlowMotion(false);
+		else if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::SKILL)
+		{
+			_uint iSkillOwnerType = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner()->Get_ObjectType();
+			if (iSkillOwnerType == OBJ_TYPE::PLAYER)
+				Set_SlowMotion(false);
+		}
+		
 		return;
 	}
-
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{

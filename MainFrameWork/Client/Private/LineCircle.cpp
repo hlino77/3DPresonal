@@ -43,7 +43,7 @@ HRESULT CLineCircle::Initialize(void* pArg)
 	//uniform_real_distribution
 
 
-	m_RandomScaleX = uniform_real_distribution<float>(0.01f, 0.05f);
+	m_RandomScaleX = uniform_real_distribution<float>(0.01f, 0.03f);
 	m_RandomScaleY = uniform_real_distribution<float>(0.5f, 1.0f);
 	m_RandomForce = uniform_real_distribution<float>(0.5f, 1.5f);
 	m_RandomAngle = uniform_real_distribution<float>(0.0f, 360.0f);
@@ -106,10 +106,6 @@ void CLineCircle::LateTick(_float fTimeDelta)
 
 HRESULT CLineCircle::Render()
 {
-
-
-
-
 	return S_OK;
 }
 
@@ -139,34 +135,35 @@ HRESULT CLineCircle::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize)
 
 	m_pShaderCom->Begin(0);
 
-
-	m_pVIBufferCom->Render_Instance(pInstanceBuffer, iSize);
+	m_pVIBufferCom->Render_Instance(pInstanceBuffer, iSize, sizeof(VTXINSTANCE_POINTEFFECT));
 
 
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
-void CLineCircle::Add_InstanceData(vector<Matrix>& BufferData)
+void CLineCircle::Add_InstanceData(vector<Vec4>& BufferData)
 {
 	Vec4 vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	Vec4 vDir = m_pRigidBody->GetLinearVelocity();
 	vDir *= 0.07f;
 
 	Vec4 vScale = m_vScale;
-	Vec4 vColor = m_vColor;
 
-	BufferData.push_back(Matrix(vPosition, vDir, vScale, vColor));
+	BufferData.push_back(vPosition);
+	BufferData.push_back(vDir);
+	BufferData.push_back(vScale);
+	BufferData.push_back(m_vColor);
+	BufferData.push_back(m_vBlurColor);
 }
 
-void CLineCircle::Appear(Vec3 vLook, Vec3 vPos, Vec3 vColor, _float fForce)
+void CLineCircle::Appear(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor, _float fForce)
 {
 	m_bActive = true;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
-	m_vColor = Vec4(vColor);
-
-	m_vColor.w = 1.0f;
+	m_vColor = vColor;
+	m_vBlurColor = vBlurColor;
 
 
 	_float fAngle = m_RandomAngle(m_RandomNumber);

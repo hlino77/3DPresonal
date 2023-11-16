@@ -71,6 +71,7 @@ void CState_Deidara_HitSpinBlowDown_Server::Knock_Back()
 {
 	m_vHitPos = m_pBoss->Get_HitObject()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	Vec3 vOwnerPos = m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_vHitPos.y = vOwnerPos.y;
 	Vec3 vDir = vOwnerPos - m_vHitPos;
 
 	vDir.Normalize();

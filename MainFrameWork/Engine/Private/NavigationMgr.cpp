@@ -26,13 +26,14 @@ HRESULT CNavigationMgr::Reserve_Manager(ID3D11Device* pDevice, ID3D11DeviceConte
 
 void CNavigationMgr::Render()
 {
-	READ_LOCK
+	WRITE_LOCK
 	if (m_pNavigation)
 		m_pNavigation->Render();
 }
 
 void CNavigationMgr::Add_Navigation(const wstring& szFileName)
 {
+	WRITE_LOCK
 	m_pNavigation = CNavigation::Create(m_pDevice, m_pContext);
 
 	m_pNavigation->Load_Navigation(szFileName);
@@ -48,6 +49,14 @@ void CNavigationMgr::Find_FirstCell(CGameObject* pObject)
 {
 	if (m_pNavigation)
 		m_pNavigation->Find_FirstCell(pObject);
+}
+
+_int CNavigationMgr::Check_Pos_InCell(Vec3 vPos)
+{
+	if (m_pNavigation == nullptr)
+		return -1;
+
+	return m_pNavigation->Check_Pos_InCell(vPos);
 }
 
 void CNavigationMgr::Reset_Navigation()

@@ -13,6 +13,7 @@
 #include "ColliderOBB.h"
 #include "EventMgr.h"
 #include "ServerEvent.h"
+#include "Skill_Server.h"
 
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
@@ -330,7 +331,10 @@ bool Handel_S_USERINFO_Server(PacketSessionRef& session, Protocol::S_USERINFO& p
 
 bool Handel_S_NEARTARGET_Server(PacketSessionRef& session, Protocol::S_NEARTARGET& pkt)
 {
-	return false;
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
+
+	return true;
 }
 
 bool Handel_S_SETSKILL_Server(PacketSessionRef& session, Protocol::S_SETSKILL& pkt)
@@ -338,12 +342,35 @@ bool Handel_S_SETSKILL_Server(PacketSessionRef& session, Protocol::S_SETSKILL& p
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
 
-	
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pkt.set_iskillobjectid(g_iObjectID++);
+
+	CSkill_Server::MODELDESC Desc;
+	Desc.strFileName = CAsUtils::ToWString(pkt.szskillname());
+	Desc.iObjectID = pkt.iskillobjectid();
+	Desc.iLayer = (_uint)LAYER_TYPE::LAYER_SKILL;
+	Desc.pSkillOwner = pObject;
+
+	wstring szProtoName = L"Prototype_GameObject_Skill_";
+	szProtoName += Desc.strFileName;
+
+	CGameObject* pSkill = pGameInstance->Add_GameObject(pkt.ilevel(), Desc.iLayer, szProtoName, &Desc);
+	if (pSkill == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
 
 
-	
-
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pBuffer);
 
 
 	Safe_Release(pGameInstance);
@@ -373,5 +400,36 @@ bool Handel_S_EVENT_Server(PacketSessionRef& session, Protocol::S_EVENT& pkt)
 {
 	dynamic_cast<CServerEvent*>(CEventMgr::GetInstance()->Get_Event(pkt.ieventid()))->Set_ClientState(session->GetSessionID(), (EVENTSTATE)pkt.istate());
 
+	return true;
+}
+
+bool Handel_S_SKILLEXPLOSION_Server(PacketSessionRef& session, Protocol::S_SKILLEXPLOSION& pkt)
+{
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	auto tObject = pkt.mutable_tobject();
+
+	_uint iObjectID = tObject->iobjectid();
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(tObject->ilevel(), tObject->ilayer(), iObjectID);
+	CSkill_Server* pSkill = dynamic_cast<CSkill_Server*>(pObject);
+
+	if (pSkill == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pSkill->Set_TargetPos(Vec3(tObject->mutable_vtargetpos()->mutable_data()));
+	pSkill->Get_TransformCom()->Set_WorldMatrix(Matrix(tObject->mutable_matworld()->mutable_data()));
+
+	pSkill->Explosion();
+
+	Safe_Release(pGameInstance);
 	return true;
 }

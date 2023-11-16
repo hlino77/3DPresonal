@@ -89,6 +89,45 @@ HRESULT CVIBuffer_Point::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iS
 	return S_OK;
 }
 
+HRESULT CVIBuffer_Point::Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize, _uint iStride)
+{
+	if (nullptr == m_pContext)
+		return E_FAIL;
+
+
+	_uint iStrideInstance = iStride;
+
+	ID3D11Buffer* pVertexBuffers[] = {
+		pInstanceBuffer
+	};
+
+	_uint			iStrides[] = {
+		iStrideInstance
+	};
+
+	_uint			iOffsets[] = {
+		0
+	};
+
+
+	/* 버텍스 버퍼들을 할당한다. */
+	/* 그리기용 정점버퍼 + 상태변환용 정점버퍼 */
+	m_pContext->IASetVertexBuffers(0, 1, pVertexBuffers, iStrides, iOffsets);
+
+	/* 인덱스 버퍼를 할당한다. */
+	/* 그리고자 하는 인스턴스의 갯수만큼 확대되어있는 인덱스 버퍼. */
+	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+
+	/* 해당 정점들을 어떤 방식으로 그릴꺼야. */
+	m_pContext->IASetPrimitiveTopology(m_eTopology);
+
+	/* 인덱스가 가르키는 정점을 활용하여 그린다. */
+	m_pContext->DrawIndexedInstanced(1, iSize, 0, 0, 0);
+
+
+	return S_OK;
+}
+
 
 CVIBuffer_Point * CVIBuffer_Point::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

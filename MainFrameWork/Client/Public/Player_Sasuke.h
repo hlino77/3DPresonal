@@ -2,6 +2,8 @@
 #include "Player.h"
 
 BEGIN(Client)
+class CSkill_Chidori;
+
 
 class CPlayer_Sasuke : public CPlayer
 {
@@ -24,12 +26,18 @@ public:
 
 	virtual	void	OnCollisionEnter_NoneControl(const _uint iColLayer, class CCollider* pOther);
 	virtual	void	OnCollisionExit_NoneControl(const _uint iColLayer, class CCollider* pOther);
+
+	virtual void	Set_Skill(CGameObject* pGameObject) override;
 public:
 	void				Send_PlayerInfo();
 
 
 	void				Set_Colliders(_float fTimeDelta);
 	void				Effect_Hit();
+
+
+	CSkill_Chidori*		Get_Chidori() { return m_pChidori; }
+
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();
@@ -40,6 +48,9 @@ protected:
 private:
 	_float	m_fSendInfoTime = 0.0f;
 	_bool m_bHitEffect = false;
+
+
+	CSkill_Chidori* m_pChidori = nullptr;
 
 public:
 	static CPlayer_Sasuke* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

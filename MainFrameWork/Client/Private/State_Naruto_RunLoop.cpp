@@ -86,6 +86,13 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Rasengun_Start");
+		return;
+	}
+
+
 	if (KEY_TAP(KEY::SPACE))
 	{
 		m_pPlayer->Set_State(L"Jump");

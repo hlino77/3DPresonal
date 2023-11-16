@@ -20,35 +20,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (m_pDevice == nullptr)
 		return S_OK;
 
-	//Instance
-	m_pInstanceShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_Instance.hlsl"), VTX_MODEL_INSTANCE::Elements, VTX_MODEL_INSTANCE::iNumElements);
-
-
-	D3D11_BUFFER_DESC			BufferDesc;
-
-	ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-
-	// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
-	BufferDesc.ByteWidth = sizeof(VTXINSTANCE) * 500;
-	BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
-	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	BufferDesc.MiscFlags = 0;
-	BufferDesc.StructureByteStride = sizeof(VTXINSTANCE);
-
-	D3D11_SUBRESOURCE_DATA		InitialData;
-
-	vector<Matrix> InitMatrix;
-
-	InitMatrix.resize(500, XMMatrixIdentity());
-
-	InitialData.pSysMem = InitMatrix.data();
-
-	if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pInstanceBuffer)))
-		return E_FAIL;
-
-
+	Ready_InstanceBuffer();
 
 	//RenderTarget
 
@@ -242,6 +214,12 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 		Safe_AddRef(pGameObject);
 		return S_OK;
 	}
+	else if (eRenderGroup == RENDERGROUP::RENDER_MODELEFFECT_INSTANCE)
+	{
+		m_ModelEffectInstance[pGameObject->Get_ModelName()].push_back(pGameObject);
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
 
 
 
@@ -271,6 +249,7 @@ HRESULT CRenderer::Draw()
 	Render_Blend();
 	Render_NonLight();
 	Render_AlphaBlend();
+	Render_ModelEffectInstance();
 	Render_EffectInstance();
 
 	Render_EffectBlur();
@@ -438,7 +417,7 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pVIBuffer->Render()))
 		return E_FAIL;
 
-
+	
 	return S_OK;
 }
 
@@ -485,6 +464,20 @@ HRESULT CRenderer::Render_AlphaBlend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_ModelEffectInstance()
+{
+	for (auto& iter : m_ModelEffectInstance)
+	{
+		if (!iter.second.empty())
+		{
+			Render_ModelEffectInstancing(iter.first);
+			iter.second.clear();
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_EffectInstance()
 {
 	for (auto& iter : m_EffectInstance)
@@ -524,8 +517,8 @@ HRESULT CRenderer::Render_EffectBlur()
 	if (FAILED(m_pEffectShader->Bind_RawValue("g_KernelSize", &m_iKernelSize, sizeof(_int))))
 		return E_FAIL;
 
-	_float fCenterWeight = 0.30f;
-	_float fWeightAtt = 0.03;
+	_float fCenterWeight = 0.25f;
+	_float fWeightAtt = 0.025f;
 
 	if (FAILED(m_pEffectShader->Bind_RawValue("g_CenterWeight", &fCenterWeight, sizeof(_float))))
 		return E_FAIL;
@@ -568,8 +561,8 @@ HRESULT CRenderer::Render_EffectBlur()
 
 HRESULT CRenderer::Render_EffectAcc()
 {
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_EffectShade"))))
-		return E_FAIL;
+	/*if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_EffectShade"))))
+		return E_FAIL;*/
 
 
 	/* 사각형 버퍼를 직교투영으로 Shade타겟의 사이즈만큼 꽉 채워서 그릴꺼야. */
@@ -580,14 +573,24 @@ HRESULT CRenderer::Render_EffectAcc()
 	if (FAILED(m_pEffectShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectDiffuse"), "g_DiffuseTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectBlur"), "g_BlurTexture")))
-		return E_FAIL;
 
 	
 
+
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectBlur"), "g_DiffuseTexture")))
+		return E_FAIL;
+
+
+	if (FAILED(m_pEffectShader->Begin(4)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+
+
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectDiffuse"), "g_DiffuseTexture")))
+		return E_FAIL;
 
 	if (FAILED(m_pEffectShader->Begin(1)))
 		return E_FAIL;
@@ -599,8 +602,8 @@ HRESULT CRenderer::Render_EffectAcc()
 
 
 	/* 다시 장치의 0번째 소켓에 백 버퍼를 올린다. */
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
+	/*if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;*/
 
 
 	return S_OK;
@@ -609,7 +612,7 @@ HRESULT CRenderer::Render_EffectAcc()
 HRESULT CRenderer::Render_Deferred_Effects()
 {
 
-	if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	/*if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pEffectShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
@@ -623,7 +626,7 @@ HRESULT CRenderer::Render_Deferred_Effects()
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	return S_OK;
 }
@@ -724,23 +727,140 @@ HRESULT CRenderer::Render_ModelInstancing(const wstring& szModelName)
 
 HRESULT CRenderer::Render_EffectInstancing(const wstring& szModelName)
 {
-	vector<Matrix> WorldMatrix;
-	WorldMatrix.reserve(500);
+	vector<Vec4> InstanceData;
+	InstanceData.reserve(5000);
 
+	_uint iSize = 0;
 	for (auto& Object : m_EffectInstance[szModelName])
 	{
-		Object->Add_InstanceData(WorldMatrix);
+		Object->Add_InstanceData(InstanceData);
+		++iSize;
 	}
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
 
-	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+	m_pContext->Map(m_pPointEffect_InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 
-	memcpy(SubResource.pData, WorldMatrix.data(), sizeof(Matrix) * WorldMatrix.size());
+	memcpy(SubResource.pData, InstanceData.data(), sizeof(Vec4) * InstanceData.size());
 
-	m_pContext->Unmap(m_pInstanceBuffer, 0);
+	m_pContext->Unmap(m_pPointEffect_InstanceBuffer, 0);
 
-	m_EffectInstance[szModelName].front()->Render_Instance(m_pInstanceBuffer, WorldMatrix.size());
+	m_EffectInstance[szModelName].front()->Render_Instance(m_pPointEffect_InstanceBuffer, iSize);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_ModelEffectInstancing(const wstring& szModelName)
+{
+	vector<Vec4> InstanceData;
+	InstanceData.reserve(3000);
+
+	_uint iSize = 0;
+	for (auto& Object : m_ModelEffectInstance[szModelName])
+	{
+		Object->Add_InstanceData(InstanceData);
+		++iSize;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
+
+	m_pContext->Map(m_pModelEffect_InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	memcpy(SubResource.pData, InstanceData.data(), sizeof(Vec4) * InstanceData.size());
+
+	m_pContext->Unmap(m_pModelEffect_InstanceBuffer, 0);
+
+	m_ModelEffectInstance[szModelName].front()->Render_Instance(m_pModelEffect_InstanceBuffer, iSize);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Ready_InstanceBuffer()
+{
+	//Instance
+	m_pInstanceShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_Instance.hlsl"), VTX_MODEL_INSTANCE::Elements, VTX_MODEL_INSTANCE::iNumElements);
+
+	{
+		D3D11_BUFFER_DESC			BufferDesc;
+
+		ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+
+		// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
+		BufferDesc.ByteWidth = sizeof(VTXINSTANCE) * 500;
+		BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+		BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		BufferDesc.MiscFlags = 0;
+		BufferDesc.StructureByteStride = sizeof(VTXINSTANCE);
+
+		D3D11_SUBRESOURCE_DATA		InitialData;
+
+		vector<Matrix> InitMatrix;
+
+		InitMatrix.resize(500, XMMatrixIdentity());
+
+		InitialData.pSysMem = InitMatrix.data();
+
+		if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pInstanceBuffer)))
+			return E_FAIL;
+	}
+
+	{
+		D3D11_BUFFER_DESC			BufferDesc;
+
+		ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+
+		// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
+		BufferDesc.ByteWidth = sizeof(VTXINSTANCE_POINTEFFECT) * 1000;
+		BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+		BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		BufferDesc.MiscFlags = 0;
+		BufferDesc.StructureByteStride = sizeof(VTXINSTANCE_POINTEFFECT);
+
+		D3D11_SUBRESOURCE_DATA		InitialData;
+
+		vector<Vec4> InitData;
+
+		InitData.resize(5000, Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+		InitialData.pSysMem = InitData.data();
+
+		if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pPointEffect_InstanceBuffer)))
+			return E_FAIL;
+
+
+	}
+
+
+
+	{
+		D3D11_BUFFER_DESC			BufferDesc;
+
+		ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+
+		// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
+		BufferDesc.ByteWidth = sizeof(VTXINSTANCE_MODELEFFECT) * 500;
+		BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+		BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		BufferDesc.MiscFlags = 0;
+		BufferDesc.StructureByteStride = sizeof(VTXINSTANCE_MODELEFFECT);
+
+		D3D11_SUBRESOURCE_DATA		InitialData;
+
+		vector<Vec4> InitData;
+
+		InitData.resize(3000, Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+		InitialData.pSysMem = InitData.data();
+
+		if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, &m_pModelEffect_InstanceBuffer)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -748,8 +868,13 @@ HRESULT CRenderer::Render_EffectInstancing(const wstring& szModelName)
 
 void CRenderer::Ready_BlurData()
 {
-	m_vPixelSize.x = 0.0015f * 1.0f;
-	m_vPixelSize.y = 0.0027f * 1.0f;
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	m_vPixelSize.x = 1.0f / ViewportDesc.Width;
+	m_vPixelSize.y = 1.0f / ViewportDesc.Height;
 
 	m_iKernelSize = 20;
 

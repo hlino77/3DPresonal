@@ -7,6 +7,7 @@
 #include "VIBuffer_Point.h"
 #include "RigidBody.h"
 #include "Player.h"
+#include "Pool.h"
 
 CFootTrail::CFootTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect(pDevice, pContext)
@@ -53,6 +54,7 @@ void CFootTrail::Tick(_float fTimeDelta)
 		{
 			m_vColor.w = 0.0f;
 			Set_Active(false);
+			CPool<CFootTrail>::Return_Obj(this);
 		}
 	}
 	else
@@ -137,6 +139,7 @@ void CFootTrail::Appear(CGameObject* pOwner, _uint iBoneIndex, Vec4 vColor, Vec4
 	Set_Active(true);
 	m_bDisappear = false;
 	m_vColor.w = 1.0f;
+	m_PointList.clear();
 }
 
 void CFootTrail::Disappear()

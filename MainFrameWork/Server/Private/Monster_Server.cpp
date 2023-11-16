@@ -192,28 +192,22 @@ void CMonster_Server::Body_Collision(CGameObject* pObject)
 
 void CMonster_Server::Hit_Attack(CCollider* pCollider)
 {
-	/*if (pCollider->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
-	{
-		
-
-		
-	}*/
-
-
 	CGameObject* pOwner = pCollider->Get_Owner();
 
 	_uint iObjType = pOwner->Get_ObjectType();
-
-	if (iObjType != OBJ_TYPE::PLAYER)
-		return;
 
 	if (iObjType == OBJ_TYPE::SKILL)
 	{
 		_uint iSkillOwnerType = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner()->Get_ObjectType();
 		if (iSkillOwnerType != OBJ_TYPE::PLAYER)
 			return;
-	}
 
+		m_pHitObject = dynamic_cast<CSkill_Server*>(pOwner)->Get_SkillOwner();
+	}
+	else if (iObjType != OBJ_TYPE::PLAYER)
+		return;
+	else if (iObjType == OBJ_TYPE::PLAYER)
+		m_pHitObject = pOwner;
 
 	m_iHp -= pCollider->Get_Attack();
 
@@ -228,14 +222,12 @@ void CMonster_Server::Hit_Attack(CCollider* pCollider)
 			Set_State(L"Dying_Normal");
 			break;
 		}
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_Middle");
 		break;
 	case (_uint)COLLIDER_ATTACK::SPINBLOWUP:
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_SpinBlowUp");
+		break;
 	case (_uint)COLLIDER_ATTACK::SPINBLOWDOWN:
-		m_pHitObject = pCollider->Get_Owner();
 		Set_State(L"Hit_SpinBlowDown");
 		break;
 	}
@@ -243,7 +235,6 @@ void CMonster_Server::Hit_Attack(CCollider* pCollider)
 	if (pCollider->Get_SlowMotion())
 		Set_SlowMotion(true);
 
-	cout << "Hit" << endl;
 }
 
 void CMonster_Server::Set_Die()

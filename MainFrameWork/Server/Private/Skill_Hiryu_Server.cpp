@@ -104,10 +104,13 @@ HRESULT CSkill_Hiryu_Server::Render()
 
 void CSkill_Hiryu_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
-	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
-		Explosion();
-		Send_Collision(iColLayer, pOther, true);
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			Explosion();
+			Send_Collision(iColLayer, pOther, true);
+		}
 	}
 }
 

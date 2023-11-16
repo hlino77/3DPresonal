@@ -24,7 +24,7 @@ public:
 	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther);
 	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther);
 
-
+	virtual void	Explosion() override;
 	
 	virtual HRESULT					Ready_Coliders();
 
@@ -34,7 +34,7 @@ public:
 	void				Shoot_Hiryu(CGameObject* pTargetObject, Vec3 vPos, Vec3 vLook);
 
 
-	void				Explosion();
+	
 
 protected:
 	virtual HRESULT Ready_Components();

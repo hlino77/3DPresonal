@@ -24,6 +24,18 @@
 #include "RigidBody.h"
 #include "LineCircle.h"
 #include "Pool.h"
+#include "FootTrail.h"
+#include "SmokeRing.h"
+#include "Lightning_A_01.h"
+#include "Lightning_A_02.h"
+#include "Lightning_B_01.h"
+#include "Lightning_B_02.h"
+#include "Lightning_B_03.h"
+#include "Lightning_C_01.h"
+#include "Lightning_Chidori.h"
+
+
+
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -191,6 +203,9 @@ HRESULT CLevel_Arena::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 	Load_MapData(LEVELID::LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
 	
 
+
+
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -243,13 +258,70 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CPool<CLineCircle>();
-	for (_uint i = 0; i < 1000; ++i)
+	for (_uint i = 0; i < 3000; ++i)
 	{
 		CLineCircle* pObject = dynamic_cast<CLineCircle*>(CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_LineCircle"));
 		CPool<CLineCircle>::Return_Obj(pObject);
 	}
 	
+
+	for (_uint i = 0; i < 20; ++i)
+	{
+		CFootTrail* pFootTrail = dynamic_cast<CFootTrail*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_FootTrail"));
+		CPool<CFootTrail>::Return_Obj(pFootTrail);
+	}
+
+	for (_uint i = 0; i < 200; ++i)
+	{
+		CSmokeRing* pSmokeRing = dynamic_cast<CSmokeRing*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_SmokeRing"));
+		CPool<CSmokeRing>::Return_Obj(pSmokeRing);
+	}
+
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_A_01* pLightning = dynamic_cast<CLightning_A_01*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_A_01"));
+		CPool<CLightning_A_01>::Return_Obj(pLightning);
+	}
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_A_02* pLightning = dynamic_cast<CLightning_A_02*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_A_02"));
+		CPool<CLightning_A_02>::Return_Obj(pLightning);
+	}
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_B_01* pLightning = dynamic_cast<CLightning_B_01*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_B_01"));
+		CPool<CLightning_B_01>::Return_Obj(pLightning);
+	}
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_B_02* pLightning = dynamic_cast<CLightning_B_02*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_B_02"));
+		CPool<CLightning_B_02>::Return_Obj(pLightning);
+	}
+	
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_B_03* pLightning = dynamic_cast<CLightning_B_03*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_B_03"));
+		CPool<CLightning_B_03>::Return_Obj(pLightning);
+	}
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_C_01* pLightning = dynamic_cast<CLightning_C_01*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_C_01"));
+		CPool<CLightning_C_01>::Return_Obj(pLightning);
+	}
+
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLightning_Chidori* pLightning = dynamic_cast<CLightning_Chidori*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Lightning_Chidori"));
+		CPool<CLightning_Chidori>::Return_Obj(pLightning);
+	}
+
+
 
 	Safe_Release(pGameInstance);
 

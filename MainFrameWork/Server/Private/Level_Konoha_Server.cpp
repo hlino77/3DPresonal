@@ -18,6 +18,7 @@
 #include "AsFileUtils.h"
 #include <filesystem>
 #include "MonsterSpawner_Server.h"
+#include "BossSpawner_Server.h"
 
 
 CLevel_Konoha_Server::CLevel_Konoha_Server()
@@ -80,7 +81,7 @@ HRESULT CLevel_Konoha_Server::Initialize()
 
 HRESULT CLevel_Konoha_Server::Tick(_float fTimeDelta)
 {
-
+	Check_Spawners();
 	return S_OK;
 }
 
@@ -376,6 +377,9 @@ void CLevel_Konoha_Server::Ready_Spawners()
 
 		SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 		CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+		
+		m_Spawners.push_back(pSpawner);
 	}
 
 
@@ -457,4 +461,69 @@ CLevel_Konoha_Server* CLevel_Konoha_Server::Create()
 void CLevel_Konoha_Server::Free()
 {
 	__super::Free();
+}
+
+void CLevel_Konoha_Server::Check_Spawners()
+{
+	if (m_bBoss == true)
+		return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	/*for (auto& Spawners : m_Spawners)
+	{
+		if (Spawners->Is_Active())
+			return;
+	}
+
+
+	list<CGameObject*> MonsterList = pGameInstance->Find_GameObjects((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_MONSTER);
+
+	for (auto& Monster : MonsterList)
+	{
+		if (Monster->Is_Active())
+			return;
+	}*/
+
+	Make_BossSpawner();
+	m_bBoss = true;
+	
+	
+	Safe_Release(pGameInstance);
+}
+
+void CLevel_Konoha_Server::Make_BossSpawner()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Vec3 vPos = Vec3(78.43f, 27.93f, -37.87f);
+
+	_uint iObjecID = g_iObjectID++;
+	CBossSpawner_Server* pSpawner = dynamic_cast<CBossSpawner_Server*>(pGameInstance->Add_GameObject((_uint)LEVEL_KONOHA, (_uint)LAYER_TYPE::LAYER_BACKGROUND, L"Prototype_GameObject_BossSpawner", &iObjecID));
+
+	pSpawner->Set_Spawner(vPos, 2.5f);
+
+
+
+	Protocol::S_CREATE_OBJCECT pkt;
+	pkt.set_strname("BossSpawner");
+	pkt.set_iobjectid(iObjecID);
+	pkt.set_ilevel((uint32)LEVELID::LEVEL_KONOHA);
+	pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_BACKGROUND);
+	pkt.set_iobjecttype((uint32)OBJ_TYPE::SPAWNER);
+
+	auto vPacketPos = pkt.mutable_vpos();
+	vPacketPos->Resize(3, 0.0f);
+	memcpy(vPacketPos->mutable_data(), &vPos, sizeof(Vec3));
+
+	/*auto tMonster = pkt.add_tmonsterinfo();
+	tMonster->set_ffollowdistance(10.0f);*/
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
+
+	Safe_Release(pGameInstance);
 }

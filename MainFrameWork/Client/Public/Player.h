@@ -78,13 +78,14 @@ public:
 	void			Send_State(const wstring& szName);
 	void			Send_ColliderState(const _uint& iLayer);
 	void			Send_SlowMotion(_bool bSlow);
-
+	void			Send_MakeSkill(const wstring& szSkillName);
 
 	void			Set_State(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 
 
 	void			Find_NearTarget();
+	void			Send_NearTarget();
 
 	Vec3			Make_StraightDir();
 	Vec3			Make_RightDir();
@@ -123,6 +124,14 @@ public:
 
 
 	void			Set_HitEffect(_bool bHitEffect) { m_bHitEffect = bHitEffect; }
+
+
+	void			Set_EnemyBodyHit(_bool bEnemyBodyHit) { m_bEnemyBodyHit = bEnemyBodyHit; }
+	_bool			Is_EnemyBodyHit() { return m_bEnemyBodyHit; }
+
+	void			Set_Invincible(_bool bInvincible) { m_bInvincible = bInvincible; }
+	_bool			Is_Invincible() { return m_bInvincible; }
+
 protected:
 	virtual HRESULT Ready_Components();
 	
@@ -154,6 +163,10 @@ protected:
 	_uint							m_iFootBoneIndex[2];
 
 
+
+	_bool							m_bEnemyBodyHit = false;
+
+	_bool							m_bInvincible = false;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

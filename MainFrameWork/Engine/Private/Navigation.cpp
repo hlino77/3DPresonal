@@ -110,6 +110,24 @@ void CNavigation::Find_FirstCell(CGameObject* pObject)
 	pObject->Set_CurrCell(0);
 }
 
+_int CNavigation::Check_Pos_InCell(Vec3 vPos)
+{
+	vPos.y += 1.0f;
+
+	Vec3 vDir(0.0f, -1.0f, 0.0f);
+
+
+	for (auto& Cell : m_Cells)
+	{
+		if (Cell->Intersects(vPos, vDir))
+		{
+			return Cell->Get_CellIndex();
+		}
+	}
+
+	return -1;
+}
+
 
 
 void CNavigation::Load_Navigation(const wstring& szFileName)
@@ -158,6 +176,11 @@ void CNavigation::Load_Navigation(const wstring& szFileName)
 
 void CNavigation::SetUp_OnCell(CGameObject* pObject)
 {
+	_int iCurrCell = pObject->Get_CurrCell();
+
+	if (iCurrCell < 0 || iCurrCell >= m_Cells.size())
+		return;
+
 	m_Cells[pObject->Get_CurrCell()]->SetUp_OnCell(pObject, 0);
 }
 

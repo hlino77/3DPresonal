@@ -164,9 +164,12 @@ HRESULT CSkill_TwinBird::Render()
 
 void CSkill_TwinBird::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
-	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
-		Explosion();
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			Explosion();
+		}
 	}
 }
 

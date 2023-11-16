@@ -15,7 +15,7 @@
 #include "Skill.h"
 #include "UI_Hits.h"
 #include "FootTrail.h"
-
+#include "Pool.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -75,7 +75,10 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	m_pRigidBody->UseGravity(true);
 	//}
 
-
+	if (KEY_TAP(KEY::I))
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, Vec3(73.43f, 27.93f, -37.87f));
+	}
 
 
 	if(!m_bWall && m_bNavi)
@@ -164,6 +167,36 @@ void CPlayer::Find_NearTarget()
 	{
 		m_pNearTarget = CGameInstance::GetInstance()->Find_NearGameObject(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_MONSTER, this);
 	}
+}
+
+void CPlayer::Send_NearTarget()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Protocol::S_NEARTARGET pkt;
+
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ilayer(m_iLayer);
+
+	if (m_pNearTarget)
+	{
+		pkt.set_itargetobjectid(m_pNearTarget->Get_ObjectID());
+		pkt.set_itargetobjectlayer(m_pNearTarget->Get_ObjectLayer());
+	}
+	else
+	{
+		pkt.set_itargetobjectid(-1);
+		pkt.set_itargetobjectlayer(-1);
+	}
+
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
+
+	Safe_Release(pGameInstance);
+
 }
 
 Vec3 CPlayer::Make_StraightDir()
@@ -540,7 +573,7 @@ void CPlayer::Appear_FootTrail()
 	{
 		if (m_pFootTrail[i] == nullptr)
 		{
-			m_pFootTrail[i] = dynamic_cast<CFootTrail*>(pGameInstance->GetInstance()->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_FootTrail"));
+			m_pFootTrail[i] = CPool<CFootTrail>::Get_Obj();
 			m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(0.035f, 0.69f, 0.95f, 1.0f), Vec4(0.074f, 0.24f, 0.58f, 1.0f));
 			//m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			//m_pFootTrail[i]->Appear(this, m_iFootBoneIndex[i], Vec4(1.0f, 0.0f, 0.0f, 1.0f), Vec4(0.074f, 0.24f, 0.58f, 1.0f));
@@ -705,6 +738,25 @@ void CPlayer::Send_SlowMotion(_bool bSlow)
 
 	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
+}
+
+void CPlayer::Send_MakeSkill(const wstring& szSkillName)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Protocol::S_SETSKILL pkt;
+
+	pkt.set_ilevel(pGameInstance->Get_CurrLevelIndex());
+	pkt.set_ilayer((_uint)LAYER_TYPE::LAYER_PLAYER);
+	pkt.set_iobjectid(m_iObjectID);
+
+	pkt.set_szskillname(CAsUtils::ToString(szSkillName));
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
+
+	Safe_Release(pGameInstance);
 }
 
 

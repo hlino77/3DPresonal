@@ -77,6 +77,7 @@ public:
 	void				Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void				Send_ColliderState(const _uint& iLayer);
 	void				Send_SlowMotion(_bool bSlow);
+	void				Send_Collision(const _uint iColLayer, CCollider* pOther, _bool bEnter);
 
 	void				Set_Colliders(_float fTimeDelta);
 	HRESULT				Ready_Coliders();

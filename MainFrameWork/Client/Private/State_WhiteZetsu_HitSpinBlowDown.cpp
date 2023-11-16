@@ -56,6 +56,7 @@ void CState_WhiteZetsu_HitSpinBlowDown::Knock_Back()
 {
 	m_vHitPos = m_pMonster->Get_HitObject()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	Vec3 vOwnerPos = m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_vHitPos.y = vOwnerPos.y;
 	Vec3 vDir = vOwnerPos - m_vHitPos;
 
 	vDir.Normalize();

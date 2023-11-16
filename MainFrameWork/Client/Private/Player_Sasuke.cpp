@@ -32,6 +32,13 @@
 #include "PhysXMgr.h"
 #include "LineCircle.h"
 #include "Pool.h"
+#include "State_Sasuke_Skill_Chidori_Attack.h"
+#include "State_Sasuke_Skill_Chidori_Charging.h"
+#include "State_Sasuke_Skill_Chidori_Loop.h"
+#include "State_Sasuke_Skill_Chidori_RunLoop.h"
+#include "State_Sasuke_Skill_Chidori_RunStart.h"
+#include "State_Sasuke_Skill_Chidori_Start.h"
+#include "Skill_Chidori.h"
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -59,6 +66,7 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 
 	m_fAttackMoveSpeed = 8.0f;
 
+	Send_MakeSkill(L"Chidori");
 
 	return S_OK;
 }
@@ -145,7 +153,8 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		Hit_Attack(pOther);
+		if(m_bInvincible == false)
+			Hit_Attack(pOther);
 		return;
 	}
 
@@ -162,6 +171,9 @@ void CPlayer_Sasuke::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS)
+			m_bEnemyBodyHit = true;
+
 		Body_Collision(pOther->Get_Owner());
 		return;
 	}
@@ -237,6 +249,13 @@ void CPlayer_Sasuke::OnCollisionExit_NoneControl(const _uint iColLayer, CCollide
 	}
 }
 
+void CPlayer_Sasuke::Set_Skill(CGameObject* pGameObject)
+{
+	WRITE_LOCK
+	if (pGameObject->Get_ModelName() == L"Chidori")
+		m_pChidori = dynamic_cast<CSkill_Chidori*>(pGameObject);
+}
+
 void CPlayer_Sasuke::Set_Colliders(_float fTimeDelta)
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();
@@ -259,15 +278,16 @@ void CPlayer_Sasuke::Effect_Hit()
 	/*Vec3 vColor(0.19f, 0.2f, 0.29f);
 	vColor *= 0.5f;*/
 
-	Vec3 vColor(0.19f, 0.0f, 0.69f);
-
+	Vec4 vColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//Vec4 vBlurColor(0.19f, 0.0f, 0.69f, 1.0f);
+	Vec4 vBlurColor(0.35f, 0.38f, 0.54f, 1.0f);
 
 	for (_uint i = 0; i < 50; ++i)
 	{
 		CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
 		if (pLineCircle)
 		{
-			pLineCircle->Appear(vLook, vPos, vColor, 1.0f);
+			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
 		}
 	}
 }
@@ -325,7 +345,12 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"GetUp", new CState_Sasuke_GetUp(L"GetUp", this));
 	m_pStateMachine->Add_State(L"DownToFloor", new CState_Sasuke_DownToFloor(L"DownToFloor", this));
 
-
+	m_pStateMachine->Add_State(L"Chidori_Start", new CState_Sasuke_Skill_Chidori_Start(L"Chidori_Start", this));
+	m_pStateMachine->Add_State(L"Chidori_Charge", new CState_Sasuke_Skill_Chidori_Charging(L"Chidori_Charge", this));
+	m_pStateMachine->Add_State(L"Chidori_Loop", new CState_Sasuke_Skill_Chidori_Loop(L"Chidori_Loop", this));
+	m_pStateMachine->Add_State(L"Chidori_RunStart", new CState_Sasuke_Skill_Chidori_RunStart(L"Chidori_RunStart", this));
+	m_pStateMachine->Add_State(L"Chidori_RunLoop", new CState_Sasuke_Skill_Chidori_RunLoop(L"Chidori_RunLoop", this));
+	m_pStateMachine->Add_State(L"Chidori_Attack", new CState_Sasuke_Skill_Chidori_Attack(L"Chidori_Attack", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));

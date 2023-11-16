@@ -297,8 +297,20 @@ struct S_EVENTDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_EVENTDefaultTypeInternal _S_EVENT_default_instance_;
+constexpr S_SKILLEXPLOSION::S_SKILLEXPLOSION(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : tobject_(nullptr){}
+struct S_SKILLEXPLOSIONDefaultTypeInternal {
+  constexpr S_SKILLEXPLOSIONDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~S_SKILLEXPLOSIONDefaultTypeInternal() {}
+  union {
+    S_SKILLEXPLOSION _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT S_SKILLEXPLOSIONDefaultTypeInternal _S_SKILLEXPLOSION_default_instance_;
 }  // namespace Protocol
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Protocol_2eproto[19];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Protocol_2eproto[20];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Protocol_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Protocol_2eproto = nullptr;
 
@@ -469,6 +481,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Protocol_2eproto::offsets[] PR
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_EVENT, ieventid_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S_EVENT, istate_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_SKILLEXPLOSION, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_SKILLEXPLOSION, tobject_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::Protocol::S_TIME)},
@@ -490,6 +508,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 143, -1, sizeof(::Protocol::S_SLOWMOTION)},
   { 152, -1, sizeof(::Protocol::S_CAMSHAKE)},
   { 159, -1, sizeof(::Protocol::S_EVENT)},
+  { 166, -1, sizeof(::Protocol::S_SKILLEXPLOSION)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -512,6 +531,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_S_SLOWMOTION_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_S_CAMSHAKE_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_S_EVENT_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protocol::_S_SKILLEXPLOSION_default_instance_),
 };
 
 const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -560,7 +580,8 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "er\030\003 \001(\005\022\r\n\005bSlow\030\004 \001(\010\"3\n\nS_CAMSHAKE\022\021\n"
   "\tfCamShake\030\001 \001(\002\022\022\n\nfShakeTime\030\002 \001(\002\"+\n\007"
   "S_EVENT\022\020\n\010iEventID\030\001 \001(\005\022\016\n\006iState\030\002 \001("
-  "\005b\006proto3"
+  "\005\"9\n\020S_SKILLEXPLOSION\022%\n\007tObject\030\001 \001(\0132\024"
+  ".Protocol.ObjectInfob\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -568,8 +589,8 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Protocol_2eproto = {
-  false, false, 1809, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
-  &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 19,
+  false, false, 1868, descriptor_table_protodef_Protocol_2eproto, "Protocol.proto", 
+  &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 20,
   schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
   file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto, file_level_service_descriptors_Protocol_2eproto,
 };
@@ -5679,6 +5700,217 @@ void S_EVENT::InternalSwap(S_EVENT* other) {
       file_level_metadata_Protocol_2eproto[18]);
 }
 
+// ===================================================================
+
+class S_SKILLEXPLOSION::_Internal {
+ public:
+  static const ::Protocol::ObjectInfo& tobject(const S_SKILLEXPLOSION* msg);
+};
+
+const ::Protocol::ObjectInfo&
+S_SKILLEXPLOSION::_Internal::tobject(const S_SKILLEXPLOSION* msg) {
+  return *msg->tobject_;
+}
+void S_SKILLEXPLOSION::clear_tobject() {
+  if (GetArenaForAllocation() == nullptr && tobject_ != nullptr) {
+    delete tobject_;
+  }
+  tobject_ = nullptr;
+}
+S_SKILLEXPLOSION::S_SKILLEXPLOSION(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:Protocol.S_SKILLEXPLOSION)
+}
+S_SKILLEXPLOSION::S_SKILLEXPLOSION(const S_SKILLEXPLOSION& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_tobject()) {
+    tobject_ = new ::Protocol::ObjectInfo(*from.tobject_);
+  } else {
+    tobject_ = nullptr;
+  }
+  // @@protoc_insertion_point(copy_constructor:Protocol.S_SKILLEXPLOSION)
+}
+
+void S_SKILLEXPLOSION::SharedCtor() {
+tobject_ = nullptr;
+}
+
+S_SKILLEXPLOSION::~S_SKILLEXPLOSION() {
+  // @@protoc_insertion_point(destructor:Protocol.S_SKILLEXPLOSION)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void S_SKILLEXPLOSION::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete tobject_;
+}
+
+void S_SKILLEXPLOSION::ArenaDtor(void* object) {
+  S_SKILLEXPLOSION* _this = reinterpret_cast< S_SKILLEXPLOSION* >(object);
+  (void)_this;
+}
+void S_SKILLEXPLOSION::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void S_SKILLEXPLOSION::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void S_SKILLEXPLOSION::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protocol.S_SKILLEXPLOSION)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && tobject_ != nullptr) {
+    delete tobject_;
+  }
+  tobject_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* S_SKILLEXPLOSION::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .Protocol.ObjectInfo tObject = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_tobject(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* S_SKILLEXPLOSION::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protocol.S_SKILLEXPLOSION)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Protocol.ObjectInfo tObject = 1;
+  if (this->has_tobject()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::tobject(this), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protocol.S_SKILLEXPLOSION)
+  return target;
+}
+
+size_t S_SKILLEXPLOSION::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protocol.S_SKILLEXPLOSION)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .Protocol.ObjectInfo tObject = 1;
+  if (this->has_tobject()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *tobject_);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void S_SKILLEXPLOSION::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:Protocol.S_SKILLEXPLOSION)
+  GOOGLE_DCHECK_NE(&from, this);
+  const S_SKILLEXPLOSION* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<S_SKILLEXPLOSION>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Protocol.S_SKILLEXPLOSION)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:Protocol.S_SKILLEXPLOSION)
+    MergeFrom(*source);
+  }
+}
+
+void S_SKILLEXPLOSION::MergeFrom(const S_SKILLEXPLOSION& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Protocol.S_SKILLEXPLOSION)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.has_tobject()) {
+    _internal_mutable_tobject()->::Protocol::ObjectInfo::MergeFrom(from._internal_tobject());
+  }
+}
+
+void S_SKILLEXPLOSION::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:Protocol.S_SKILLEXPLOSION)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void S_SKILLEXPLOSION::CopyFrom(const S_SKILLEXPLOSION& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protocol.S_SKILLEXPLOSION)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool S_SKILLEXPLOSION::IsInitialized() const {
+  return true;
+}
+
+void S_SKILLEXPLOSION::InternalSwap(S_SKILLEXPLOSION* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(tobject_, other->tobject_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata S_SKILLEXPLOSION::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[19]);
+}
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
@@ -5738,6 +5970,9 @@ template<> PROTOBUF_NOINLINE ::Protocol::S_CAMSHAKE* Arena::CreateMaybeMessage< 
 }
 template<> PROTOBUF_NOINLINE ::Protocol::S_EVENT* Arena::CreateMaybeMessage< ::Protocol::S_EVENT >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protocol::S_EVENT >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::S_SKILLEXPLOSION* Arena::CreateMaybeMessage< ::Protocol::S_SKILLEXPLOSION >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::S_SKILLEXPLOSION >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

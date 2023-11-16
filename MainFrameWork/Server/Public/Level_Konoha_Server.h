@@ -6,6 +6,8 @@
 
 BEGIN(Server)
 
+class CMonsterSpawner_Server;
+
 class CLevel_Konoha_Server final : public CLevel
 {
 private:
@@ -47,6 +49,9 @@ public:
 
 
 private:
+	void			Check_Spawners();
+	void			Make_BossSpawner();
+
 
 
 
@@ -65,7 +70,7 @@ private:
 	_bool	m_bMonsterSpawn = false;
 
 
-
+	vector<CMonsterSpawner_Server*> m_Spawners;
 private:
 	
 	thread* m_pCollisionThread = nullptr;

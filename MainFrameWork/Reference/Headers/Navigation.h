@@ -23,6 +23,7 @@ public:
 public:
 	CCell*		Find_Cell(_uint iIndex) { return m_Cells[iIndex]; }
 	void		Find_FirstCell(CGameObject* pObject);
+	_int		Check_Pos_InCell(Vec3 vPos);
 
 	void		Load_Navigation(const wstring& szFileName);
 

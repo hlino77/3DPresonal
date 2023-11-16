@@ -95,6 +95,12 @@ void CState_Naruto_WalkLoop::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		m_pPlayer->Set_State(L"Rasengun_Start");
+		return;
+	}
+
 
 	if (KEY_TAP(KEY::SPACE))
 	{
