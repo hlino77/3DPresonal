@@ -6,8 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Camera_Player.h"
-#include "LineCircle.h"
-#include "RasenganCircle.h"
+#include "Skill_Chidori.h"
 
 CState_Sasuke_Skill_Chidori_Charging::CState_Sasuke_Skill_Chidori_Charging(const wstring& strStateName, CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
@@ -39,6 +38,7 @@ HRESULT CState_Sasuke_Skill_Chidori_Charging::Initialize()
 void CState_Sasuke_Skill_Chidori_Charging::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
+	m_pPlayer->Get_Chidori()->Appear();
 }
 
 void CState_Sasuke_Skill_Chidori_Charging::Tick_State(_float fTimeDelta)

@@ -60,7 +60,6 @@ void CState_Sasuke_Skill_Chidori_Start::Tick_State_Control(_float fTimeDelta)
 
 	if (iFrame > 8)
 	{
-		m_pPlayer->Get_Chidori()->Appear();
 		m_pPlayer->Set_State(L"Chidori_Charge");
 	}
 
@@ -75,12 +74,6 @@ void CState_Sasuke_Skill_Chidori_Start::Tick_State_NoneControl(_float fTimeDelta
 {
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
-
-
-	if (iFrame > 8)
-	{
-		m_pPlayer->Get_Chidori()->Appear();
-	}
 
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);

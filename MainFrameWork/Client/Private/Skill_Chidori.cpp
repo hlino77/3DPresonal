@@ -92,10 +92,14 @@ void CSkill_Chidori::Tick(_float fTimeDelta)
 		m_fCurrTime -= fTimeDelta;
 		if (m_fCurrTime <= 0.0f)
 		{
-			m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
-			Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
-			if(m_bAttackTime)
-				dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+			if (m_pSkillOwner->Is_Control())
+			{
+				m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
+				Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
+
+				if (m_bAttackTime)
+					dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+			}
 
 			DisAppearTrail();
 

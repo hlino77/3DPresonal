@@ -60,7 +60,6 @@ void CState_Naruto_Skill_Rasengun_Start::Tick_State_Control(_float fTimeDelta)
 
 	if (iFrame > 8)
 	{
-		m_pPlayer->Get_Rasengun()->Appear();
 		m_pPlayer->Set_State(L"Rasengun_Charge");
 	}
 
@@ -75,13 +74,6 @@ void CState_Naruto_Skill_Rasengun_Start::Tick_State_NoneControl(_float fTimeDelt
 {
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
-
-
-	if (iFrame > 8)
-	{
-		m_pPlayer->Get_Rasengun()->Appear();
-	}
-
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }

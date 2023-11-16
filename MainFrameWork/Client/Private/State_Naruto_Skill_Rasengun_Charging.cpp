@@ -6,8 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Camera_Player.h"
-#include "LineCircle.h"
-#include "RasenganCircle.h"
+#include "Skill_Rasengun.h"
 
 CState_Naruto_Skill_Rasengun_Charging::CState_Naruto_Skill_Rasengun_Charging(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -39,6 +38,8 @@ HRESULT CState_Naruto_Skill_Rasengun_Charging::Initialize()
 void CState_Naruto_Skill_Rasengun_Charging::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
+
+	m_pPlayer->Get_Rasengun()->Appear();
 }
 
 void CState_Naruto_Skill_Rasengun_Charging::Tick_State(_float fTimeDelta)
