@@ -149,13 +149,14 @@ void CState_Naruto_WalkLoop::Tick_State_NoneControl(_float fTimeDelta)
 
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
+	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_Naruto_WalkLoop::Set_TargetPos(Vec3 vDir)
 {
 	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 
-	Vec3 vTargetPos = vPos + vDir * 2.0f;
+	Vec3 vTargetPos = vPos + vDir * 5.0f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 

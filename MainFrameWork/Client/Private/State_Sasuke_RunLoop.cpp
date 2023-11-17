@@ -169,7 +169,7 @@ void CState_Sasuke_RunLoop::Set_TargetPos(Vec3 vDir)
 {
 	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE::STATE_POSITION);
 
-	Vec3 vTargetPos = vPos + vDir * 2.0f;
+	Vec3 vTargetPos = vPos + vDir * 5.0f;
 	m_pPlayer->Set_TargetPos(vTargetPos);
 }
 

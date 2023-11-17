@@ -75,6 +75,13 @@ void CPlayer_Naruto::Tick(_float fTimeDelta)
 	m_pStateMachine->Tick_State(fTimeDelta);
 
 	__super::Tick(fTimeDelta);
+
+
+
+
+	//Vec3 vPos = m_vTargetPos.load();
+
+	//cout << vPos.x << "  " << vPos.y << "  " << vPos.z << endl;
 }
 
 void CPlayer_Naruto::LateTick(_float fTimeDelta)
