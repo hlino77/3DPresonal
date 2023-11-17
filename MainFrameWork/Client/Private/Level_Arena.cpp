@@ -671,7 +671,7 @@ void CLevel_Arena::Start_PhysX()
 
 	for (auto& Player : PlayerList)
 	{
-		Player->Get_RigidBody()->Set_PhysX(true);
+		//Player->Get_RigidBody()->Set_PhysX(true);
 		CPhysXMgr::GetInstance()->Add_PlayObject(Player);
 	}
 	Safe_Release(pGameInstance);

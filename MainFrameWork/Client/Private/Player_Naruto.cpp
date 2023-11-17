@@ -238,6 +238,14 @@ void CPlayer_Naruto::OnCollisionEnter_NoneControl(const _uint iColLayer, CCollid
 		}
 		return;
 	}
+
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		if (m_bControl)
+			CPickingMgr::GetInstance()->Add_ColMesh(pOther->Get_Owner());
+		CPhysXMgr::GetInstance()->Add_ColMesh(m_iObjectID, pOther->Get_Owner()->Get_ModelName());
+		return;
+	}
 }
 
 void CPlayer_Naruto::OnCollisionExit_NoneControl(const _uint iColLayer, CCollider* pOther)
@@ -248,6 +256,15 @@ void CPlayer_Naruto::OnCollisionExit_NoneControl(const _uint iColLayer, CCollide
 		{
 			m_bHitEffect = false;
 		}
+		return;
+	}
+
+
+	if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::COLMESH)
+	{
+		if (m_bControl)
+			CPickingMgr::GetInstance()->Delete_ColMesh(pOther->Get_Owner());
+		CPhysXMgr::GetInstance()->Delete_ColMesh(m_iObjectID, pOther->Get_Owner()->Get_ModelName());
 		return;
 	}
 }
