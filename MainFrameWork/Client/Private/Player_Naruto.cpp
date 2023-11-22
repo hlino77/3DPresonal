@@ -66,11 +66,12 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 
 	m_fAttackMoveSpeed = 8.0f;
 
-	
-	Send_MakeSkill(L"Rasengun");
+	if (m_bControl)
+	{
+		Send_MakeSkill(L"Rasengun");
 
-	Send_MakeSkill(L"RasenSyuriken");
-
+		Send_MakeSkill(L"RasenSyuriken");
+	}
 
 	return S_OK;
 }

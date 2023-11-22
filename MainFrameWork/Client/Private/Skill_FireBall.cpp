@@ -125,12 +125,14 @@ void CSkill_FireBall::Tick(_float fTimeDelta)
 		if (m_fCurrTime >= m_fSkillTime)
 			Explosion();
 
-
-		m_fSendInfoTime += fTimeDelta;
-		if (m_fSendInfoTime >= 0.05f)
+		if (m_pSkillOwner->Is_Control())
 		{
-			m_fSendInfoTime = 0.0f;
-			Send_SkillInfo();
+			m_fSendInfoTime += fTimeDelta;
+			if (m_fSendInfoTime >= 0.05f)
+			{
+				m_fSendInfoTime = 0.0f;
+				Send_SkillInfo();
+			}
 		}
 
 		Effect_Shooting(fTimeDelta);

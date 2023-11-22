@@ -68,9 +68,13 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 	Ready_Coliders();
 
 	m_fAttackMoveSpeed = 8.0f;
+	
 
-	Send_MakeSkill(L"Chidori");
-	Send_MakeSkill(L"FireBall");
+	if (m_bControl)
+	{
+		Send_MakeSkill(L"Chidori");
+		Send_MakeSkill(L"FireBall");
+	}
 
 	return S_OK;
 }

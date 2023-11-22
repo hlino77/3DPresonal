@@ -763,6 +763,7 @@ void CPlayer::Send_SlowMotion(_bool bSlow)
 
 void CPlayer::Send_MakeSkill(const wstring& szSkillName)
 {
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
