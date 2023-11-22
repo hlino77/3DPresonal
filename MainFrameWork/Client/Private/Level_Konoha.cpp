@@ -21,6 +21,7 @@
 #include "PhysXMgr.h"
 #include "Pool.h"
 #include "LineCircle.h"
+#include "ClientEvent_MadaraMeteor.h"
 
 CLevel_Konoha::CLevel_Konoha(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -103,6 +104,7 @@ HRESULT CLevel_Konoha::Exit()
 	End_Picking();
 	CPhysXMgr::GetInstance()->Reset();
 	CGameInstance::GetInstance()->Reset_Lights();
+	CGameInstance::GetInstance()->Reset_QaudTree();
 	return S_OK;
 }
 
@@ -180,6 +182,7 @@ HRESULT CLevel_Konoha::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	pGameInstance->Make_QaudTree(Vec3(0.0f, 62.2f, 0.0f), Vec3(250.0f, 70.0f, 220.0f), 3);
 
 	Load_ColMesh(LEVELID::LEVEL_KONOHA, L"../Bin/Resources/ColMeshData/Kono.data");
 	Load_MapData(LEVELID::LEVEL_KONOHA, L"../Bin/Resources/MapData/Kono.data");
@@ -383,6 +386,15 @@ HRESULT CLevel_Konoha::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 				}
 			}
 
+
+			{
+				vector<CSphereCollider*>& Colliders = pStaticModel->Get_StaticColliders();
+
+				for (auto& Collider : Colliders)
+				{
+					pGameInstance->Add_Object_To_QuadTree(Collider);
+				}
+			}
 		}
 	}
 
@@ -477,10 +489,11 @@ HRESULT CLevel_Konoha::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
 
 HRESULT CLevel_Konoha::Ready_Events()
 {
-
+	CEventMgr::GetInstance()->Add_Event(new CClientEvent_MadaraMeteor((_uint)EVENT::MADARAMETEOR, m_pDevice, m_pContext));
 
 	return S_OK;
 }
+
 
 
 void CLevel_Konoha::Set_CheckGruop()

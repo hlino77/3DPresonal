@@ -33,7 +33,13 @@
 #include "Lightning_B_03.h"
 #include "Lightning_C_01.h"
 #include "Lightning_Chidori.h"
-
+#include "Smoke_09.h"
+#include "Smoke_19.h"
+#include "Fire.h"
+#include "Smoke_24.h"
+#include "ExplosionRing.h"
+#include "SmokeRing_Syuriken.h"
+#include "RasenSyurikenSphere.h"
 
 
 
@@ -321,6 +327,51 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 		CPool<CLightning_Chidori>::Return_Obj(pLightning);
 	}
 
+
+	for (_uint i = 0; i < 500; ++i)
+	{
+		CSmoke_09* pSmoke = dynamic_cast<CSmoke_09*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_09"));
+		CPool<CSmoke_09>::Return_Obj(pSmoke);
+	}
+
+	for (_uint i = 0; i < 500; ++i)
+	{
+		CSmoke_19* pSmoke = dynamic_cast<CSmoke_19*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_19"));
+		CPool<CSmoke_19>::Return_Obj(pSmoke);
+	}
+
+	for (_uint i = 0; i < 3000; ++i)
+	{
+		CFire* pFire = dynamic_cast<CFire*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Fire"));
+		CPool<CFire>::Return_Obj(pFire);
+	}
+
+
+
+	for (_uint i = 0; i < 300; ++i)
+	{
+		CSmoke_24* pSmoke = dynamic_cast<CSmoke_24*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_24"));
+		CPool<CSmoke_24>::Return_Obj(pSmoke);
+	}
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CExplosionRing* pExplosionRing = dynamic_cast<CExplosionRing*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_ExplosionRing"));
+		CPool<CExplosionRing>::Return_Obj(pExplosionRing);
+	}
+
+
+	for (_uint i = 0; i < 10; ++i)
+	{
+		CRasenSyurikenSphere* pSphere = dynamic_cast<CRasenSyurikenSphere*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_RasenSyurikenSphere"));
+		CPool<CRasenSyurikenSphere>::Return_Obj(pSphere);
+	}
+
+	for (_uint i = 0; i < 300; ++i)
+	{
+		CSmokeRing_Syuriken* pSmoke = dynamic_cast<CSmokeRing_Syuriken*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_SmokeRing_Syuriken"));
+		CPool<CSmokeRing_Syuriken>::Return_Obj(pSmoke);
+	}
 
 
 	Safe_Release(pGameInstance);

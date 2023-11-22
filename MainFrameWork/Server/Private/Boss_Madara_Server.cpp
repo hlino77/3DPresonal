@@ -18,6 +18,11 @@
 #include "State_Madara_Attack_TurnKick_Server.h"
 #include "State_Madara_Attack_DoubleTurnKick_Server.h"
 #include "Skill_Server.h"
+#include "Skill_Meteor_Server.h"
+#include "State_Madara_Skill_Meteor_Server.h"
+#include "EventMgr.h"
+
+
 
 
 CBoss_Madara_Server::CBoss_Madara_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -52,6 +57,17 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 	CNavigationMgr::GetInstance()->Reset_Navigation();
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Madara.navi");
 
+
+
+	SKILLINFO tMeteor;
+	tMeteor.m_bReady = false;
+	tMeteor.m_fCoolTime = 30.0f;
+	tMeteor.m_fCurrCoolTime = 20.0f;
+
+	m_SkillInfo.push_back(tMeteor);
+
+
+
     return S_OK;
 }
 
@@ -66,6 +82,14 @@ void CBoss_Madara_Server::Tick(_float fTimeDelta)
 	m_pStateMachine->Tick_State(fTimeDelta);
 
 	__super::Tick(fTimeDelta);
+
+
+	if (m_SkillInfo[MADARA_SKILL::METEOR].m_bReady)
+	{
+		CEventMgr::GetInstance()->Start_Event((_uint)EVENT::MADARAMETEOR);
+		m_SkillInfo[MADARA_SKILL::METEOR].m_bReady = false;
+	}
+
 }
 
 void CBoss_Madara_Server::LateTick(_float fTimeDelta)
@@ -167,6 +191,8 @@ void CBoss_Madara_Server::Set_Skill(CGameObject* pObject)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 	
+	Send_MakeSkill(L"Meteor", (CGameObject**)&m_pMeteor);
+
 
 	Safe_Release(pGameInstance);
 }
@@ -305,7 +331,7 @@ void CBoss_Madara_Server::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_Madara_Attack_Punch_Server(L"Attack_Punch", this));
 	m_pStateMachine->Add_State(L"Attack_TurnKick", new CState_Madara_Attack_TurnKick_Server(L"Attack_TurnKick", this));
 	m_pStateMachine->Add_State(L"Attack_DoubleTurnKick", new CState_Madara_Attack_DoubleTurnKick_Server(L"Attack_DoubleTurnKick", this));
-
+	m_pStateMachine->Add_State(L"Skill_Meteor", new CState_Madara_Skill_Meteor_Server (L"Skill_Meteor", this));
 
 
 	m_pStateMachine->Change_State(L"Appear");

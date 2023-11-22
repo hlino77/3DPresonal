@@ -57,6 +57,7 @@ namespace Client
 		ARENASTART,
 		PLAYERSTART,
 		BATTLESTART,
+		MADARAMETEOR,
 		EVENTEND
 	};
 

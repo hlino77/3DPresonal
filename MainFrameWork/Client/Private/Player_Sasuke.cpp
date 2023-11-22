@@ -39,6 +39,9 @@
 #include "State_Sasuke_Skill_Chidori_RunStart.h"
 #include "State_Sasuke_Skill_Chidori_Start.h"
 #include "Skill_Chidori.h"
+#include "Skill_FireBall.h"
+#include "State_Sasuke_Skill_FireBall.h"
+
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -67,6 +70,7 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 	m_fAttackMoveSpeed = 8.0f;
 
 	Send_MakeSkill(L"Chidori");
+	Send_MakeSkill(L"FireBall");
 
 	return S_OK;
 }
@@ -271,6 +275,10 @@ void CPlayer_Sasuke::Set_Skill(CGameObject* pGameObject)
 	WRITE_LOCK
 	if (pGameObject->Get_ModelName() == L"Chidori")
 		m_pChidori = dynamic_cast<CSkill_Chidori*>(pGameObject);
+
+	if (pGameObject->Get_ModelName() == L"FireBall")
+		m_pFireBall = dynamic_cast<CSkill_FireBall*>(pGameObject);
+
 }
 
 void CPlayer_Sasuke::Set_Colliders(_float fTimeDelta)
@@ -368,6 +376,8 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Chidori_RunStart", new CState_Sasuke_Skill_Chidori_RunStart(L"Chidori_RunStart", this));
 	m_pStateMachine->Add_State(L"Chidori_RunLoop", new CState_Sasuke_Skill_Chidori_RunLoop(L"Chidori_RunLoop", this));
 	m_pStateMachine->Add_State(L"Chidori_Attack", new CState_Sasuke_Skill_Chidori_Attack(L"Chidori_Attack", this));
+
+	m_pStateMachine->Add_State(L"FireBall", new CState_Sasuke_Skill_FireBall(L"FireBall", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));

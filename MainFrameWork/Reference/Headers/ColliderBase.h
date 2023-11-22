@@ -37,6 +37,7 @@ public:
 
 	virtual _bool	Intersects(DirectX::SimpleMath::Ray& ray, OUT float& distance)	PURE;
 	virtual _bool	Intersects(CCollider* other)				PURE;
+	virtual _bool			Intersects_Box(const BoundingBox& Collier) PURE;
 
 	ColliderType	GetColliderType()			{ return m_eColliderType; }
 	_uint			GetID()						{ return m_iID; }

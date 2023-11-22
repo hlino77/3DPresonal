@@ -3,6 +3,8 @@
 
 BEGIN(Client)
 
+class CSkill_Meteor;
+
 class CBoss_Madara : public CBoss
 {
 private:
@@ -27,6 +29,10 @@ public:
 	
 
 	virtual void		Set_Die();
+
+
+	CSkill_Meteor* Get_Meteor() { return m_pMeteor; }
+
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();
@@ -41,6 +47,9 @@ private:
 
 
 	_bool m_bHitEffect = false;
+
+
+	CSkill_Meteor* m_pMeteor = nullptr;
 public:
 	static CBoss_Madara* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg);

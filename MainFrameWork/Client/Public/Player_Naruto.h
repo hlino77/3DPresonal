@@ -7,6 +7,8 @@ class CLineCircle;
 
 
 class CSkill_Rasengun;
+class CSkill_RasenSyuriken;
+
 
 class CPlayer_Naruto : public CPlayer
 {
@@ -42,6 +44,7 @@ public:
 
 
 	CSkill_Rasengun*	Get_Rasengun() { return m_pRasengun; }
+	CSkill_RasenSyuriken* Get_RasenSyuriken() { return m_pRasenSyuriken; }
 
 protected:
 	virtual HRESULT Ready_Components() override;
@@ -55,6 +58,8 @@ private:
 
 
 	CSkill_Rasengun* m_pRasengun = nullptr;
+	CSkill_RasenSyuriken* m_pRasenSyuriken = nullptr;
+
 
 public:
 	static CPlayer_Naruto* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

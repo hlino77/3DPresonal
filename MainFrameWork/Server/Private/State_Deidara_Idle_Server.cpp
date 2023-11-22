@@ -40,7 +40,7 @@ void CState_Deidara_Idle_Server::Tick_State(_float fTimeDelta)
 		return;
 	}
 
-	m_pBoss->Update_NearTarget(fTimeDelta);
+	//m_pBoss->Update_NearTarget(fTimeDelta);
 }
 
 void CState_Deidara_Idle_Server::Exit_State()

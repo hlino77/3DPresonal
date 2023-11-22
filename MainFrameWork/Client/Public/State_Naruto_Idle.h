@@ -33,6 +33,8 @@ private:
 	//Animation
 	_int m_iIdle_Loop = 0;
 
+
+
 public:
 	virtual void Free() override;
 };

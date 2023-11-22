@@ -70,11 +70,6 @@ HRESULT CStaticModel::Render()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
 		return S_OK;
 
-	Matrix matVeiw = pGameInstance->Get_DirectionLightMatrix();
-	Matrix matWorld = matVeiw.Invert();
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ShadowViewMatrix", &matVeiw)))
-		return S_OK;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -214,7 +209,7 @@ HRESULT CStaticModel::Ready_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_LockFree_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	/* For.Com_Renderer */

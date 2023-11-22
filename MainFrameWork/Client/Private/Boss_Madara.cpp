@@ -22,6 +22,8 @@
 #include "State_Madara_Attack_DoubleTurnKick.h"
 #include "LineCircle.h"
 #include "Pool.h"
+#include "State_Madara_Skill_Meteor.h"
+#include "Skill_Meteor.h"
 
 
 CBoss_Madara::CBoss_Madara(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -85,7 +87,8 @@ HRESULT CBoss_Madara::Render()
 void CBoss_Madara::Set_Skill(CGameObject* pGameObject)
 {
 	WRITE_LOCK
-
+	if (pGameObject->Get_ModelName() == L"Meteor")
+		m_pMeteor = dynamic_cast<CSkill_Meteor*>(pGameObject);
 }
 
 void CBoss_Madara::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
@@ -155,7 +158,7 @@ HRESULT CBoss_Madara::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Punch", new CState_Madara_Attack_Punch(L"Attack_Punch", this));
 	m_pStateMachine->Add_State(L"Attack_TurnKick", new CState_Madara_Attack_TurnKick(L"Attack_TurnKick", this));
 	m_pStateMachine->Add_State(L"Attack_DoubleTurnKick", new CState_Madara_Attack_DoubleTurnKick(L"Attack_DoubleTurnKick", this));
-	
+	m_pStateMachine->Add_State(L"Skill_Meteor", new CState_Madara_Skill_Meteor(L"Skill_Meteor", this));
 
 
 

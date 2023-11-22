@@ -53,6 +53,7 @@ namespace Server
 		ARENASTART,
 		PLAYERSTART,
 		BATTLESTART,
+		MADARAMETEOR,
 		EVENTEND
 	};
 

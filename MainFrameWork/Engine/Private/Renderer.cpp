@@ -238,7 +238,7 @@ HRESULT CRenderer::Draw()
 	
 	Render_NonAlphaBlend();
 	Render_StaticInstance();
-	Render_ShadowDepth();
+	//Render_ShadowDepth();
 
 
 	Render_Lights();
@@ -315,8 +315,7 @@ HRESULT CRenderer::Render_ShadowDepth()
 			return E_FAIL;
 		Safe_Release(iter);
 	}
-	
-	m_RenderObjects[RENDER_NONBLEND].clear();
+
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
@@ -335,6 +334,8 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 			return E_FAIL;
 	}
 	
+	m_RenderObjects[RENDER_NONBLEND].clear();
+
 	return S_OK;
 }
 
@@ -656,7 +657,7 @@ HRESULT CRenderer::Render_Debug()
 	//	return E_FAIL;
 	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Lights"), m_pMRTShader, m_pVIBuffer)))
 	//	return E_FAIL;
-
+	
 	/*if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Effects"), m_pMRTShader, m_pVIBuffer)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_EffectShade"), m_pMRTShader, m_pVIBuffer)))
@@ -727,6 +728,21 @@ HRESULT CRenderer::Render_ModelInstancing(const wstring& szModelName)
 
 HRESULT CRenderer::Render_EffectInstancing(const wstring& szModelName)
 {
+
+	/*Vec3 vCamPos = CGameInstance::GetInstance()->Get_CamPosition();
+
+
+	::sort(m_EffectInstance[szModelName].begin(), m_EffectInstance[szModelName].end(), [&](CGameObject* pObjL, CGameObject* pObjR) ->_bool
+		{
+
+			_float fDistanceL = (vCamPos - pObjL->Get_TransformCom()->Get_State(CTransform::STATE_POSITION)).Length();
+			_float fDistanceR = (vCamPos - pObjR->Get_TransformCom()->Get_State(CTransform::STATE_POSITION)).Length();
+
+			return fDistanceL < fDistanceR;
+		});*/
+
+
+
 	vector<Vec4> InstanceData;
 	InstanceData.reserve(5000);
 

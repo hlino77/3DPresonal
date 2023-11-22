@@ -33,8 +33,9 @@ private:
 	HRESULT Load_MapData(LEVELID eLevel, const wstring& szFullPath);
 	HRESULT Load_ColMesh(LEVELID eLevel, const wstring& szFullPath);
 
-	HRESULT Ready_Events();
 
+
+	HRESULT Ready_Events();
 
 
 

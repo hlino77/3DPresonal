@@ -2,11 +2,10 @@
 
 #include "Component.h"
 #include "AsTypes.h"
-#include "Lock.h"
 
 BEGIN(Engine)
 
-class ENGINE_DLL CTransform final : public CComponent
+class ENGINE_DLL CTransform : public CComponent
 {
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
@@ -18,24 +17,23 @@ public:
 	}TRANSFORMDESC;
 
 
-private:
+protected:
 	CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTransform(const CTransform& rhs);
 	virtual ~CTransform() = default;
 
-	USE_LOCK
 public:
-	Vec3 Get_State(STATE eState);
+	virtual Vec3 Get_State(STATE eState) PURE;
 
-	Matrix Get_WorldMatrix();
+	virtual Matrix Get_WorldMatrix() PURE;
 
 
-	Matrix Get_WorldMatrix_TP();
+	virtual Matrix Get_WorldMatrix_TP() PURE;
 
-	Matrix Get_WorldMatrixInverse();
+	virtual Matrix Get_WorldMatrixInverse() PURE;
 
-	void Set_State(STATE eState, Vec3 vState);
-	void Set_WorldMatrix(Matrix matWorld);
+	virtual void Set_State(STATE eState, Vec3 vState) PURE;
+	virtual void Set_WorldMatrix(Matrix matWorld) PURE;
 
 
 
@@ -45,40 +43,38 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
-	void Go_Straight(_float fSpeed, _float fTimeDelta);
-	void Go_Backward(_float fSpeed, _float fTimeDelta);
-	void Go_Left(_float fSpeed, _float fTimeDelta);
-	void Go_Right(_float fSpeed, _float fTimeDelta);
-	void Go_Up(_float fTimeDelta);
-	void Go_Down(_float fTimeDelta);
+	virtual void Go_Straight(_float fSpeed, _float fTimeDelta) PURE;
+	virtual void Go_Backward(_float fSpeed, _float fTimeDelta) PURE;
+	virtual void Go_Left(_float fSpeed, _float fTimeDelta) PURE;
+	virtual void Go_Right(_float fSpeed, _float fTimeDelta) PURE;
+	virtual void Go_Up(_float fTimeDelta) PURE;
+	virtual void Go_Down(_float fTimeDelta) PURE;
 
-	void Set_Scale(Vec3 vScaleInfo);
-	Vec3 Get_Scale();
+	virtual void Set_Scale(Vec3 vScaleInfo) PURE;
+	virtual Vec3 Get_Scale() PURE;
 
-	void Turn(Vec3 vAxis, _float fTimeDelta);
-	void Turn_Speed(Vec3 vAxis, _float fSpeed, _float fTimeDelta);
-	void Rotation(Vec3 vAxis, _float fRadian);
+	virtual void Turn(Vec3 vAxis, _float fTimeDelta) PURE;
+	virtual void Turn_Speed(Vec3 vAxis, _float fSpeed, _float fTimeDelta) PURE;
+	virtual void Rotation(Vec3 vAxis, _float fRadian) PURE;
 
-	void LookAt(Vec3 vAt);
-	void LookAt_ForLandObject(Vec3 vAt);
-	void LookAt_Dir(Vec3 vDir);
-	void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f);
-	void Move_Dir(Vec3 vDir, _float fTimeDelta);
-	void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta);
-	void LookAt_Lerp_ForLand(Vec3 vAt, _float fSpeed, _float fTimeDelta);
-	void SetUp_Lerp(Vec3 vLook, _float fSpeed, _float fTimeDelta);
-	void Move_Pos(Vec3 vTargetPos);
+	virtual void LookAt(Vec3 vAt) PURE;
+	virtual void LookAt_ForLandObject(Vec3 vAt) PURE;
+	virtual void LookAt_Dir(Vec3 vDir) PURE;
+	virtual void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f) PURE;
+	virtual void Move_Dir(Vec3 vDir, _float fTimeDelta) PURE;
+	virtual void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta) PURE;
+	virtual void LookAt_Lerp_ForLand(Vec3 vAt, _float fSpeed, _float fTimeDelta) PURE;
+	virtual void SetUp_Lerp(Vec3 vLook, _float fSpeed, _float fTimeDelta) PURE;
+	virtual void Move_Pos(Vec3 vTargetPos) PURE;
 
 
-	void Set_Up(Vec3 vNormal);
+	virtual void Set_Up(Vec3 vNormal) PURE;
 
-private:
+protected:
 	Matrix					m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc;
 
 public:
-	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(CGameObject* pObject, void* pArg) override;
 	virtual void Free() override;
 };
 

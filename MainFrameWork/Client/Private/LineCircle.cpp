@@ -191,6 +191,43 @@ void CLineCircle::Appear(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor, _float fForce)
 	m_pRigidBody->Set_Gravity(true);
 }
 
+void CLineCircle::Appear_OnlyUp(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor, _float fForce)
+{
+	m_bActive = true;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+	m_vColor = vColor;
+	m_vBlurColor = vBlurColor;
+
+
+	_float fAngle = m_RandomAngle(m_RandomNumber);
+	Vec3 vDir;
+	vDir.x = m_RandomDir(m_RandomNumber);
+	vDir.y = m_RandomDir(m_RandomNumber);
+	vDir.z = m_RandomDir(m_RandomNumber);
+	vDir.Normalize();
+
+	if (vDir.y < 0.0f)
+		vDir.y *= -1.0f;
+
+	_float fRandomForce = m_RandomForce(m_RandomNumber);
+
+	fRandomForce *= fForce;
+	m_pRigidBody->AddForce(vDir * fRandomForce, ForceMode::FORCE);
+
+	//0.05f 0.01f 1.0f, 0.5f;
+
+	m_vScale.x = m_RandomScaleX(m_RandomNumber);
+	m_vScale.y = m_RandomScaleY(m_RandomNumber);
+
+
+	m_fLifeTime = m_RandomLifeTime(m_RandomNumber);
+
+	m_bEnd = false;
+
+	m_pRigidBody->Set_Gravity(true);
+}
+
 
 HRESULT CLineCircle::Ready_Components()
 {

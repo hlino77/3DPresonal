@@ -3,7 +3,7 @@
 /* 클라에서 정의할 카메라들의 부모. */
 /* 모든 카메라가 가져야할 기본적인 기능을 보유한다. */
 #include "GameObject.h"
-#include "Transform.h"
+#include "LockFree_Transform.h"
 
 BEGIN(Engine)
 
@@ -36,7 +36,10 @@ public:
 
 protected:
 	CAMERADESC					m_CameraDesc;
+	Matrix						m_matProj;
 
+
+	BoundingFrustum				m_tCamFrustum;
 protected:
 	virtual HRESULT Ready_Components() override;
 

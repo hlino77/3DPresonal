@@ -135,7 +135,7 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 	
-	
+	void					CullingObject();
 
 protected:
 	class CCamera_Player*			m_pCamera = nullptr;
@@ -167,10 +167,18 @@ protected:
 	_bool							m_bEnemyBodyHit = false;
 
 	_bool							m_bInvincible = false;
+
+
+
+
+
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 
+
+	//Culling
+	BoundingSphere m_tCullingSphere;
 
 public:
 	virtual void Free();

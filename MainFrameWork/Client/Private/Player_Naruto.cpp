@@ -38,6 +38,8 @@
 #include "State_Naruto_Skill_Rasengun_RunLoop.h"
 #include "State_Naruto_Skill_Rasengun_RunStart.h"
 #include "Skill_Rasengun.h"
+#include "Skill_RasenSyuriken.h"
+#include "State_Naruto_Skill_RasenSyuriken.h"
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -66,6 +68,9 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 
 	
 	Send_MakeSkill(L"Rasengun");
+
+	Send_MakeSkill(L"RasenSyuriken");
+
 
 	return S_OK;
 }
@@ -274,7 +279,8 @@ void CPlayer_Naruto::Set_Skill(CGameObject* pGameObject)
 	WRITE_LOCK
 	if (pGameObject->Get_ModelName() == L"Rasengun")
 		m_pRasengun = dynamic_cast<CSkill_Rasengun*>(pGameObject);
-
+	else if (pGameObject->Get_ModelName() == L"RasenSyuriken")
+		m_pRasenSyuriken = dynamic_cast<CSkill_RasenSyuriken*>(pGameObject);
 }
 
 void CPlayer_Naruto::Send_PlayerInfo()
@@ -374,6 +380,7 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Rasengun_RunLoop", new CState_Naruto_Skill_Rasengun_RunLoop(L"Rasengun_RunLoop", this));
 	m_pStateMachine->Add_State(L"Rasengun_Attack", new CState_Naruto_Skill_Rasengun_Attack(L"Rasengun_Attack", this));
 
+	m_pStateMachine->Add_State(L"RasenSyuriken", new CState_Naruto_Skill_RasenSyuriken(L"RasenSyuriken", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Naruto_Attack_Punch_Left(L"Attack_Normal_cmb01", this));

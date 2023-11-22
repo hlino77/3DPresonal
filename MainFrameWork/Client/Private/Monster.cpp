@@ -37,6 +37,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	m_pRigidBody->SetMass(2.0f);
 
 
+
+
     return S_OK;
 }
 
@@ -54,8 +56,7 @@ void CMonster::LateTick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 
-	if (m_bRender)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	CullingObject();
 }
 
 HRESULT CMonster::Render()
@@ -164,7 +165,7 @@ HRESULT CMonster::Ready_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	/* For.Com_Renderer */
@@ -225,6 +226,20 @@ HRESULT CMonster::Ready_Components()
 	m_pTransformCom->Set_Scale(vScale);
 
     return S_OK;
+}
+
+void CMonster::CullingObject()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	m_tCullingSphere.Center = vPos;
+
+	const BoundingFrustum& tCamFrustum = CGameInstance::GetInstance()->Get_CamFrustum();
+
+	if (tCamFrustum.Intersects(m_tCullingSphere) == false)
+		return;
+		
+	if (m_bRender)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 void CMonster::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)

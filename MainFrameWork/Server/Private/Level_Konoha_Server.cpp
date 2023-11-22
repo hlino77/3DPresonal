@@ -19,6 +19,7 @@
 #include <filesystem>
 #include "MonsterSpawner_Server.h"
 #include "BossSpawner_Server.h"
+#include "ServerEvent_MadaraMeteor.h"
 
 
 CLevel_Konoha_Server::CLevel_Konoha_Server()
@@ -326,6 +327,7 @@ HRESULT CLevel_Konoha_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
 
 HRESULT CLevel_Konoha_Server::Ready_Events()
 {
+	CEventMgr::GetInstance()->Add_Event(new CServerEvent_MadaraMeteor((_uint)EVENT::MADARAMETEOR, nullptr, nullptr));
 
 	return S_OK;
 }

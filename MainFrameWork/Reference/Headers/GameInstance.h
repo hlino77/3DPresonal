@@ -88,7 +88,7 @@ public: /* For.PipeLine */
 	Matrix Get_TransformMatrix(CPipeLine::TRANSFORMSTATE eTransformState) const;
 	Matrix Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE eTransformState) const;
 	Vec4 Get_CamPosition();
-
+	const BoundingFrustum& Get_CamFrustum();
 /* For. KeyManager */
 public:
 	KEY_STATE GetKeyState(KEY _eKey);
@@ -96,9 +96,14 @@ public:
 
 
 	/* For. NavigationManager */
-
 public:
 
+
+	/* For. QuadTreeManager */
+public:
+	HRESULT Make_QaudTree(Vec3 vPos, Vec3 vScale, _uint iMaxDepth);
+	HRESULT Reset_QaudTree();
+	_bool	Add_Object_To_QuadTree(CSphereCollider * pCollider);
 
 public:
 	void			AddFont(const wstring & szTextName, const wstring & szFontPath);
@@ -123,6 +128,8 @@ private:
 	class CNavigationMgr*			m_pNavigationMgr = { nullptr };
 	class CEventMgr*				m_pEventMgr = { nullptr };
 	class CPhysXMgr*				m_pPhysXMgr = { nullptr };
+	class CQuadTreeMgr*				m_pQuadTreeMgr = { nullptr };
+
 public:
 	static void Release_Engine();
 	virtual void Free() override;

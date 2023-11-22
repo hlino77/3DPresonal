@@ -112,17 +112,10 @@ void CSkill_Rasengun::Tick(_float fTimeDelta)
 
 void CSkill_Rasengun::LateTick(_float fTimeDelta)
 {
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CSkill_Rasengun::Render()
 {
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-	{
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
-	}
 	return S_OK;
 }
 
@@ -255,7 +248,7 @@ HRESULT CSkill_Rasengun::Ready_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	{

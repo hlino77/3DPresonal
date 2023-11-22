@@ -205,7 +205,7 @@ HRESULT CUI_PlayerInfo::Ready_Components()
 		TransformDesc.fSpeedPerSec = 5.f;
 		TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"),
 			TEXT("Com_CharacterTransform"), (CComponent**)&m_pTextureTransform, &TransformDesc)))
 			return E_FAIL;
 	}
@@ -218,7 +218,7 @@ HRESULT CUI_PlayerInfo::Ready_Components()
 		TransformDesc.fSpeedPerSec = 5.f;
 		TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"),
 			TEXT("Com_MarkTransform"), (CComponent**)&m_pMarkTransform, &TransformDesc)))
 			return E_FAIL;
 	}

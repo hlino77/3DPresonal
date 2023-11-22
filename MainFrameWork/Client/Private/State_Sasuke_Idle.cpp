@@ -91,6 +91,12 @@ void CState_Sasuke_Idle::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::NUM_2))
+	{
+		m_pPlayer->Set_State(L"FireBall");
+		return;
+	}
+
 
 
 	if (KEY_TAP(KEY::O))

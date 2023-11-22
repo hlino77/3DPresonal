@@ -20,7 +20,7 @@ public:
 
 	virtual _bool	Intersects(SimpleMath::Ray& ray, OUT _float& distance)	override;
 	virtual _bool	Intersects(Super* other)					override;
-
+	virtual _bool	Intersects_Box(const BoundingBox& Collider) override;
 	
 	void			Set_Center();
 	void			Set_Center(Vec3 vPos) { m_tBoundingSphere.Center = vPos; }

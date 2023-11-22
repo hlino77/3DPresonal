@@ -49,6 +49,9 @@ HRESULT CMonster_C2Dragon::Initialize(void* pArg)
 
 	Set_Active(false);
 
+
+	m_tCullingSphere.Radius = 10.0f;
+
 	return S_OK;
 }
 
@@ -132,7 +135,7 @@ HRESULT CMonster_C2Dragon::Ready_Components()
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	/* For.Com_Renderer */

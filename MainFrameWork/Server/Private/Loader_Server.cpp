@@ -14,6 +14,9 @@
 #include "Boss_Madara_Server.h"
 #include "Skill_Rasengun_Server.h"
 #include "Skill_Chidori_Server.h"
+#include "Skill_Meteor_Server.h"
+#include "Skill_FireBall_Server.h"
+#include "Skill_RasenSyuriken_Server.h"
 
 
 CLoader_Server::CLoader_Server()
@@ -254,6 +257,20 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Chidori"),
 		CSkill_Chidori_Server::Create(nullptr, nullptr))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Meteor"),
+		CSkill_Meteor_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_FireBall"),
+		CSkill_FireBall_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_RasenSyuriken"),
+		CSkill_RasenSyuriken_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+
 
 	Safe_Release(pGameInstance);
 

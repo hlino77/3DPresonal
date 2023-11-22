@@ -22,6 +22,8 @@
 #include "NavigationMgr.h"
 #include "Renderer.h"
 #include "EventMgr.h"
+#include "LockFree_Transform.h"
+#include "UseLock_Transform.h"
 
 
 CMainApp_Server::CMainApp_Server()
@@ -110,8 +112,12 @@ HRESULT CMainApp_Server::Ready_Prototype_Component()
 	Safe_AddRef(m_pRenderer_Com);
 
 	/* For.Prototype_Component_Transform */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		CTransform::Create(nullptr, nullptr))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_LockFree_Transform"),
+		CLockFree_Transform::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_UseLock_Transform"),
+		CUseLock_Transform::Create(nullptr, nullptr))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_State */

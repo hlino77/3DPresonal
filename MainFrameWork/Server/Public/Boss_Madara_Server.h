@@ -5,8 +5,8 @@
 
 
 BEGIN(Server)
-class CMonster_C2Dragon_Server;
-class CSkill_TwinBird_Server;
+class CSkill_Meteor_Server;
+
 
 
 class CBoss_Madara_Server : public CBoss_Server
@@ -19,7 +19,7 @@ public:
 		_bool m_bReady;
 	}SKILLINFO;
 
-	enum MADARA_SKILL { C2DRAGON, TWINBIRD, SKILLEND };
+	enum MADARA_SKILL { METEOR, FIREBALL, SKILLEND };
 
 
 protected:
@@ -63,6 +63,9 @@ public:
 
 	void				Set_NormalAttackHit(_bool bHit) { m_bNormalAttackHit = bHit; }
 	_bool				Is_NormalAttackHit() { return m_bNormalAttackHit; }
+
+
+	CSkill_Meteor_Server* Get_Meteor() { return m_pMeteor; }
 protected:
 	virtual HRESULT		Ready_Components();
 
@@ -82,6 +85,8 @@ private:
 
 
 	vector<SKILLINFO> m_SkillInfo;
+
+	CSkill_Meteor_Server* m_pMeteor = nullptr;
 
 
 public:

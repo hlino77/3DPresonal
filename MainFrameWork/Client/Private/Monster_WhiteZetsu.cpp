@@ -44,6 +44,8 @@ HRESULT CMonster_WhiteZetsu::Initialize(void* pArg)
 	Ready_State();
 
 
+	m_tCullingSphere.Radius = 2.0f;
+
 	return S_OK;
 }
 

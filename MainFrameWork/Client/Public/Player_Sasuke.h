@@ -3,7 +3,7 @@
 
 BEGIN(Client)
 class CSkill_Chidori;
-
+class CSkill_FireBall;
 
 class CPlayer_Sasuke : public CPlayer
 {
@@ -37,7 +37,7 @@ public:
 
 
 	CSkill_Chidori*		Get_Chidori() { return m_pChidori; }
-
+	CSkill_FireBall*	Get_FireBall() { return m_pFireBall; }
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();
@@ -51,6 +51,8 @@ private:
 
 
 	CSkill_Chidori* m_pChidori = nullptr;
+	CSkill_FireBall* m_pFireBall = nullptr;
+
 
 public:
 	static CPlayer_Sasuke* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

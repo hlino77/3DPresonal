@@ -75,7 +75,8 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 
-
+protected:
+	void					CullingObject();
 
 protected:
 
@@ -91,6 +92,8 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 
 	std::future<HRESULT>			m_PlayAnimation;
+
+	BoundingSphere m_tCullingSphere;
 public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free();

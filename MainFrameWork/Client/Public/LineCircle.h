@@ -28,6 +28,7 @@ public:
 	virtual void Add_InstanceData(vector<Vec4>& BufferData) override;
 
 	void		Appear(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor,_float fForce);
+	void		Appear_OnlyUp(Vec3 vPos, Vec4 vColor, Vec4 vBlurColor, _float fForce);
 
 protected: 
 

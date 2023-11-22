@@ -100,10 +100,8 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 	if (m_UseGravity)
 		m_vLinearVelocity += m_vGravityDir * 9.81f * fTimeDelta * m_fMass;
 
-	m_vAngularVelocity += m_vAngularAcceleration;
 	m_vLinearVelocity += m_vLinearAcceleration;
 
-	_float fAngularResistance = m_fAngularDrag;
 	_float fLinearResistance = m_fDrag;
 	_float fLinearGroundResistance = m_fGroundDrag * fTimeDelta;
 
@@ -115,18 +113,18 @@ void CRigidBody::KineticUpdate(const _float& fTimeDelta)
 		(fLinearGroundResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearGroundResistance)) : (m_vLinearVelocity = Vec3::Zero);
 
 	// Constraints Check
-	if (m_byConstraints)
+	/*if (m_byConstraints)
 	{
 		_int i = 0;
 		while(i < 3)
 			(m_byConstraints & 1 << i) ? (*(((_float*)&m_vLinearVelocity) + i++) = 0) : i++;
 		while(i < 6)
 			(m_byConstraints & 1 << i) ? (*(((_float*)&m_vAngularVelocity) + i++) = 0) : i++;
-	}
+	}*/
 
 	UpdateTransform(fTimeDelta);
 
-	m_vAngularAcceleration = Vec3::Zero;
+	//m_vAngularAcceleration = Vec3::Zero;
 	m_vLinearAcceleration = Vec3::Zero;
 
 
@@ -142,7 +140,7 @@ void CRigidBody::KinematicUpdate(const _float& fTimeDelta)
 
 	//ClearNetPower();
 	ClearForce(ForceMode::VELOCITY_CHANGE);
-	ClearTorque(ForceMode::VELOCITY_CHANGE);
+	//ClearTorque(ForceMode::VELOCITY_CHANGE);
 }
 
 void CRigidBody::UpdateTransform(const _float& fTimeDelta)

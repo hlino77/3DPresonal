@@ -54,7 +54,28 @@
 #include "LightningTrail.h"
 #include "Rasengan_StartSmoke.h"
 #include "Rasengan_RunSmoke.h"
-
+#include "Skill_Meteor.h"
+#include "Meteor_HemiSphere.h"
+#include "Meteor_Bottom.h"
+#include "Meteor_Smoke.h"
+#include "Smoke_09.h"
+#include "Smoke_19.h"
+#include "Meteor_Cylinder.h"
+#include "Monster_Susanoo_Madara.h"
+#include "FireBall.h"
+#include "FireBallPlane.h"
+#include "FireBallTrail.h"
+#include "Fire.h"
+#include "Smoke_24.h"
+#include "ExplosionRing.h"
+#include "Skill_FireBall.h"
+#include "RasenSyurikenBlade.h"
+#include "RasenSyurikenBladeBlur.h"
+#include "RasenSyurikenBladeLine.h"
+#include "Skill_RasenSyuriken.h"
+#include "RasenSyurikenCenter.h"
+#include "RasenSyurikenSphere.h"
+#include "SmokeRing_Syuriken.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -239,6 +260,86 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/LineSmoke.png"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Meteor_HemiSphere"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Meteor_HemiSphere.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Meteor_Bottom"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Meteor_Bottom.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Meteor_Smoke"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Meteor_Smoke.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Smoke_09"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Smoke_09.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Smoke_19"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Smoke_19.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Default"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Default.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_FireBallOut"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/FireBallOut.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_FirePlane"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/FirePlane.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_FireDisolve"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/FireDisolve_%d.png", 2))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_FireBallTrail"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/FireBallTrail.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Fire"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Fire.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Fire_Mask"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Fire_Mask.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Smoke_24"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Smoke_24.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_ExplosionRing"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/ExplosionRing.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_BladeBlur"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/BladeBlur.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_NoiseLine_BC"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/NoiseLine_BC.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_NoiseLine_M"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/NoiseLine_M.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_SphereNoise"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/SphereNoise.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_SphereDisolve"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/SphereDisolve.png"))))
+		return E_FAIL;
 
 
 	/* For.Mesh */
@@ -279,6 +380,11 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CMonster_C2Dragon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_Susanoo_Madara"),
+		CMonster_Susanoo_Madara::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticModel"),
 		CStaticModel::Create(m_pDevice, m_pContext, PROP))))
 		return E_FAIL;
@@ -317,6 +423,20 @@ HRESULT CLoader::Loading_For_Level_Arena()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Chidori"),
 		CSkill_Chidori::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_Meteor"),
+		CSkill_Meteor::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_FireBall"),
+		CSkill_FireBall::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_RasenSyuriken"),
+		CSkill_RasenSyuriken::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_SmokeRing"),
@@ -365,6 +485,89 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CRasengan_RunSmoke::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Meteor_HemiSphere"),
+		CMeteor_HemiSphere::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Meteor_Bottom"),
+		CMeteor_Bottom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Meteor_Smoke"),
+		CMeteor_Smoke::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Smoke_09"),
+		CSmoke_09::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Smoke_19"),
+		CSmoke_19::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Meteor_Cylinder"),
+		CMeteor_Cylinder::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_FireBall"),
+		CFireBall::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_FireBallPlane"),
+		CFireBallPlane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_FireBallTrail"),
+		CFireBallTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Fire"),
+		CFire::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Smoke_24"),
+		CSmoke_24::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_ExplosionRing"),
+		CExplosionRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_RasenSyurikenBlade"),
+		CRasenSyurikenBlade::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_RasenSyurikenBladeBlur"),
+		CRasenSyurikenBladeBlur::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_RasenSyurikenBladeLine"),
+		CRasenSyurikenBladeLine::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_RasenSyurikenCenter"),
+		CRasenSyurikenCenter::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_RasenSyurikenSphere"),
+		CRasenSyurikenSphere::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_SmokeRing_Syuriken"),
+		CSmokeRing_Syuriken::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleStart"), CUI_BattleStart::Create(m_pDevice, m_pContext))))
@@ -391,6 +594,9 @@ HRESULT CLoader::Loading_For_Level_Arena()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LightningTrail"),
 		CLightningTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
+
 
 
 	m_strLoading = TEXT("모델을 로딩 중 입니다.");
@@ -799,6 +1005,16 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 			return E_FAIL;
 	}
 
+	{
+		wstring strFileName = L"Susanoo_Madara";
+		wstring strFilePath = L"../Bin/Resources/Meshes/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
 
 	{
 		wstring strFileName = L"AreaCircle";
@@ -930,6 +1146,141 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 	}
 
 
+	{
+		wstring strFileName = L"Meteor";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Meteor_HemiSphere";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Meteor_Bottom";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"Meteor_Smoke";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"Meteor_Cylinder";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"FireBall";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"FireBallPlane";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"FireBallTrail";
+
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"RasenSyurikenBlade";
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"RasenSyurikenBladeBlur";
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+	{
+		wstring strFileName = L"RasenSyurikenBladeLine";
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+	{
+		wstring strFileName = L"CommonSphere";
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
+
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -963,6 +1314,9 @@ HRESULT CLoader::Loading_Model_For_Level_Konoha()
 			CModel::Create(m_pDevice, m_pContext, strFilePath, strFileName, true, false, PivotMatrix))))
 			return E_FAIL;
 	}
+
+
+	
 
 
 

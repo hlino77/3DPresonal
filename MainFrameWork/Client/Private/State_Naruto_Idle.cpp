@@ -6,10 +6,9 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Camera_Player.h"
-#include "LineCircle.h"
-#include "RasenganCircle.h"
-#include "SmokeRing.h"
 #include "Pool.h"
+#include "RasenSyurikenSphere.h"
+#include "SmokeRing_Syuriken.h"
 
 
 CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
@@ -87,12 +86,24 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::NUM_2))
+	{
+		m_pPlayer->Set_State(L"RasenSyuriken");
+		return;
+	}
 
 
 
 	if (KEY_TAP(KEY::O))
 	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
 		
+
+		
+		
+		Safe_Release(pGameInstance);
 	}
 
 }

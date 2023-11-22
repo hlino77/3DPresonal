@@ -35,6 +35,8 @@ public:
 		return m_vCamPosition;
 	}
 
+	const BoundingFrustum& Get_CamFrustum() { return m_tCamFrustum; }
+	void	Set_Frustum(const BoundingFrustum& tBoundingFrustum) { m_tCamFrustum = tBoundingFrustum; }
 public:
 	void Update();
 	
@@ -43,6 +45,7 @@ private:
 	Matrix				m_TransformInverseMatrix[D3DTS_END];
 	Vec4					m_vCamPosition;
 
+	BoundingFrustum		m_tCamFrustum;
 public:
 	virtual void Free() override;
 };

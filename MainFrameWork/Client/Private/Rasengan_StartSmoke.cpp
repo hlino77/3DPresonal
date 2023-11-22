@@ -35,7 +35,7 @@ HRESULT CRasengan_StartSmoke::Initialize(void* pArg)
 	m_bActive = false;
 
 
-	m_vColor = Vec4(1.0f, 1.0f, 1.0f, 0.5f);
+	m_vColor = Vec4(0.8f, 0.8f, 0.8f, 0.5f);
 	m_vBlur = Vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//m_vBlur = Vec4(0.07f, 0.3f, 0.63f, 1.0f);
@@ -123,7 +123,7 @@ HRESULT CRasengan_StartSmoke::Render_Instance(ID3D11Buffer* pInstanceBuffer, _ui
 			return E_FAIL;*/
 
 
-		if (FAILED(m_pModelCom->Render_Instance(pInstanceBuffer, iSize, m_pShaderCom, i, iStride, 1)))
+		if (FAILED(m_pModelCom->Render_Instance(pInstanceBuffer, iSize, m_pShaderCom, i, iStride, 2)))
 			return S_OK;
 	}
 
@@ -160,7 +160,7 @@ void CRasengan_StartSmoke::Appear()
 
 	m_fCurrTime = 0.0f;
 
-	m_vColor.w = 0.5f;
+	m_vColor.w = 1.0f;
 }
 
 void CRasengan_StartSmoke::DisAppear()
@@ -201,7 +201,7 @@ HRESULT CRasengan_StartSmoke::Ready_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_LockFree_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	/* For.Com_Renderer */

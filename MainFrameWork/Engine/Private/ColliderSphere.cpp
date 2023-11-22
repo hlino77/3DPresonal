@@ -105,6 +105,21 @@ _bool CSphereCollider::Intersects(Super* other)
 	return false;
 }
 
+_bool CSphereCollider::Intersects_Box(const BoundingBox& Collider)
+{
+	if (m_tBoundingSphere.Intersects(Collider))
+	{
+		if (m_pChild)
+		{
+			return m_pChild->Intersects_Box(Collider);
+		}
+		else
+			return true;
+	}
+
+	return false;
+}
+
 void CSphereCollider::Set_Center()
 {
 	Matrix matObjectWorld = m_pOwner->Get_TransformCom()->Get_WorldMatrix();

@@ -87,6 +87,11 @@ _bool COBBCollider::Intersects(Super* other)
 	return false;
 }
 
+_bool COBBCollider::Intersects_Box(const BoundingBox& Collier)
+{
+	return m_tBoundingBox.Intersects(Collier);
+}
+
 
 
 void COBBCollider::Set_StaticBoundingBox()

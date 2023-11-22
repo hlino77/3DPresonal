@@ -71,9 +71,11 @@ protected:
 	virtual HRESULT Ready_Components();
 
 
+protected:
+	void					CullingObject();
+
 
 protected:
-
 	_float							m_fMoveSpeed = 0.0f;
 	_float							m_fAttackMoveSpeed = 0.0f;
 	_float							m_fAnimationSpeed = 1.0f;
@@ -87,6 +89,13 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 
 	std::future<HRESULT>			m_PlayAnimation;
+
+
+
+	//Culling
+	BoundingSphere m_tCullingSphere;
+
+
 public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free();

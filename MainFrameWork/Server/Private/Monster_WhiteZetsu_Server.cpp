@@ -42,10 +42,10 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 15;
+	m_iHp = 1;
 
     return S_OK;
-}
+} 
 
 void CMonster_WhiteZetsu_Server::Tick(_float fTimeDelta)
 {

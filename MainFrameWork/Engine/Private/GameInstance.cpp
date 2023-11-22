@@ -12,6 +12,8 @@
 #include "NavigationMgr.h"
 #include "EventMgr.h"
 #include "PhysXMgr.h"
+#include "QuadTreeMgr.h"
+
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -30,6 +32,7 @@ CGameInstance::CGameInstance()
 	, m_pNavigationMgr(CNavigationMgr::GetInstance())
 	, m_pEventMgr(CEventMgr::GetInstance())
 	, m_pPhysXMgr(CPhysXMgr::GetInstance())
+	, m_pQuadTreeMgr(CQuadTreeMgr::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -43,6 +46,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pText_Manager);
 	Safe_AddRef(m_pNavigationMgr);
 	Safe_AddRef(m_pEventMgr);
+	Safe_AddRef(m_pQuadTreeMgr);
 
 	Safe_AddRef(m_pUtilities);
 	Safe_AddRef(m_pPhysXMgr);
@@ -82,6 +86,8 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayerType,
 	if (FAILED(m_pText_Manager->Reserve_Manager(*ppDevice, *ppContext)))
 		return E_FAIL;
 
+	if (FAILED(m_pQuadTreeMgr->Reserve_Manager(*ppDevice, *ppContext)))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -111,6 +117,8 @@ void CGameInstance::Tick(_float fTimeDelta)
 
 
 	m_pEventMgr->LateTick(fTimeDelta);
+	m_pQuadTreeMgr->Tick(fTimeDelta);
+
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pPhysXMgr->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
@@ -390,6 +398,11 @@ Vec4 CGameInstance::Get_CamPosition()
 	return m_pPipeLine->Get_CamPosition();
 }
 
+const BoundingFrustum& CGameInstance::Get_CamFrustum()
+{
+	return m_pPipeLine->Get_CamFrustum();
+}
+
 KEY_STATE CGameInstance::GetKeyState(KEY _eKey)
 {
 	if (nullptr == m_pKey_Manager)
@@ -402,6 +415,21 @@ const POINT& CGameInstance::GetMousePos()
 {
 
 	return POINT();
+}
+
+HRESULT CGameInstance::Make_QaudTree(Vec3 vPos, Vec3 vScale, _uint iMaxDepth)
+{
+	return m_pQuadTreeMgr->Make_QaudTree(vPos, vScale, iMaxDepth);
+}
+
+HRESULT CGameInstance::Reset_QaudTree()
+{
+	return m_pQuadTreeMgr->Reset_QaudTree();
+}
+
+_bool CGameInstance::Add_Object_To_QuadTree(CSphereCollider* pCollider)
+{
+	return m_pQuadTreeMgr->Add_Object(pCollider);
 }
 
 void CGameInstance::AddFont(const wstring& szTextName, const wstring& szFontPath)
@@ -442,7 +470,7 @@ void CGameInstance::Release_Engine()
 	CInput_Device::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
 	CLight_Manager::GetInstance()->DestroyInstance();
-	
+	CQuadTreeMgr::GetInstance()->DestroyInstance();
 
 	CKey_Manager::GetInstance()->DestroyInstance();
 	CUtils::GetInstance()->DestroyInstance();
@@ -458,6 +486,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pLight_Manager);
+	Safe_Release(m_pQuadTreeMgr);
 
 	Safe_Release(m_pKey_Manager);
 	Safe_Release(m_pUtilities);
