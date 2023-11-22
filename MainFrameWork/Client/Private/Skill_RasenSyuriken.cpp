@@ -263,9 +263,10 @@ void CSkill_RasenSyuriken::Explosion()
 
 void CSkill_RasenSyuriken::Appear()
 {
+	Update_Transform();
 	Send_SkillInfo();
 
-	Update_Transform();
+	
 	Set_Active(true);
 	m_bExplosion = false;
 	m_fCurrTime = 0.0f;

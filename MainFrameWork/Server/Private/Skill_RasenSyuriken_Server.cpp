@@ -48,6 +48,11 @@ void CSkill_RasenSyuriken_Server::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	cout << vPos.x << "  " << vPos.y << "  " << vPos.z << endl;
+	cout << m_iObjectID << endl;
+
 	/*m_fSendInfoTime += fTimeDelta;
 	if (m_fSendInfoTime >= 0.05f)
 	{
