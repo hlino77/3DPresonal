@@ -263,6 +263,8 @@ void CSkill_RasenSyuriken::Explosion()
 
 void CSkill_RasenSyuriken::Appear()
 {
+	Send_SkillInfo();
+
 	Update_Transform();
 	Set_Active(true);
 	m_bExplosion = false;
@@ -280,6 +282,8 @@ void CSkill_RasenSyuriken::Appear()
 	Effect_SmokeRing(0.0f, 0.1f);
 	Effect_SmokeRing(0.0f, 0.1f);
 	Effect_SmokeRing(0.0f, 0.1f);
+
+	
 }
 
 void CSkill_RasenSyuriken::Shoot()

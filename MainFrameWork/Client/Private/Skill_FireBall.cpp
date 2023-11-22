@@ -242,6 +242,8 @@ void CSkill_FireBall::Explosion()
 
 void CSkill_FireBall::Appear()
 {
+	Send_SkillInfo();
+
 	Set_Active(true);
 	m_bExplosion = false;
 	m_fCurrTime = 0.0f;
