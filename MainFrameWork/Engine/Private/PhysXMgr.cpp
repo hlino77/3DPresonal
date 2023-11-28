@@ -91,9 +91,13 @@ HRESULT CPhysXMgr::Register_ColMesh(CGameObject* pObject)
 		vector<PxVec3> Vertices;
 		Vertices.reserve(iNumVertices);
 
+		Matrix matWorld = pObject->Get_TransformCom()->Get_WorldMatrix();
+
 		for (_uint i = 0; i < iNumVertices; ++i)
 		{
 			Vec3 vMeshVertex = pVB[i].vPosition;
+
+			vMeshVertex = XMVector3TransformCoord(vMeshVertex, matWorld);
 
 			Vertices.push_back(PxVec3(vMeshVertex.x, vMeshVertex.y, vMeshVertex.z));
 		}
