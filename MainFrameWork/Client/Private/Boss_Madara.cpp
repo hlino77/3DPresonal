@@ -24,6 +24,14 @@
 #include "Pool.h"
 #include "State_Madara_Skill_Meteor.h"
 #include "Skill_Meteor.h"
+#include "Player.h"
+#include "Skill_MadaraFireBall.h"
+#include "State_Madara_Skill_FireBall_End.h"
+#include "State_Madara_Skill_FireBall_Loop.h"
+#include "State_Madara_Skill_FireBall_Start.h"
+#include "Teleport.h"
+#include "State_Madara_Die.h"
+#include "State_Madara_Dying_Normal.h"
 
 
 CBoss_Madara::CBoss_Madara(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -49,6 +57,14 @@ HRESULT CBoss_Madara::Initialize(void* pArg)
 
 
 	m_fAttackMoveSpeed = 12.0f;
+
+
+
+	m_iHp = 200;
+	m_iMaxHp = 200;
+
+	if (FAILED(Ready_HP_UI(1)))
+		return E_FAIL;
 
 
 	CNavigationMgr::GetInstance()->Reset_Navigation();
@@ -89,6 +105,9 @@ void CBoss_Madara::Set_Skill(CGameObject* pGameObject)
 	WRITE_LOCK
 	if (pGameObject->Get_ModelName() == L"Meteor")
 		m_pMeteor = dynamic_cast<CSkill_Meteor*>(pGameObject);
+	if (pGameObject->Get_ModelName() == L"MadaraFireBall")
+		m_pFireBall = dynamic_cast<CSkill_MadaraFireBall*>(pGameObject);
+
 }
 
 void CBoss_Madara::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
@@ -99,7 +118,8 @@ void CBoss_Madara::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		{
 			if (m_bHitEffect == false)
 			{
-				Effect_Hit();
+				if(dynamic_cast<CPlayer*>(pOther->Get_Owner())->Is_Invincible() == false)
+					Effect_Hit();
 				m_bHitEffect = true;
 			}
 		}
@@ -138,6 +158,18 @@ void CBoss_Madara::Set_Die()
 {
 }
 
+void CBoss_Madara::Effect_Teleport()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+
+	vPos += vUp * 0.5f;
+
+	CTeleport* pTeleport = CPool<CTeleport>::Get_Obj();
+	pTeleport->Appear(vPos, vUp);
+}
+
 HRESULT CBoss_Madara::Ready_Components()
 {
 	__super::Ready_Components();
@@ -160,7 +192,12 @@ HRESULT CBoss_Madara::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_DoubleTurnKick", new CState_Madara_Attack_DoubleTurnKick(L"Attack_DoubleTurnKick", this));
 	m_pStateMachine->Add_State(L"Skill_Meteor", new CState_Madara_Skill_Meteor(L"Skill_Meteor", this));
 
+	m_pStateMachine->Add_State(L"Skill_FireBall_Start", new CState_Madara_Skill_FireBall_Start(L"Skill_FireBall_Start", this));
+	m_pStateMachine->Add_State(L"Skill_FireBall_Loop", new CState_Madara_Skill_FireBall_Loop(L"Skill_FireBall_Loop", this));
+	m_pStateMachine->Add_State(L"Skill_FireBall_End", new CState_Madara_Skill_FireBall_End(L"Skill_FireBall_End", this));
 
+	m_pStateMachine->Add_State(L"Die", new CState_Madara_Die(L"Die", this));
+	m_pStateMachine->Add_State(L"Dying_Normal", new CState_Madara_Dying_Normal(L"Dying_Normal", this));
 
 	m_pStateMachine->Change_State(L"Appear");
 

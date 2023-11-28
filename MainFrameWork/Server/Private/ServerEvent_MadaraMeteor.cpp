@@ -25,10 +25,6 @@ void CServerEvent_MadaraMeteor::Enter_Event()
 	Safe_AddRef(pGameInstance);
 
 	m_pMadara = dynamic_cast<CBoss_Madara_Server*>(pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, L"Madara"));
-
-	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
-	
-
 	m_iAnimIndex = m_pMadara->Get_ModelCom()->Find_AnimIndex(L"Ninjutsu_ShatteredHeaven");
 
 	Safe_Release(pGameInstance);
@@ -42,6 +38,10 @@ void CServerEvent_MadaraMeteor::Enter_Event()
 		}
 			
 	}
+
+	
+	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
+	m_pMadara->Set_Invincible(true);
 
 	m_pMadara->Set_State(L"Idle");
 

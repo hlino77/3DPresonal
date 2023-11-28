@@ -34,13 +34,13 @@ void CState_Deidara_Idle_Server::Enter_State()
 
 void CState_Deidara_Idle_Server::Tick_State(_float fTimeDelta)
 {
-	if (m_pBoss->Get_SkillReady(CBoss_Deidara_Server::DEIDARA_SKILL::C2DRAGON))
+	/*if (m_pBoss->Get_SkillReady(CBoss_Deidara_Server::DEIDARA_SKILL::C2DRAGON))
 	{
 		m_pBoss->Set_State(L"Skill_C2Dragon");
 		return;
 	}
 
-	//m_pBoss->Update_NearTarget(fTimeDelta);
+	m_pBoss->Update_NearTarget(fTimeDelta);*/
 }
 
 void CState_Deidara_Idle_Server::Exit_State()

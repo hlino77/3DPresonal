@@ -28,8 +28,8 @@ HRESULT CUI_NickName::Initialize(void* pArg)
 
 	__super::Initialize(pArg);
 
-	m_fSizeX = 300.0f;
-	m_fSizeY = 150.0f;
+	m_fSizeX = 300.0f * g_fSizeRatio;
+	m_fSizeY = 150.0f * g_fSizeRatio;
 	m_fX = g_iWinSizeX * 0.5f;
 	m_fY = g_iWinSizeY * 0.5f;
 
@@ -122,10 +122,10 @@ void CUI_NickName::Render_String()
 	Vec2 vPos(m_fX, m_fY - 30.0f);
 	Vec2 vScale(0.4f, 0.4f);
 
-	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"125", szString);
+	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"AdobeFont", szString);
 	Vec2 vOrigin = vMeasure * 0.5f;
 
-	CGameInstance::GetInstance()->DrawFont(L"125", szString, vPos, Vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, vOrigin, vScale);
+	CGameInstance::GetInstance()->DrawFont(L"AdobeFont", szString, vPos, Vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, vOrigin, vScale);
 }
 
 CUI_NickName * CUI_NickName::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

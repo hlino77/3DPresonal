@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 /* 빛 정볼르 보관한다. */
+class CTexture;
 
 class CLight final : public CBase
 {
@@ -19,6 +20,8 @@ public:
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc);
 	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	void	Set_StaticShadowMap(CTexture* pTexture) { m_pStaticShadowMap = pTexture; }
+
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;
@@ -27,6 +30,7 @@ private:
 private:
 	LIGHTDESC				m_LightDesc;
 
+	CTexture*				m_pStaticShadowMap = nullptr;
 public:
 	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
 	virtual void Free() override;

@@ -521,3 +521,20 @@ void CLockFree_Transform::LookAt_Dir(Vec3 vDir)
 	Set_State(CLockFree_Transform::STATE_UP, XMVector3Normalize(vUp) * vScale.y);
 	Set_State(CLockFree_Transform::STATE_LOOK, XMVector3Normalize(vLook) * vScale.z);
 }
+
+void CLockFree_Transform::LookAt_SetUp(Vec3 vAt)
+{
+	Vec3		vUp = Get_State(STATE::STATE_UP);
+	Vec3		vLook = vAt - Get_State(CLockFree_Transform::STATE_POSITION);
+
+	Vec3		vRight = vUp.Cross(vLook);
+
+	vUp = vLook.Cross(vRight);
+
+	Vec3		vScale = Get_Scale();
+
+
+	Set_State(CLockFree_Transform::STATE_RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(CLockFree_Transform::STATE_UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(CLockFree_Transform::STATE_LOOK, XMVector3Normalize(vLook) * vScale.z);
+}

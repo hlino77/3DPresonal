@@ -35,6 +35,9 @@ void CState_Madara_TeleportAttack_Server::Enter_State()
 
 	Vec3 vPos = m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	m_pBoss->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
+
+
+	m_pBoss->Set_Invincible(true);
 }
 
 void CState_Madara_TeleportAttack_Server::Tick_State(_float fTimeDelta)
@@ -62,6 +65,8 @@ void CState_Madara_TeleportAttack_Server::Exit_State()
 
 	m_pBoss->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vTargetPos);
 	m_pBoss->Get_TransformCom()->LookAt_ForLandObject(vPlayerPos);
+
+	m_pBoss->Set_Invincible(false);
 }
 
 

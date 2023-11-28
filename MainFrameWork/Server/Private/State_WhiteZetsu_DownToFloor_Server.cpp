@@ -33,18 +33,19 @@ HRESULT CState_WhiteZetsu_DownToFloor_Server::Initialize()
 void CState_WhiteZetsu_DownToFloor_Server::Enter_State()
 {
 	m_pMonster->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
+
+	if (m_pMonster->Get_Hp() <= 0)
+		m_pMonster->Set_Die();
 }
 
 void CState_WhiteZetsu_DownToFloor_Server::Tick_State(_float fTimeDelta)
 {
 	if (m_pMonster->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
 	{
-		if (m_pMonster->Get_Hp() <= 0)
-		{
+		if(m_pMonster->Is_Die())
 			m_pMonster->Set_State(L"Die");
-		}
 		else
-			m_pMonster->Set_State(L"GetUp");
+			m_pMonster->Set_State(L"GetUp");			
 	}
 		
 }

@@ -30,6 +30,7 @@ HRESULT CState_Madara_Skill_Meteor_Server::Initialize()
 void CState_Madara_Skill_Meteor_Server::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
+	m_pBoss->Set_Invincible(true);
 }
 
 void CState_Madara_Skill_Meteor_Server::Tick_State(_float fTimeDelta)
@@ -50,7 +51,8 @@ void CState_Madara_Skill_Meteor_Server::Tick_State(_float fTimeDelta)
 
 void CState_Madara_Skill_Meteor_Server::Exit_State()
 {
-
+	m_pBoss->Set_TeleportAttackDelay(0.5f);
+	m_pBoss->Set_Invincible(false);
 }
 
 

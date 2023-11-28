@@ -89,7 +89,7 @@ HRESULT CSkill_FireBall::Initialize(void* pArg)
 	Set_Active(false);
 
 
-	m_fExplosionTime = 0.5f;
+	m_fExplosionTime = 0.1f;
 	m_fSkillTime = 2.0f;
 
 	m_iAttack = 10;
@@ -136,9 +136,9 @@ void CSkill_FireBall::Tick(_float fTimeDelta)
 		}
 
 		Effect_Shooting(fTimeDelta);
-	}
 
-	Follow_Target(fTimeDelta);
+		Follow_Target(fTimeDelta);
+	}
 }
 
 void CSkill_FireBall::LateTick(_float fTimeDelta)
@@ -156,6 +156,14 @@ void CSkill_FireBall::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		if (m_bExplosion == false)
 			Explosion();
+	}
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		if (pOther->Get_Owner()->Is_Invincible())
+			return;
+
+		Add_Hit();
 	}
 }
 
@@ -176,7 +184,7 @@ HRESULT CSkill_FireBall::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(5.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(4.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_AttackCollider(m_iAttack, (_uint)COLLIDER_ATTACK::SPINBLOWUP, false);
@@ -329,10 +337,12 @@ HRESULT CSkill_FireBall::Ready_Components()
 
 void CSkill_FireBall::Add_Hit()
 {
-	
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pSkillOwner);
+	if (m_pSkillOwner->Is_Control())
+	{
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pSkillOwner);
 
-	pPlayer->Add_Hit();
+		pPlayer->Add_Hit();
+	}	
 }
 
 void CSkill_FireBall::Follow_Target(_float fTimeDelta)
@@ -350,7 +360,7 @@ void CSkill_FireBall::Follow_Target(_float fTimeDelta)
 		m_pTransformCom->LookAt_Lerp_ForLand(vDir, 0.5f, fTimeDelta);
 	}
 
-	m_pTransformCom->Go_Straight(8.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(10.0f, fTimeDelta);
 }
 
 void CSkill_FireBall::Effect_Explosion()
@@ -381,8 +391,7 @@ void CSkill_FireBall::Effect_Explosion()
 		{
 			CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
 
-			pSmoke->Appear(vPos);
-
+			pSmoke->Appear(vPos, Vec4(0.0f, 0.0f, 0.0f, 0.7f), Vec2(1.0f, 1.0f), 0.01f, 0.01f, 0.05f);
 		}
 	}
 

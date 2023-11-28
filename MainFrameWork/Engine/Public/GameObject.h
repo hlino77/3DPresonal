@@ -35,6 +35,9 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize) { return S_OK; }
 	virtual HRESULT Render_ShadowDepth() { return S_OK; }
+	virtual HRESULT Render_MakeSRV() { return S_OK; }
+
+
 	virtual void	Add_InstanceData(vector<Vec4>& BufferData) {};
 
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) {};
@@ -135,6 +138,15 @@ public:
 	void						Set_Gravity(_bool bGravity) { m_bGravity = bGravity; }
 	_bool						Is_Gravity() { return m_bGravity; }
 	
+
+	void			Set_Invincible(_bool bInvincible) { m_bInvincible = bInvincible; }
+	_bool			Is_Invincible() { return m_bInvincible; }
+
+
+	_int			Get_Hp() { return m_iHp; }
+	_uint			Get_MaxHp() { return m_iMaxHp; }
+	void			Set_Hp(_int iHp) { m_iHp = iHp; }
+
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& pPrototypeTag, const wstring& pComponentTag, CComponent** ppOut, void* pArg = nullptr);
@@ -173,6 +185,7 @@ protected:
 	_bool				m_bDie = false;
 	_bool				m_bNavi = true;
 	_bool				m_bGravity = false;
+	_bool				m_bInvincible = false;
 
 	atomic<Vec3>		m_vTargetPos;
 	atomic<Matrix>		m_matTargetWorld;
@@ -192,6 +205,9 @@ protected:
 
 	list<COLLISIONSTAY>			m_CollisionList;
 
+
+	_int							m_iHp;
+	_uint							m_iMaxHp;
 private:
 	CComponent* Find_Component(const wstring & strComponentTag);
 

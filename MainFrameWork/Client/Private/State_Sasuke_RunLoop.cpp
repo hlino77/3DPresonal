@@ -91,16 +91,23 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 
 	if (KEY_TAP(KEY::NUM_1))
 	{
-		m_pPlayer->Set_State(L"Chidori_Start");
-		return;
+		if (m_pPlayer->Get_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::CHIDORI))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::CHIDORI, false);
+			m_pPlayer->Set_State(L"Chidori_Start");
+			return;
+		}
 	}
 
 	if (KEY_TAP(KEY::NUM_2))
 	{
-		m_pPlayer->Set_State(L"FireBall");
-		return;
+		if (m_pPlayer->Get_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::FIREBALL))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::FIREBALL, false);
+			m_pPlayer->Set_State(L"FireBall");
+			return;
+		}
 	}
-
 
 	if (KEY_TAP(KEY::SPACE))
 	{

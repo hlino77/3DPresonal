@@ -175,6 +175,15 @@ void CSkill_RasenSyuriken::OnCollisionEnter(const _uint iColLayer, CCollider* pO
 		if (m_bExplosion == false)
 			Explosion();
 	}
+
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
+	{
+		if (pOther->Get_Owner()->Is_Invincible())
+			return;
+
+		Add_Hit();
+	}
+
 }
 
 void CSkill_RasenSyuriken::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
@@ -194,7 +203,7 @@ HRESULT CSkill_RasenSyuriken::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(5.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(4.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_AttackCollider(m_iAttack, (_uint)COLLIDER_ATTACK::SPINBLOWUP, false);
@@ -376,10 +385,12 @@ void CSkill_RasenSyuriken::Effect_SmokeRing(_float fTime, _float fBaseScale)
 
 void CSkill_RasenSyuriken::Add_Hit()
 {
-	
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pSkillOwner);
+	if (m_pSkillOwner->Is_Control())
+	{
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pSkillOwner);
 
-	pPlayer->Add_Hit();
+		pPlayer->Add_Hit();
+	}	
 }
 
 void CSkill_RasenSyuriken::Follow_Target(_float fTimeDelta)
@@ -397,7 +408,7 @@ void CSkill_RasenSyuriken::Follow_Target(_float fTimeDelta)
 		m_pTransformCom->LookAt_Lerp_ForLand(vDir, 0.5f, fTimeDelta);
 	}
 
-	m_pTransformCom->Go_Straight(8.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(10.0f, fTimeDelta);
 }
 
 void CSkill_RasenSyuriken::Effect_Explosion()

@@ -16,6 +16,8 @@
 #include "UI_Hits.h"
 #include "FootTrail.h"
 #include "Pool.h"
+#include "Teleport.h"
+#include "UI_OtherPlayer.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -65,6 +67,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_iFootBoneIndex[0] = m_pModelCom->Find_BoneIndex(L"LeftToeBase_end");
 	m_iFootBoneIndex[1] = m_pModelCom->Find_BoneIndex(L"RightToeBase_end");
 
+
+	m_iHp = 100;
+	m_iMaxHp = 100;
+
+	
     return S_OK;
 }
 
@@ -86,6 +93,12 @@ void CPlayer::Tick(_float fTimeDelta)
 		CNavigationMgr::GetInstance()->SetUp_OnCell(this);
 
 	m_pRigidBody->Tick(fTimeDelta);
+
+
+	for (auto& Skill : m_SkillInfo)
+	{
+		Update_Skill(Skill, fTimeDelta);
+	}
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
@@ -110,6 +123,13 @@ void CPlayer::LateTick(_float fTimeDelta)
 	//m_pModelCom->Play_Animation(fTimeDelta);
 
 	CullingObject();
+
+	if (m_bControl)
+	{
+		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		CGameInstance::GetInstance()->Update_LightMatrix(vPos);
+	}
+
 }
 
 HRESULT CPlayer::Render()
@@ -139,18 +159,66 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return S_OK;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
-			return S_OK;
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
+				return S_OK;
+		}
+		else
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 2)))
+				return S_OK;
+		}
 	}
 
 	Safe_Release(pGameInstance);
 
 
     return S_OK;
+}
+
+HRESULT CPlayer::Render_ShadowDepth()
+{
+	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+		return S_OK;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return S_OK;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	Matrix matLightVeiw = pGameInstance->Get_DirectionLightMatrix();
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matLightVeiw)))
+		return S_OK;
+
+
+
+	m_pModelCom->SetUpAnimation_OnShader(m_pShaderCom);
+
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;*/
+
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;*/
+
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
+			return S_OK;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 
@@ -483,6 +551,45 @@ void CPlayer::Set_SlowMotion(_bool bSlow)
 		Send_SlowMotion(bSlow);
 }
 
+void CPlayer::Effect_Teleport()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+
+	vPos += vUp * 0.5f;
+
+	CTeleport* pTeleport = CPool<CTeleport>::Get_Obj();
+	pTeleport->Appear(vPos, vUp);
+}
+
+HRESULT CPlayer::Ready_UI_OtherPlayer()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CUI_OtherPlayer* pUI = dynamic_cast<CUI_OtherPlayer*>(pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"Prototype_GameObject_UI_OtherPlayer", this));
+
+	if (pUI == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return E_FAIL;
+	}
+
+	pUI->Appear();
+
+	Safe_Release(pGameInstance);
+
+}
+
+void CPlayer::Set_NickName(const wstring& szNickName)
+{
+	m_szNickName = szNickName;
+
+	if(m_bControl == false)
+		Ready_UI_OtherPlayer();
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -567,7 +674,11 @@ void CPlayer::CullingObject()
 	if (m_bControl)
 	{
 		if (m_bRender)
+		{
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOW, this);
+		}
+			
 		return;
 	}
 
@@ -580,7 +691,25 @@ void CPlayer::CullingObject()
 		return;
 
 	if (m_bRender)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOW, this);
+	}
+		
+}
+
+void CPlayer::Update_Skill(SKILLINFO& tSkill, _float fTimeDelta)
+{
+	if (tSkill.m_bReady == false)
+	{
+		tSkill.m_fCurrCoolTime += fTimeDelta;
+
+		if (tSkill.m_fCurrCoolTime > tSkill.m_fCoolTime)
+		{
+			tSkill.m_fCurrCoolTime = 0.0f;
+			tSkill.m_bReady = true;
+		}
+	}
 }
 
 void CPlayer::Appear_FootTrail()

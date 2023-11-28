@@ -210,6 +210,10 @@ void CMonster_Server::Hit_Attack(CCollider* pCollider)
 		m_pHitObject = pOwner;
 
 	m_iHp -= pCollider->Get_Attack();
+	if (m_iHp < 0)
+		m_iHp = 0;
+	Send_Hp();
+
 
 	_uint iAttackType = pCollider->Get_AttackType();
 
@@ -437,6 +441,20 @@ void CMonster_Server::Send_SlowMotion(_bool bSlow)
 
 	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
 	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+}
+
+void CMonster_Server::Send_Hp()
+{
+	Protocol::S_HP pkt;
+
+	pkt.set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ihp(m_iHp);
+
+	SendBufferRef pSendBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast(pSendBuffer);
+
 }
 
 void CMonster_Server::Set_Colliders(_float fTimeDelta)

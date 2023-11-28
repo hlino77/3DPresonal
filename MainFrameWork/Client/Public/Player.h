@@ -35,6 +35,15 @@ public:
 
 public:
 
+	typedef struct SkillInfoTag
+	{
+		_float m_fCoolTime;
+		_float m_fCurrCoolTime;
+		_bool m_bReady;
+	}SKILLINFO;
+
+
+
 
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,6 +56,7 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_ShadowDepth();
 	virtual void Set_SlowMotion(_bool bSlow) override;
 
 
@@ -129,13 +139,25 @@ public:
 	void			Set_EnemyBodyHit(_bool bEnemyBodyHit) { m_bEnemyBodyHit = bEnemyBodyHit; }
 	_bool			Is_EnemyBodyHit() { return m_bEnemyBodyHit; }
 
-	void			Set_Invincible(_bool bInvincible) { m_bInvincible = bInvincible; }
-	_bool			Is_Invincible() { return m_bInvincible; }
 
+	void			Effect_Teleport();
+
+
+	const SKILLINFO& Get_SkillInfo(_uint iSkill) { return m_SkillInfo[iSkill]; }
+	_bool				Get_SkillReady(_uint iSkill) { return m_SkillInfo[iSkill].m_bReady; }
+	void				Set_SkillReady(_uint iSkill, _bool bReady) { m_SkillInfo[iSkill].m_bReady = bReady; }
+
+
+	
+
+	const wstring& Get_NickName() { return m_szNickName; }
+	void			Set_NickName(const wstring& szNickName);
 protected:
 	virtual HRESULT Ready_Components();
 	
 	void					CullingObject();
+	void					Update_Skill(SKILLINFO& tSkill, _float fTimeDelta);
+	HRESULT			Ready_UI_OtherPlayer();
 
 protected:
 	class CCamera_Player*			m_pCamera = nullptr;
@@ -154,7 +176,6 @@ protected:
 	
 	_bool							m_bHitEffect = false;
 
-	_uint							m_iHp;
 
 	std::future<HRESULT>			m_PlayAnimation;
 
@@ -166,10 +187,6 @@ protected:
 
 	_bool							m_bEnemyBodyHit = false;
 
-	_bool							m_bInvincible = false;
-
-
-
 
 
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
@@ -179,6 +196,12 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 	//Culling
 	BoundingSphere m_tCullingSphere;
+
+
+	vector<SKILLINFO> m_SkillInfo;
+
+
+	wstring m_szNickName;
 
 public:
 	virtual void Free();

@@ -348,14 +348,35 @@ HRESULT CGameInstance::Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc);
 }
 
-void CGameInstance::Ready_LightMatrix(Matrix matWorld)
+HRESULT CGameInstance::Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc, CTexture* pTexture)
 {
-	m_pLight_Manager->Ready_LightMatrix(matWorld);
+	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc, pTexture);
 }
+
+void CGameInstance::Ready_LightMatrix(Vec3 vOffset, Vec3 vLook)
+{
+	m_pLight_Manager->Ready_LightMatrix(vOffset, vLook);
+}
+
+void CGameInstance::Ready_StaticLightMatrix(Vec3 vPos, Vec3 vLook)
+{
+	m_pLight_Manager->Ready_StaticLightMatrix(vPos, vLook);
+}
+
 
 Matrix CGameInstance::Get_DirectionLightMatrix()
 {
 	return m_pLight_Manager->Get_DirectionLightMatrix();
+}
+
+Matrix CGameInstance::Get_StaticLightMatrix()
+{
+	return m_pLight_Manager->Get_StaticLightMatrix();
+}
+
+void CGameInstance::Update_LightMatrix(Vec3 vPos)
+{
+	m_pLight_Manager->Update_LightMatrix(vPos);
 }
 
 

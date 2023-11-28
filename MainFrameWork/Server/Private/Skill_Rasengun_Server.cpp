@@ -66,6 +66,9 @@ void CSkill_Rasengun_Server::OnCollisionEnter(const _uint iColLayer, CCollider* 
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS)
 		{
+			if (pOther->Get_Owner()->Is_Invincible())
+				return;
+
 			Send_Collision(iColLayer, pOther, true);
 		}
 	}
@@ -82,6 +85,9 @@ void CSkill_Rasengun_Server::OnCollisionExit(const _uint iColLayer, CCollider* p
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS)
 		{
+			if (pOther->Get_Owner()->Is_Invincible())
+				return;
+
 			Send_Collision(iColLayer, pOther, false);
 		}
 	}

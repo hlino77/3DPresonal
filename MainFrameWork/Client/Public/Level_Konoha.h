@@ -3,6 +3,12 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
+
+BEGIN(ENGINE)
+class CRenderer;
+END
+
+
 BEGIN(Client)
 
 class CLevel_Konoha final : public CLevel
@@ -36,7 +42,7 @@ private:
 
 
 	HRESULT Ready_Events();
-
+	HRESULT	Ready_Renderer();
 
 
 	void			Set_CheckGruop();
@@ -51,6 +57,8 @@ private:
 	thread* m_pCollisionThread = nullptr;
 	thread* m_pPickingThread = nullptr;
 
+
+	CRenderer* m_pRendererCom = nullptr;
 public:
 	static class CLevel_Konoha* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

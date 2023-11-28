@@ -40,7 +40,10 @@
 #include "ExplosionRing.h"
 #include "SmokeRing_Syuriken.h"
 #include "RasenSyurikenSphere.h"
-
+#include "Teleport.h"
+#include "Explosion.h"
+#include "SkyBoxDay.h"
+#include "Renderer.h"
 
 
 CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -51,6 +54,8 @@ CLevel_Arena::CLevel_Arena(ID3D11Device * pDevice, ID3D11DeviceContext * pContex
 HRESULT CLevel_Arena::Initialize()
 {
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
+
+	Ready_Renderer();
 
 	Ready_Events();
 
@@ -78,8 +83,6 @@ HRESULT CLevel_Arena::Initialize()
 	if (FAILED(Ready_Layer_Effect(LAYER_TYPE::LAYER_EFFECT)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
-		return E_FAIL;
 
 	while (true)
 	{
@@ -89,6 +92,8 @@ HRESULT CLevel_Arena::Initialize()
 	}
 	
 
+	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
+		return E_FAIL;
 
 	Send_LevelState(LEVELSTATE::INITEND);
 
@@ -110,6 +115,9 @@ HRESULT CLevel_Arena::Initialize()
 
 HRESULT CLevel_Arena::Tick(_float fTimeDelta)
 {
+	/*if(KEY_TAP(KEY::F9))
+		m_pRendererCom->Set_StaticShadow();*/
+
 	return S_OK;
 }
 
@@ -160,21 +168,31 @@ HRESULT CLevel_Arena::Ready_Lights()
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = Vec4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDirection = Vec4(0.705f, -0.667f, -0.239f, 0.f);
 	LightDesc.vDiffuse = Vec4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = Vec4(1.0f, 1.0f, 1.0f, 1.f);
 	LightDesc.vSpecular = Vec4(1.f, 1.f, 1.f, 1.f);
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
 
+	CTexture* pStaticShadowMap = CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/LightMap/ArenaLight.dds");
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc, pStaticShadowMap)))
+		return E_FAIL;
 
 
 	Vec3 vLook = LightDesc.vDirection;
 	vLook.Normalize();
-	Vec3 vPos = -vLook * 200.0f;
-	Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
-	pGameInstance->Ready_LightMatrix(matLightView.Invert());
+	//Vec3 vPos = Vec3(-80.78f, 83.75f, 33.80f);
+	//Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+
+	Vec3 vOffset = Vec3(-117.04f, 110.27f, 36.20f);
+
+	pGameInstance->Ready_StaticLightMatrix(vOffset, vLook);
+	vOffset.Normalize();
+	vOffset *= 30.0f;
+	pGameInstance->Ready_LightMatrix(vOffset, vLook);
+
+
 
 	Safe_Release(pGameInstance);
 
@@ -207,9 +225,11 @@ HRESULT CLevel_Arena::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 
 	Load_ColMesh(LEVELID::LEVEL_ARENA, L"../Bin/Resources/ColMeshData/Arena.data");
 	Load_MapData(LEVELID::LEVEL_ARENA, L"../Bin/Resources/MapData/Arena.data");
-	
+	//m_pRendererCom->Set_StaticShadowMap();
 
+	//Prototype_GameObject_SkyBoxDay
 
+	pGameInstance->GetInstance()->Add_GameObject(LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_SKYBOX, L"Prototype_GameObject_SkyBoxDay");
 
 
 	Safe_Release(pGameInstance);
@@ -250,6 +270,10 @@ HRESULT CLevel_Arena::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 
 	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_HP_Base")))
 		return E_FAIL;
+
+
+	
+
 
 
 	Safe_Release(pGameInstance);
@@ -327,11 +351,23 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 		CPool<CLightning_Chidori>::Return_Obj(pLightning);
 	}
 
+	for (_uint i = 0; i < 3000; ++i)
+	{
+		CFire* pFire = dynamic_cast<CFire*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Fire"));
+		CPool<CFire>::Return_Obj(pFire);
+	}
+
 
 	for (_uint i = 0; i < 500; ++i)
 	{
-		CSmoke_09* pSmoke = dynamic_cast<CSmoke_09*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_09"));
-		CPool<CSmoke_09>::Return_Obj(pSmoke);
+		CExplosion* pExplosion = dynamic_cast<CExplosion*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Explosion"));
+		CPool<CExplosion>::Return_Obj(pExplosion);
+	}
+
+	for (_uint i = 0; i < 1000; ++i)
+	{
+		CSmoke_24* pSmoke = dynamic_cast<CSmoke_24*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_24"));
+		CPool<CSmoke_24>::Return_Obj(pSmoke);
 	}
 
 	for (_uint i = 0; i < 500; ++i)
@@ -340,19 +376,12 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 		CPool<CSmoke_19>::Return_Obj(pSmoke);
 	}
 
-	for (_uint i = 0; i < 3000; ++i)
+	for (_uint i = 0; i < 500; ++i)
 	{
-		CFire* pFire = dynamic_cast<CFire*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Fire"));
-		CPool<CFire>::Return_Obj(pFire);
+		CSmoke_09* pSmoke = dynamic_cast<CSmoke_09*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_09"));
+		CPool<CSmoke_09>::Return_Obj(pSmoke);
 	}
 
-
-
-	for (_uint i = 0; i < 300; ++i)
-	{
-		CSmoke_24* pSmoke = dynamic_cast<CSmoke_24*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Smoke_24"));
-		CPool<CSmoke_24>::Return_Obj(pSmoke);
-	}
 
 	for (_uint i = 0; i < 50; ++i)
 	{
@@ -373,6 +402,11 @@ HRESULT CLevel_Arena::Ready_Layer_Effect(const LAYER_TYPE eLayerType)
 		CPool<CSmokeRing_Syuriken>::Return_Obj(pSmoke);
 	}
 
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CTeleport* pTeleport = dynamic_cast<CTeleport*>(pGameInstance->GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_STATIC, (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Teleport"));
+		CPool<CTeleport>::Return_Obj(pTeleport);
+	}
 
 	Safe_Release(pGameInstance);
 
@@ -519,8 +553,13 @@ HRESULT CLevel_Arena::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 				}
 			}
 
+		
+			//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_STATICSHADOW, pObject);
 		}
 	}
+
+
+
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -617,6 +656,21 @@ HRESULT CLevel_Arena::Ready_Events()
 	CEventMgr::GetInstance()->Add_Event(new CClientEvent_PlayerStart((_uint)EVENT::PLAYERSTART, m_pDevice, m_pContext));
 	CEventMgr::GetInstance()->Add_Event(new CClientEvent_BattleStart((_uint)EVENT::BATTLESTART, m_pDevice, m_pContext));
 
+	return S_OK;
+}
+
+HRESULT CLevel_Arena::Ready_Renderer()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	m_pRendererCom = dynamic_cast<CRenderer*>(pGameInstance->Clone_Component(nullptr, LEVEL_STATIC, L"Prototype_Component_Renderer"));
+	if (m_pRendererCom == nullptr)
+		return E_FAIL;
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

@@ -88,8 +88,22 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 
 	if (KEY_TAP(KEY::NUM_1))
 	{
-		m_pPlayer->Set_State(L"Rasengun_Start");
-		return;
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN, false);
+			m_pPlayer->Set_State(L"Rasengun_Start");
+			return;
+		}
+	}
+
+	if (KEY_TAP(KEY::NUM_2))
+	{
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN, false);
+			m_pPlayer->Set_State(L"RasenSyuriken");
+			return;
+		}
 	}
 
 

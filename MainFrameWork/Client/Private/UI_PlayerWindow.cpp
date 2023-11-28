@@ -31,9 +31,12 @@ HRESULT CUI_PlayerWindow::Initialize(void* pArg)
 
 	m_vUITargetPos = Vec3(303.f, 332.f, 1.0f);
 
-	m_fSizeX = 381;
-	m_fSizeY = 338;
-	m_fX = 100.0f;
+	m_vUITargetPos.x *= g_fSizeRatio;
+	m_vUITargetPos.y *= g_fSizeRatio;
+
+	m_fSizeX = 381 * g_fSizeRatio;
+	m_fSizeY = 338 * g_fSizeRatio;
+	m_fX = 100.0f * g_fSizeRatio;
 	m_fY = m_vUITargetPos.y;
 
 	m_strObjectTag = L"PlayerWindow";

@@ -44,7 +44,8 @@ void CUI::Tick(_float fTimeDelta)
 
 void CUI::LateTick(_float fTimeDelta)
 {
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);	
+	if(m_bRender)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);	
 }
 
 HRESULT CUI::Render()

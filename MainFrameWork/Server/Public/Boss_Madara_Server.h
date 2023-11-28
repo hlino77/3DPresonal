@@ -6,19 +6,13 @@
 
 BEGIN(Server)
 class CSkill_Meteor_Server;
+class CSkill_MadaraFireBall_Server;
 
 
 
 class CBoss_Madara_Server : public CBoss_Server
 {
 public:
-	typedef struct SkillInfoTag
-	{
-		_float m_fCoolTime;
-		_float m_fCurrCoolTime;
-		_bool m_bReady;
-	}SKILLINFO;
-
 	enum MADARA_SKILL { METEOR, FIREBALL, SKILLEND };
 
 
@@ -47,6 +41,7 @@ public:
 	
 	void				Update_NearTarget(_float fTimeDelta);
 	_bool				Ready_TeleportAttack(_float fTimeDelta);
+	void				Set_TeleportAttackDelay(_float fDelay) { m_fTeleportAttackDelay = fDelay; }
 
 
 	void				Attack_Random();
@@ -60,12 +55,19 @@ public:
 
 	virtual void		Set_Die();
 
+	_bool				Get_SkillReady(MADARA_SKILL eSkill) { return m_SkillInfo[eSkill].m_bReady; }
+	void				Set_SkillReady(MADARA_SKILL eSkill, _bool bReady) { m_SkillInfo[eSkill].m_bReady = bReady; }
 
 	void				Set_NormalAttackHit(_bool bHit) { m_bNormalAttackHit = bHit; }
 	_bool				Is_NormalAttackHit() { return m_bNormalAttackHit; }
 
 
 	CSkill_Meteor_Server* Get_Meteor() { return m_pMeteor; }
+	CSkill_MadaraFireBall_Server* Get_FireBall() { return m_pFireBall; }
+
+	void				Set_FireBall(_bool bFireBall) { m_bFireBall = bFireBall; }
+	_bool				Is_FireBall() { return m_bFireBall; }
+
 protected:
 	virtual HRESULT		Ready_Components();
 
@@ -87,8 +89,9 @@ private:
 	vector<SKILLINFO> m_SkillInfo;
 
 	CSkill_Meteor_Server* m_pMeteor = nullptr;
+	CSkill_MadaraFireBall_Server* m_pFireBall = nullptr;
 
-
+	_bool m_bFireBall = false;
 public:
 	static	CBoss_Madara_Server* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);

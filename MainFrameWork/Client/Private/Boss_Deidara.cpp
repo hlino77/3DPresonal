@@ -24,6 +24,9 @@
 #include "State_Deidara_Attack_cmb02.h"
 #include "Skill_TwinBird.h"
 #include "State_Deidara_Skill_TwinBirds.h"
+#include "LineCircle.h"
+#include "Pool.h"
+#include "Player.h"
 
 
 CBoss_Deidara::CBoss_Deidara(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -52,6 +55,15 @@ HRESULT CBoss_Deidara::Initialize(void* pArg)
 
 	m_pTwinBird[0] = nullptr;
 	m_pTwinBird[1] = nullptr;
+
+
+	m_iHp = 200;
+	m_iMaxHp = 200;
+
+
+	if (FAILED(Ready_HP_UI(0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -90,6 +102,40 @@ void CBoss_Deidara::Set_Skill(CGameObject* pGameObject)
 		m_pTwinBird[0] = dynamic_cast<CSkill_TwinBird*>(pGameObject);
 	else
 		m_pTwinBird[1] = dynamic_cast<CSkill_TwinBird*>(pGameObject);
+}
+
+void CBoss_Deidara::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			if (m_bHitEffect == false)
+			{
+				if (dynamic_cast<CPlayer*>(pOther->Get_Owner())->Is_Invincible() == false)
+					Effect_Hit();
+				m_bHitEffect = true;
+			}
+		}
+
+		return;
+	}
+}
+
+void CBoss_Deidara::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
+{
+}
+
+void CBoss_Deidara::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
+	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
+	{
+		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			m_bHitEffect = false;
+		}
+		return;
+	}
 }
 
 void CBoss_Deidara::Set_Colliders()
@@ -152,6 +198,34 @@ void CBoss_Deidara::Set_Die()
 	m_pTwinBird[1]->Set_Die();
 
 	m_bDie = true;
+}
+
+void CBoss_Deidara::Effect_Hit()
+{
+	Vec3 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+	vLook.Normalize();
+	vPos += vUp * 0.7f;
+	vPos += vLook * 1.0f;
+
+
+	/*Vec3 vColor(0.19f, 0.2f, 0.29f);
+	vColor *= 0.5f;*/
+
+
+	Vec4 vColor(1.0f, 1.0f, 0.0f, 1.0f);
+	Vec4 vBlurColor(1.0f, 0.3f, 0.0f, 1.0f);
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
+		if (pLineCircle)
+		{
+			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
+		}
+	}
 }
 
 

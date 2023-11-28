@@ -18,6 +18,8 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_ShadowDepth();
+
 
 
 	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther);
@@ -34,7 +36,7 @@ public:
 
 	void				Shoot_Hiryu(CGameObject* pTargetObject, Vec3 vPos, Vec3 vLook);
 
-	
+	void				Effect_Explosion();
 protected:
 	virtual HRESULT Ready_Components();
 

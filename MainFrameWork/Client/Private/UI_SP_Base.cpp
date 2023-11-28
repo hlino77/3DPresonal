@@ -28,10 +28,10 @@ HRESULT CUI_SP_Base::Initialize(void* pArg)
 	__super::Initialize(pArg);
 
 
-	m_fSizeX = 512 * 0.7f;
-	m_fSizeY = 128 * 0.7f;
-	m_fX = 227.0f;
-	m_fY = 641.0f;
+	m_fSizeX = 512 * 0.7f * g_fSizeRatio;
+	m_fSizeY = 128 * 0.7f * g_fSizeRatio;
+	m_fX = 227.0f * g_fSizeRatio;
+	m_fY = 641.0f * g_fSizeRatio;
 
 	m_strObjectTag = L"SP_Base";
 

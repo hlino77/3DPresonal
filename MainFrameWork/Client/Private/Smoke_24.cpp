@@ -47,6 +47,9 @@ HRESULT CSmoke_24::Initialize(void* pArg)
 
 	m_fSpeed = 1.0f;
 
+
+	m_pRendererCom->Reserve_RenderGroup(CRenderer::RENDER_EFFECT_INSTANCE, this);
+
 	return S_OK;
 }
 
@@ -75,7 +78,6 @@ void CSmoke_24::Tick(_float fTimeDelta)
 			m_fEffectTime -= fTimeDelta;
 			if (m_fEffectTime <= 0.0f)
 				m_bEnd = true;
-
 		}
 	}
 	else
@@ -148,39 +150,79 @@ void CSmoke_24::Add_InstanceData(vector<Vec4>& BufferData)
 	BufferData.push_back(m_vBlurColor);
 }
 
-void CSmoke_24::Appear(Vec3 vPos)
+void CSmoke_24::Appear(Vec3 vPos, Vec4 vColor, Vec2 vScale, _float fTime, _float fDirForce, _float fStartTime)
 {
 	m_bActive = true;
 
 
 	m_vUVIndex = Vec2(rand() % 2 * 1.0f, rand() % 2 * 1.0f);
 
-	m_vColor.w = 0.7f;
+	m_vColor = vColor;
 
-	m_fEffectTime = (rand() % 100 + 1) * 0.01f;
+	m_fEffectTime = (rand() % 100 + 1) * fTime;
 
 	m_fAlphaWeight = 0.0f;
 
 	m_bEnd = false;
 
+	m_vScale = vScale;
 
 	Vec3 vDir(0.0f, 0.0f, 0.0f);
 
-	vDir.x = (rand() % 100 - 50) * 0.01f;
-	vDir.y = (rand() % 100 - 50) * 0.01f;
-	vDir.z = (rand() % 100 - 50) * 0.01f;
+	vDir.x = (rand() % 100 - 50) * fDirForce;
+	vDir.y = (rand() % 100 - 50) * fDirForce;
+	vDir.z = (rand() % 100 - 50) * fDirForce;
 
 
 	vDir.Normalize();
 
 	m_vDir = vDir;
 
-	vPos += m_vDir * ((rand() % 100) * 0.01f);
+	vPos += m_vDir * ((rand() % 100) * fDirForce);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 
 	m_bStart = false;
-	m_fStartTime = 0.05f;
+	m_fStartTime = fStartTime;
+}
+
+void CSmoke_24::Appear_Up(Vec3 vPos, Vec4 vColor, Vec2 vScale, _float fTime, _float fDirForce, _float fStartTime)
+{
+	m_bActive = true;
+
+
+	m_vUVIndex = Vec2(rand() % 2 * 1.0f, rand() % 2 * 1.0f);
+
+	m_vColor = vColor;
+
+	m_fEffectTime = (rand() % 100 + 1) * fTime;
+
+	m_fAlphaWeight = 0.0f;
+
+	m_bEnd = false;
+
+	m_vScale = vScale;
+
+	Vec3 vDir(0.0f, 0.0f, 0.0f);
+
+	vDir.x = (rand() % 100 - 50) * fDirForce;
+	vDir.y = (rand() % 100 - 50) * fDirForce;
+	if (vDir.y < 0.0f)
+		vDir.y *= -1.0f;
+
+	vDir.z = (rand() % 100 - 50) * fDirForce;
+
+
+	vDir.Normalize();
+
+	m_vDir = vDir;
+
+	vPos += m_vDir * ((rand() % 100) * fDirForce);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+
+	m_bStart = false;
+	m_fStartTime = fStartTime;
 }
 
 

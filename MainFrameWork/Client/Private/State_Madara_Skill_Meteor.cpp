@@ -38,6 +38,8 @@ void CState_Madara_Skill_Meteor::Enter_State()
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 
 	m_pSusanoo->Appear(m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_LOOK));
+
+	m_pBoss->Set_Invincible(true);
 }
 
 void CState_Madara_Skill_Meteor::Tick_State(_float fTimeDelta)
@@ -54,7 +56,7 @@ void CState_Madara_Skill_Meteor::Tick_State(_float fTimeDelta)
 
 void CState_Madara_Skill_Meteor::Exit_State()
 {
-	
+	m_pBoss->Set_Invincible(false);
 }
 
 

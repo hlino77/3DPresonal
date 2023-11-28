@@ -11,6 +11,8 @@
 #include "Boss_Deidara.h"
 #include "State_C2Dragon_Attack.h"
 #include "Skill_Hiryu.h"
+#include "Pool.h"
+#include "Smoke_24.h"
 
 CMonster_C2Dragon::CMonster_C2Dragon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -65,6 +67,7 @@ void CMonster_C2Dragon::Tick(_float fTimeDelta)
 	if (m_fSpawnTime <= 0.0f)
 	{
 		Set_Active(false);
+		Effect_Smoke();
 	}
 }
 
@@ -76,7 +79,44 @@ void CMonster_C2Dragon::LateTick(_float fTimeDelta)
 
 HRESULT CMonster_C2Dragon::Render()
 {
-	__super::Render();
+	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+		return S_OK;
+
+	m_PlayAnimation.get();
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return S_OK;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
+		return S_OK;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	m_pModelCom->SetUpAnimation_OnShader(m_pShaderCom);
+
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;
+
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 4)))
+				return S_OK;
+		}
+		else
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 2)))
+				return S_OK;
+		}
+	}
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -99,6 +139,8 @@ void CMonster_C2Dragon::Spawn()
 	Set_Active(true);
 
 	m_fSpawnTime = 32.0f;
+
+	Effect_Smoke();
 }
 
 void CMonster_C2Dragon::Shoot_Hiryu()
@@ -120,6 +162,18 @@ void CMonster_C2Dragon::Set_Die()
 {
 	m_pHiryu->Set_Die();
 	Set_Active(false);
+}
+
+void CMonster_C2Dragon::Effect_Smoke()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos.y += 3.0f;
+
+	for (_uint i = 0; i < 100; ++i)
+	{
+		CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
+		pSmoke->Appear(vPos, Vec4(1.0f, 1.0f, 1.0f, 0.85f), Vec2(2.0f, 2.0f), 0.0f, 0.05f, 0.00f);
+	}
 }
 
 HRESULT CMonster_C2Dragon::Ready_Components()

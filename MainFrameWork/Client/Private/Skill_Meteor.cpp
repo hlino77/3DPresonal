@@ -16,6 +16,8 @@
 #include "Player.h"
 #include "ExplosionRing.h"
 #include "Camera_Player.h"
+#include "Explosion.h"
+#include "Smoke_24.h"
 
 CSkill_Meteor::CSkill_Meteor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CSkill(pDevice, pContext)
@@ -51,8 +53,6 @@ HRESULT CSkill_Meteor::Initialize(void* pArg)
 
 		m_pSmoke->Set_Owner(this);
 	}
-
-
 
 	{
 		m_pBottom = dynamic_cast<CMeteor_Bottom*>(pGameInstance->GetInstance()->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_Meteor_Bottom"));
@@ -119,6 +119,11 @@ void CSkill_Meteor::Tick(_float fTimeDelta)
 	if (m_bExplosion)
 	{
 		Set_Active(false);
+
+	}
+	else
+	{
+		CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.0001f, 1.0f);
 	}
 
 	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -239,7 +244,7 @@ void CSkill_Meteor::Explosion()
 
 	
 
-	for (_uint i = 0; i < 50; ++i)
+	for (_uint i = 0; i < 30; ++i)
 	{
 		Vec3 vPos = m_vEffectPos;
 
@@ -251,7 +256,7 @@ void CSkill_Meteor::Explosion()
 		pSmoke->Appear(vPos);
 	}
 
-	for (_uint i = 0; i < 30; ++i)
+	for (_uint i = 0; i < 15; ++i)
 	{
 		Vec3 vPos = m_vEffectPos;
 
@@ -264,7 +269,7 @@ void CSkill_Meteor::Explosion()
 	}
 
 
-	for (_uint i = 0; i < 50; ++i)
+	for (_uint i = 0; i < 30; ++i)
 	{
 		Vec3 vPos = m_vEffectPos;
 
@@ -276,7 +281,7 @@ void CSkill_Meteor::Explosion()
 		pSmoke->Appear(vPos);
 	}
 
-	for (_uint i = 0; i < 30; ++i)
+	for (_uint i = 0; i < 15; ++i)
 	{
 		Vec3 vPos = m_vEffectPos;
 
@@ -306,15 +311,37 @@ void CSkill_Meteor::Explosion()
 		}
 	}
 
+
+
+	{
+		_float fLength = 0.3f;
+		for (_uint i = 0; i < 10; ++i)
+		{
+			for (_uint i = 0; i < 4; ++i)
+			{
+				CExplosion* pExplosion = CPool<CExplosion>::Get_Obj();
+				pExplosion->Appear_Up(0.2f, m_vEffectPos, fLength, 0.0f);
+			}
+			fLength += 1.0f;
+		}
+	}
+
+
+	{
+		for (_uint i = 0; i < 30; ++i)
+		{
+			CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
+
+			pSmoke->Appear_Up(m_vEffectPos, Vec4(0.0f, 0.0f, 0.0f, 0.7f), Vec2(2.0f, 2.0f), 0.01f, 0.1f, 0.05f);
+		}
+	}
+
+
 	CExplosionRing* pExplosionRing = CPool<CExplosionRing>::Get_Obj();
 
-	pExplosionRing->Appear(m_vEffectPos, Vec3(40.0f, 40.0f, 0.0f));
+	pExplosionRing->Appear(m_vEffectPos, Vec3(80.0f, 80.0f, 0.0f));
 
-
-
-	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 1.0f);
-
-
+	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.002f, 1.0f);
 }
 
 void CSkill_Meteor::Appear()

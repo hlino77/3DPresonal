@@ -20,6 +20,10 @@ public:
 	virtual HRESULT		Render();
 	virtual void		Set_Skill(CGameObject* pGameObject) override;
 
+	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionStay(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
+
 
 	void				Set_Colliders();
 	void				Set_C2Dragon(CMonster_C2Dragon* pDragon) { m_pC2Dragon = pDragon; }
@@ -27,6 +31,8 @@ public:
 	void				Shoot_TwinBirds();
 
 	virtual void		Set_Die();
+
+	void				Effect_Hit();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();
@@ -40,6 +46,8 @@ private:
 
 
 	CSkill_TwinBird* m_pTwinBird[2];
+
+	_bool m_bHitEffect = false;
 
 public:
 	static CBoss_Deidara* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

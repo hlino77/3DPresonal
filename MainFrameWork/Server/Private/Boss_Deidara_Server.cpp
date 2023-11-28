@@ -44,7 +44,8 @@ HRESULT CBoss_Deidara_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 1;
+	m_iHp = 2;
+	m_iMaxHp = 200;
 
 	m_fFollowDistance = 40.0f;
 
@@ -112,7 +113,10 @@ void CBoss_Deidara_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pO
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
+			Send_Collision(iColLayer, pOther, true);
 			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+		}
 		return;
 	}
 
@@ -168,7 +172,10 @@ void CBoss_Deidara_Server::OnCollisionExit(const _uint iColLayer, CCollider* pOt
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
 			Set_SlowMotion(false);
+			Send_Collision(iColLayer, pOther, false);
+		}
 		return;
 	}
 

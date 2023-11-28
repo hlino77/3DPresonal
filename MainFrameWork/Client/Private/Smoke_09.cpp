@@ -33,7 +33,7 @@ HRESULT CSmoke_09::Initialize(void* pArg)
 
 	m_bActive = false;
 
-	m_vColor = Vec4(0.7f, 0.7f, 0.7f, 1.0f);
+	m_vColor = Vec4(0.7f, 0.7f, 0.7f, 0.8f);
 	m_vBlurColor = Vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	m_vUVMaxCount = Vec2(4.0f, 8.0f);
@@ -47,7 +47,10 @@ HRESULT CSmoke_09::Initialize(void* pArg)
 
 	m_fDiscardAlpha = 0.7f;
 
-	m_fAlphaWeight = 2.0f;
+	m_fAlphaWeight = 1.0f;
+
+
+	m_pRendererCom->Reserve_RenderGroup(CRenderer::RENDER_EFFECT_INSTANCE, this);
 
 	return S_OK;
 }

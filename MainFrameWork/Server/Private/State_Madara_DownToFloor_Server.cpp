@@ -33,12 +33,17 @@ HRESULT CState_Madara_DownToFloor_Server::Initialize()
 void CState_Madara_DownToFloor_Server::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
+
+	if (m_pBoss->Get_Hp() <= 0)
+		m_pBoss->Set_Die();
 }
 
 void CState_Madara_DownToFloor_Server::Tick_State(_float fTimeDelta)
 {
 	if (m_pBoss->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
 	{
+		m_pBoss->Set_State(L"GetUp");
+
 		if (m_pBoss->Get_Hp() <= 0)
 		{
 			m_pBoss->Set_State(L"Die");

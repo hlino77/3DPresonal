@@ -17,6 +17,7 @@
 #include "Skill_Meteor_Server.h"
 #include "Skill_FireBall_Server.h"
 #include "Skill_RasenSyuriken_Server.h"
+#include "Skill_MadaraFireBall_Server.h"
 
 
 CLoader_Server::CLoader_Server()
@@ -268,6 +269,10 @@ HRESULT CLoader_Server::Loading_Model_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_RasenSyuriken"),
 		CSkill_RasenSyuriken_Server::Create(nullptr, nullptr))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_MadaraFireBall"),
+		CSkill_MadaraFireBall_Server::Create(nullptr, nullptr))))
 		return E_FAIL;
 
 

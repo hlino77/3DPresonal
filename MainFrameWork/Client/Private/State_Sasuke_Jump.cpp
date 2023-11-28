@@ -44,7 +44,7 @@ void CState_Sasuke_Jump::Enter_State()
 	if (m_pPlayer->Is_Control())
 		Set_TargetPos();
 
-
+	m_pPlayer->Effect_Teleport();
 	Set_Jump();
 
 	m_pPlayer->Set_Gravity(false);
@@ -67,6 +67,8 @@ void CState_Sasuke_Jump::Exit_State()
 	m_pPlayer->Get_RigidBody()->UseDrag(true);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 	m_pPlayer->Set_Render(true);
+
+	m_pPlayer->Effect_Teleport();
 }
 
 void CState_Sasuke_Jump::Tick_State_Control(_float fTimeDelta)

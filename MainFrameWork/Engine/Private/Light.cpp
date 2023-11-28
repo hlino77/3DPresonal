@@ -1,6 +1,9 @@
 #include "..\Public\Light.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "Texture.h"
+
+
 
 CLight::CLight(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -27,6 +30,15 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 
 		if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vDirection, sizeof(Vec4))))
 			return E_FAIL;
+
+
+		if (m_pStaticShadowMap)
+		{
+			if (FAILED(m_pStaticShadowMap->Set_SRV(pShader, "g_StaticShadowDepthTexture")))
+				return E_FAIL;
+
+			iPassIndex = 6;
+		}
 	}
 	else
 	{
@@ -70,4 +82,5 @@ void CLight::Free()
 {
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	Safe_Release(m_pStaticShadowMap);
 }

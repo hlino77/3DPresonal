@@ -22,6 +22,8 @@
 #include "Pool.h"
 #include "LineCircle.h"
 #include "ClientEvent_MadaraMeteor.h"
+#include "Renderer.h"
+#include "ClientEvent_KonohaStart.h"
 
 CLevel_Konoha::CLevel_Konoha(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -30,6 +32,8 @@ CLevel_Konoha::CLevel_Konoha(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 HRESULT CLevel_Konoha::Initialize()
 {
+	Ready_Renderer();
+
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Kono.navi");
 
 	Ready_Events();
@@ -90,6 +94,10 @@ HRESULT CLevel_Konoha::Initialize()
 
 HRESULT CLevel_Konoha::Tick(_float fTimeDelta)
 {
+	/*if (KEY_TAP(KEY::F9))
+		m_pRendererCom->Set_StaticShadow();*/
+
+
 	return S_OK;
 }
 
@@ -139,20 +147,33 @@ HRESULT CLevel_Konoha::Ready_Lights()
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = Vec4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = Vec4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vDirection = Vec4(-0.079633f, -0.82389f, 0.561141f, 0.f);
+	LightDesc.vDiffuse = Vec4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = Vec4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = Vec4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = Vec4(0.4f, 0.4f, 0.4f, 1.f);
 
-	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
+
+	CTexture* pStaticShadowMap = CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/LightMap/KonohaLight.dds");
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc, pStaticShadowMap)))
 		return E_FAIL;
 
 
 	Vec3 vLook = LightDesc.vDirection;
 	vLook.Normalize();
-	Vec3 vPos = -vLook * 500.0f;
-	Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
-	pGameInstance->Ready_LightMatrix(matLightView.Invert());
+	//Vec3 vPos = Vec3(-80.78f, 83.75f, 33.80f);
+	//Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+
+	Vec3 vOffset = Vec3(37.75f, 188.02f, -123.82f);
+
+	pGameInstance->Ready_StaticLightMatrix(vOffset, vLook);
+	vOffset.Normalize();
+	vOffset *= 30.0f;
+	pGameInstance->Ready_LightMatrix(vOffset, vLook);
+
+
+	//Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
+	//pGameInstance->Ready_LightMatrix(matLightView.Invert());
 
 	Safe_Release(pGameInstance);
 
@@ -188,6 +209,8 @@ HRESULT CLevel_Konoha::Ready_Layer_BackGround(const LAYER_TYPE eLayerType)
 	Load_MapData(LEVELID::LEVEL_KONOHA, L"../Bin/Resources/MapData/Kono.data");
 	
 
+	pGameInstance->GetInstance()->Add_GameObject(LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_SKYBOX, L"Prototype_GameObject_SkyBoxNight");
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -216,15 +239,15 @@ HRESULT CLevel_Konoha::Ready_Layer_UI(const LAYER_TYPE eLayerType)
 	} */
 
 
-	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_BattleStart")))
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_KONOHA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_BattleStart")))
 		return E_FAIL;
 
 
-	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_SP_Base")))
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_KONOHA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_SP_Base")))
 		return E_FAIL;
 
 
-	if (nullptr == pGameInstance->Add_GameObject(LEVEL_ARENA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_HP_Base")))
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_KONOHA, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_HP_Base")))
 		return E_FAIL;
 
 
@@ -395,6 +418,10 @@ HRESULT CLevel_Konoha::Load_MapData(LEVELID eLevel, const wstring& szFullPath)
 					pGameInstance->Add_Object_To_QuadTree(Collider);
 				}
 			}
+
+
+
+			//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_STATICSHADOW, pObject);
 		}
 	}
 
@@ -490,7 +517,23 @@ HRESULT CLevel_Konoha::Load_ColMesh(LEVELID eLevel, const wstring& szFullPath)
 HRESULT CLevel_Konoha::Ready_Events()
 {
 	CEventMgr::GetInstance()->Add_Event(new CClientEvent_MadaraMeteor((_uint)EVENT::MADARAMETEOR, m_pDevice, m_pContext));
+	CEventMgr::GetInstance()->Add_Event(new CClientEvent_KonohaStart((_uint)EVENT::KONOHASTART, m_pDevice, m_pContext));
 
+	return S_OK;
+}
+
+HRESULT CLevel_Konoha::Ready_Renderer()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	m_pRendererCom = dynamic_cast<CRenderer*>(pGameInstance->Clone_Component(nullptr, LEVEL_STATIC, L"Prototype_Component_Renderer"));
+	if (m_pRendererCom == nullptr)
+		return E_FAIL;
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

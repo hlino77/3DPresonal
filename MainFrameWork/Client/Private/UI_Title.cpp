@@ -2,6 +2,8 @@
 #include "UI_Title.h"
 #include "GameInstance.h"
 #include "UI_TitleSymbol.h"
+#include "UI_MatchingLobbyTitle.h"
+
 
 CUI_Title::CUI_Title(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI(pDevice, pContext)
@@ -30,9 +32,12 @@ HRESULT CUI_Title::Initialize(void* pArg)
 
 	m_vUITargetPos = Vec3(225.0f, 53.0f, 0.02f);
 
-	m_fSizeX = 475;
-	m_fSizeY = 60;
-	m_fX = 100.0f;
+	m_vUITargetPos.x *= g_fSizeRatio;
+	m_vUITargetPos.y *= g_fSizeRatio;
+
+	m_fSizeX = 475 * g_fSizeRatio;
+	m_fSizeY = 60 * g_fSizeRatio;
+	m_fX = 100.0f * g_fSizeRatio;
 	m_fY = m_vUITargetPos.y;
 
 	m_strObjectTag = L"Title";
@@ -71,8 +76,8 @@ HRESULT CUI_Title::Render()
 	__super::Render();
 
 
-	if (m_eState == UISTATE::TICK)
-		Render_String();
+	/*if (m_eState == UISTATE::TICK)
+		Render_String();*/
 
 	return S_OK;
 }
@@ -97,15 +102,24 @@ void CUI_Title::UI_AppearTick(_float fTimeDelta)
 	if (m_fAlpha == 1.0f && m_fX == m_vUITargetPos.x)
 	{
 		m_eState = UISTATE::TICK;
+		{
+			CUI_TitleSymbol* pTitleSymbol = dynamic_cast<CUI_TitleSymbol*>(CGameInstance::GetInstance()->
+				Find_GameObejct(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"TitleSymbol"));
 
-		CUI_TitleSymbol* pTitleSymbol = dynamic_cast<CUI_TitleSymbol*>(CGameInstance::GetInstance()->
-			Find_GameObejct(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"TitleSymbol"));
+			if (pTitleSymbol)
+				pTitleSymbol->Appear();
+		}
 
-		if (pTitleSymbol)
-			pTitleSymbol->Appear();
-	}
-		
+		{
+			CUI_MatchingLobbyTitle* pTitle = dynamic_cast<CUI_MatchingLobbyTitle*>(CGameInstance::GetInstance()->
+				Find_GameObejct(CGameInstance::GetInstance()->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"MatchingLobbyTitle"));
+
+			if (pTitle)
+				pTitle->Appear();
+		}
 	
+	}
+
 
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,

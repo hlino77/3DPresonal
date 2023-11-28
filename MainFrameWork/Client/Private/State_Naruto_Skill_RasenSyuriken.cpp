@@ -141,7 +141,7 @@ void CState_Naruto_Skill_RasenSyuriken::Set_Target()
 
 		_float fDistance = (vTargetPos - vPos).Length();
 
-		if (fDistance > 15.0f)
+		if (fDistance > 20.0f)
 		{
 			pNearTarget = nullptr;
 			m_pPlayer->Set_NearTarget(nullptr);

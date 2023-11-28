@@ -48,10 +48,6 @@ void CSkill_RasenSyuriken_Server::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 
-	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	cout << vPos.x << "  " << vPos.y << "  " << vPos.z << endl;
-	cout << m_iObjectID << endl;
 
 	/*m_fSendInfoTime += fTimeDelta;
 	if (m_fSendInfoTime >= 0.05f)
@@ -98,7 +94,7 @@ HRESULT CSkill_RasenSyuriken_Server::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(5.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(4.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_AttackCollider(10, (_uint)COLLIDER_ATTACK::SPINBLOWUP, false);

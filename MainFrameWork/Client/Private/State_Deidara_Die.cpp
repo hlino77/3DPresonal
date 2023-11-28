@@ -26,6 +26,7 @@ HRESULT CState_Deidara_Die::Initialize()
 void CState_Deidara_Die::Enter_State()
 {
 	m_pBoss->Set_Die();
+	m_pBoss->Effect_Die();
 }
 
 void CState_Deidara_Die::Tick_State(_float fTimeDelta)

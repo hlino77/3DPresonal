@@ -12,13 +12,6 @@ class CSkill_TwinBird_Server;
 class CBoss_Deidara_Server : public CBoss_Server
 {
 public:
-	typedef struct SkillInfoTag
-	{
-		_float m_fCoolTime;
-		_float m_fCurrCoolTime;
-		_bool m_bReady;
-	}SKILLINFO;
-
 	enum DEIDARA_SKILL { C2DRAGON, TWINBIRD, SKILLEND };
 
 
@@ -55,7 +48,7 @@ public:
 
 
 	_bool				Get_SkillReady(DEIDARA_SKILL eSkill) { return m_SkillInfo[eSkill].m_bReady; }
-
+	
 
 	void				Reset_FindTargetTime() { m_fFindTargetTime = 0.0f; }
 

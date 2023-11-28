@@ -25,6 +25,7 @@ HRESULT CState_WhiteZetsu_Die::Initialize()
 void CState_WhiteZetsu_Die::Enter_State()
 {
 	m_pMonster->Set_Die();
+	m_pMonster->Effect_Die();
 }
 
 void CState_WhiteZetsu_Die::Tick_State(_float fTimeDelta)

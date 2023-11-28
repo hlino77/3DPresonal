@@ -55,9 +55,7 @@ public:
 	_float					Get_FollowDistance() { return m_fFollowDistance; }
 	
 	void					Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill);
-	
 
-	_int					Get_Hp() { return m_iHp; }
 
 	
 public:
@@ -75,6 +73,8 @@ public:
 	void				Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);
 	void				Send_ColliderState(const _uint& iLayer);
 	void				Send_SlowMotion(_bool bSlow);
+	void				Send_Hp();
+
 
 	void				Set_Colliders(_float fTimeDelta);
 	HRESULT				Ready_Coliders();
@@ -105,9 +105,6 @@ protected:
 
 
 	_float							m_fFollowDistance = 0.0f;
-
-
-	_int							m_iHp;
 
 
 

@@ -40,6 +40,8 @@
 #include "Skill_Rasengun.h"
 #include "Skill_RasenSyuriken.h"
 #include "State_Naruto_Skill_RasenSyuriken.h"
+#include "UI_Skill.h"
+
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPlayer(pDevice, pContext)
@@ -73,6 +75,19 @@ HRESULT CPlayer_Naruto::Initialize(void* pArg)
 		Send_MakeSkill(L"RasenSyuriken");
 	}
 
+
+
+	if (m_bControl)
+	{
+		if (FAILED(Ready_SkillUI()))
+			return E_FAIL;
+	}
+
+
+
+
+
+
 	return S_OK;
 }
 
@@ -81,9 +96,6 @@ void CPlayer_Naruto::Tick(_float fTimeDelta)
 	m_pStateMachine->Tick_State(fTimeDelta);
 
 	__super::Tick(fTimeDelta);
-
-
-
 
 	//Vec3 vPos = m_vTargetPos.load();
 
@@ -142,6 +154,9 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
 		{
 			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+
+			if (pOther->Get_Owner()->Is_Invincible())
+				return;
 
 			if(pOther->Get_AttackType() == (_uint)COLLIDER_ATTACK::MIDDLE)
 				m_pCamera->Cam_Shake(0.001f, 0.1f);
@@ -413,6 +428,52 @@ HRESULT CPlayer_Naruto::Ready_Coliders()
 
 
 
+	return S_OK;
+}
+
+HRESULT CPlayer_Naruto::Ready_SkillUI()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	SKILLINFO tRasengan;
+	tRasengan.m_bReady = true;
+	tRasengan.m_fCoolTime = 15.0f;
+	tRasengan.m_fCurrCoolTime = 0.0f;
+	m_SkillInfo.push_back(tRasengan);
+
+
+	SKILLINFO tRasenSyuriken;
+	tRasenSyuriken.m_bReady = true;
+	tRasenSyuriken.m_fCoolTime = 30.0f;
+	tRasenSyuriken.m_fCurrCoolTime = 0.0f;
+	m_SkillInfo.push_back(tRasenSyuriken);
+
+
+	{
+		CUI_Skill::SKILLUIDESC tDesc;
+		tDesc.iSkillIndex = 0;
+		tDesc.iSkillTexture = 0;
+		tDesc.szUIName = L"UI_Skill_1";
+		tDesc.pPlayer = this;
+
+		if (nullptr == pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_Skill"), &tDesc))
+			return E_FAIL;
+	}
+
+	{
+		CUI_Skill::SKILLUIDESC tDesc;
+		tDesc.iSkillIndex = 1;
+		tDesc.iSkillTexture = 1;
+		tDesc.szUIName = L"UI_Skill_2";
+		tDesc.pPlayer = this;
+
+		if (nullptr == pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_Skill"), &tDesc))
+			return E_FAIL;
+	}
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

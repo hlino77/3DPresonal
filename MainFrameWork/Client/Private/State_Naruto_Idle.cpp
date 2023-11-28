@@ -7,8 +7,10 @@
 #include "GameInstance.h"
 #include "Camera_Player.h"
 #include "Pool.h"
-#include "RasenSyurikenSphere.h"
-#include "SmokeRing_Syuriken.h"
+#include "Explosion.h"
+#include "ExplosionRing.h"
+#include "Smoke_24.h"
+#include "LineCircle.h"
 
 
 CState_Naruto_Idle::CState_Naruto_Idle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
@@ -82,14 +84,22 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 
 	if (KEY_TAP(KEY::NUM_1))
 	{
-		m_pPlayer->Set_State(L"Rasengun_Start");
-		return;
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN, false);
+			m_pPlayer->Set_State(L"Rasengun_Start");
+			return;
+		}
 	}
 
 	if (KEY_TAP(KEY::NUM_2))
 	{
-		m_pPlayer->Set_State(L"RasenSyuriken");
-		return;
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN, false);
+			m_pPlayer->Set_State(L"RasenSyuriken");
+			return;
+		}
 	}
 
 
@@ -99,10 +109,7 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		
 
-		
-		
 		Safe_Release(pGameInstance);
 	}
 

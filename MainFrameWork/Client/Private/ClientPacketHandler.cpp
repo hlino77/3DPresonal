@@ -104,39 +104,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 
 	switch ((OBJ_TYPE)pkt.iobjecttype())
 	{
-	case OBJ_TYPE::PLAYER:
-	{
-		CPlayer::MODELDESC Desc;
-		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
-		Desc.bControl = pkt.bcontroll();
-		Desc.iObjectID = pkt.iobjectid();
-		Desc.iLayer = pkt.ilayer();
 
-		wstring szProtoName = L"Prototype_GameObject_Player_" + Desc.strFileName;
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
-		if (nullptr == pPlayer)
-		{
-			Safe_Release(pGameInstance);
-			return true;
-		}
-			
-		Vec3 vPos(pkt.vpos().data());
-
-
-		if(Desc.bControl)
-			CServerSessionManager::GetInstance()->Set_Player(pPlayer);
-		else
-		{
-			Matrix matWorld = XMMatrixIdentity();
-			matWorld.Translation(vPos);
-			pPlayer->Set_TargetMatrix(matWorld);
-		}
-		
-		
-		pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
-		CNavigationMgr::GetInstance()->Find_FirstCell(pPlayer);
-		break;
-	}
 	case OBJ_TYPE::MONSTER:
 	{
 		CMonster::MODELDESC Desc;
@@ -610,5 +578,71 @@ bool Handel_S_SKILLEXPLOSION_Client(PacketSessionRef& session, Protocol::S_SKILL
 	pSkill->Explosion();
 
 	Safe_Release(pGameInstance);
+	return true;
+}
+
+bool Handel_S_HP_Client(PacketSessionRef& session, Protocol::S_HP& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	pObject->Set_Hp(pkt.ihp());
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_CREATEPLAYER_Client(PacketSessionRef& session, Protocol::S_CREATE_PLAYER& pkt)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CPlayer::MODELDESC Desc;
+	Desc.strFileName = CAsUtils::ToWString(pkt.strname());
+	Desc.bControl = pkt.bcontroll();
+	Desc.iObjectID = pkt.iobjectid();
+	Desc.iLayer = pkt.ilayer();
+
+	wstring szProtoName = L"Prototype_GameObject_Player_" + Desc.strFileName;
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
+	if (nullptr == pPlayer)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+	Vec3 vPos(pkt.vpos().data());
+
+
+	if (Desc.bControl)
+		CServerSessionManager::GetInstance()->Set_Player(pPlayer);
+	else
+	{
+		Matrix matWorld = XMMatrixIdentity();
+		matWorld.Translation(vPos);
+		pPlayer->Set_TargetMatrix(matWorld);
+	}
+
+
+	pPlayer->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
+	CNavigationMgr::GetInstance()->Find_FirstCell(pPlayer);
+
+
+	pPlayer->Set_NickName(CAsUtils::ToWString(pkt.strnickname()));
+
+
+	Safe_Release(pGameInstance);
+
 	return true;
 }

@@ -76,6 +76,17 @@
 #include "RasenSyurikenCenter.h"
 #include "RasenSyurikenSphere.h"
 #include "SmokeRing_Syuriken.h"
+#include "Teleport.h"
+#include "Explosion.h"
+#include "Skill_MadaraFireBall.h"
+#include "SkyBoxDay.h"
+#include "SkyBoxNight.h"
+#include "UI_Skill.h"
+#include "UI_HP_Monster.h"
+#include "UI_HP_Boss.h"
+#include "UI_BossIcon.h"
+#include "UI_MatchingLobbyTitle.h"
+#include "UI_OtherPlayer.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -231,6 +242,33 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_GaugeMask.png"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_Damage"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/HP_Damage.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Skill_Base"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Skill_Base.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Skill_Mask"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Skill_Mask.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Skill_Icon"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Skill_%d.png", 4))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Skill_ShadowMask"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Skill_ShadowMask.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_BossIcon"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/BossIcon_%d.png", 2))))
+		return E_FAIL;
+
+	
+
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Circle"),
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Circle.png"))))
 		return E_FAIL;
@@ -342,6 +380,33 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		return E_FAIL;
 
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_TeleportLine"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/TeleportLine.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Explosion_BC"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Explosion_BC.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Explosion_M"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/Explosion_M.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_ExplosionDisolve"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/Effects/ExplosionDisolve.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBoxDay"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/SkyBox/SkyBoxDay.png"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBoxNight"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/SkyBox/SkyBoxNight.png"))))
+		return E_FAIL;
+
+
+
+
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
 	
@@ -350,11 +415,6 @@ HRESULT CLoader::Loading_For_Level_Arena()
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 
 	m_strLoading = TEXT("객체 원형을 로딩 중 입니다.");
-
-	/* For.Prototype_GameObject_Camera_Free */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
-		CCamera_Free::Create(m_pDevice, m_pContext, L"Free_Camera"))))
-		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Player"),
 		CCamera_Player::Create(m_pDevice, m_pContext, L"Player_Camera"))))
@@ -434,6 +494,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_RasenSyuriken"),
 		CSkill_RasenSyuriken::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skill_MadaraFireBall"),
+		CSkill_MadaraFireBall::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -569,6 +633,16 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CSmokeRing_Syuriken::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Teleport"),
+		CTeleport::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Explosion"),
+		CExplosion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleStart"), CUI_BattleStart::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -581,6 +655,24 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HP_Base"), CUI_HP_Base::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Skill"), CUI_Skill::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HP_Monster"), CUI_HP_Monster::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HP_Boss"), CUI_HP_Boss::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BossIcon"), CUI_BossIcon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_OtherPlayer"), CUI_OtherPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LineCircle"),
 		CLineCircle::Create(m_pDevice, m_pContext))))
@@ -596,6 +688,14 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		return E_FAIL;
 
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyBoxDay"),
+		CSkyBoxDay::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyBoxNight"),
+		CSkyBoxNight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 
@@ -623,6 +723,12 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+
+	/* For.Prototype_GameObject_Camera_Free */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
+		CCamera_Free::Create(m_pDevice, m_pContext, L"Free_Camera"))))
+		return E_FAIL;
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_BackGround_Lobby"),
@@ -665,6 +771,11 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_ReadyMark"),
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/ReadyMark.png"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_MatchingLobbyTitle"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/MatchingLobbyTitle.png"))))
 		return E_FAIL;
 
 
@@ -726,10 +837,17 @@ HRESULT CLoader::Loading_For_Level_Lobby()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CharacterSelect"), CUI_CharacterSelect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MatchingLobbyTitle"), CUI_MatchingLobbyTitle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Lobby"),
 		CPlayer_Lobby::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
+	
 
 	Safe_Release(pGameInstance);
 
@@ -1278,6 +1396,18 @@ HRESULT CLoader::Loading_Model_For_Level_Arena()
 			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
 			return E_FAIL;
 	}
+
+
+	{
+		wstring strFileName = L"SkyBoxDay";
+		wstring szModelPath = L"../Bin/Resources/Meshes/Static/";
+		wstring strComponentName = L"Prototype_Component_Model_" + strFileName;
+
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, strComponentName,
+			CModel::Create(m_pDevice, m_pContext, szModelPath, strFileName, true, false, PivotMatrix))))
+			return E_FAIL;
+	}
+
 
 
 

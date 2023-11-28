@@ -13,6 +13,8 @@ END
 
 BEGIN(Client)
 
+class CPlayer;
+
 class CUI_HP_Base final : public CUI
 {
 
@@ -49,12 +51,22 @@ private:
 
 	Vec4 m_vHp_BackColor;
 	Vec4 m_vHp_GaugeColor;
+	Vec4 m_vHp_DamageColor;
 
 	Matrix matHPGauge;
 
 	CTexture* m_pHP_Back = nullptr;
 	CTexture* m_pHP_Gauge = nullptr;
 	CTexture* m_pHP_GaugeMask = nullptr;
+	CTexture* m_pHP_Damage = nullptr;
+
+	CPlayer* m_pPlayer = nullptr;
+
+	Vec2 m_vMaskUV;
+	_float m_fMaskUVLength;
+
+
+	_uint m_iPrevHp;
 public:
 	static CUI_HP_Base* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override; /* 사본객체를 생성할때 원본데이터로부터 복제해올 데이터외에 더 추가해 줘야할 데이터가 있다라면 받아오겠다. */

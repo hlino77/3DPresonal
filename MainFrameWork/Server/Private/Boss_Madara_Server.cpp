@@ -21,8 +21,12 @@
 #include "Skill_Meteor_Server.h"
 #include "State_Madara_Skill_Meteor_Server.h"
 #include "EventMgr.h"
-
-
+#include "Skill_MadaraFireBall_Server.h"
+#include "State_Madara_Skill_FireBall_End_Server.h"
+#include "State_Madara_Skill_FireBall_Loop_Server.h"
+#include "State_Madara_Skill_FireBall_Start_Server.h"
+#include "State_Madara_Dying_Normal_Server.h"
+#include "State_Madara_Die_Server.h"
 
 
 CBoss_Madara_Server::CBoss_Madara_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -46,7 +50,8 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 100;
+	m_iHp = 2;
+	m_iMaxHp = 200;
 
 	m_fFollowDistance = 40.0f;
 
@@ -61,10 +66,18 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 
 	SKILLINFO tMeteor;
 	tMeteor.m_bReady = false;
-	tMeteor.m_fCoolTime = 30.0f;
-	tMeteor.m_fCurrCoolTime = 20.0f;
+	tMeteor.m_fCoolTime = 90.0f;
+	tMeteor.m_fCurrCoolTime = 0.0f;
 
 	m_SkillInfo.push_back(tMeteor);
+
+
+	SKILLINFO tFireBall;
+	tFireBall.m_bReady = false;
+	tFireBall.m_fCoolTime = 30.0f;
+	tFireBall.m_fCurrCoolTime = 20.0f;
+
+	m_SkillInfo.push_back(tFireBall);
 
 
 
@@ -86,8 +99,11 @@ void CBoss_Madara_Server::Tick(_float fTimeDelta)
 
 	if (m_SkillInfo[MADARA_SKILL::METEOR].m_bReady)
 	{
-		CEventMgr::GetInstance()->Start_Event((_uint)EVENT::MADARAMETEOR);
-		m_SkillInfo[MADARA_SKILL::METEOR].m_bReady = false;
+		if (m_bFireBall == false)
+		{
+			CEventMgr::GetInstance()->Start_Event((_uint)EVENT::MADARAMETEOR);
+			m_SkillInfo[MADARA_SKILL::METEOR].m_bReady = false;
+		}
 	}
 
 }
@@ -127,7 +143,8 @@ void CBoss_Madara_Server::OnCollisionEnter(const _uint iColLayer, CCollider* pOt
 
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
-		Hit_Attack(pOther);
+		if(m_bInvincible == false)
+			Hit_Attack(pOther);
 		return;
 	}
 
@@ -192,7 +209,7 @@ void CBoss_Madara_Server::Set_Skill(CGameObject* pObject)
 	Safe_AddRef(pGameInstance);
 	
 	Send_MakeSkill(L"Meteor", (CGameObject**)&m_pMeteor);
-
+	Send_MakeSkill(L"MadaraFireBall", (CGameObject**)&m_pFireBall);
 
 	Safe_Release(pGameInstance);
 }
@@ -333,6 +350,12 @@ void CBoss_Madara_Server::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_DoubleTurnKick", new CState_Madara_Attack_DoubleTurnKick_Server(L"Attack_DoubleTurnKick", this));
 	m_pStateMachine->Add_State(L"Skill_Meteor", new CState_Madara_Skill_Meteor_Server (L"Skill_Meteor", this));
 
+	m_pStateMachine->Add_State(L"Skill_FireBall_Start", new CState_Madara_Skill_FireBall_Start_Server(L"Skill_FireBall_Start", this));
+	m_pStateMachine->Add_State(L"Skill_FireBall_Loop", new CState_Madara_Skill_FireBall_Loop_Server(L"Skill_FireBall_Loop", this));
+	m_pStateMachine->Add_State(L"Skill_FireBall_End", new CState_Madara_Skill_FireBall_End_Server(L"Skill_FireBall_End", this));
+
+	m_pStateMachine->Add_State(L"Dying_Normal", new CState_Madara_Dying_Normal_Server(L"Dying_Normal", this));
+	m_pStateMachine->Add_State(L"Die", new CState_Madara_Die_Server(L"Die", this));
 
 	m_pStateMachine->Change_State(L"Appear");
 }

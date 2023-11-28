@@ -7,6 +7,7 @@
 #include "Camera_Free.h"
 #include "UI_SP_Base.h"
 #include "UI_HP_Base.h"
+#include "UI_Skill.h"
 
 CClientEvent_PlayerStart::CClientEvent_PlayerStart(_uint iID, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CClientEvent(iID, pDevice, pContext)
@@ -23,7 +24,7 @@ HRESULT CClientEvent_PlayerStart::Initialize()
 	tCameraDesc.fFovy = XMConvertToRadians(60.0f);
 	tCameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	tCameraDesc.fNear = 0.2f;
-	tCameraDesc.fFar = 1000.0f;
+	tCameraDesc.fFar = 1200.0f;
 
 	CGameObject* pCamera = CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_CAMERA, L"Prototype_GameObject_Camera_Free", &tCameraDesc);
 
@@ -84,6 +85,13 @@ void CClientEvent_PlayerStart::Exit_Event()
 
 	CUI_HP_Base* pHPBase = dynamic_cast<CUI_HP_Base*>(pGameInstance->GetInstance()->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"HP_Base"));
 	pHPBase->Appear();
+
+
+	CUI_Skill* pSkill1 = dynamic_cast<CUI_Skill*>(pGameInstance->GetInstance()->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"UI_Skill_1"));
+	pSkill1->Appear();
+
+	CUI_Skill* pSkill2 = dynamic_cast<CUI_Skill*>(pGameInstance->GetInstance()->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"UI_Skill_2"));
+	pSkill2->Appear();
 
 
 	m_pCamera->Set_Active(false);

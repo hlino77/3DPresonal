@@ -43,6 +43,7 @@ public:
 	virtual void LookAt(Vec3 vAt) override;
 	virtual void LookAt_ForLandObject(Vec3 vAt) override;
 	virtual void LookAt_Dir(Vec3 vDir) override;
+	virtual void LookAt_SetUp(Vec3 vAt);
 	virtual void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f) override;
 	virtual void Move_Dir(Vec3 vDir, _float fTimeDelta) override;
 	virtual void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta) override;

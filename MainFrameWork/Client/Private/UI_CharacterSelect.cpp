@@ -30,7 +30,6 @@ HRESULT CUI_CharacterSelect::Initialize(void* pArg)
 
 	__super::Initialize(pArg);
 
-
 	CharacterUI* tUI = static_cast<CharacterUI*>(pArg);
 
 	m_tCharacterUI.szCharacterName = tUI->szCharacterName;
@@ -42,10 +41,10 @@ HRESULT CUI_CharacterSelect::Initialize(void* pArg)
 	m_vUITargetPos = Vec3(155.f + 100.f * m_tCharacterUI.iIndex, 600.0f, 1.0f);
 
 
-	m_fSizeX = 100;
-	m_fSizeY = 100;
-	m_fX = m_vUITargetPos.x;
-	m_fY = m_vUITargetPos.y;
+	m_fSizeX = 100 * g_fSizeRatio;
+	m_fSizeY = 100 * g_fSizeRatio;
+	m_fX = m_vUITargetPos.x * g_fSizeRatio;
+	m_fY = m_vUITargetPos.y * g_fSizeRatio;
 
 	m_strObjectTag = L"CharacterSelect_" + m_tCharacterUI.szCharacterName;
 

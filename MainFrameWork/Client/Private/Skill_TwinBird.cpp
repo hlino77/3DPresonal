@@ -5,6 +5,14 @@
 #include "ColliderSphere.h"
 #include "ServerSessionManager.h"
 #include "RigidBody.h"
+#include "Pool.h"
+#include "Smoke_24.h"
+#include "Explosion.h"
+#include "ExplosionRing.h"
+#include "Smoke_24.h"
+#include "LineCircle.h"
+#include "Player.h"
+#include "Camera_Player.h"
 
 
 CSkill_TwinBird::CSkill_TwinBird(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -110,6 +118,7 @@ void CSkill_TwinBird::LateTick(_float fTimeDelta)
 	}*/
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOW, this);
 }
 
 HRESULT CSkill_TwinBird::Render()
@@ -146,7 +155,7 @@ HRESULT CSkill_TwinBird::Render()
 				return E_FAIL;*/
 
 
-			if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 4)))
 				return S_OK;
 		}
 
@@ -162,13 +171,55 @@ HRESULT CSkill_TwinBird::Render()
 	return S_OK;
 }
 
+HRESULT CSkill_TwinBird::Render_ShadowDepth()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return S_OK;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	Matrix matLightVeiw = pGameInstance->Get_DirectionLightMatrix();
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matLightVeiw)))
+		return S_OK;
+
+
+
+	m_pModelCom->SetUpAnimation_OnShader(m_pShaderCom);
+
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;*/
+
+			/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+				return E_FAIL;*/
+
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
+			return S_OK;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 void CSkill_TwinBird::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
 		{
-			Explosion();
+			if (m_bExplosion == false)
+				Explosion();
 		}
 	}
 }
@@ -189,7 +240,7 @@ HRESULT CSkill_TwinBird::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.2f, 0.0f));
 
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(5.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(2.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.2f, 0.0f));
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_AttackCollider(1, (_uint)COLLIDER_ATTACK::SPINBLOWUP, false);
@@ -244,6 +295,71 @@ void CSkill_TwinBird::Shoot_TwinBird(CGameObject* pTargetObject, Vec3 vPos, Vec3
 
 	m_pModelCom->Set_CurrAnim(m_iFly_Start);
 	m_bFlyLoop = false;
+
+	Effect_Smoke();
+}
+
+void CSkill_TwinBird::Effect_Smoke()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos.y += 0.5f;
+
+	for (_uint i = 0; i < 50; ++i)
+	{
+		CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
+		pSmoke->Appear(vPos, Vec4(1.0f, 1.0f, 1.0f, 0.85f), Vec2(1.0f, 1.0f), 0.0f, 0.02f, 0.00f);
+	}
+}
+
+void CSkill_TwinBird::Effect_Explosion()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos.y += 0.5f;
+
+	{
+		_float fLength = 0.2f;
+		for (_uint i = 0; i < 10; ++i)
+		{
+			for (_uint i = 0; i < 3; ++i)
+			{
+				CExplosion* pExplosion = CPool<CExplosion>::Get_Obj();
+				pExplosion->Appear(0.05f, vPos, fLength, 0.0f);
+			}
+			fLength += 0.2f;
+		}
+	}
+
+
+	{
+		for (_uint i = 0; i < 30; ++i)
+		{
+			CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
+
+			pSmoke->Appear(vPos, Vec4(0.0f, 0.0f, 0.0f, 0.7f), Vec2(1.0f, 1.0f), 0.01f, 0.02f, 0.05f);
+		}
+	}
+
+	{
+		Vec4 vColor(1.0f, 1.0f, 0.0f, 1.0f);
+		Vec4 vBlurColor(1.0f, 0.3f, 0.0f, 1.0f);
+
+		for (_uint i = 0; i < 100; ++i)
+		{
+			CLineCircle* pLineCircle = CPool<CLineCircle>::Get_Obj();
+			if (pLineCircle)
+			{
+				pLineCircle->Appear(vPos, vColor, vBlurColor, 3.0f);
+			}
+		}
+	}
+
+
+	{
+		CExplosionRing* pExplosionRing = CPool<CExplosionRing>::Get_Obj();
+		pExplosionRing->Appear(vPos, Vec3(25.0f, 25.0f, 0.0f));
+	}
+	
+	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 0.2f);
 }
 
 void CSkill_TwinBird::Explosion()
@@ -255,6 +371,8 @@ void CSkill_TwinBird::Explosion()
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(true);
+
+	Effect_Explosion();
 }
 
 

@@ -26,6 +26,15 @@ public:
 	}MODELDESC;
 
 
+	typedef struct SkillInfoTag
+	{
+		_float m_fCoolTime;
+		_float m_fCurrCoolTime;
+		_bool m_bReady;
+	}SKILLINFO;
+
+
+
 protected:
 	CBoss_Server(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBoss_Server(const CBoss_Server& rhs);
@@ -58,9 +67,6 @@ public:
 	_float					Get_FollowDistance() { return m_fFollowDistance; }
 	
 
-	_int					Get_Hp() { return m_iHp; }
-	
-
 	void					Send_MakeSkill(const wstring& szSkillName, CGameObject** pSkill);
 public:
 
@@ -78,6 +84,8 @@ public:
 	void				Send_ColliderState(const _uint& iLayer);
 	void				Send_SlowMotion(_bool bSlow);
 	void				Send_Collision(const _uint iColLayer, CCollider* pOther, _bool bEnter);
+	void				Send_Hp();
+
 
 	void				Set_Colliders(_float fTimeDelta);
 	HRESULT				Ready_Coliders();
@@ -107,9 +115,6 @@ protected:
 
 
 	_float							m_fFollowDistance = 0.0f;
-
-
-	_int							m_iHp;
 
 
 	

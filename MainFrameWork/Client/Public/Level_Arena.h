@@ -2,8 +2,15 @@
 
 #include "Client_Defines.h"
 #include "Level.h"
+BEGIN(ENGINE)
+
+class CRenderer;
+END
+
+
 
 BEGIN(Client)
+
 
 class CLevel_Arena final : public CLevel
 {
@@ -35,7 +42,7 @@ private:
 
 	HRESULT Ready_Events();
 
-
+	HRESULT	Ready_Renderer();
 
 
 	void			Set_CheckGruop();
@@ -49,6 +56,9 @@ private:
 private:
 	thread* m_pCollisionThread = nullptr;
 	thread* m_pPickingThread = nullptr;
+
+	CRenderer* m_pRendererCom = nullptr;
+	//_bool m_bStaticShadow = false;
 
 public:
 	static class CLevel_Arena* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

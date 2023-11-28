@@ -52,6 +52,7 @@ HRESULT CLineCircle::Initialize(void* pArg)
 	m_RandomDir = uniform_real_distribution<float>(-1.0f, 1.0f);
 	m_RandomLifeTime = uniform_real_distribution<float>(0.5f, 1.5f);
 
+	m_pRendererCom->Reserve_RenderGroup(CRenderer::RENDER_EFFECT_INSTANCE, this);
 
 	return S_OK;
 }

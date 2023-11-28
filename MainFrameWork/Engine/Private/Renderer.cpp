@@ -5,6 +5,7 @@
 #include "NavigationMgr.h"
 #include "Target_Manager.h"
 #include "Light_Manager.h"
+#include "Texture.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -29,12 +30,20 @@ HRESULT CRenderer::Initialize_Prototype()
 	_uint				iNumViewports = 1;
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
+	m_fShadowTargetSizeRatio = 5.12f;
+	m_fStaticShadowTargetSizeRatio = 5.12f;
 
 
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"),
 		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
+
+	/* For.Target_MakeSRV */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_MakeSRV"),
+		500, 500, DXGI_FORMAT_R8G8B8A8_UNORM, Vec4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+
 
 	/* For.Target_Normal */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Normal"),
@@ -48,7 +57,7 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	/* For.Target_Depth */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth"),
-		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, Vec4(1.f, 1.f, 1.f, 1.f))))
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, Vec4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
 	/* For.Target_ModelNormal */
@@ -58,9 +67,13 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	/* For.Target_ShadowDepth */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth"),
-		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, Vec4(1.0f, 1.0f, 1.0f, 1.0f))))
+		ViewportDesc.Width * m_fShadowTargetSizeRatio, ViewportDesc.Height * m_fShadowTargetSizeRatio, DXGI_FORMAT_R32G32B32A32_FLOAT, Vec4(1.0f, 1.0f, 1.0f, 1.0f))))
 		return E_FAIL;
 
+	/* For.Target_ShadowDepth */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_StaticShadowDepth"),
+		ViewportDesc.Width * m_fStaticShadowTargetSizeRatio, ViewportDesc.Height * m_fStaticShadowTargetSizeRatio, DXGI_FORMAT_R32G32B32A32_FLOAT, Vec4(1.0f, 1.0f, 1.0f, 1.0f))))
+		return E_FAIL;
 
 
 	/* For.Target_EffectDiffuse */
@@ -95,11 +108,14 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Depth"), 225.0f, 225.0f, 150.0f, 150.0f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 375.f, 75.f, 150.0f, 150.0f)))
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 180.0f, 180.0f, 360.0f, 360.0f)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_StaticShadowDepth"), 180.0f, 540.0f, 360.0f, 360.0f)))
 		return E_FAIL;
 
 
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ModelNormal"), 75.0f, 375.f, 150.0f, 150.0f)))
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ModelNormal"), 150.0f, 570.0f, 300.0f, 300.0f)))
 		return E_FAIL;
 
 	
@@ -114,6 +130,9 @@ HRESULT CRenderer::Initialize_Prototype()
 
 
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_EffectShade"), 375.f, 525.f, 150.0f, 150.0f)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_MakeSRV"), 1450.f, 150.0f, 150.0f, 150.0f)))
 		return E_FAIL;
 
 	
@@ -133,6 +152,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_ShadowDepth"), TEXT("Target_ShadowDepth"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_StaticShadowDepth"), TEXT("Target_StaticShadowDepth"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_MakeSRV"), TEXT("Target_MakeSRV"))))
 		return E_FAIL;
 
 
@@ -176,6 +201,9 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (nullptr == m_pEffectShader)
 		return E_FAIL;
 
+	Ready_MakeSRV_DSV();
+	Ready_ShadowDSV();
+
 
 	m_WorldMatrix = XMMatrixIdentity();
 	m_WorldMatrix._11 = ViewportDesc.Width;
@@ -194,6 +222,33 @@ HRESULT CRenderer::Initialize_Prototype()
 
 HRESULT CRenderer::Initialize(void * pArg)
 {
+	return S_OK;
+}
+
+HRESULT CRenderer::Reserve_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObject)
+{
+	if (eRenderGroup >= RENDER_END)
+		return E_FAIL;
+
+	if (eRenderGroup == RENDERGROUP::INSTANCE_STATIC)
+	{
+		m_StaticInstance[pGameObject->Get_ModelName()].clear();
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
+	else if (eRenderGroup == RENDERGROUP::RENDER_EFFECT_INSTANCE)
+	{
+		m_EffectInstance[pGameObject->Get_ModelName()].clear();
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
+	else if (eRenderGroup == RENDERGROUP::RENDER_MODELEFFECT_INSTANCE)
+	{
+		m_ModelEffectInstance[pGameObject->Get_ModelName()].clear();
+		Safe_AddRef(pGameObject);
+		return S_OK;
+	}
+
 	return S_OK;
 }
 
@@ -230,15 +285,30 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 	return S_OK;
 }
 
+HRESULT CRenderer::Add_MakeSRV(CGameObject* pObject, ID3D11ShaderResourceView** pSRV)
+{
+	MAKESRV tDesc;
+	tDesc.pObject = pObject;
+	tDesc.pSRV = pSRV;
+	m_MakeSRVObjects.push_back(tDesc);
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Draw()
 {
+	if (m_bRenderStaticShadow)
+		Render_StaticShadow();
+
+	Render_MakeSRV();
+
+
 	Render_Priority();
 	CNavigationMgr::GetInstance()->Render();
 
-	
 	Render_NonAlphaBlend();
 	Render_StaticInstance();
-	//Render_ShadowDepth();
+	Render_ShadowDepth();
 
 
 	Render_Lights();
@@ -254,11 +324,12 @@ HRESULT CRenderer::Draw()
 
 	Render_EffectBlur();
 	Render_EffectAcc();
-	Render_Deferred_Effects();
+
+
+	Render_WorldUI();
 	Render_UI();
 
-
-	Render_Debug();
+	//Render_Debug();
 	
 	
 	return S_OK;
@@ -273,6 +344,57 @@ HRESULT CRenderer::Draw_Server()
 		Safe_Release(iter);
 	}
 	m_RenderObjects[RENDER_NONBLEND].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_MakeSRV()
+{
+	if (m_MakeSRVObjects.empty())
+		return S_OK;
+
+
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	_float fOriginalWidth = ViewportDesc.Width;
+	_float fOriginalHeight = ViewportDesc.Height;
+
+	ViewportDesc.Width = 500;
+	ViewportDesc.Height = 500;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+
+
+	for (auto& iter : m_MakeSRVObjects)
+	{
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_MakeSRV"), m_pMakeSRV_DSV)))
+			return E_FAIL;
+
+		m_pContext->ClearDepthStencilView(m_pMakeSRV_DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+		if (FAILED(iter.pObject->Render_MakeSRV()))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+
+
+		m_pTarget_Manager->Copy_SRV(L"Target_MakeSRV", iter.pSRV);
+
+	}
+	m_MakeSRVObjects.clear();
+
+
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+	ViewportDesc.Width = fOriginalWidth;
+	ViewportDesc.Height = fOriginalHeight;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
 
 	return S_OK;
 }
@@ -306,19 +428,88 @@ HRESULT CRenderer::Render_StaticInstance()
 
 HRESULT CRenderer::Render_ShadowDepth()
 {
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_ShadowDepth"))))
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_ShadowDepth"), m_pShadowDSV)))
 		return E_FAIL;
 
-	for (auto& iter : m_RenderObjects[RENDER_NONBLEND])
+	m_pContext->ClearDepthStencilView(m_pShadowDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	_float fOriginalWidth = ViewportDesc.Width;
+	_float fOriginalHeight = ViewportDesc.Height;
+
+	ViewportDesc.Width *= m_fShadowTargetSizeRatio;
+	ViewportDesc.Height *= m_fShadowTargetSizeRatio;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+
+	for (auto& iter : m_RenderObjects[RENDER_SHADOW])
 	{
 		if (FAILED(iter->Render_ShadowDepth()))
 			return E_FAIL;
 		Safe_Release(iter);
 	}
+	m_RenderObjects[RENDER_SHADOW].clear();
 
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
+
+
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+	ViewportDesc.Width = fOriginalWidth;
+	ViewportDesc.Height = fOriginalHeight;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_StaticShadow()
+{
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_StaticShadowDepth"), m_pStaticShadowDSV)))
+		return E_FAIL;
+
+	m_pContext->ClearDepthStencilView(m_pStaticShadowDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	D3D11_VIEWPORT		ViewportDesc;
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	_float fOriginalWidth = ViewportDesc.Width;
+	_float fOriginalHeight = ViewportDesc.Height;
+
+	ViewportDesc.Width *= m_fStaticShadowTargetSizeRatio;
+	ViewportDesc.Height *= m_fStaticShadowTargetSizeRatio;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+
+	for (auto& iter : m_RenderObjects[RENDER_STATICSHADOW])
+	{
+		if (FAILED(iter->Render_ShadowDepth()))
+			return E_FAIL;
+		Safe_Release(iter);
+	}
+	m_RenderObjects[RENDER_STATICSHADOW].clear();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	m_pTarget_Manager->Make_SRVTexture(L"../Bin/Resources/Textures/LightMap/LightMap.dds", L"Target_StaticShadowDepth");
+
+
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+	ViewportDesc.Width = fOriginalWidth;
+	ViewportDesc.Height = fOriginalHeight;
+
+	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+	m_bRenderStaticShadow = false;
 
 	return S_OK;
 }
@@ -367,11 +558,53 @@ HRESULT CRenderer::Render_LightAcc()
 	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+
+
+	if (FAILED(m_pMRTShader->Bind_Matrix("g_ViewMatrixInv", &CPipeLine::GetInstance()->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrixInv", &CPipeLine::GetInstance()->Get_TransformMatrixInverse(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pMRTShader->Bind_Matrix("g_LightViewMatrix", &CLight_Manager::GetInstance()->Get_DirectionLightMatrix())))
+		return E_FAIL;
+	if (FAILED(m_pMRTShader->Bind_Matrix("g_LightProjMatrix", &CPipeLine::GetInstance()->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pMRTShader->Bind_Matrix("g_StaticLightViewMatrix", &CLight_Manager::GetInstance()->Get_StaticLightMatrix())))
+		return E_FAIL;
+
+
+	D3D11_VIEWPORT		ViewportDesc;
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+	Vec2 vWinSize(ViewportDesc.Width, ViewportDesc.Height);
+
+
+	/*if (KEY_TAP(KEY::UP_ARROW))
+		m_fBias += 0.000001f;
+	if (KEY_TAP(KEY::DOWN_ARROW))
+		m_fBias -= 0.000001f;*/
+
+
+	if (FAILED(m_pMRTShader->Bind_RawValue("g_fBias", &m_fBias, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pMRTShader->Bind_RawValue("g_vWinSize", &vWinSize, sizeof(Vec2))))
+		return E_FAIL;
+
+	if (FAILED(m_pMRTShader->Bind_RawValue("g_fShadowSizeRatio", &m_fShadowTargetSizeRatio, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pMRTShader->Bind_RawValue("g_fStaticShadowSizeRatio", &m_fStaticShadowTargetSizeRatio, sizeof(_float))))
+		return E_FAIL;
+
+
 	Vec3 vCamPos = CPipeLine::GetInstance()->Get_CamPosition();
 
 	if (FAILED(m_pMRTShader->Bind_RawValue("g_CamPosition", &vCamPos, sizeof(Vec3))))
 		return E_FAIL;
-
 
 
 	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_Normal"), "g_NormalTexture")))
@@ -382,6 +615,10 @@ HRESULT CRenderer::Render_LightAcc()
 
 	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_ModelNormal"), "g_ModelNormalTexture")))
 		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pMRTShader, TEXT("Target_ShadowDepth"), "g_ShadowDepthTexture")))
+		return E_FAIL;
+
 
 	
 
@@ -610,24 +847,16 @@ HRESULT CRenderer::Render_EffectAcc()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Deferred_Effects()
+
+HRESULT CRenderer::Render_WorldUI()
 {
-
-	/*if (FAILED(m_pEffectShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pEffectShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pEffectShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_SRV(m_pEffectShader, TEXT("Target_EffectShade"), "g_ShadeTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pEffectShader->Begin(0)))
-		return E_FAIL;
-
-	if (FAILED(m_pVIBuffer->Render()))
-		return E_FAIL;*/
+	for (auto& iter : m_RenderObjects[RENDERGROUP::RENDER_WORLDUI])
+	{
+		if (FAILED(iter->Render()))
+			return E_FAIL;
+		Safe_Release(iter);
+	}
+	m_RenderObjects[RENDER_WORLDUI].clear();
 
 	return S_OK;
 }
@@ -653,18 +882,26 @@ HRESULT CRenderer::Render_Debug()
 	if (FAILED(m_pMRTShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_GameObjects"), m_pMRTShader, m_pVIBuffer)))
-	//	return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_GameObjects"), m_pMRTShader, m_pVIBuffer)))
+		return E_FAIL;
+
+
 	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Lights"), m_pMRTShader, m_pVIBuffer)))
 	//	return E_FAIL;
 	
-	/*if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Effects"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_EffectShade"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_Effects"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_EffectShade"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_ShadowDepth"), m_pMRTShader, m_pVIBuffer)))
-		return E_FAIL;*/
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_ShadowDepth"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_StaticShadowDepth"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pTarget_Manager->Render(TEXT("MRT_StaticShadowDepth"), m_pMRTShader, m_pVIBuffer)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -881,6 +1118,108 @@ HRESULT CRenderer::Ready_InstanceBuffer()
 	return S_OK;
 }
 
+
+HRESULT CRenderer::Ready_MakeSRV_DSV()
+{
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = 500;
+		TextureDesc.Height = 500;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pMakeSRV_DSV)))
+			return E_FAIL;
+	}
+
+	return E_NOTIMPL;
+}
+
+HRESULT CRenderer::Ready_ShadowDSV()
+{
+	
+	
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	
+	//ShadowDepth
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = m_fShadowTargetSizeRatio * ViewportDesc.Width;
+		TextureDesc.Height = m_fShadowTargetSizeRatio * ViewportDesc.Height;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDSV)))
+			return E_FAIL;
+	}
+
+	//StaticShadowDepth
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = m_fStaticShadowTargetSizeRatio * ViewportDesc.Width;
+		TextureDesc.Height = m_fStaticShadowTargetSizeRatio * ViewportDesc.Height;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pStaticShadowDSV)))
+			return E_FAIL;
+	}
+
+
+	return S_OK;
+}
 
 void CRenderer::Ready_BlurData()
 {

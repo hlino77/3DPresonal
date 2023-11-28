@@ -31,12 +31,15 @@ HRESULT CUI_Hits::Initialize(void* pArg)
 	m_strObjectTag = L"Hits";
 
 
-	
 
 	m_pTransformCom->Set_WorldMatrix(Matrix::CreateFromAxisAngle(Vec3(0.0f, 0.0f, -1.0f), -XMConvertToRadians(25.0f)));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		Vec3(250.0f , 100.0f, 0.0f));
 
+
+	Vec3 vPos(250.0f, 100.0f, 0.0f);
+
+	vPos *= g_fSizeRatio;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		vPos);
 
 
 	m_vOffsetDir = Vec3(1.0f, 0.0f, 0.0f);

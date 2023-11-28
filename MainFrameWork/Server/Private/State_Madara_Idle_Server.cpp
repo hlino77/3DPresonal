@@ -34,15 +34,13 @@ void CState_Madara_Idle_Server::Enter_State()
 
 void CState_Madara_Idle_Server::Tick_State(_float fTimeDelta)
 {
+	m_pBoss->Update_NearTarget(fTimeDelta);
+
+	if (m_pBoss->Get_SkillReady(CBoss_Madara_Server::MADARA_SKILL::FIREBALL))
+		m_pBoss->Set_State(L"Skill_FireBall_Start");
 
 
-
-	//m_pBoss->Update_NearTarget(fTimeDelta);
-
-	//m_pBoss->Ready_TeleportAttack(fTimeDelta);
-
-
-
+	m_pBoss->Ready_TeleportAttack(fTimeDelta);
 }
 
 void CState_Madara_Idle_Server::Exit_State()

@@ -207,7 +207,7 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 	
 
-
+	
 	matWorld = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
 
 

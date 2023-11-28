@@ -20,6 +20,7 @@
 #include "MonsterSpawner_Server.h"
 #include "BossSpawner_Server.h"
 #include "ServerEvent_MadaraMeteor.h"
+#include "ServerEvent_KonohaStart.h"
 
 
 CLevel_Konoha_Server::CLevel_Konoha_Server()
@@ -70,7 +71,7 @@ HRESULT CLevel_Konoha_Server::Initialize()
 
 	Wait_ClientLevelState(LEVELSTATE::INITEND);
 
-
+	CEventMgr::GetInstance()->Start_Event((_uint)EVENT::KONOHASTART);
 
 	Broadcast_LevelState(LEVELSTATE::INITEND);
 
@@ -169,12 +170,14 @@ HRESULT CLevel_Konoha_Server::Broadcast_Character()
 	for (auto& OwnerSession : Sessions)
 	{
 		wstring strCharacter = OwnerSession->Get_CharacterName();
-		Protocol::S_CREATE_OBJCECT pkt;
+		Protocol::S_CREATE_PLAYER pkt;
 		pkt.set_strname(CAsUtils::ToString(strCharacter));
 		pkt.set_iobjectid(g_iObjectID++);
 		pkt.set_ilevel((uint32)LEVELID::LEVEL_KONOHA);
 		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_PLAYER);
 		pkt.set_iobjecttype((uint32)OBJ_TYPE::PLAYER);
+		pkt.set_strnickname(CAsUtils::ToString(OwnerSession->Get_NickName()));
+
 
 		auto vPacketPos = pkt.mutable_vpos();
 		vPacketPos->Resize(3, 0.0f);
@@ -328,6 +331,7 @@ HRESULT CLevel_Konoha_Server::Broadcast_Boss(const wstring& szName, Vec3 vPos)
 HRESULT CLevel_Konoha_Server::Ready_Events()
 {
 	CEventMgr::GetInstance()->Add_Event(new CServerEvent_MadaraMeteor((_uint)EVENT::MADARAMETEOR, nullptr, nullptr));
+	CEventMgr::GetInstance()->Add_Event(new CServerEvent_KonohaStart((_uint)EVENT::KONOHASTART, nullptr, nullptr));
 
 	return S_OK;
 }

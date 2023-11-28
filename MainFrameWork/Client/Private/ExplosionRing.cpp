@@ -43,7 +43,6 @@ HRESULT CExplosionRing::Initialize(void* pArg)
 
 	m_vScale = Vec3(1.0f, 1.0f, 1.0f);
 
-
 	return S_OK;
 }
 
@@ -68,7 +67,7 @@ void CExplosionRing::Tick(_float fTimeDelta)
 
 void CExplosionRing::LateTick(_float fTimeDelta)
 {
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
 HRESULT CExplosionRing::Render()

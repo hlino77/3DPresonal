@@ -28,6 +28,9 @@ public:
 	void				Shoot_Hiryu();
 
 	virtual void			Set_Die();
+
+
+	void				Effect_Smoke();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();

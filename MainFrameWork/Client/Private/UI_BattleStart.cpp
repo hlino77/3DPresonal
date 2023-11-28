@@ -73,8 +73,8 @@ void CUI_BattleStart::Appear()
 	m_eState = UISTATE::APPEAR;
 
 
-	m_fSizeX = 3000.0f;
-	m_fSizeY = 600.0f;
+	m_fSizeX = 3000.0f * g_fSizeRatio;
+	m_fSizeY = 600.0f * g_fSizeRatio;
 	m_pTransformCom->Set_Scale(Vec3(m_fSizeX, m_fSizeY, 1.f));
 
 	m_fAlpha = 0.0f;

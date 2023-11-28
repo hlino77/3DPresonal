@@ -44,8 +44,10 @@ void CClientEvent_MadaraMeteor::Enter_Event()
 	m_pMadara = dynamic_cast<CBoss_Madara*>(pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, L"Madara"));
 	
 	m_pMadara->Set_Render(false);
+	m_pMadara->Effect_Teleport();
 	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
 	m_pMadara->Get_TransformCom()->LookAt(m_vMadaraPos + Vec3(0.0f, 0.0f, -1.0f));
+	m_pMadara->Set_Invincible(true);
 
 
 	Send_State(EVENTSTATE::READY);
@@ -90,6 +92,9 @@ void CClientEvent_MadaraMeteor::Tick(_float fTimeDelta)
 	if (m_iState != (_uint)EVENTSTATE::EVENT)
 		return;
 
+	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
+	m_pMadara->Get_TransformCom()->LookAt(m_vMadaraPos + Vec3(0.0f, 0.0f, -1.0f));
+
 
 	if (m_bStart == false)
 	{
@@ -99,6 +104,7 @@ void CClientEvent_MadaraMeteor::Tick(_float fTimeDelta)
 			Player_Active(false);
 			CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Set_Active(false);
 			m_pMadara->Set_Render(true);
+			m_pMadara->Effect_Teleport();
 			m_pCamera->Set_Active(true);
 			m_bStart = true;
 		}
@@ -109,10 +115,6 @@ void CClientEvent_MadaraMeteor::Tick(_float fTimeDelta)
 		vCameraPos = Vec3::Lerp(vCameraPos, m_vTargetPos, 2.0f * fTimeDelta);
 		m_pCamera->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vCameraPos);
 	}
-
-
-	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
-	m_pMadara->Get_TransformCom()->LookAt(m_vMadaraPos + Vec3(0.0f, 0.0f, -1.0f));
 }
 
 void CClientEvent_MadaraMeteor::LateTick(_float fTimeDelta)

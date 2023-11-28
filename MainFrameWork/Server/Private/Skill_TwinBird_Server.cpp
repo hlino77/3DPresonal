@@ -126,14 +126,13 @@ HRESULT CSkill_TwinBird_Server::Ready_Coliders()
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.2f, 0.0f));
-	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(5.0f);
+
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Radius(2.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->SetActive(false);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Offset(Vec3(0.0f, 0.2f, 0.0f));
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_AttackCollider(1, (_uint)COLLIDER_ATTACK::SPINBLOWUP, false);
-	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
 	return S_OK;
 }

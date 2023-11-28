@@ -121,6 +121,9 @@ HRESULT CSkill_Rasengun::Render()
 
 void CSkill_Rasengun::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
+	if (pOther->Get_Owner()->Is_Invincible())
+		return;
+
 	if (m_bAttackTime == false)
 	{
 		m_pSkillOwner->Set_SlowMotion(true);

@@ -29,10 +29,12 @@ HRESULT CUI_TitleSymbol::Initialize(void* pArg)
 
 	m_vUITargetSize = Vec2(75.f, 75.f);
 
-	m_fSizeX = 100;
-	m_fSizeY = 100;
-	m_fX = 45.0f;
-	m_fY = 53.0f;
+	m_vUITargetSize *= g_fSizeRatio;
+
+	m_fSizeX = 100 * g_fSizeRatio;
+	m_fSizeY = 100 * g_fSizeRatio;
+	m_fX = 45.0f * g_fSizeRatio;
+	m_fY = 53.0f * g_fSizeRatio;
 
 	m_strObjectTag = L"TitleSymbol";
 

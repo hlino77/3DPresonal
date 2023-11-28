@@ -7,6 +7,11 @@
 #include "ColliderSphere.h"
 #include "RigidBody.h"
 #include "NavigationMgr.h"
+#include "Smoke_24.h"
+#include "Pool.h"
+#include "UI_HP_Boss.h"
+#include "UI_BossIcon.h"
+
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Boss", OBJ_TYPE::BOSS)
@@ -87,12 +92,16 @@ HRESULT CBoss::Render()
 		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return S_OK;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
-			return S_OK;
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
+				return S_OK;
+		}
+		else
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 2)))
+				return S_OK;
+		}
 	}
 
 	Safe_Release(pGameInstance);
@@ -116,6 +125,48 @@ void CBoss::Set_SlowMotion(_bool bSlow)
 		m_fAnimationSpeed = 1.0f;
 		m_pRigidBody->Set_Active(true);
 	}
+}
+
+HRESULT CBoss::Render_ShadowDepth()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix())))
+		return S_OK;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ))))
+		return S_OK;
+
+	Matrix matLightVeiw = pGameInstance->Get_DirectionLightMatrix();
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matLightVeiw)))
+		return S_OK;
+
+
+
+	m_pModelCom->SetUpAnimation_OnShader(m_pShaderCom);
+
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;*/
+
+			/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+				return E_FAIL;*/
+
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
+			return S_OK;
+	}
+
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
 }
 
 
@@ -146,6 +197,17 @@ void CBoss::Set_Die()
 		Collider.second->SetActive(false);
 
 	m_bDie = true;
+}
+
+void CBoss::Effect_Die()
+{
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	for (_uint i = 0; i < 30; ++i)
+	{
+		CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
+		pSmoke->Appear_Up(vPos, Vec4(1.0f, 1.0f, 1.0f, 0.85f), Vec2(0.5f, 0.5f), 0.0f, 0.01f, 0.00f);
+	}
 }
 
 HRESULT CBoss::Ready_Components()
@@ -223,6 +285,40 @@ HRESULT CBoss::Ready_Components()
     return S_OK;
 }
 
+HRESULT CBoss::Ready_HP_UI(_uint iTextureIndex)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	//Prototype_GameObject_UI_HP_Monster
+
+	CUI_HP_Boss* pUI = dynamic_cast<CUI_HP_Boss*>(pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"Prototype_GameObject_UI_HP_Boss", this));
+
+	if (pUI == nullptr)
+		return E_FAIL;
+
+	pUI->Appear();
+
+
+
+	CUI_BossIcon::BOSSICONDESC tDesc;
+	tDesc.pBoss = this;
+	tDesc.iTextureIndex = iTextureIndex;
+
+	CUI_BossIcon* pBossIcon = dynamic_cast<CUI_BossIcon*>(pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_UI, L"Prototype_GameObject_UI_BossIcon", &tDesc));
+
+	if (pBossIcon == nullptr)
+		return E_FAIL;
+
+	pBossIcon->Appear();
+
+
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
+}
+
 void CBoss::CullingObject()
 {
 	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -234,7 +330,11 @@ void CBoss::CullingObject()
 		return;
 
 	if (m_bRender)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOW, this);
+	}
+		
 }
 
 void CBoss::Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame)

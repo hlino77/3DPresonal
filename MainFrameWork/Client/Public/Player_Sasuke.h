@@ -7,6 +7,10 @@ class CSkill_FireBall;
 
 class CPlayer_Sasuke : public CPlayer
 {
+public:
+	enum SASUKE_SKILL { CHIDORI, FIREBALL, SKILLEND };
+
+
 private:
 	CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer_Sasuke(const CPlayer_Sasuke& rhs);
@@ -38,6 +42,10 @@ public:
 
 	CSkill_Chidori*		Get_Chidori() { return m_pChidori; }
 	CSkill_FireBall*	Get_FireBall() { return m_pFireBall; }
+
+private:
+	HRESULT			Ready_SkillUI();
+
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT			Ready_State();

@@ -55,6 +55,26 @@ HRESULT CTarget_Manager::Bind_SRV(CShader * pShader, const wstring & strTargetTa
 	return pRenderTarget->Bind_SRV(pShader, pConstantName);
 }
 
+HRESULT CTarget_Manager::Make_SRVTexture(const wstring& szPath, const wstring& strTargetTag)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	pRenderTarget->Make_TextureFile(szPath);
+	
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Copy_SRV(const wstring& strTargetTag, ID3D11ShaderResourceView** pSRV)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Copy_SRV(pSRV);
+}
+
 HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring & strMRTTag)
 {
 	list<CRenderTarget*>*		pMRTList = Find_MRT(strMRTTag);
@@ -77,6 +97,30 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring 
 	pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, m_pDSV);
 
 	return	S_OK;
+}
+
+HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+{
+	list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDSV);
+
+	ID3D11RenderTargetView* pRenderTargets[8] = {};
+
+	_uint			iNumRTVs = 0;
+
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		pRenderTargets[iNumRTVs++] = pRenderTarget->Get_RTV();
+		pRenderTarget->Clear();
+	}
+
+	pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, pDSV);
+
+	return S_OK;
 }
 
 HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext* pContext)

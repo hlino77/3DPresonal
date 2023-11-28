@@ -30,8 +30,13 @@ HRESULT CUI_TitleCloud::Initialize(void* pArg)
 
 	m_tCloudInfo = *(static_cast<TitleCloud*>(pArg));
 
-	m_fSizeX = m_tCloudInfo.vSize.x;
-	m_fSizeY = m_tCloudInfo.vSize.y;
+
+	m_fSizeX = m_tCloudInfo.vSize.x * g_fSizeRatio;
+	m_fSizeY = m_tCloudInfo.vSize.y * g_fSizeRatio;
+
+	m_tCloudInfo.vTargetPos.x *= g_fSizeRatio;
+	m_tCloudInfo.vTargetPos.y *= g_fSizeRatio;
+
 	m_fX = m_tCloudInfo.vTargetPos.x * 0.3f;
 	m_fY = m_tCloudInfo.vTargetPos.y;
 

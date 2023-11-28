@@ -48,6 +48,9 @@ HRESULT CSmoke_19::Initialize(void* pArg)
 
 	m_fAlphaWeight = 3.0f;
 
+
+	m_pRendererCom->Reserve_RenderGroup(CRenderer::RENDER_EFFECT_INSTANCE, this);
+
 	return S_OK;
 }
 

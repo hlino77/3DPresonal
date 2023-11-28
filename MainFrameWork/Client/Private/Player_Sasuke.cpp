@@ -41,7 +41,7 @@
 #include "Skill_Chidori.h"
 #include "Skill_FireBall.h"
 #include "State_Sasuke_Skill_FireBall.h"
-
+#include "UI_Skill.h"
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -75,6 +75,14 @@ HRESULT CPlayer_Sasuke::Initialize(void* pArg)
 		Send_MakeSkill(L"Chidori");
 		Send_MakeSkill(L"FireBall");
 	}
+
+
+	if (m_bControl)
+	{
+		if (FAILED(Ready_SkillUI()))
+			return E_FAIL;
+	}
+
 
 	return S_OK;
 }
@@ -141,6 +149,10 @@ void CPlayer_Sasuke::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
 		{
 			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+
+			if (pOther->Get_Owner()->Is_Invincible())
+				return;
+
 
 			if (pOther->Get_AttackType() == (_uint)COLLIDER_ATTACK::MIDDLE)
 				m_pCamera->Cam_Shake(0.001f, 0.1f);
@@ -349,6 +361,53 @@ void CPlayer_Sasuke::Send_PlayerInfo()
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
+
+HRESULT CPlayer_Sasuke::Ready_SkillUI()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	SKILLINFO tChidori;
+	tChidori.m_bReady = true;
+	tChidori.m_fCoolTime = 15.0f;
+	tChidori.m_fCurrCoolTime = 0.0f;
+	m_SkillInfo.push_back(tChidori);
+
+
+	SKILLINFO tFireBall;
+	tFireBall.m_bReady = true;
+	tFireBall.m_fCoolTime = 30.0f;
+	tFireBall.m_fCurrCoolTime = 0.0f;
+	m_SkillInfo.push_back(tFireBall);
+
+
+	{
+		CUI_Skill::SKILLUIDESC tDesc;
+		tDesc.iSkillIndex = 0;
+		tDesc.iSkillTexture = 2;
+		tDesc.szUIName = L"UI_Skill_1";
+		tDesc.pPlayer = this;
+
+		if (nullptr == pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_Skill"), &tDesc))
+			return E_FAIL;
+	}
+
+	{
+		CUI_Skill::SKILLUIDESC tDesc;
+		tDesc.iSkillIndex = 1;
+		tDesc.iSkillTexture = 3;
+		tDesc.szUIName = L"UI_Skill_2";
+		tDesc.pPlayer = this;
+
+		if (nullptr == pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_Skill"), &tDesc))
+			return E_FAIL;
+	}
+
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+
+}
 
 HRESULT CPlayer_Sasuke::Ready_Components()
 {

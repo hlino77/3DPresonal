@@ -121,7 +121,7 @@ HRESULT CLevel_Lobby::Ready_Lights()
 	vLook.Normalize();
 	Vec3 vPos = -vLook * 500.0f;
 	Matrix matLightView = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
-	pGameInstance->Ready_LightMatrix(matLightView.Invert());
+	//pGameInstance->Ready_LightMatrix(matLightView.Invert());
 
 	Safe_Release(pGameInstance);
 
@@ -130,7 +130,18 @@ HRESULT CLevel_Lobby::Ready_Lights()
 
 HRESULT CLevel_Lobby::Ready_Layer_Camera(const LAYER_TYPE eLayerType)
 {
+	CCamera::CAMERADESC tCameraDesc;
 
+	tCameraDesc.iLayer = (_uint)LAYER_TYPE::LAYER_CAMERA;
+	tCameraDesc.vEye = Vec4(0.f, 0.0f, 0.0f, 1.f);
+	tCameraDesc.vAt = Vec4(0.f, 0.f, 1.f, 1.f);
+	tCameraDesc.fFovy = XMConvertToRadians(60.0f);
+	tCameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	tCameraDesc.fNear = 0.2f;
+	tCameraDesc.fFar = 1200.0f;
+
+	CGameObject* pCamera = CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_LOBBY, (_uint)LAYER_TYPE::LAYER_CAMERA, L"Prototype_GameObject_Camera_Free", &tCameraDesc);
+	pCamera->Set_Active(true);
 
 	return S_OK;
 }
@@ -351,6 +362,9 @@ HRESULT CLevel_Lobby::Ready_Title(const LAYER_TYPE eLayerType)
 
 
 	if (nullptr == pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_TitleSymbol")))
+		return E_FAIL;
+
+	if (nullptr == pGameInstance->Add_GameObject(LEVEL_LOBBY, _uint(LAYER_TYPE::LAYER_UI), TEXT("Prototype_GameObject_UI_MatchingLobbyTitle")))
 		return E_FAIL;
 
 

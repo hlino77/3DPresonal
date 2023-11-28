@@ -34,8 +34,6 @@ void CState_WhiteZetsu_Dying_Normal::Enter_State()
 
 void CState_WhiteZetsu_Dying_Normal::Tick_State(_float fTimeDelta)
 {
-	if (m_pMonster->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
-		m_pMonster->Set_Active(false);
 }
 
 void CState_WhiteZetsu_Dying_Normal::Exit_State()

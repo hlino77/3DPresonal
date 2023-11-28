@@ -163,6 +163,9 @@ HRESULT CModel::SetUp_OnShader(CShader * pShader, _uint iMaterialIndex, aiTextur
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
+	if (m_Materials[iMaterialIndex].pTexture[eTextureType] == nullptr)
+		return E_FAIL;
+
 	return m_Materials[iMaterialIndex].pTexture[eTextureType]->Set_SRV(pShader, strConstantName);
 }
 

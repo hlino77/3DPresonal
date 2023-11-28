@@ -39,9 +39,13 @@ HRESULT CUI_PlayerInfo::Initialize(void* pArg)
 
 	m_vUITargetPos = Vec3(303.f, 259.f + iIndex * 80.0f, 0.05f);
 
-	m_fSizeX = 286.f;
-	m_fSizeY = 64.f;
-	m_fX = 250.0f;
+	m_vUITargetPos.x *= g_fSizeRatio;
+	m_vUITargetPos.y *= g_fSizeRatio;
+
+
+	m_fSizeX = 286.f * g_fSizeRatio;
+	m_fSizeY = 64.f * g_fSizeRatio;
+	m_fX = 250.0f * g_fSizeRatio;
 	m_fY = m_vUITargetPos.y;
 
 	m_strObjectTag = L"PlayerInfo_" + m_szNickName;
@@ -55,9 +59,9 @@ HRESULT CUI_PlayerInfo::Initialize(void* pArg)
 
 
 	//CharacterTexture
-	m_fTextureSizeX = 93.f;
-	m_fTextureSizeY = 85.f;
-	m_fTextureX = m_fX - 109.f;
+	m_fTextureSizeX = 93.f * g_fSizeRatio;
+	m_fTextureSizeY = 85.f * g_fSizeRatio;
+	m_fTextureX = m_fX - (109.f * g_fSizeRatio);
 	m_fTextureY = m_fY;
 
 
@@ -67,10 +71,10 @@ HRESULT CUI_PlayerInfo::Initialize(void* pArg)
 
 
 	//ReadyMark
-	m_fMarkSizeX = 20.f;
-	m_fMarkSizeY = 20.f;
-	m_fMarkX = m_vUITargetPos.x + 125.f;
-	m_fMarkY = m_vUITargetPos.y + 2.0f;
+	m_fMarkSizeX = 20.f * g_fSizeRatio;
+	m_fMarkSizeY = 20.f * g_fSizeRatio;
+	m_fMarkX = m_vUITargetPos.x + (125.f * g_fSizeRatio);
+	m_fMarkY = m_vUITargetPos.y + (2.0f * g_fSizeRatio);
 
 
 	m_pMarkTransform->Set_Scale(Vec3(m_fMarkSizeX, m_fMarkSizeY, 1.f));
@@ -148,7 +152,7 @@ void CUI_PlayerInfo::UI_AppearTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		Vec3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, m_vUITargetPos.z));
 
-	m_fTextureX = m_fX - 109.f;
+	m_fTextureX = m_fX - (109.f * g_fSizeRatio);
 	m_fTextureY = m_fY;
 
 
@@ -240,12 +244,12 @@ HRESULT CUI_PlayerInfo::Bind_ShaderResources()
 void CUI_PlayerInfo::Render_String()
 {
 	Vec2 vPos(m_fX, m_fY);
-	Vec2 vScale(0.5f, 0.5f);
+	Vec2 vScale(0.65f, 0.65f);
 
-	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"125", m_szNickName);
+	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"Cascadia", m_szNickName);
 	Vec2 vOrigin = vMeasure * 0.5f;
 
-	CGameInstance::GetInstance()->DrawFont(L"125", m_szNickName, vPos, Vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
+	CGameInstance::GetInstance()->DrawFont(L"Cascadia", m_szNickName, vPos, Vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
 }
 
 HRESULT CUI_PlayerInfo::Render_CharacterTexture()

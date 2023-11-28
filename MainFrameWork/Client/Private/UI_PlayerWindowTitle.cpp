@@ -29,9 +29,13 @@ HRESULT CUI_PlayerWindowTitle::Initialize(void* pArg)
 
 	m_vUITargetPos = Vec3(303.f, 193.f, 0.2f);
 
-	m_fSizeX = 331;
-	m_fSizeY = 38;
-	m_fX = 250.0f;
+	m_vUITargetPos.x *= g_fSizeRatio;
+	m_vUITargetPos.y *= g_fSizeRatio;
+
+
+	m_fSizeX = 331 * g_fSizeRatio;
+	m_fSizeY = 38 * g_fSizeRatio;
+	m_fX = 250.0f * g_fSizeRatio;
 	m_fY = m_vUITargetPos.y;
 
 	m_strObjectTag = L"PlayerWindowTitle";
@@ -47,6 +51,9 @@ HRESULT CUI_PlayerWindowTitle::Initialize(void* pArg)
 	m_fMoveSpeed = 200.0f;
 
 	m_fAlpha = 0.0f;
+
+
+	m_vStringOffset = Vec2(0.0f, 9.0f);
 
 	Set_Active(false);
 
@@ -191,12 +198,14 @@ void CUI_PlayerWindowTitle::Render_String()
 	wstring szString = L"플레이어";
 
 	Vec2 vPos(m_fX, m_fY);
+	vPos += m_vStringOffset;
+
 	Vec2 vScale(0.5f, 0.5f);
 
-	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"125", szString);
+	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"AdobeFont", szString);
 	Vec2 vOrigin = vMeasure * 0.5f;
 
-	CGameInstance::GetInstance()->DrawFont(L"125", szString, vPos, Vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
+	CGameInstance::GetInstance()->DrawFont(L"AdobeFont", szString, vPos, Vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
 }
 
 

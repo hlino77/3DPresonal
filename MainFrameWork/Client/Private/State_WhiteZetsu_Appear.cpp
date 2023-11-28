@@ -42,7 +42,7 @@ void CState_WhiteZetsu_Appear::Tick_State(_float fTimeDelta)
 	}
 		
 
-	m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+	//m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
 void CState_WhiteZetsu_Appear::Exit_State()

@@ -49,8 +49,11 @@ void CStaticModel::LateTick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 
-	if(m_bRender)
+	if (m_bRender)
+	{
 		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
+	}
+		
 }
 
 HRESULT CStaticModel::Render()
@@ -79,12 +82,17 @@ HRESULT CStaticModel::Render()
 		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return S_OK;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
-			return S_OK;
+		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
+				return S_OK;
+		}
+		else
+		{
+			if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 10)))
+				return S_OK;
+		}
+		
 	}
 
 	Safe_Release(pGameInstance);
@@ -109,8 +117,7 @@ HRESULT CStaticModel::Render_ShadowDepth()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW))))
 		return S_OK;
 
-	Matrix matVeiw = pGameInstance->Get_DirectionLightMatrix();
-	Matrix matWorld = matVeiw.Invert();
+	Matrix matVeiw = pGameInstance->Get_StaticLightMatrix();
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ShadowViewMatrix", &matVeiw)))
 		return S_OK;
@@ -120,8 +127,8 @@ HRESULT CStaticModel::Render_ShadowDepth()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 
-		if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
-			return S_OK;
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return S_OK;*/
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/

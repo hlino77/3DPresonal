@@ -29,10 +29,10 @@ HRESULT CUI_NickNameInput::Initialize(void* pArg)
 
 	__super::Initialize(pArg);
 
-	m_fSizeX = 250.0f;
-	m_fSizeY = 30.0f;
+	m_fSizeX = 250.0f * g_fSizeRatio;
+	m_fSizeY = 30.0f * g_fSizeRatio;
 	m_fX = g_iWinSizeX * 0.5f;
-	m_fY = g_iWinSizeY * 0.5f + 10.0f;
+	m_fY = g_iWinSizeY * 0.5f + (10.0f * g_fSizeRatio);
 
 	m_strObjectTag = L"NickNameInput";
 
@@ -113,12 +113,12 @@ HRESULT CUI_NickNameInput::Bind_ShaderResources()
 void CUI_NickNameInput::Render_String()
 {
 	Vec2 vPos(m_fX, m_fY);
-	Vec2 vScale(0.3f, 0.3f);
+	Vec2 vScale(0.7f, 0.7f);
 
-	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"125", m_szNickName);
+	Vec2 vMeasure = CGameInstance::GetInstance()->MeasureString(L"Cascadia", m_szNickName);
 	Vec2 vOrigin = vMeasure * 0.5f;
 
-	CGameInstance::GetInstance()->DrawFont(L"125", m_szNickName, vPos, Vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, vOrigin, vScale);
+	CGameInstance::GetInstance()->DrawFont(L"Cascadia", m_szNickName, vPos, Vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, vOrigin, vScale);
 }
 
 CUI_NickNameInput * CUI_NickNameInput::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

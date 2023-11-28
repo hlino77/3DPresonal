@@ -27,10 +27,6 @@ HRESULT CEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-
-
-
-
 	return S_OK;
 }
 

@@ -4,6 +4,7 @@
 BEGIN(Client)
 
 class CSkill_Meteor;
+class CSkill_MadaraFireBall;
 
 class CBoss_Madara : public CBoss
 {
@@ -32,7 +33,10 @@ public:
 
 
 	CSkill_Meteor* Get_Meteor() { return m_pMeteor; }
+	CSkill_MadaraFireBall* Get_FireBall() { return m_pFireBall; }
 
+
+	void			Effect_Teleport();
 protected:
 	virtual HRESULT Ready_Components() override;
 	HRESULT Ready_State();
@@ -50,6 +54,7 @@ private:
 
 
 	CSkill_Meteor* m_pMeteor = nullptr;
+	CSkill_MadaraFireBall* m_pFireBall = nullptr;
 public:
 	static CBoss_Madara* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg);

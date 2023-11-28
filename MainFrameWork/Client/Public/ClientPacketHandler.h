@@ -28,6 +28,8 @@ enum : uint16
 	PKT_S_CAMSHAKE = 18,
 	PKT_S_EVENT = 19,
 	PKT_S_SKILLEXPLOSION = 20,
+	PKT_S_HP = 21,
+	PKT_S_CREATEPLAYER = 22,
 };
 
 // TODO
@@ -51,6 +53,8 @@ bool Handel_S_SLOWMOTION_Client(PacketSessionRef& session, Protocol::S_SLOWMOTIO
 bool Handel_S_CAMSHAKE_Client(PacketSessionRef& session, Protocol::S_CAMSHAKE& pkt);
 bool Handel_S_EVENT_Client(PacketSessionRef& session, Protocol::S_EVENT& pkt);
 bool Handel_S_SKILLEXPLOSION_Client(PacketSessionRef& session, Protocol::S_SKILLEXPLOSION& pkt);
+bool Handel_S_HP_Client(PacketSessionRef& session, Protocol::S_HP& pkt);
+bool Handel_S_CREATEPLAYER_Client(PacketSessionRef& session, Protocol::S_CREATE_PLAYER& pkt);
 
 
 
@@ -83,6 +87,8 @@ public:
 		GPacketHandler[PKT_S_CAMSHAKE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CAMSHAKE>(Handel_S_CAMSHAKE_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_EVENT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_EVENT>(Handel_S_EVENT_Client, session, buffer, len); };
 		GPacketHandler[PKT_S_SKILLEXPLOSION] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_SKILLEXPLOSION>(Handel_S_SKILLEXPLOSION_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_HP] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_HP>(Handel_S_HP_Client, session, buffer, len); };
+		GPacketHandler[PKT_S_CREATEPLAYER] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::S_CREATE_PLAYER>(Handel_S_CREATEPLAYER_Client, session, buffer, len); };
 
 	}
 
@@ -113,6 +119,8 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_CAMSHAKE& pkt) { return MakeSendBuffer(pkt, PKT_S_CAMSHAKE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_EVENT& pkt) { return MakeSendBuffer(pkt, PKT_S_EVENT); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_SKILLEXPLOSION& pkt) { return MakeSendBuffer(pkt, PKT_S_SKILLEXPLOSION); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_HP& pkt) { return MakeSendBuffer(pkt, PKT_S_HP); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_CREATE_PLAYER& pkt) { return MakeSendBuffer(pkt, PKT_S_CREATEPLAYER); }
 
 
 private:

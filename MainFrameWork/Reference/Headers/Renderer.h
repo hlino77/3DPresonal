@@ -8,14 +8,24 @@
 BEGIN(Engine)
 
 class CShader;
+class CTexture;
+
 
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, INSTANCE_STATIC, RENDER_NONBLEND, RENDER_BLEND, RENDER_ALPHABLEND, RENDER_MODELEFFECT_INSTANCE, RENDER_EFFECT_INSTANCE, RENDER_UI, RENDER_END };
+	typedef struct MakeSRVDesc
+	{
+		CGameObject* pObject;
+		ID3D11ShaderResourceView** pSRV;
+	}MAKESRV;
+
+
+public:
+	enum RENDERGROUP { RENDER_STATICSHADOW, RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_LIGHT, INSTANCE_STATIC, RENDER_NONBLEND, RENDER_SHADOW, RENDER_BLEND, RENDER_MODELEFFECT_INSTANCE, RENDER_EFFECT_INSTANCE, RENDER_ALPHABLEND, RENDER_WORLDUI, RENDER_UI, RENDER_END };
 
 private:
-	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
+	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CRenderer(const CRenderer& rhs) = delete;
 	virtual ~CRenderer() = default;
 
@@ -24,14 +34,25 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
+	HRESULT Reserve_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
+	HRESULT Add_MakeSRV(CGameObject* pObject, ID3D11ShaderResourceView** pSRV);
+
+
 	HRESULT Draw();
 	HRESULT Draw_Server();
 
+
+	void	Set_StaticShadow() { m_bRenderStaticShadow = true; }
+
 private:
+
+	HRESULT	Render_MakeSRV();
+
+
 	HRESULT Render_Priority();
 
-
+	HRESULT Render_StaticShadow();
 	HRESULT Render_NonAlphaBlend();
 	HRESULT Render_StaticInstance();
 	HRESULT	Render_ShadowDepth();
@@ -48,9 +69,8 @@ private:
 
 	HRESULT Render_EffectBlur();
 	HRESULT Render_EffectAcc();
-	HRESULT Render_Deferred_Effects();
 
-
+	HRESULT	Render_WorldUI();
 	HRESULT Render_UI();
 
 
@@ -77,6 +97,9 @@ private:
 	ID3D11Buffer* m_pPointEffect_InstanceBuffer = nullptr;
 	ID3D11Buffer* m_pModelEffect_InstanceBuffer = nullptr;
 
+
+
+
 	_uint	m_iBufferSize = 0;
 
 
@@ -88,9 +111,21 @@ private:
 	class CShader* m_pMRTShader = { nullptr };
 	class CShader* m_pEffectShader = { nullptr };
 
-
 	Matrix					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 
+	//MakeSRV
+	HRESULT	Ready_MakeSRV_DSV();
+	ID3D11DepthStencilView* m_pMakeSRV_DSV = nullptr;
+	vector<MAKESRV> m_MakeSRVObjects;
+
+	//Shadow
+	HRESULT	Ready_ShadowDSV();
+
+	ID3D11DepthStencilView* m_pShadowDSV = nullptr;
+	_float m_fShadowTargetSizeRatio;
+
+	ID3D11DepthStencilView* m_pStaticShadowDSV = nullptr;
+	_float m_fStaticShadowTargetSizeRatio;
 
 
 	//Blur
@@ -100,7 +135,10 @@ private:
 	_int	m_iKernelSize;
 	vector<_float> m_BlurWeights;
 
+	_float m_fBias = 0.0000022f;
 
+
+	_bool m_bRenderStaticShadow = false;
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pObject, void* pArg) override;

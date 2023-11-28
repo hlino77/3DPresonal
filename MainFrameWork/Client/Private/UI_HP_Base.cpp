@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "UI_HP_Base.h"
 #include "GameInstance.h"
+#include "Player.h"
+#include "ServerSessionManager.h"
 
 CUI_HP_Base::CUI_HP_Base(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI(pDevice, pContext)
@@ -28,10 +30,11 @@ HRESULT CUI_HP_Base::Initialize(void* pArg)
 	__super::Initialize(pArg);
 
 
-	m_fSizeX = 512 * 0.7f;
-	m_fSizeY = 64 * 0.7f;
-	m_fX = 265.0f;
-	m_fY = 658.0f;
+
+	m_fSizeX = 512 * 0.7f * g_fSizeRatio;
+	m_fSizeY = 64 * 0.7f * g_fSizeRatio;
+	m_fX = 265.0f * g_fSizeRatio;
+	m_fY = 658.0f * g_fSizeRatio;
 
 	m_strObjectTag = L"HP_Base";
 
@@ -53,6 +56,20 @@ HRESULT CUI_HP_Base::Initialize(void* pArg)
 
 	m_bActive = false;
 
+	while (true)
+	{
+		m_pPlayer = CServerSessionManager::GetInstance()->Get_Player();
+		if (m_pPlayer != nullptr)
+			break;
+	}
+
+	m_iPrevHp = m_pPlayer->Get_Hp();
+	
+	m_fMaskUVLength = 0.31f;
+	m_vMaskUV = Vec2(-m_fMaskUVLength, 0.0f);
+
+
+	m_vHp_DamageColor = Vec4(1.0f, 0.0f, 0.0f, 0.0f);
 
 	return S_OK;
 }
@@ -60,6 +77,7 @@ HRESULT CUI_HP_Base::Initialize(void* pArg)
 void CUI_HP_Base::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
 }
 
 void CUI_HP_Base::LateTick(_float fTimeDelta)
@@ -84,8 +102,23 @@ HRESULT CUI_HP_Base::Render()
 
 
 	{
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Color", &m_vHp_DamageColor, sizeof(Vec4))))
+			return E_FAIL;
+
+		m_pHP_Damage->Set_SRV(m_pShaderCom, "g_DiffuseTexture");
+
+		m_pShaderCom->Begin(2);
+
+		m_pVIBufferCom->Render();
+	}
+
+
+	{
 
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_Color", &m_vHp_GaugeColor, sizeof(Vec4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskUV", &m_vMaskUV, sizeof(Vec2))))
 			return E_FAIL;
 
 		m_pHP_GaugeMask->Set_SRV(m_pShaderCom, "g_MaskTexture");
@@ -119,25 +152,25 @@ void CUI_HP_Base::UI_Tick(_float fTimeDelta)
 
 	/*if (KEY_TAP(KEY::LEFT_ARROW))
 	{
-		m_fX -= 1.0f;
+		m_vMaskUV.x -= 0.01f;
 	}
 
 	if (KEY_TAP(KEY::RIGHT_ARROW))
 	{
-		m_fX += 1.0f;
-	}
+		m_vMaskUV.x += 0.01f;
+	}*/
 
-	if (KEY_TAP(KEY::UP_ARROW))
-	{
-		m_fY -= 1.0f;
-	}
+	//if (KEY_TAP(KEY::UP_ARROW))
+	//{
+	//	m_vMaskUV.y -= 1.0f;
+	//}
 
-	if (KEY_TAP(KEY::DOWN_ARROW))
-	{
-		m_fY += 1.0f;
-	}
+	//if (KEY_TAP(KEY::DOWN_ARROW))
+	//{
+	//	m_vMaskUV.y += 1.0f;
+	//}
 
-	if (KEY_TAP(KEY::Y))
+	/*if (KEY_TAP(KEY::Y))
 	{
 		cout << "Pos : " << m_fX << " " << m_fY << endl;
 		cout << "Size : " << m_fSizeX << " " << m_fSizeY << endl;
@@ -147,6 +180,35 @@ void CUI_HP_Base::UI_Tick(_float fTimeDelta)
 	m_pTransformCom->Set_Scale(Vec3(m_fSizeX, m_fSizeY, 1.f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		Vec3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, m_vUITargetPos.z));*/
+
+
+
+	_uint iCurrHp = m_pPlayer->Get_Hp();
+	_uint iMaxHp = m_pPlayer->Get_MaxHp();
+
+	_float fRatio = (_float)iCurrHp / iMaxHp;
+
+	_float fCurrUVX = m_fMaskUVLength - ((m_fMaskUVLength * 2.0f) * fRatio);
+	
+	m_vMaskUV = Vec2::Lerp(m_vMaskUV, Vec2(fCurrUVX, 0.0f), 2.0f * fTimeDelta);
+
+
+
+
+	if (m_vHp_DamageColor.w > 0.0f)
+	{
+		m_vHp_DamageColor.w -= 1.0f * fTimeDelta;
+		if (m_vHp_DamageColor.w < 0.0f)
+			m_vHp_DamageColor.w = 0.0f;
+	}
+
+
+	if (iCurrHp != m_iPrevHp)
+	{
+		m_vHp_DamageColor.w = 1.0f;
+		m_iPrevHp = iCurrHp;
+	}
+	
 }
 
 void CUI_HP_Base::UI_DisappearTick(_float fTimeDelta)
@@ -175,6 +237,12 @@ HRESULT CUI_HP_Base::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_GaugeMask"),
 		TEXT("Com_Texture_HP_GaugeMask"), (CComponent**)&m_pHP_GaugeMask)))
 		return E_FAIL;
+
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_HP_Damage"),
+		TEXT("Com_Texture_HP_Damage"), (CComponent**)&m_pHP_Damage)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

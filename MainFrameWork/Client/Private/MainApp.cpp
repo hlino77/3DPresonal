@@ -246,7 +246,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtx_PointToTex_Effect_Instance.hlsl"), VTX_LINECIRCLE_INSTANCE::Elements, VTX_LINECIRCLE_INSTANCE::iNumElements))))
 		return E_FAIL;
 
-
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_SkyBox"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxSkyBox.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -257,6 +259,8 @@ HRESULT CMainApp::Ready_Prototype_Font()
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->AddFont(L"125", L"../Bin/Resources/Fonts/125.spritefont");
+	pGameInstance->AddFont(L"AdobeFont", L"../Bin/Resources/Fonts/AdobeFont.spritefont");
+	pGameInstance->AddFont(L"Cascadia", L"../Bin/Resources/Fonts/Cascadia.spritefont");
 
 
 	Safe_Release(pGameInstance);

@@ -77,8 +77,14 @@ public: /* For. Componenet_Manager */
 public: /* For.Light_Manager */
 	const LIGHTDESC* Get_LightDesc(_uint iIndex);
 	HRESULT Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc);
-	void Ready_LightMatrix(Matrix matWorld);
+	HRESULT Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const LIGHTDESC & LightDesc, class CTexture* pTexture);
+	void Ready_LightMatrix(Vec3 vOffset, Vec3 vLook);
+	void Ready_StaticLightMatrix(Vec3 vPos, Vec3 vLook);
+
 	Matrix Get_DirectionLightMatrix();
+	Matrix Get_StaticLightMatrix();
+
+	void	Update_LightMatrix(Vec3 vPos);
 
 	HRESULT Reset_Lights();
 

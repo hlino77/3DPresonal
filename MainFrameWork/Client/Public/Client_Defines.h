@@ -10,8 +10,10 @@ namespace Client
 
 	enum OBJ_TYPE { PLAYER, MONSTER, BOSS, SKILL, TERRAIN, PROP, UI, COLMESH, EFFECT, SPAWNER, OBJ_END };
 
-	const unsigned int		g_iWinSizeX = 1280;
-	const unsigned int		g_iWinSizeY = 720;
+	const unsigned int		g_iWinSizeX = 1600;
+	const unsigned int		g_iWinSizeY = 900;
+	const float				g_fSizeRatio = 1.25f;
+
 
 	enum class LAYER_TYPE
 	{
@@ -58,6 +60,7 @@ namespace Client
 		PLAYERSTART,
 		BATTLESTART,
 		MADARAMETEOR,
+		KONOHASTART,
 		EVENTEND
 	};
 

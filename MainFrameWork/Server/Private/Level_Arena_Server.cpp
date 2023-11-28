@@ -30,7 +30,7 @@ HRESULT CLevel_Arena_Server::Initialize()
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
 
 	m_iMonsterCount = 1;
-	m_iMaxMonster = 3;
+	m_iMaxMonster = 30;
 
 	Ready_Events();
 
@@ -173,12 +173,13 @@ HRESULT CLevel_Arena_Server::Broadcast_Character()
 	for (auto& OwnerSession : Sessions)
 	{
 		wstring strCharacter = OwnerSession->Get_CharacterName();
-		Protocol::S_CREATE_OBJCECT pkt;
+		Protocol::S_CREATE_PLAYER pkt;
 		pkt.set_strname(CAsUtils::ToString(strCharacter));
 		pkt.set_iobjectid(g_iObjectID++);
 		pkt.set_ilevel((uint32)LEVELID::LEVEL_ARENA);
 		pkt.set_ilayer((uint32)LAYER_TYPE::LAYER_PLAYER);
 		pkt.set_iobjecttype((uint32)OBJ_TYPE::PLAYER);
+		pkt.set_strnickname(CAsUtils::ToString(OwnerSession->Get_NickName()));
 
 		auto vPacketPos = pkt.mutable_vpos();
 		vPacketPos->Resize(3, 0.0f);
@@ -554,7 +555,7 @@ Vec3 CLevel_Arena_Server::Find_MonsterSpawnPos()
 			Vec3 vPlayerPos = Player->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 
 
-			Vec3 vOffset(0.0f, 0.0f, 5.0f);
+			Vec3 vOffset(0.0f, 0.0f, 7.0f);
 
 			_float fAngle = (_float)(rand() % 360);
 

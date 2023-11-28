@@ -21,6 +21,9 @@
 #include "State_WhiteZetsu_DownToFloor.h"
 #include "State_WhiteZetsu_HitSpinBlowDown.h"
 #include "State_WhiteZetsu_Die.h"
+#include "UI_HP_Monster.h"
+
+
 
 CMonster_WhiteZetsu::CMonster_WhiteZetsu(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CMonster(pDevice, pContext)
@@ -46,6 +49,14 @@ HRESULT CMonster_WhiteZetsu::Initialize(void* pArg)
 
 	m_tCullingSphere.Radius = 2.0f;
 
+	m_iHp = 50;
+	m_iMaxHp = 50;
+
+
+	if (FAILED(Ready_HP_UI()))
+		return E_FAIL;
+	
+
 	return S_OK;
 }
 
@@ -54,6 +65,7 @@ void CMonster_WhiteZetsu::Tick(_float fTimeDelta)
 	m_pStateMachine->Tick_State(fTimeDelta);
 
 	__super::Tick(fTimeDelta);
+
 }
 
 void CMonster_WhiteZetsu::LateTick(_float fTimeDelta)

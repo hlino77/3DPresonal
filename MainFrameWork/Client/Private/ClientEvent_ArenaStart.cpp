@@ -21,7 +21,7 @@ HRESULT CClientEvent_ArenaStart::Initialize()
 	tCameraDesc.fFovy = XMConvertToRadians(60.0f);
 	tCameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	tCameraDesc.fNear = 0.2f;
-	tCameraDesc.fFar = 1000.0f;
+	tCameraDesc.fFar = 1200.0f;
 
 	CGameObject* pCamera = CGameInstance::GetInstance()->Add_GameObject((_uint)LEVELID::LEVEL_ARENA, (_uint)LAYER_TYPE::LAYER_CAMERA, L"Prototype_GameObject_Camera_Free", &tCameraDesc);
 

@@ -31,10 +31,13 @@ void CState_Madara_TeleportAttack::Enter_State()
 	m_pBoss->Reserve_Animation(m_iIdle_Loop, 0.1f, 0, 0);
 	m_bMove = false;
 	m_pBoss->Set_Render(false);
-
+	m_pBoss->Effect_Teleport();
 
 	Vec3 vPos = m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	m_pBoss->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
+
+	m_pBoss->Set_Invincible(true);
+	
 }
 
 void CState_Madara_TeleportAttack::Tick_State(_float fTimeDelta)
@@ -58,7 +61,11 @@ void CState_Madara_TeleportAttack::Exit_State()
 	m_pBoss->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vTargetPos);
 	m_pBoss->Get_TransformCom()->LookAt_ForLandObject(vPlayerPos);
 	m_pBoss->Set_Render(true);
+	m_pBoss->Effect_Teleport();
+
+	m_pBoss->Set_Invincible(false);
 }
+
 
 
 void CState_Madara_TeleportAttack::Free()

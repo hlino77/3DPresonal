@@ -433,3 +433,37 @@ bool Handel_S_SKILLEXPLOSION_Server(PacketSessionRef& session, Protocol::S_SKILL
 	Safe_Release(pGameInstance);
 	return true;
 }
+
+bool Handel_S_HP_Server(PacketSessionRef& session, Protocol::S_HP& pkt)
+{
+	SendBufferRef pBuffer = CServerPacketHandler::MakeSendBuffer(pkt);
+	CGameSessionManager::GetInstance()->Broadcast_Others(pBuffer, session->GetSessionID());
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+
+	CGameObject* pObject = pGameInstance->Find_GameObejct(pkt.ilevel(), pkt.ilayer(), pkt.iobjectid());
+
+	if (pObject == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return true;
+	}
+
+
+	pObject->Set_Hp(pkt.ihp());
+
+	Safe_Release(pGameInstance);
+
+	return true;
+}
+
+bool Handel_S_CREATEPLAYER_Server(PacketSessionRef& session, Protocol::S_CREATE_PLAYER& pkt)
+{
+
+
+
+	return true;
+}

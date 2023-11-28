@@ -27,8 +27,8 @@ public:
 	virtual HRESULT Render_Instance(ID3D11Buffer* pInstanceBuffer, _uint iSize);
 	virtual void Add_InstanceData(vector<Vec4>& BufferData) override;
 
-	void		Appear(Vec3 vPos);
-
+	void		Appear(Vec3 vPos, Vec4 vColor, Vec2 vScale, _float fTime, _float fDirForce, _float fStartTime);
+	void		Appear_Up(Vec3 vPos, Vec4 vColor, Vec2 vScale, _float fTime, _float fDirForce, _float fStartTime);
 protected: 
 
 

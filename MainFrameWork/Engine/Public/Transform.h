@@ -60,6 +60,7 @@ public:
 	virtual void LookAt(Vec3 vAt) PURE;
 	virtual void LookAt_ForLandObject(Vec3 vAt) PURE;
 	virtual void LookAt_Dir(Vec3 vDir) PURE;
+	virtual void LookAt_SetUp(Vec3 vAt) PURE;
 	virtual void Move(Vec3 vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f) PURE;
 	virtual void Move_Dir(Vec3 vDir, _float fTimeDelta) PURE;
 	virtual void LookAt_Lerp(Vec3 vAt, _float fSpeed, _float fTimeDelta) PURE;

@@ -44,7 +44,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual void Set_SlowMotion(_bool bSlow) override;
-
+	virtual HRESULT Render_ShadowDepth();
 
 public:
 	CShader*				Get_ShaderCom() { return m_pShaderCom; }
@@ -72,8 +72,12 @@ public:
 
 
 	virtual void					Set_Die();
+
+	void	Effect_Die();
 protected:
 	virtual HRESULT Ready_Components();
+	HRESULT Ready_HP_UI(_uint iTextureIndex);
+
 
 protected:
 	void					CullingObject();

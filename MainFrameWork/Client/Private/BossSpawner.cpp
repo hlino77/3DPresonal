@@ -33,8 +33,8 @@ HRESULT CBossSpawner::Initialize(void* pArg)
 	_uint* pObjectID = (_uint*)pArg;
 	m_iObjectID = *pObjectID;
 
-	m_vColor = Vec4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_vBlurColor = Vec4(0.68f, 0.0f, 0.0f, 1.0f);
+	m_vColor = Vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_vBlurColor = Vec4(0.79f, 0.0f, 0.1f, 1.0f);
 	//m_vColor = Vec4(0.035f, 0.69f, 0.95f, 1.0f);
 	//m_vBlurColor = Vec4(0.074f, 0.24f, 0.58f, 1.0f);
 
