@@ -149,7 +149,7 @@ HRESULT CLevel_Konoha::Ready_Lights()
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = Vec4(-0.079633f, -0.82389f, 0.561141f, 0.f);
 	LightDesc.vDiffuse = Vec4(0.4f, 0.4f, 0.4f, 1.f);
-	LightDesc.vAmbient = Vec4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vAmbient = Vec4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vSpecular = Vec4(0.4f, 0.4f, 0.4f, 1.f);
 
 

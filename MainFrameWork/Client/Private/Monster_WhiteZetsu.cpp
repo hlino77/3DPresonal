@@ -49,8 +49,8 @@ HRESULT CMonster_WhiteZetsu::Initialize(void* pArg)
 
 	m_tCullingSphere.Radius = 2.0f;
 
-	m_iHp = 50;
-	m_iMaxHp = 50;
+	m_iHp = 20;
+	m_iMaxHp = 20;
 
 
 	if (FAILED(Ready_HP_UI()))

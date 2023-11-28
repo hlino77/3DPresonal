@@ -89,6 +89,8 @@ public:
 	void			Send_ColliderState(const _uint& iLayer);
 	void			Send_SlowMotion(_bool bSlow);
 	void			Send_MakeSkill(const wstring& szSkillName);
+	void			Send_Hp();
+
 
 	void			Set_State(const wstring& szName);
 	void			Reserve_Animation(_uint iAnimIndex, _float fChangeTime, _uint iStartFrame, _uint iChangeFrame);

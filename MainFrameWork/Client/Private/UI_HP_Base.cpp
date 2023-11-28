@@ -52,7 +52,7 @@ HRESULT CUI_HP_Base::Initialize(void* pArg)
 	m_fAlpha = 1.0f;
 
 	m_vHp_BackColor = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	m_vHp_GaugeColor = Vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	m_vHp_GaugeColor = Vec4(0.05f, 0.81f, 0.27f, 1.0f);
 
 	m_bActive = false;
 

@@ -104,7 +104,7 @@ HRESULT CSkill_RasenSyuriken::Initialize(void* pArg)
 	m_fExplosionTime = 0.5f;
 	m_fSkillTime = 2.0f;
 
-	m_iAttack = 10;
+	m_iAttack = 20;
 
 	m_fEffectTime = 0.1f;
 

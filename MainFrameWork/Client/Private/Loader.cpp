@@ -266,7 +266,10 @@ HRESULT CLoader::Loading_For_Level_Arena()
 		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/BossIcon_%d.png", 2))))
 		return E_FAIL;
 
-	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Rank"),
+		CTexture::Create(m_pDevice, m_pContext, L"../Bin/Resources/Textures/UI/Rank.png", 2))))
+		return E_FAIL;
+
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Circle"),

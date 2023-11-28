@@ -503,6 +503,15 @@ void CPlayer::Hit_Attack(CCollider* pCollider)
 			return;
 	}
 
+	m_iHp -= pCollider->Get_Attack();
+	if (m_iHp < 0)
+		m_iHp = 0;
+
+
+	if (m_iHp == 0)
+		m_iHp = 100;
+
+	Send_Hp();
 
 	_uint iAttackType = pCollider->Get_AttackType();
 
@@ -908,6 +917,19 @@ void CPlayer::Send_MakeSkill(const wstring& szSkillName)
 	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 
 	Safe_Release(pGameInstance);
+}
+
+void CPlayer::Send_Hp()
+{
+	Protocol::S_HP pkt;
+
+	pkt.set_ilevel(CGameInstance::GetInstance()->Get_CurrLevelIndex());
+	pkt.set_ilayer(m_iLayer);
+	pkt.set_iobjectid(m_iObjectID);
+	pkt.set_ihp(m_iHp);
+
+	SendBufferRef pSendBuffer = CClientPacketHandler::MakeSendBuffer(pkt);
+	CServerSessionManager::GetInstance()->Send(pSendBuffer);
 }
 
 

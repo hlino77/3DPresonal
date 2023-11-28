@@ -48,6 +48,18 @@ HRESULT CUI_SP_Base::Initialize(void* pArg)
 	m_bActive = false;
 
 
+	m_fRankSizeX = 75.6f * g_fSizeRatio;
+	m_fRankSizeY = 74.8f * g_fSizeRatio;
+	m_fRankX = m_fX - (109.2f * g_fSizeRatio);
+	m_fRankY = m_fY + (6.4f * g_fSizeRatio);
+
+
+	m_pRankTransform->Set_Scale(Vec3(m_fRankSizeX, m_fRankSizeY, 1.f));
+	m_pRankTransform->Set_State(CTransform::STATE_POSITION,
+		Vec3(m_fRankX - g_iWinSizeX * 0.5f, -m_fRankY + g_iWinSizeY * 0.5f, 0.001f));
+
+
+
 	return S_OK;
 }
 
@@ -65,6 +77,24 @@ HRESULT CUI_SP_Base::Render()
 {
 	__super::Render();
 
+
+	_float fAlpha = 1.0f;
+	{
+
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pRankTransform->Get_WorldMatrix())))
+			return S_OK;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pRankTexture->Set_SRV(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(0);
+
+		m_pVIBufferCom->Render();
+	}
+
 	return S_OK;
 }
 
@@ -81,7 +111,52 @@ void CUI_SP_Base::UI_AppearTick(_float fTimeDelta)
 
 void CUI_SP_Base::UI_Tick(_float fTimeDelta)
 {
-	
+
+	if (KEY_TAP(KEY::LEFT_ARROW))
+	{
+		m_fRankX -= 1.0f;
+	}
+
+	if (KEY_TAP(KEY::RIGHT_ARROW))
+	{
+		m_fRankX += 1.0f;
+	}
+
+	if (KEY_TAP(KEY::UP_ARROW))
+	{
+		m_fRankY -= 1.0f;
+	}
+
+	if (KEY_TAP(KEY::DOWN_ARROW))
+	{
+		m_fRankY += 1.0f;
+	}
+
+	if (KEY_TAP(KEY::H))
+	{
+		m_fRankSizeX -= 1.0f;
+	}
+
+	if (KEY_TAP(KEY::J))
+	{
+		m_fRankSizeX += 1.0f;
+	}
+
+	if (KEY_TAP(KEY::K))
+	{
+		m_fRankSizeY -= 1.0f;
+	}
+
+	if (KEY_TAP(KEY::L))
+	{
+		m_fRankSizeY += 1.0f;
+	}
+
+
+	m_pRankTransform->Set_Scale(Vec3(m_fRankSizeX, m_fRankSizeY, 1.f));
+	m_pRankTransform->Set_State(CTransform::STATE_POSITION,
+		Vec3(m_fRankX - g_iWinSizeX * 0.5f, -m_fRankY + g_iWinSizeY * 0.5f, m_vUITargetPos.z));
+
 }
 
 void CUI_SP_Base::UI_DisappearTick(_float fTimeDelta)
@@ -97,6 +172,22 @@ HRESULT CUI_SP_Base::Ready_Components()
 	/* Com_Texture*/
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_SP_Base"),
 		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_UI_Rank"),
+		TEXT("Com_RankTexture"), (CComponent**)&m_pRankTexture)))
+		return E_FAIL;
+
+
+	/* Com_Transform */
+	CTransform::tagTransformDesc		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof TransformDesc);
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_LockFree_Transform"),
+		TEXT("Com_RankTransform"), (CComponent**)&m_pRankTransform, &TransformDesc)))
 		return E_FAIL;
 
 

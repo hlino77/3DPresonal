@@ -42,7 +42,7 @@ HRESULT CUI_OtherPlayer::Initialize(void* pArg)
 
 	m_fAlpha = 0.5f;
 
-	m_vHp_GaugeColor = Vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	m_vHp_GaugeColor = Vec4(0.08f, 0.35f, 0.66f, 1.0f);
 
 	m_bActive = false;
 
@@ -160,7 +160,7 @@ HRESULT CUI_OtherPlayer::Render_MakeSRV()
 		}
 	}
 
-	CGameInstance::GetInstance()->DrawFont(L"Cascadia", szString, vPos, Vec4(0.0f, 0.0f, 1.0f, 1.0f), 0.0f, vOrigin, vScale);
+	CGameInstance::GetInstance()->DrawFont(L"Cascadia", szString, vPos, Vec4(0.08f, 0.35f, 0.66f, 1.0f), 0.0f, vOrigin, vScale);
 
 	return S_OK;
 }
