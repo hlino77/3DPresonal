@@ -116,7 +116,7 @@ protected:
 
 	_float							m_fFollowDistance = 0.0f;
 
-
+	atomic<_int>					m_iSlowMotionCount = 0;
 	
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 

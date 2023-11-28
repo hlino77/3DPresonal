@@ -97,6 +97,8 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 	//Culling
 	BoundingSphere m_tCullingSphere;
+
+	atomic<_int>					m_iSlowMotionCount = 0;
 public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free();

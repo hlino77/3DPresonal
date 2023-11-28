@@ -82,15 +82,26 @@ void CBoss_Server::Set_SlowMotion(_bool bSlow)
 {
 	if (bSlow)
 	{
-		m_fAttackMoveSpeed = 0.1f;
-		m_fAnimationSpeed = 0.01f;
-		m_pRigidBody->Set_Active(false);
+		if (m_iSlowMotionCount <= 0)
+		{
+			m_fAttackMoveSpeed = 0.1f;
+			m_fAnimationSpeed = 0.01f;
+			m_pRigidBody->Set_Active(false);
+		}
+		else
+			m_iSlowMotionCount++;
 	}
 	else
 	{
-		m_fAttackMoveSpeed = 8.0f;
-		m_fAnimationSpeed = 1.0f;
-		m_pRigidBody->Set_Active(true);
+		--m_iSlowMotionCount;
+
+		if (m_iSlowMotionCount <= 0)
+		{
+			m_fAttackMoveSpeed = 8.0f;
+			m_fAnimationSpeed = 1.0f;
+			m_pRigidBody->Set_Active(true);
+			m_iSlowMotionCount = 0;
+		}
 	}
 
 	Send_SlowMotion(bSlow);
