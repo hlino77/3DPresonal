@@ -193,7 +193,7 @@ void CSkill_RasenSyuriken::OnCollisionStay(const _uint iColLayer, CCollider* pOt
 
 void CSkill_RasenSyuriken::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
-	m_pSkillOwner->Set_SlowMotion(false);
+	//m_pSkillOwner->Set_SlowMotion(false);
 }
 
 HRESULT CSkill_RasenSyuriken::Ready_Coliders()

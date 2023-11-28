@@ -174,7 +174,7 @@ void CSkill_FireBall::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
 
 void CSkill_FireBall::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 {
-	m_pSkillOwner->Set_SlowMotion(false);
+	//m_pSkillOwner->Set_SlowMotion(false);
 }
 
 HRESULT CSkill_FireBall::Ready_Coliders()
