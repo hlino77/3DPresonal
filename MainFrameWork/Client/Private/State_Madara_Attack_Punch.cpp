@@ -30,7 +30,7 @@ HRESULT CState_Madara_Attack_Punch::Initialize()
 
 void CState_Madara_Attack_Punch::Enter_State()
 {
-	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 2, 0);
+	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 0, 0);
 }
 
 void CState_Madara_Attack_Punch::Tick_State(_float fTimeDelta)

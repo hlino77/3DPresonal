@@ -34,7 +34,7 @@ HRESULT CState_Madara_Attack_Punch_Server::Initialize()
 
 void CState_Madara_Attack_Punch_Server::Enter_State()
 {
-	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 2, 0);
+	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 0, 0);
 
 	m_pBoss->Set_TargetPos(m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
 
