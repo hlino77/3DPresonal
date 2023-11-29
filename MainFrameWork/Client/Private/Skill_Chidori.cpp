@@ -134,11 +134,6 @@ void CSkill_Chidori::LateTick(_float fTimeDelta)
 
 HRESULT CSkill_Chidori::Render()
 {
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-	{
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->Set_Center();
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
-	}
 	return S_OK;
 }
 

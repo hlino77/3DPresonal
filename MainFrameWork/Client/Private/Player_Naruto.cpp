@@ -48,6 +48,10 @@
 #include "State_Naruto_Skill_AerialRasengun_RunStart.h"
 #include "State_Naruto_Skill_AerialRasengun_Start.h"
 #include "State_Naruto_Skill_AerialRasenSyuriken.h"
+#include "State_Naruto_WireStart.h"
+#include "State_Naruto_WireDash_Start.h"
+#include "State_Naruto_WireDash_Loop.h"
+#include "State_Naruto_WireDash_End.h"
 
 
 
@@ -130,12 +134,6 @@ void CPlayer_Naruto::LateTick(_float fTimeDelta)
 HRESULT CPlayer_Naruto::Render()
 {
 	__super::Render();
-
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
-
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
 
 	return S_OK;
 }
@@ -415,6 +413,7 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"AerialRasenSyuriken", new CState_Naruto_Skill_AerialRasenSyuriken(L"AerialRasenSyuriken", this));
 
 
+	m_pStateMachine->Add_State(L"WireStart", new CState_Naruto_WireStart(L"WireStart", this));
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Naruto_Attack_Punch_Left(L"Attack_Normal_cmb01", this));
@@ -422,6 +421,12 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb03", new CState_Naruto_Attack_ElbowStrike(L"Attack_Normal_cmb03", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb04", new CState_Naruto_Attack_JumpDoubleKick(L"Attack_Normal_cmb04", this));
 	
+
+
+	m_pStateMachine->Add_State(L"WireDash_Start", new CState_Naruto_WireDash_Start(L"WireDash_Start", this));
+	m_pStateMachine->Add_State(L"WireDash_Loop", new CState_Naruto_WireDash_Loop(L"WireDash_Loop", this));
+	m_pStateMachine->Add_State(L"WireDash_End", new CState_Naruto_WireDash_End(L"WireDash_End", this));
+
 
 	m_pStateMachine->Change_State(L"Idle");
 

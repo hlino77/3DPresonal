@@ -97,6 +97,14 @@ void CPickingMgr::Compute_LocalLayInfo(Vec3* pDir, Vec3* pRayPos, CTransform* pT
 	*pDir = XMVector3TransformNormal(m_vRayDir, matWorldInv);
 }
 
+void CPickingMgr::Compute_LocalLayInfo(Vec3* pOutDir, Vec3* pOutRayPos, Vec3 vRayPos, Vec3 vRayDir, CTransform* pTransform)
+{
+	Matrix matWorldInv = pTransform->Get_WorldMatrixInverse();
+
+	*pOutRayPos = XMVector3TransformCoord(vRayPos, matWorldInv);
+	*pOutDir = XMVector3TransformNormal(vRayDir, matWorldInv);
+}
+
 
 CGameObject* CPickingMgr::Find_ColMesh(CGameObject* pObj)
 {
@@ -172,6 +180,67 @@ BOOL CPickingMgr::IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle)
 	}
 
 
+
+	return bRayHit;
+}
+
+BOOL CPickingMgr::IsPicking(Vec3 vRayPos, Vec3 vRayDir, CGameObject* _pObj, TRIAGLEDESC* tTriangle, _float fMinDistance)
+{
+	CModel* pModel = _pObj->Get_ModelCom();
+
+	if (pModel == nullptr)
+		return false;
+
+	CTransform* pTransform = _pObj->Get_TransformCom();
+	vector<CMesh*>& ObjectMeshes = pModel->Get_Meshes();
+
+	BOOL bRayHit = false;
+
+	for (auto& Mesh : ObjectMeshes)
+	{
+		Matrix matWorld = pTransform->Get_WorldMatrix();
+		VTXANIMMODEL* objVB = Mesh->Get_Vertices();
+		FACEINDICES32* objIB = Mesh->Get_Indices();
+		Matrix matTargetWorld = _pObj->Get_TransformCom()->Get_WorldMatrix();
+
+
+		_uint iNumVertices = Mesh->Get_NumVertices();
+		_uint iNumPrimitives = Mesh->Get_NumPrimitives();
+
+
+		Vec3 vOutRayDir, vOutRayPos;
+		Compute_LocalLayInfo(&vOutRayDir, &vOutRayPos, vRayPos, vRayDir, pTransform);
+
+		vOutRayDir.Normalize();
+
+		_float fU, fV, fDist;
+
+		_float fResultDist = -1.0f;
+
+		for (_uint i = 0; i < iNumPrimitives; ++i)
+		{
+			if (TriangleTests::Intersects(vOutRayPos,
+				vOutRayDir, XMLoadFloat3(&objVB[objIB[i]._0].vPosition),
+				XMLoadFloat3(&objVB[objIB[i]._1].vPosition),
+				XMLoadFloat3(&objVB[objIB[i]._2].vPosition), fDist))
+			{
+				if (fResultDist == -1.0f || fDist < fResultDist)
+				{
+					if (fDist <= fMinDistance)
+					{
+						fResultDist = fDist;
+						tTriangle->vPos0 = XMVector3TransformCoord(objVB[objIB[i]._0].vPosition, matTargetWorld);
+						tTriangle->vPos1 = XMVector3TransformCoord(objVB[objIB[i]._1].vPosition, matTargetWorld);
+						tTriangle->vPos2 = XMVector3TransformCoord(objVB[objIB[i]._2].vPosition, matTargetWorld);
+
+						tTriangle->fDist = fDist;
+
+						bRayHit = true;
+					}
+				}
+			}
+		}
+	}
 
 	return bRayHit;
 }

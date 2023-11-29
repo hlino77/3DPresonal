@@ -304,7 +304,6 @@ HRESULT CRenderer::Draw()
 
 
 	Render_Priority();
-	CNavigationMgr::GetInstance()->Render();
 
 	Render_NonAlphaBlend();
 	Render_StaticInstance();

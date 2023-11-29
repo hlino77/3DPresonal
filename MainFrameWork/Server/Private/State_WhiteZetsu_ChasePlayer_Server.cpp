@@ -46,6 +46,7 @@ void CState_WhiteZetsu_ChasePlayer_Server::Tick_State(_float fTimeDelta)
 	Vec3 vTargetPos = m_pMonster->Get_NearTarget()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	Vec3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
 
+
 	Vec3 vDir = vTargetPos - vPos;
 
 	_float fDistance = vDir.Length();

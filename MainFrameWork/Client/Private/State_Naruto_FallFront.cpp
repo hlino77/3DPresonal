@@ -90,6 +90,12 @@ void CState_Naruto_FallFront::Tick_State_Control(_float fTimeDelta)
 	}
 
 
+	if (KEY_TAP(KEY::CTRL))
+	{
+		m_pPlayer->Set_State(L"WireStart");
+		return;
+	}
+
 
 	Set_Ray();
 

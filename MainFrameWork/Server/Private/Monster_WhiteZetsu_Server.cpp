@@ -42,8 +42,10 @@ HRESULT CMonster_WhiteZetsu_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 2000;
+	m_iHp = 20;
 	m_iMaxHp = 20;
+
+	m_fFollowDistance = 40.0f;
 
     return S_OK;
 } 

@@ -91,12 +91,6 @@ HRESULT CBoss_Madara::Render()
 {
 	__super::Render();
 
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->DebugRender();
-
-	if (m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->IsActive())
-		m_Coliders[(_uint)LAYER_COLLIDER::LAYER_ATTACK]->DebugRender();
-
 	return S_OK;
 }
 

@@ -87,6 +87,7 @@
 #include "UI_BossIcon.h"
 #include "UI_MatchingLobbyTitle.h"
 #include "UI_OtherPlayer.h"
+#include "WireTrail.h"
 
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -688,6 +689,11 @@ HRESULT CLoader::Loading_For_Level_Arena()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_LightningTrail"),
 		CLightningTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_WireTrail"),
+		CWireTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

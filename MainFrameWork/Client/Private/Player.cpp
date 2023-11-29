@@ -18,7 +18,7 @@
 #include "Pool.h"
 #include "Teleport.h"
 #include "UI_OtherPlayer.h"
-
+#include "WireTrail.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext, L"Player", OBJ_TYPE::PLAYER)
@@ -72,6 +72,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_iMaxHp = 100;
 
 	
+
+	if (FAILED(Ready_WireTrail()))
+		return E_FAIL;
+
     return S_OK;
 }
 
@@ -87,6 +91,12 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, Vec3(73.43f, 27.93f, -37.87f));
 	}
+
+	if (KEY_TAP(KEY::F1))
+	{
+		Set_State(L"Idle");
+	}
+
 
 
 	if(!m_bWall && m_bNavi)
@@ -608,6 +618,35 @@ void CPlayer::Set_NickName(const wstring& szNickName)
 
 	if(m_bControl == false)
 		Ready_UI_OtherPlayer();
+}
+
+
+
+HRESULT CPlayer::Ready_WireTrail()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	CWireTrail::WireTrailDesc tDesc;
+	tDesc.pOwner = this;
+	tDesc.iBoneIndex = m_pModelCom->Find_BoneIndex(L"RightHandThumb3_end");
+
+	CWireTrail* pTrail = dynamic_cast<CWireTrail*>(pGameInstance->Add_GameObject(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_EFFECT, L"Prototype_GameObject_Effect_WireTrail", &tDesc));
+
+	if (pTrail == nullptr)
+	{
+		Safe_Release(pGameInstance);
+		return E_FAIL;
+	}
+
+
+	m_pWireTrail = pTrail;
+
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Components()

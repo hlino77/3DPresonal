@@ -301,6 +301,10 @@
     <ClInclude Include="..\Public\State_Naruto_Skill_AerialRasengun_RunStart.h" />
     <ClInclude Include="..\Public\State_Naruto_Skill_AerialRasengun_Start.h" />
     <ClInclude Include="..\Public\State_Naruto_Skill_AerialRasenSyuriken.h" />
+    <ClInclude Include="..\Public\State_Naruto_WireDash_End.h" />
+    <ClInclude Include="..\Public\State_Naruto_WireDash_Loop.h" />
+    <ClInclude Include="..\Public\State_Naruto_WireDash_Start.h" />
+    <ClInclude Include="..\Public\State_Naruto_WireStart.h" />
     <ClInclude Include="..\Public\State_Sasuke_Skill_AerialChidori_Attack.h" />
     <ClInclude Include="..\Public\State_Sasuke_Skill_AerialChidori_Charging.h" />
     <ClInclude Include="..\Public\State_Sasuke_Skill_AerialChidori_Loop.h" />
@@ -391,6 +395,7 @@
     <ClInclude Include="..\Public\UI_Title.h" />
     <ClInclude Include="..\Public\UI_TitleCloud.h" />
     <ClInclude Include="..\Public\UI_TitleSymbol.h" />
+    <ClInclude Include="..\Public\WireTrail.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -540,6 +545,10 @@
     <ClCompile Include="..\Private\State_Naruto_Skill_Rasengun_RunLoop.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Skill_Rasengun_RunStart.cpp" />
     <ClCompile Include="..\Private\State_Naruto_Skill_Rasengun_Start.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_WireDash_End.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_WireDash_Loop.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_WireDash_Start.cpp" />
+    <ClCompile Include="..\Private\State_Naruto_WireStart.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_DownToFloor.cpp" />
     <ClCompile Include="..\Private\State_Naruto_DownToFloor.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_FallBehind.cpp" />
@@ -628,6 +637,7 @@
     <ClCompile Include="..\Private\UI_Title.cpp" />
     <ClCompile Include="..\Private\UI_TitleCloud.cpp" />
     <ClCompile Include="..\Private\UI_TitleSymbol.cpp" />
+    <ClCompile Include="..\Private\WireTrail.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

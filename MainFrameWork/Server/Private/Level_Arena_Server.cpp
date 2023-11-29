@@ -322,7 +322,6 @@ HRESULT CLevel_Arena_Server::Broadcast_Monster(const wstring& szName, Vec3 vPos)
 
 	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
 
-	pMonster->Set_FollowDistance(15.0f);
 	CNavigationMgr::GetInstance()->Find_FirstCell(pMonster);
 
 

@@ -21,6 +21,7 @@ BEGIN(Client)
 
 class CUI_Hits;
 class CFootTrail;
+class CWireTrail;
 
 class CPlayer : public CGameObject
 {
@@ -157,6 +158,10 @@ public:
 
 
 	void			Set_DefaultUp(_bool bUp) { m_bSetDefaultUp = bUp; }
+
+
+	CWireTrail*				Get_WireTrail() { return m_pWireTrail; }
+	virtual HRESULT			Ready_WireTrail();
 protected:
 	virtual HRESULT Ready_Components();
 	
@@ -194,6 +199,9 @@ protected:
 	_bool							m_bSetDefaultUp = true;
 
 	atomic<_int>					m_iSlowMotionCount = 0;
+
+
+	CWireTrail*						m_pWireTrail = nullptr;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 	CShader* m_pShaderCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

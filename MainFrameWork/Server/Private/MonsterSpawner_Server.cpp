@@ -197,7 +197,6 @@ void CMonsterSpawner_Server::Send_Monster(const wstring& szModelName, Vec3 vPos)
 		return;
 
 	pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, vPos);
-	pMonster->Set_FollowDistance(10.0f);
 	CNavigationMgr::GetInstance()->Find_FirstCell(pMonster);
 
 	Safe_Release(pGameInstance);

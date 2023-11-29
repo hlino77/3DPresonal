@@ -162,11 +162,7 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 	_float fAngle = XMConvertToDegrees(m_fCameraAngle);
 
-	_float fDownAngle;
-	if (m_pPlayer->Is_Wall())
-		fDownAngle = 150.0f;
-	else
-		fDownAngle = 87.0f;
+	_float fDownAngle = 150.0f;
 
 	if (fAngle < 30.0f)
 	{
@@ -204,10 +200,6 @@ void CCamera_Player::Tick(_float fTimeDelta)
 	Vec3 vLook = Vec3::Lerp(vCamLook, vTargetLook, fLerpSpeed);
 	vLook.Normalize();
 
-
-	
-
-	
 	matWorld = Matrix::CreateWorld(vPos, -vLook, Vec3(0.0f, 1.0f, 0.0f));
 
 
@@ -230,6 +222,17 @@ void CCamera_Player::Tick(_float fTimeDelta)
 
 		matWorld = Matrix::CreateWorld(vPos, -vShakeLook, Vec3(0.0f, 1.0f, 0.0f));
 	}
+
+
+
+	if (m_pPlayer->Is_Wall() == false)
+	{
+		if (matWorld._42 < vPlayerPos.y - 0.8f)
+		{
+			matWorld._42 = vPlayerPos.y - 0.8f;
+		}
+	}
+
 
 
 	m_pTransformCom->Set_WorldMatrix(matWorld);

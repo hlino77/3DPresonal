@@ -37,10 +37,13 @@ public:
 
 private:
 	void	Compute_LocalLayInfo(Vec3* pDir, Vec3* pRayPos, CTransform* pTransform);
+	void	Compute_LocalLayInfo(Vec3* pOutDir, Vec3* pOutRayPos, Vec3 vRayPos, Vec3 vRayDir, CTransform* pTransform);
 
 	CGameObject* Find_ColMesh(CGameObject* pObj);
 public:
 	BOOL	IsPicking(CGameObject* _pObj, TRIAGLEDESC* tTriangle);
+	
+	BOOL	IsPicking(Vec3 vRayPos, Vec3 vRayDir, CGameObject* _pObj, TRIAGLEDESC* tTriangle, _float fMinDistance);
 
 private:
 	USE_LOCK

@@ -341,14 +341,14 @@ void CSkill_Rasengun::Add_Hit()
 void CSkill_Rasengun::CamShake()
 {
 	if (m_pSkillOwner->Is_Control())
-		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
 	else
 	{
 		Vec3 vCameraOwnerPos = CServerSessionManager::GetInstance()->Get_Player()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fDistance = (vCameraOwnerPos - vPos).Length();
 		if (fDistance < 5.0f)
-			CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+			CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 0.1f);
 	}
 }
 
