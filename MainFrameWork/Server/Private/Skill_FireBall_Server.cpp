@@ -91,7 +91,7 @@ void CSkill_FireBall_Server::OnCollisionExit(const _uint iColLayer, CCollider* p
 HRESULT CSkill_FireBall_Server::Ready_Coliders()
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(3.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(2.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 
 

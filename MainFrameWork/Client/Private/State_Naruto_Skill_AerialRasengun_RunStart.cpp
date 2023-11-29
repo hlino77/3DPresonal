@@ -132,7 +132,7 @@ void CState_Naruto_Skill_AerialRasengun_RunStart::Follow_Target(_float fTimeDelt
 	{
 		Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 		pTransform->LookAt_Lerp(vTargetPos, 10.0f, fTimeDelta);
-		pTransform->Go_Straight(10.0f, fTimeDelta);
+		pTransform->Go_Straight(15.0f, fTimeDelta);
 		return;
 	}
 
@@ -150,5 +150,5 @@ void CState_Naruto_Skill_AerialRasengun_RunStart::Follow_Target(_float fTimeDelt
 	pTransform->LookAt(vTargetPos);
 
 	if (fDistance > 1.4f)
-		pTransform->Go_Straight(10.0f, fTimeDelta);
+		pTransform->Go_Straight(15.0f, fTimeDelta);
 }

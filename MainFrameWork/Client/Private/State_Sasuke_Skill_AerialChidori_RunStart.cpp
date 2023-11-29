@@ -133,7 +133,7 @@ void CState_Sasuke_Skill_AerialChidori_RunStart::Follow_Target(_float fTimeDelta
 	{
 		Vec3 vTargetPos = m_pPlayer->Get_TargetPos();
 		pTransform->LookAt_Lerp(vTargetPos, 10.0f, fTimeDelta);
-		pTransform->Go_Straight(10.0f, fTimeDelta);
+		pTransform->Go_Straight(15.0f, fTimeDelta);
 		return;
 	}
 
@@ -147,5 +147,5 @@ void CState_Sasuke_Skill_AerialChidori_RunStart::Follow_Target(_float fTimeDelta
 	pTransform->LookAt(vTargetPos);
 
 	if (fDistance > 1.4f)
-		pTransform->Go_Straight(10.0f, fTimeDelta);
+		pTransform->Go_Straight(15.0f, fTimeDelta);
 }
