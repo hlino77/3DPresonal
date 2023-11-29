@@ -22,7 +22,7 @@ CState_Naruto_Attack_ElbowStrike::CState_Naruto_Attack_ElbowStrike(const CState&
 
 HRESULT CState_Naruto_Attack_ElbowStrike::Initialize()
 {
-	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_ElbowStrike", 2.5f);
+	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_ElbowStrike", 3.0f);
 	
 
 

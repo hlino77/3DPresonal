@@ -67,6 +67,30 @@ void CState_Naruto_FallFront::Tick_State_Control(_float fTimeDelta)
 	}
 
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN, false);
+			m_pPlayer->Set_State(L"AerialRasengun_Start");
+			return;
+		}
+	}
+
+
+	if (KEY_TAP(KEY::NUM_2))
+	{
+		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENSYURIKEN, false);
+			m_pPlayer->Set_State(L"AerialRasenSyuriken");
+			return;
+		}
+
+	}
+
+
+
 	Set_Ray();
 
 	Set_Wall();

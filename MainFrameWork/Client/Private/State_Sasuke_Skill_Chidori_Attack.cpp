@@ -59,7 +59,7 @@ void CState_Sasuke_Skill_Chidori_Attack::Tick_State_Control(_float fTimeDelta)
 
 	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
 
-	if (m_bAttack == false && iFrame > 3)
+	if (m_bAttack == false && iFrame > 4)
 	{
 		m_pPlayer->Get_Chidori()->Explosion();
 		m_bAttack = true;

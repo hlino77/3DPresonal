@@ -66,7 +66,7 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 
 	SKILLINFO tMeteor;
 	tMeteor.m_bReady = false;
-	tMeteor.m_fCoolTime = 90.0f;
+	tMeteor.m_fCoolTime = 60.0f;
 	tMeteor.m_fCurrCoolTime = 0.0f;
 
 	m_SkillInfo.push_back(tMeteor);
@@ -74,8 +74,8 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 
 	SKILLINFO tFireBall;
 	tFireBall.m_bReady = false;
-	tFireBall.m_fCoolTime = 30.0f;
-	tFireBall.m_fCurrCoolTime = 20.0f;
+	tFireBall.m_fCoolTime = 27.0f;
+	tFireBall.m_fCurrCoolTime = 15.0f;
 
 	m_SkillInfo.push_back(tFireBall);
 
@@ -326,6 +326,13 @@ void CBoss_Madara_Server::Set_Die()
 
 	m_bDie = true;
 }
+
+void CBoss_Madara_Server::ResetSkill(MADARA_SKILL eSkill)
+{
+	m_SkillInfo[eSkill].m_fCurrCoolTime = 0.0f;
+	m_SkillInfo[eSkill].m_bReady = false;
+}
+
 
 HRESULT CBoss_Madara_Server::Ready_Components()
 {

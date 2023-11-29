@@ -21,7 +21,7 @@ CState_Naruto_Attack_JumpDoubleKick::CState_Naruto_Attack_JumpDoubleKick(const C
 
 HRESULT CState_Naruto_Attack_JumpDoubleKick::Initialize()
 {
-	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpDoubleKick", 2.0f);
+	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_JumpDoubleKick", 2.5f);
 
 	if (m_iAnimIndex == -1)
 		return E_FAIL;

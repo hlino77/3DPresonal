@@ -1,36 +1,37 @@
 #include "stdafx.h"
-#include "State_Naruto_Skill_RasenSyuriken.h"
+#include "State_Naruto_Skill_AerialRasenSyuriken.h"
 #include "Player_Naruto.h"
 #include "Model.h"
 #include "StateMachine.h"
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "Skill_RasenSyuriken.h"
+#include "RigidBody.h"
 
 
-CState_Naruto_Skill_RasenSyuriken::CState_Naruto_Skill_RasenSyuriken(const wstring& strStateName, class CPlayer_Naruto* pPlayer)
+CState_Naruto_Skill_AerialRasenSyuriken::CState_Naruto_Skill_AerialRasenSyuriken(const wstring& strStateName, class CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
 	, m_pPlayer(pPlayer)
 {
 }
 
-CState_Naruto_Skill_RasenSyuriken::CState_Naruto_Skill_RasenSyuriken(const CState& rhs, class CStateMachine* pMachine)
+CState_Naruto_Skill_AerialRasenSyuriken::CState_Naruto_Skill_AerialRasenSyuriken(const CState& rhs, class CStateMachine* pMachine)
 	:CState(rhs, pMachine)
 {
 }
 
-HRESULT CState_Naruto_Skill_RasenSyuriken::Initialize()
+HRESULT CState_Naruto_Skill_AerialRasenSyuriken::Initialize()
 {
-	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Ninjutsu_TrueRasenShuriken", 1.5f);
+	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Ninjutsu_Aerial_TrueRasenShuriken1", 1.5f);
 
 	if (m_iAnimIndex == -1)
 		return E_FAIL;
 
 
 	if (m_pPlayer->Is_Control())
-		m_TickFunc = &CState_Naruto_Skill_RasenSyuriken::Tick_State_Control;
+		m_TickFunc = &CState_Naruto_Skill_AerialRasenSyuriken::Tick_State_Control;
 	else
-		m_TickFunc = &CState_Naruto_Skill_RasenSyuriken::Tick_State_NoneControl;
+		m_TickFunc = &CState_Naruto_Skill_AerialRasenSyuriken::Tick_State_NoneControl;
 
 
 	m_iAppearFrame = 9;
@@ -41,7 +42,7 @@ HRESULT CState_Naruto_Skill_RasenSyuriken::Initialize()
 	return S_OK;
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Enter_State()
+void CState_Naruto_Skill_AerialRasenSyuriken::Enter_State()
 {
 	if(m_pPlayer->Is_Control())
 		Set_Target();
@@ -51,23 +52,37 @@ void CState_Naruto_Skill_RasenSyuriken::Enter_State()
 	m_bAppear = false;
 
 	m_pPlayer->Set_Invincible(true);
+
+
+	m_pPlayer->Set_Gravity(false);
+	m_pPlayer->Set_DefaultUp(false);
+	m_pPlayer->Get_RigidBody()->UseDrag(false);
+	m_pPlayer->Get_RigidBody()->UseGravity(false);
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
+	m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Tick_State(_float fTimeDelta)
+void CState_Naruto_Skill_AerialRasenSyuriken::Tick_State(_float fTimeDelta)
 {
 	m_TickFunc(*this, fTimeDelta);
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Exit_State()
+void CState_Naruto_Skill_AerialRasenSyuriken::Exit_State()
 {
 	m_pPlayer->Set_Invincible(false);
+
+
+	m_pPlayer->Get_RigidBody()->UseDrag(true);
+	m_pPlayer->Set_Gravity(true);
+	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
+	m_pPlayer->Set_DefaultUp(true);
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Tick_State_Control(_float fTimeDelta)
+void CState_Naruto_Skill_AerialRasenSyuriken::Tick_State_Control(_float fTimeDelta)
 {
 	_uint iFrame = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
 
-	if (iFrame >= 45 && iFrame < m_iShootFrame - 5)
+	if (iFrame < m_iShootFrame)
 	{
 		LookAt_Target(fTimeDelta);
 	}
@@ -91,16 +106,16 @@ void CState_Naruto_Skill_RasenSyuriken::Tick_State_Control(_float fTimeDelta)
 	}
 
 	if (m_pPlayer->Get_ModelCom()->Is_AnimationEnd(m_iAnimIndex))
-		m_pPlayer->Set_State(L"Idle");
+		m_pPlayer->Set_State(L"Fall_Front");
 
 
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Tick_State_NoneControl(_float fTimeDelta)
+void CState_Naruto_Skill_AerialRasenSyuriken::Tick_State_NoneControl(_float fTimeDelta)
 {
 	_uint iFrame = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
 
-	if (iFrame >= 45 && iFrame < m_iShootFrame - 5)
+	if (iFrame < m_iShootFrame)
 	{
 		LookAt_Target(fTimeDelta);
 	}
@@ -128,7 +143,7 @@ void CState_Naruto_Skill_RasenSyuriken::Tick_State_NoneControl(_float fTimeDelta
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Set_Target()
+void CState_Naruto_Skill_AerialRasenSyuriken::Set_Target()
 {
 	m_pPlayer->Find_NearTarget();
 
@@ -160,7 +175,7 @@ void CState_Naruto_Skill_RasenSyuriken::Set_Target()
 	}
 }
 
-void CState_Naruto_Skill_RasenSyuriken::LookAt_Target(_float fTimeDelta)
+void CState_Naruto_Skill_AerialRasenSyuriken::LookAt_Target(_float fTimeDelta)
 {
 	CGameObject* pNearTarget = m_pPlayer->Get_NearTarget();
 
@@ -181,10 +196,13 @@ void CState_Naruto_Skill_RasenSyuriken::LookAt_Target(_float fTimeDelta)
 	Vec3 vDir = vTargetPos - vPos;
 	vDir.Normalize();
 
-	m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 8.0f, fTimeDelta);
+
+	m_pPlayer->Get_TransformCom()->SetUp_Lerp(vDir, 10.0f, fTimeDelta);
+	m_pPlayer->Get_TransformCom()->LookAt_Lerp_ForLand(vDir, 10.0f, fTimeDelta);
+	//m_pPlayer->Get_TransformCom()->LookAt_Lerp(vDir, 8.0f, fTimeDelta);
 }
 
-void CState_Naruto_Skill_RasenSyuriken::Free()
+void CState_Naruto_Skill_AerialRasenSyuriken::Free()
 {
 	__super::Free();
 }

@@ -29,8 +29,8 @@ HRESULT CLevel_Arena_Server::Initialize()
 {
 	CNavigationMgr::GetInstance()->Add_Navigation(L"Arena.navi");
 
-	m_iMonsterCount = 16;
-	m_iMaxMonster = 8;
+	m_iMonsterCount = 1;
+	m_iMaxMonster = 1;
 
 	Ready_Events();
 

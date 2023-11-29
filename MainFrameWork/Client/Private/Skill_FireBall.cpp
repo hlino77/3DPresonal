@@ -360,7 +360,7 @@ void CSkill_FireBall::Follow_Target(_float fTimeDelta)
 		m_pTransformCom->LookAt_Lerp_ForLand(vDir, 0.5f, fTimeDelta);
 	}
 
-	m_pTransformCom->Go_Straight(10.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(13.0f, fTimeDelta);
 }
 
 void CSkill_FireBall::Effect_Explosion()

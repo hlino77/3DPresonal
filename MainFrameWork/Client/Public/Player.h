@@ -154,6 +154,9 @@ public:
 
 	const wstring& Get_NickName() { return m_szNickName; }
 	void			Set_NickName(const wstring& szNickName);
+
+
+	void			Set_DefaultUp(_bool bUp) { m_bSetDefaultUp = bUp; }
 protected:
 	virtual HRESULT Ready_Components();
 	
@@ -188,6 +191,7 @@ protected:
 
 
 	_bool							m_bEnemyBodyHit = false;
+	_bool							m_bSetDefaultUp = true;
 
 	atomic<_int>					m_iSlowMotionCount = 0;
 protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */

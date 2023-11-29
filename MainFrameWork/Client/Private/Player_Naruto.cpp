@@ -41,6 +41,14 @@
 #include "Skill_RasenSyuriken.h"
 #include "State_Naruto_Skill_RasenSyuriken.h"
 #include "UI_Skill.h"
+#include "State_Naruto_Skill_AerialRasengun_Attack.h"
+#include "State_Naruto_Skill_AerialRasengun_Charging.h"
+#include "State_Naruto_Skill_AerialRasengun_Loop.h"
+#include "State_Naruto_Skill_AerialRasengun_RunLoop.h"
+#include "State_Naruto_Skill_AerialRasengun_RunStart.h"
+#include "State_Naruto_Skill_AerialRasengun_Start.h"
+#include "State_Naruto_Skill_AerialRasenSyuriken.h"
+
 
 
 CPlayer_Naruto::CPlayer_Naruto(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -396,7 +404,17 @@ HRESULT CPlayer_Naruto::Ready_State()
 	m_pStateMachine->Add_State(L"Rasengun_RunLoop", new CState_Naruto_Skill_Rasengun_RunLoop(L"Rasengun_RunLoop", this));
 	m_pStateMachine->Add_State(L"Rasengun_Attack", new CState_Naruto_Skill_Rasengun_Attack(L"Rasengun_Attack", this));
 
+	m_pStateMachine->Add_State(L"AerialRasengun_Start", new CState_Naruto_Skill_AerialRasengun_Start(L"AerialRasengun_Start", this));
+	m_pStateMachine->Add_State(L"AerialRasengun_Charge", new CState_Naruto_Skill_AerialRasengun_Charging(L"AerialRasengun_Charge", this));
+	m_pStateMachine->Add_State(L"AerialRasengun_Loop", new CState_Naruto_Skill_AerialRasengun_Loop(L"AerialRasengun_Loop", this));
+	m_pStateMachine->Add_State(L"AerialRasengun_RunStart", new CState_Naruto_Skill_AerialRasengun_RunStart(L"AerialRasengun_RunStart", this));
+	m_pStateMachine->Add_State(L"AerialRasengun_RunLoop", new CState_Naruto_Skill_AerialRasengun_RunLoop(L"AerialRasengun_RunLoop", this));
+	m_pStateMachine->Add_State(L"AerialRasengun_Attack", new CState_Naruto_Skill_AerialRasengun_Attack(L"AerialRasengun_Attack", this));
+
 	m_pStateMachine->Add_State(L"RasenSyuriken", new CState_Naruto_Skill_RasenSyuriken(L"RasenSyuriken", this));
+	m_pStateMachine->Add_State(L"AerialRasenSyuriken", new CState_Naruto_Skill_AerialRasenSyuriken(L"AerialRasenSyuriken", this));
+
+
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Naruto_Attack_Punch_Left(L"Attack_Normal_cmb01", this));

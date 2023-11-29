@@ -300,21 +300,15 @@ void CSkill_RasenSyuriken::Shoot()
 {
 	m_pNearTarget = m_pSkillOwner->Get_NearTarget();
 
-	Vec3 vPlayerPos = m_pSkillOwner->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	Vec3 vPlayerLook = m_pSkillOwner->Get_TransformCom()->Get_State(CTransform::STATE_LOOK);
-	Vec3 vPlayerUp = m_pSkillOwner->Get_TransformCom()->Get_State(CTransform::STATE_UP);
 	vPlayerLook.Normalize();
-	vPlayerUp.Normalize();
 
-	Vec3 vPos = vPlayerPos + (vPlayerLook * 2.0f) + (vPlayerUp * 1.5f);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	m_pTransformCom->LookAt(vPos + vPlayerLook);
-
 
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
-
 
 	m_bShoot = true;
 }
@@ -408,7 +402,7 @@ void CSkill_RasenSyuriken::Follow_Target(_float fTimeDelta)
 		m_pTransformCom->LookAt_Lerp_ForLand(vDir, 0.5f, fTimeDelta);
 	}
 
-	m_pTransformCom->Go_Straight(10.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(13.0f, fTimeDelta);
 }
 
 void CSkill_RasenSyuriken::Effect_Explosion()

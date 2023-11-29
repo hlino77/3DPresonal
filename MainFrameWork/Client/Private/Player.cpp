@@ -99,17 +99,17 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		Update_Skill(Skill, fTimeDelta);
 	}
+
+
+	if (m_bWall && m_bControl)
+		Set_PlayerToWall(fTimeDelta);
+	else if (m_bSetDefaultUp && m_bWall == false)
+		Set_PlayerUp(fTimeDelta);
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
 	m_PlayAnimation = std::async(&CModel::Play_Animation, m_pModelCom, fTimeDelta * m_fAnimationSpeed);
-
-	if (m_bWall && m_bControl)
-		Set_PlayerToWall(fTimeDelta);
-	else if (m_bWall == false && m_bControl)
-		Set_PlayerUp(fTimeDelta);
-
 
 	if (nullptr == m_pRendererCom)
 		return;

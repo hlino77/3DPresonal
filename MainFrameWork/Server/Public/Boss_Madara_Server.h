@@ -57,6 +57,7 @@ public:
 
 	_bool				Get_SkillReady(MADARA_SKILL eSkill) { return m_SkillInfo[eSkill].m_bReady; }
 	void				Set_SkillReady(MADARA_SKILL eSkill, _bool bReady) { m_SkillInfo[eSkill].m_bReady = bReady; }
+	void				ResetSkill(MADARA_SKILL eSkill);
 
 	void				Set_NormalAttackHit(_bool bHit) { m_bNormalAttackHit = bHit; }
 	_bool				Is_NormalAttackHit() { return m_bNormalAttackHit; }

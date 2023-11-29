@@ -42,6 +42,14 @@
 #include "Skill_FireBall.h"
 #include "State_Sasuke_Skill_FireBall.h"
 #include "UI_Skill.h"
+#include "State_Sasuke_Skill_AerialChidori_Attack.h"
+#include "State_Sasuke_Skill_AerialChidori_Charging.h"
+#include "State_Sasuke_Skill_AerialChidori_Loop.h"
+#include "State_Sasuke_Skill_AerialChidori_RunLoop.h"
+#include "State_Sasuke_Skill_AerialChidori_RunStart.h"
+#include "State_Sasuke_Skill_AerialChidori_Start.h"
+#include "State_Sasuke_Skill_AerialFireBall.h"
+
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -440,7 +448,19 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Chidori_RunLoop", new CState_Sasuke_Skill_Chidori_RunLoop(L"Chidori_RunLoop", this));
 	m_pStateMachine->Add_State(L"Chidori_Attack", new CState_Sasuke_Skill_Chidori_Attack(L"Chidori_Attack", this));
 
+
+	m_pStateMachine->Add_State(L"AerialChidori_Start", new CState_Sasuke_Skill_AerialChidori_Start(L"AerialChidori_Start", this));
+	m_pStateMachine->Add_State(L"AerialChidori_Charge", new CState_Sasuke_Skill_AerialChidori_Charging(L"AerialChidori_Charge", this));
+	m_pStateMachine->Add_State(L"AerialChidori_Loop", new CState_Sasuke_Skill_AerialChidori_Loop(L"AerialChidori_Loop", this));
+	m_pStateMachine->Add_State(L"AerialChidori_RunStart", new CState_Sasuke_Skill_AerialChidori_RunStart(L"AerialChidori_RunStart", this));
+	m_pStateMachine->Add_State(L"AerialChidori_RunLoop", new CState_Sasuke_Skill_AerialChidori_RunLoop(L"AerialChidori_RunLoop", this));
+	m_pStateMachine->Add_State(L"AerialChidori_Attack", new CState_Sasuke_Skill_AerialChidori_Attack(L"AerialChidori_Attack", this));
+
+
+
 	m_pStateMachine->Add_State(L"FireBall", new CState_Sasuke_Skill_FireBall(L"FireBall", this));
+	m_pStateMachine->Add_State(L"AerialFireBall", new CState_Sasuke_Skill_AerialFireBall(L"AerialFireBall", this));
+
 
 
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb01", new CState_Sasuke_Attack_cmb01(L"Attack_Normal_cmb01", this));

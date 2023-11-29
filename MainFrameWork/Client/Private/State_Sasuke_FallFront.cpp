@@ -68,6 +68,31 @@ void CState_Sasuke_FallFront::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::NUM_1))
+	{
+		if (m_pPlayer->Get_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::CHIDORI))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::CHIDORI, false);
+			m_pPlayer->Set_State(L"AerialChidori_Start");
+			return;
+		}
+	}
+
+
+	if (KEY_TAP(KEY::NUM_2))
+	{
+		/*if (m_pPlayer->Get_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::FIREBALL))
+		{
+			m_pPlayer->Set_SkillReady(CPlayer_Sasuke::SASUKE_SKILL::FIREBALL, false);
+			m_pPlayer->Set_State(L"FireBall");
+			return;
+		}*/
+
+		m_pPlayer->Set_State(L"AerialFireBall");
+		return;
+	}
+
+
 
 	Set_Ray();
 

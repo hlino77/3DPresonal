@@ -21,7 +21,7 @@ CState_Naruto_Attack_Punch_Left::CState_Naruto_Attack_Punch_Left(const CState& r
 
 HRESULT CState_Naruto_Attack_Punch_Left::Initialize()
 {
-	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch_Left", 2.0f);
+	m_iAnimIndex = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Attack_Punch_Left", 3.0f);
 
 	if (m_iAnimIndex == -1)
 		return E_FAIL;
