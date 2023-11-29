@@ -49,7 +49,10 @@
 #include "State_Sasuke_Skill_AerialChidori_RunStart.h"
 #include "State_Sasuke_Skill_AerialChidori_Start.h"
 #include "State_Sasuke_Skill_AerialFireBall.h"
-
+#include "State_Sasuke_WireStart.h"
+#include "State_Sasuke_WireDash_Start.h"
+#include "State_Sasuke_WireDash_Loop.h"
+#include "State_Sasuke_WireDash_End.h"
 
 
 CPlayer_Sasuke::CPlayer_Sasuke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -461,7 +464,12 @@ HRESULT CPlayer_Sasuke::Ready_State()
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb02", new CState_Sasuke_Attack_cmb03(L"Attack_Normal_cmb02", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb03", new CState_Sasuke_Attack_cmb08(L"Attack_Normal_cmb03", this));
 	m_pStateMachine->Add_State(L"Attack_Normal_cmb04", new CState_Sasuke_Attack_cmb06(L"Attack_Normal_cmb04", this));
-	
+
+	m_pStateMachine->Add_State(L"WireStart", new CState_Sasuke_WireStart(L"WireStart", this));
+	m_pStateMachine->Add_State(L"WireDash_Start", new CState_Sasuke_WireDash_Start(L"WireDash_Start", this));
+	m_pStateMachine->Add_State(L"WireDash_Loop", new CState_Sasuke_WireDash_Loop(L"WireDash_Loop", this));
+	m_pStateMachine->Add_State(L"WireDash_End", new CState_Sasuke_WireDash_End(L"WireDash_End", this));
+
 
 	m_pStateMachine->Change_State(L"Idle");
 

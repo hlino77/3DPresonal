@@ -358,6 +358,10 @@
     <ClInclude Include="..\Public\State_Sasuke_WalkEnd.h" />
     <ClInclude Include="..\Public\State_Sasuke_WalkLoop.h" />
     <ClInclude Include="..\Public\State_Sasuke_WallLand.h" />
+    <ClInclude Include="..\Public\State_Sasuke_WireDash_End.h" />
+    <ClInclude Include="..\Public\State_Sasuke_WireDash_Loop.h" />
+    <ClInclude Include="..\Public\State_Sasuke_WireDash_Start.h" />
+    <ClInclude Include="..\Public\State_Sasuke_WireStart.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Appear.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Kick.h" />
     <ClInclude Include="..\Public\State_WhiteZetsu_Attack_Normal.h" />
@@ -597,6 +601,10 @@
     <ClCompile Include="..\Private\State_Sasuke_WalkEnd.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_WalkLoop.cpp" />
     <ClCompile Include="..\Private\State_Sasuke_WallLand.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_WireDash_End.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_WireDash_Loop.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_WireDash_Start.cpp" />
+    <ClCompile Include="..\Private\State_Sasuke_WireStart.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Appear.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Kick.cpp" />
     <ClCompile Include="..\Private\State_WhiteZetsu_Attack_Normal.cpp" />

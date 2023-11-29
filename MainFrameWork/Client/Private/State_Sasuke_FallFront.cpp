@@ -92,6 +92,11 @@ void CState_Sasuke_FallFront::Tick_State_Control(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_TAP(KEY::CTRL))
+	{
+		m_pPlayer->Set_State(L"WireStart");
+		return;
+	}
 
 
 	Set_Ray();
