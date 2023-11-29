@@ -348,7 +348,7 @@ void CSkill_Rasengun::CamShake()
 		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fDistance = (vCameraOwnerPos - vPos).Length();
 		if (fDistance < 5.0f)
-			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+			CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 0.2f);
 	}
 }
 
