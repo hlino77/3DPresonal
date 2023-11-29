@@ -2,7 +2,10 @@
 
 #include "Client_Defines.h"
 #include "Level.h"
-BEGIN(ENGINE)
+
+
+
+BEGIN(Engine)
 
 class CRenderer;
 END
