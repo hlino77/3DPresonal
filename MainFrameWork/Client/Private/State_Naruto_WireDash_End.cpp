@@ -40,6 +40,7 @@ void CState_Naruto_WireDash_End::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 
+	m_pPlayer->Set_Wall(true);
 	m_pPlayer->Get_RigidBody()->UseDrag(true);
 	m_pPlayer->Set_Gravity(false);
 	m_pPlayer->Get_RigidBody()->UseGravity(false);
