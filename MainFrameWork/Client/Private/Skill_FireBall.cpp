@@ -414,8 +414,7 @@ void CSkill_FireBall::Effect_Explosion()
 
 	pExplosionRing->Appear(vPos, Vec3(20.0f, 20.0f, 0.0f));
 
-	if (m_pSkillOwner->Is_Control())
-		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	CamShake();
 }
 
 void CSkill_FireBall::Effect_Shooting(_float fTimeDelta)
@@ -437,6 +436,20 @@ void CSkill_FireBall::Effect_Shooting(_float fTimeDelta)
 			}
 		}
 		m_fCurrEffectTime = 0.0f;
+	}
+}
+
+void CSkill_FireBall::CamShake()
+{
+	if (m_pSkillOwner->Is_Control())
+		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	else
+	{
+		Vec3 vCameraOwnerPos = CServerSessionManager::GetInstance()->Get_Player()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float fDistance = (vCameraOwnerPos - vPos).Length();
+		if(fDistance < 15.0f)
+			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
 	}
 }
 

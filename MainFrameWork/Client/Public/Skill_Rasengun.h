@@ -47,7 +47,7 @@ private:
 	void		Effect_LineCircle();
 	void		Effect_SmokeRing(_float fTime, _float fBaseScale);
 	void		Add_Hit();
-
+	void		CamShake();
 private:
 	_bool	m_bExplosion = false;
 	_float	m_fCurrTime = 0.0f;

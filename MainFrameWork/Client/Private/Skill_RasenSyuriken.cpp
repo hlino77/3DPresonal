@@ -199,7 +199,7 @@ void CSkill_RasenSyuriken::OnCollisionExit(const _uint iColLayer, CCollider* pOt
 HRESULT CSkill_RasenSyuriken::Ready_Coliders()
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(false);
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(3.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(2.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.0f, 0.0f));
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
@@ -429,8 +429,7 @@ void CSkill_RasenSyuriken::Effect_Explosion()
 		}
 	}
 
-	if(m_pSkillOwner->Is_Control())
-		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	CamShake();
 }
 
 void CSkill_RasenSyuriken::Update_Transform()
@@ -451,6 +450,20 @@ void CSkill_RasenSyuriken::Update_Transform()
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, vUp);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, vLook);
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, -vRight);
+}
+
+void CSkill_RasenSyuriken::CamShake()
+{
+	if (m_pSkillOwner->Is_Control())
+		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	else
+	{
+		Vec3 vCameraOwnerPos = CServerSessionManager::GetInstance()->Get_Player()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float fDistance = (vCameraOwnerPos - vPos).Length();
+		if (fDistance < 15.0f)
+			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	}
 }
 
 

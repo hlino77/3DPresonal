@@ -61,7 +61,7 @@ protected:
 private:
 	HRESULT Ready_Trails();
 	void				Add_Hit();
-
+	void		CamShake();
 private:
 	_bool	m_bExplosion = false;
 	_float	m_fCurrTime = 0.0f;

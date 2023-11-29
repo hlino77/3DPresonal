@@ -456,14 +456,14 @@ HRESULT CPlayer_Naruto::Ready_SkillUI()
 
 	SKILLINFO tRasengan;
 	tRasengan.m_bReady = true;
-	tRasengan.m_fCoolTime = 15.0f;
+	tRasengan.m_fCoolTime = 1.0f;
 	tRasengan.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tRasengan);
 
 
 	SKILLINFO tRasenSyuriken;
 	tRasenSyuriken.m_bReady = true;
-	tRasenSyuriken.m_fCoolTime = 30.0f;
+	tRasenSyuriken.m_fCoolTime = 1.0f;
 	tRasenSyuriken.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tRasenSyuriken);
 

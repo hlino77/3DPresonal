@@ -377,14 +377,14 @@ HRESULT CPlayer_Sasuke::Ready_SkillUI()
 
 	SKILLINFO tChidori;
 	tChidori.m_bReady = true;
-	tChidori.m_fCoolTime = 15.0f;
+	tChidori.m_fCoolTime = 1.0f;
 	tChidori.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tChidori);
 
 
 	SKILLINFO tFireBall;
 	tFireBall.m_bReady = true;
-	tFireBall.m_fCoolTime = 30.0f;
+	tFireBall.m_fCoolTime = 1.0f;
 	tFireBall.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tFireBall);
 

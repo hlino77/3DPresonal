@@ -53,6 +53,8 @@ private:
 	void		Effect_Explosion();
 
 	void		Update_Transform();
+
+	void		CamShake();
 private:
 	_bool	m_bExplosion = false;
 	_float	m_fCurrTime = 0.0f;

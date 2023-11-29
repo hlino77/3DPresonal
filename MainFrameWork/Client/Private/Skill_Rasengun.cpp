@@ -80,7 +80,7 @@ void CSkill_Rasengun::Tick(_float fTimeDelta)
 				Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
 				if (m_bAttackTime)
-					dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+					CamShake();
 			}
 				
 
@@ -98,6 +98,9 @@ void CSkill_Rasengun::Tick(_float fTimeDelta)
 			Effect_SmokeRing(0.5f, m_fSmokeRingScale);
 			m_fSmokeRingScale += 0.1f;
 			m_fEffectCurrTime = 0.0f;
+
+			if (m_bAttackTime)
+				CamShake();
 		}
 
 
@@ -108,6 +111,8 @@ void CSkill_Rasengun::Tick(_float fTimeDelta)
 			m_fCurrHitTime = 0.0f;
 		}	
 	}
+
+
 }
 
 void CSkill_Rasengun::LateTick(_float fTimeDelta)
@@ -128,8 +133,6 @@ void CSkill_Rasengun::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		m_pSkillOwner->Set_SlowMotion(true);
 		m_fCurrTime = m_fAttackTime;
-		if (m_pSkillOwner->Is_Control())
-			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 10.0f);
 		m_bEffect = true;
 		m_bAttackTime = true;
 	}
@@ -333,6 +336,20 @@ void CSkill_Rasengun::Add_Hit()
 		pPlayer->Add_Hit();
 	}
 
+}
+
+void CSkill_Rasengun::CamShake()
+{
+	if (m_pSkillOwner->Is_Control())
+		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	else
+	{
+		Vec3 vCameraOwnerPos = CServerSessionManager::GetInstance()->Get_Player()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float fDistance = (vCameraOwnerPos - vPos).Length();
+		if (fDistance < 5.0f)
+			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+	}
 }
 
 

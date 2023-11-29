@@ -34,6 +34,7 @@ public:
 
 	virtual HRESULT					Ready_Coliders();
 
+
 public:
 	void				Send_SkillInfo();
 
@@ -48,6 +49,8 @@ private:
 	void		Effect_Explosion();
 	void		Effect_Shooting(_float fTimeDelta);
 
+
+	void		CamShake();
 private:
 	_bool	m_bExplosion = false;
 	_float	m_fCurrTime = 0.0f;

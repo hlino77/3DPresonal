@@ -98,7 +98,7 @@ void CSkill_Chidori::Tick(_float fTimeDelta)
 				Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_ATTACK);
 
 				if (m_bAttackTime)
-					dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+					CamShake();
 			}
 
 			DisAppearTrail();
@@ -114,6 +114,9 @@ void CSkill_Chidori::Tick(_float fTimeDelta)
 		ChidoriEffect();
 		Add_Hit();
 		m_fEffectCurrTime = 0.0f;
+
+		if (m_bAttackTime)
+			CamShake();
 	}
 
 
@@ -148,8 +151,6 @@ void CSkill_Chidori::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 	{
 		m_pSkillOwner->Set_SlowMotion(true);
 		m_fCurrTime = m_fAttackTime;
-		if(m_pSkillOwner->Is_Control())
-			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 10.0f);
 		m_bEffect = true;
 		m_bAttackTime = true;
 		m_eState = CHIDORISTATE::HITEXPLOSION;
@@ -497,6 +498,19 @@ void CSkill_Chidori::Add_Hit()
 	}
 }
 
+void CSkill_Chidori::CamShake()
+{
+	if (m_pSkillOwner->Is_Control())
+		dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+	else
+	{
+		Vec3 vCameraOwnerPos = CServerSessionManager::GetInstance()->Get_Player()->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float fDistance = (vCameraOwnerPos - vPos).Length();
+		if (fDistance < 5.0f)
+			dynamic_cast<CPlayer*>(m_pSkillOwner)->Get_Camera()->Cam_Shake(0.001f, 0.1f);
+	}
+}
 
 
 
