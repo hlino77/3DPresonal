@@ -261,8 +261,8 @@ void CMonster_Server::Set_SlowMotion(_bool bSlow)
 			m_fAnimationSpeed = 0.01f;
 			m_pRigidBody->Set_Active(false);
 		}
-		else
-			m_iSlowMotionCount++;
+
+		m_iSlowMotionCount++;
 	}
 	else
 	{
