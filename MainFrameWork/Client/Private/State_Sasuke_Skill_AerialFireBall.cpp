@@ -35,6 +35,9 @@ HRESULT CState_Sasuke_Skill_AerialFireBall::Initialize()
 
 	m_iSkillFrame = 15;
 
+
+
+	
 	return S_OK;
 }
 
@@ -54,6 +57,9 @@ void CState_Sasuke_Skill_AerialFireBall::Enter_State()
 	m_pPlayer->Get_RigidBody()->UseGravity(false);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(false);
 	m_pPlayer->Get_RigidBody()->ClearForce(ForceMode::VELOCITY_CHANGE);
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_Sasuke_Skill_AerialFireBall::Tick_State(_float fTimeDelta)

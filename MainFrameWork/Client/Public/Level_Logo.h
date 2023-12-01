@@ -19,6 +19,7 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 	virtual HRESULT Exit();
 
+	HRESULT Ready_SoundTrack();
 
 	void Tick_LOGO(_float fTimeDelta);
 	void Tick_NICKNAME(_float fTimeDelta);

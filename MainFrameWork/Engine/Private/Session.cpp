@@ -94,6 +94,7 @@ bool Session::RegisterConnect()
 	if (SocketUtils::BindAnyAddress(_socket, 0/*³²´Â°Å*/) == false)
 		return false;
 
+
 	_connectEvent.Init();
 	_connectEvent.owner = shared_from_this(); // ADD_REF
 

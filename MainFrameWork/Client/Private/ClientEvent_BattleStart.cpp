@@ -44,7 +44,7 @@ void CClientEvent_BattleStart::Exit_Event()
 
 	m_pBattleStart->Disappear();
 
-	CGameInstance::GetInstance()->PlayBGM(L"ArenaBattle.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
+	CGameInstance::GetInstance()->PlayBGM(L"ArenaBattle.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.1f);
 
 
 	Safe_Release(pGameInstance);

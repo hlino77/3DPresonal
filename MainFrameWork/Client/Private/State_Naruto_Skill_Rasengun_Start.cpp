@@ -31,6 +31,7 @@ HRESULT CState_Naruto_Skill_Rasengun_Start::Initialize()
 	else
 		m_TickFunc = &CState_Naruto_Skill_Rasengun_Start::Tick_State_NoneControl;
 
+	
 
 	return S_OK;
 }
@@ -40,6 +41,8 @@ void CState_Naruto_Skill_Rasengun_Start::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 
 	m_pPlayer->Set_Invincible(true);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_Naruto_Skill_Rasengun_Start::Tick_State(_float fTimeDelta)

@@ -509,6 +509,36 @@ HRESULT CGameInstance::CheckPlaySoundFile(const wstring& strSoundKey, _uint iCha
 	return m_pSoundMgr->CheckPlaySoundFile(strSoundKey, iChannel, fVolume);
 }
 
+HRESULT CGameInstance::Initialize_LoopChannel(_uint iStart, _uint iEnd)
+{
+	return m_pSoundMgr->Initialize_LoopChannel(iStart, iEnd);
+}
+
+HRESULT CGameInstance::PlaySound_Distance(const wstring& strSoundKey, _uint iChannel, _float fVolume, Vec3 vPos, _float fRange)
+{
+	return m_pSoundMgr->PlaySound_Distance(strSoundKey, iChannel, fVolume, vPos, fRange);
+}
+
+HRESULT CGameInstance::PlaySoundFile_LoopChannel(const wstring& strSoundKey, _float fVolume)
+{
+	return m_pSoundMgr->PlaySoundFile_LoopChannel(strSoundKey, fVolume);
+}
+
+HRESULT CGameInstance::PlaySound_Distance_LoopChannel(const wstring& strSoundKey, _float fVolume, Vec3 vPos, _float fRange)
+{
+	return m_pSoundMgr->PlaySound_Distance_LoopChannel(strSoundKey, fVolume, vPos, fRange);
+}
+
+HRESULT CGameInstance::Add_SoundTrack(const wstring& strSoundTrack, const wstring& strSoundKey)
+{
+	return m_pSoundMgr->Add_SoundTrack(strSoundTrack, strSoundKey);
+}
+
+const wstring& CGameInstance::Get_RandomSoundKey(const wstring& strSoundTrack)
+{
+	return m_pSoundMgr->Get_RandomSoundKey(strSoundTrack);
+}
+
 
 
 void CGameInstance::Release_Engine()

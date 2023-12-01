@@ -33,8 +33,12 @@ HRESULT CLevel_Logo::Initialize()
 	{
 	}*/
 
+
+	if (FAILED(Ready_SoundTrack()))
+		return E_FAIL;
+
 	CGameInstance::GetInstance()->PlayBGM(L"LoggoSound.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
-	
+
 	return S_OK;
 }
 
@@ -69,6 +73,22 @@ HRESULT CLevel_Logo::Exit()
 	CGameInstance::GetInstance()->StopSoundAll();
 
 
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_SoundTrack()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+
+	pGameInstance->Add_SoundTrack(L"MoveSound", L"Move_1.wav");
+	pGameInstance->Add_SoundTrack(L"MoveSound", L"Move_2.wav");
+	pGameInstance->Add_SoundTrack(L"MoveSound", L"Move_3.wav");
+
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

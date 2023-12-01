@@ -34,7 +34,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
-	g_fVolume = 0.2f;
+	g_fVolume = 0.5f;
 
 
 	/* 1. 내 게임의 초기화를 수행할꺼야. */
@@ -69,6 +69,9 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(Ready_Prototype_Font()))
 		return E_FAIL;
+
+
+	
 
 	//ShowCursor(false);
 
@@ -135,6 +138,8 @@ HRESULT CMainApp::Initialize_Client()
 	CEventMgr::GetInstance()->Reserve_EventMgr(m_pDevice, m_pContext);
 	
 	CPhysXMgr::GetInstance()->ReserveManager();
+
+	CGameInstance::GetInstance()->Initialize_LoopChannel(CHANNELID::CHANNEL_LOOPSTART, CHANNEL_END);
 
 	// Manager Reserve
 	return S_OK;

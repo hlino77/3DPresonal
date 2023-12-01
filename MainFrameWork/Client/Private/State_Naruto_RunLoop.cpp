@@ -86,6 +86,9 @@ void CState_Naruto_RunLoop::Tick_State_Control(_float fTimeDelta)
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
 
 
+	Update_MoveSound();
+
+
 	if (KEY_TAP(KEY::NUM_1))
 	{
 		if (m_pPlayer->Get_SkillReady(CPlayer_Naruto::NARUTO_SKILL::RASENGAN))
@@ -150,6 +153,28 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+}
+
+void CState_Naruto_RunLoop::Update_MoveSound()
+{
+	_uint iFrame = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_iRun_Loop);
+
+	_uint iFirstFrame = 1;
+	_uint iSecondFrame = 6;
+
+	if (iFrame == iFirstFrame || iFrame == iFirstFrame + 1 || iFrame == iSecondFrame || iFrame == iSecondFrame + 1)
+	{
+		if (m_bMoveSound == false)
+		{
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Move_2.wav", g_fVolume * 0.3f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+			m_bMoveSound = true;
+		}
+			
+	}
+	else
+		m_bMoveSound = false;
+
+
 }
 
 void CState_Naruto_RunLoop::Set_TargetPos(Vec3 vDir)

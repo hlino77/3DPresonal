@@ -47,6 +47,8 @@ HRESULT CLevel_Lobby::Initialize()
 		return E_FAIL;
 
 
+
+
 	CGameInstance::GetInstance()->PlayBGM(L"MatchingLobbySound.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
 
 	return S_OK;

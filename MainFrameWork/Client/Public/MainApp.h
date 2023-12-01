@@ -54,6 +54,8 @@ public:
 	void Tick(_float fTimeDelta);
 	HRESULT Render();
 
+
+
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 
@@ -72,6 +74,9 @@ private:
 	HRESULT Initialize_Client();
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Font();
+
+
+	
 
 public:
 	static CMainApp* Create();

@@ -1,4 +1,6 @@
 #include "Sound_Manager.h"
+#include "PipeLine.h"
+
 
 IMPLEMENT_SINGLETON(CSound_Manager)
 
@@ -22,6 +24,17 @@ HRESULT CSound_Manager::Ready_Sound()
 	return S_OK;
 }
 
+HRESULT CSound_Manager::Initialize_LoopChannel(_uint iStart, _uint iEnd)
+{
+	for (_uint i = iStart; i <= iEnd; ++i)
+		m_LoopChannelList.push_back(i);
+
+
+	m_iLoopChannelSize = m_LoopChannelList.size();
+
+	return S_OK;
+}
+
 HRESULT CSound_Manager::PlaySoundFile(const wstring& strSoundKey, _uint iChannel, _float fVolume)
 {
 	auto iter = m_Sounds.find(strSoundKey);
@@ -40,6 +53,79 @@ HRESULT CSound_Manager::PlaySoundFile(const wstring& strSoundKey, _uint iChannel
 
 	return S_OK;
 }
+
+HRESULT CSound_Manager::PlaySound_Distance(const wstring& strSoundKey, _uint iChannel, _float fVolume, Vec3 vPos, _float fRange)
+{
+	Vec3 vCamPos = CPipeLine::GetInstance()->Get_CamPosition();
+
+	_float fDistance = (vCamPos - vPos).Length();
+
+	if (fDistance > fRange)
+		return S_OK;
+
+	_float fDistanceVolume = min(fVolume * (1.0f - (fDistance / fRange)) * 1.25f, fVolume);
+	
+	return PlaySoundFile(strSoundKey, iChannel, fDistanceVolume);
+}
+
+HRESULT CSound_Manager::PlaySoundFile_LoopChannel(const wstring& strSoundKey, _float fVolume)
+{
+	WRITE_LOCK
+
+	auto iter = m_Sounds.find(strSoundKey);
+
+	if (iter == m_Sounds.end())
+		return E_FAIL;
+
+
+	for (_uint i = 0; i < m_iLoopChannelSize; ++i)
+	{
+		_uint iChannel = m_LoopChannelList.front();
+		m_LoopChannelList.pop_front();
+		m_LoopChannelList.push_back(iChannel);
+
+
+		FMOD_BOOL    bPlay = FALSE;
+		FMOD_RESULT bResult = FMOD_Channel_IsPlaying(m_pChannelArr[iChannel], &bPlay);
+
+		if (bPlay == FALSE)
+		{
+			FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[iChannel]);
+			FMOD_Channel_SetVolume(m_pChannelArr[iChannel], fVolume);
+			FMOD_System_Update(m_pSystem);
+
+			return S_OK;
+		}
+	}
+
+	_uint iChannel = m_LoopChannelList.front();
+	m_LoopChannelList.pop_front();
+	m_LoopChannelList.push_back(iChannel);
+
+	FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[iChannel]);
+	FMOD_Channel_SetVolume(m_pChannelArr[iChannel], fVolume);
+	FMOD_System_Update(m_pSystem);
+
+	return S_OK;
+}
+
+HRESULT CSound_Manager::PlaySound_Distance_LoopChannel(const wstring& strSoundKey, _float fVolume, Vec3 vPos, _float fRange)
+{
+
+	Vec3 vCamPos = CPipeLine::GetInstance()->Get_CamPosition();
+
+	_float fDistance = (vCamPos - vPos).Length();
+
+
+	if (fDistance > fRange)
+		return S_OK;
+
+	_float fDistanceVolume = min(fVolume * (1.0f - (fDistance / fRange)) * 1.25f, fVolume);
+	
+
+	return PlaySoundFile_LoopChannel(strSoundKey, fDistanceVolume);
+}
+
 
 HRESULT CSound_Manager::PlayBGM(const wstring& strSoundKey, _uint iChannel, _float fVolume)
 {
@@ -113,6 +199,42 @@ HRESULT CSound_Manager::CheckPlaySoundFile(const wstring& strSoundKey, _uint iCh
 	FMOD_System_Update(m_pSystem);
 
 	return S_OK;
+}
+
+HRESULT CSound_Manager::Add_SoundTrack(const wstring& strSoundTrack, const wstring& strSoundKey)
+{
+	{
+		auto iter = m_Sounds.find(strSoundKey);
+
+		if (iter == m_Sounds.end())
+			return E_FAIL;
+	}
+	
+	{
+		auto iter = m_SoundTrack.find(strSoundTrack);
+
+		if (iter == m_SoundTrack.end())
+		{
+			m_SoundTrack.emplace(strSoundTrack, vector<wstring>());
+		}
+	}
+
+	
+	m_SoundTrack[strSoundTrack].push_back(strSoundKey);
+
+	return S_OK;
+}
+
+const wstring& CSound_Manager::Get_RandomSoundKey(const wstring& strSoundTrack)
+{
+	auto iter = m_SoundTrack.find(strSoundTrack);
+
+	if (iter == m_SoundTrack.end())
+		return wstring();
+
+	_uint iSoundIndex = rand() % iter->second.size();
+
+	return iter->second[iSoundIndex];
 }
 
 HRESULT CSound_Manager::LoadSoundFile()

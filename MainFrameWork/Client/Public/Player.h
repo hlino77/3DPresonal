@@ -162,6 +162,9 @@ public:
 
 	CWireTrail*				Get_WireTrail() { return m_pWireTrail; }
 	virtual HRESULT			Ready_WireTrail();
+
+
+
 protected:
 	virtual HRESULT Ready_Components();
 	

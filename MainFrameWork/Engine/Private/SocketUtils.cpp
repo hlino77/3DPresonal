@@ -73,7 +73,10 @@ bool SocketUtils::SetUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket)
 
 bool SocketUtils::Bind(SOCKET socket, NetAddress netAddr)
 {
-	return SOCKET_ERROR != ::bind(socket, reinterpret_cast<const SOCKADDR*>(&netAddr.GetSockAddr()), sizeof(SOCKADDR_IN));
+	int i = ::bind(socket, reinterpret_cast<const SOCKADDR*>(&netAddr.GetSockAddr()), sizeof(SOCKADDR_IN));
+
+	int iError = WSAGetLastError();
+	return SOCKET_ERROR != i;
 }
 
 bool SocketUtils::BindAnyAddress(SOCKET socket, uint16 port)
