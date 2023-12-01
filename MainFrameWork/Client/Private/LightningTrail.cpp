@@ -135,10 +135,10 @@ HRESULT CLightningTrail::Render()
 
 void CLightningTrail::Appear()
 {
+	m_PointList.clear();
 	Set_Active(true);
 	m_bDisappear = false;
 	m_vColor.w = 1.0f;
-	m_PointList.clear();
 }
 
 void CLightningTrail::Disappear()

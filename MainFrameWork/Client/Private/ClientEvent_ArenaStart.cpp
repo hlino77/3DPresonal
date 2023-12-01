@@ -35,6 +35,9 @@ HRESULT CClientEvent_ArenaStart::Initialize()
 
 	m_fSpeed = 0.4f;
 
+	
+
+
 	return S_OK;
 }
 
@@ -43,8 +46,6 @@ void CClientEvent_ArenaStart::Enter_Event()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-
-	
 
 	list<CGameObject*> Players;
 	while (true)
@@ -84,6 +85,9 @@ void CClientEvent_ArenaStart::Enter_Event()
 	m_fLerp = 0.0f;
 
 	m_fCameraTime = 3.0f;
+
+
+	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaStart.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
 }
 
 void CClientEvent_ArenaStart::Exit_Event()
@@ -93,6 +97,8 @@ void CClientEvent_ArenaStart::Exit_Event()
 
 
 	m_pCamera->Set_Active(false);
+
+	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaPlayerStart.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 
 	Safe_Release(pGameInstance);
 }

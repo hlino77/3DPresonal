@@ -39,8 +39,6 @@ void CState_Naruto_WireDash_Start::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 5, 0);
 
-	m_pPlayer->Set_Invincible(true);
-
 	m_pPlayer->Set_Gravity(false);
 	m_pPlayer->Set_DefaultUp(false);
 	m_pPlayer->Get_RigidBody()->UseDrag(false);

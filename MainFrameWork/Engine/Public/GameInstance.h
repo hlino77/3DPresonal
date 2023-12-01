@@ -111,11 +111,25 @@ public:
 	HRESULT Reset_QaudTree();
 	_bool	Add_Object_To_QuadTree(CSphereCollider * pCollider);
 
+
+	/* For. FontManager */
 public:
 	void			AddFont(const wstring & szTextName, const wstring & szFontPath);
 	void			DrawFont(const wstring & szTextName, const wstring & szString, const Vec2 & vPosition, const Vec4 & vColor, const _float & fRotation, const Vec2 & vOrigin, const Vec2 & vScale);
 	Vec2			MeasureString(const wstring & szTextName, const wstring & szString);
 	void			InputText(wstring& szInputText);
+
+	/* For. SoundManager */
+
+	HRESULT PlaySoundFile(const wstring& strSoundKey, _uint iChannel, _float fVolume);
+	HRESULT PlayBGM(const wstring& strSoundKey, _uint iChannel, _float fVolume);
+	HRESULT StopSound(_uint iChannel);
+	HRESULT StopSoundAll();
+	HRESULT SetChannelVolume(_uint iChannel, _float fVolume);
+	HRESULT CheckPlaySoundFile(const wstring& strSoundKey, _uint iChannel, _float fVolume);
+public:
+
+
 
 private:
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
@@ -135,6 +149,7 @@ private:
 	class CEventMgr*				m_pEventMgr = { nullptr };
 	class CPhysXMgr*				m_pPhysXMgr = { nullptr };
 	class CQuadTreeMgr*				m_pQuadTreeMgr = { nullptr };
+	class CSound_Manager*			m_pSoundMgr = { nullptr };
 
 public:
 	static void Release_Engine();

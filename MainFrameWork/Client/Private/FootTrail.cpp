@@ -135,11 +135,10 @@ void CFootTrail::Appear(CGameObject* pOwner, _uint iBoneIndex, Vec4 vColor, Vec4
 	m_vColor = vColor;
 	m_vBlurColor = vBlurColor;
 
-
+	m_PointList.clear();
 	Set_Active(true);
 	m_bDisappear = false;
 	m_vColor.w = 1.0f;
-	m_PointList.clear();
 }
 
 void CFootTrail::Disappear()

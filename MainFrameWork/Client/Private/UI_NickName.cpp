@@ -78,6 +78,9 @@ void CUI_NickName::Appear()
 
 	//pNickNameInput->Set_Active(true);
 	pNickNameInput->Appear();
+
+
+	CGameInstance::GetInstance()->PlaySoundFile(L"UI_Appear.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 }
 
 void CUI_NickName::UI_AppearTick(_float fTimeDelta)

@@ -13,6 +13,7 @@
 #include "EventMgr.h"
 #include "PhysXMgr.h"
 #include "QuadTreeMgr.h"
+#include "Sound_Manager.h"
 
 
 IMPLEMENT_SINGLETON(CGameInstance)
@@ -33,6 +34,7 @@ CGameInstance::CGameInstance()
 	, m_pEventMgr(CEventMgr::GetInstance())
 	, m_pPhysXMgr(CPhysXMgr::GetInstance())
 	, m_pQuadTreeMgr(CQuadTreeMgr::GetInstance())
+	, m_pSoundMgr(CSound_Manager::GetInstance())
 {
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
@@ -50,6 +52,7 @@ CGameInstance::CGameInstance()
 
 	Safe_AddRef(m_pUtilities);
 	Safe_AddRef(m_pPhysXMgr);
+	Safe_AddRef(m_pSoundMgr);
 
 
 }
@@ -87,6 +90,9 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayerType,
 		return E_FAIL;
 
 	if (FAILED(m_pQuadTreeMgr->Reserve_Manager(*ppDevice, *ppContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pSoundMgr->Ready_Sound()))
 		return E_FAIL;
 
 
@@ -473,10 +479,35 @@ void CGameInstance::InputText(wstring& szInputText)
 	m_pText_Manager->InputText(szInputText);
 }
 
+HRESULT CGameInstance::PlaySoundFile(const wstring& strSoundKey, _uint iChannel, _float fVolume)
+{
+	return m_pSoundMgr->PlaySoundFile(strSoundKey, iChannel, fVolume);
+}
 
+HRESULT CGameInstance::PlayBGM(const wstring& strSoundKey, _uint iChannel, _float fVolume)
+{
+	return m_pSoundMgr->PlayBGM(strSoundKey, iChannel, fVolume);
+}
 
+HRESULT CGameInstance::StopSound(_uint iChannel)
+{
+	return m_pSoundMgr->StopSound(iChannel);
+}
 
+HRESULT CGameInstance::StopSoundAll()
+{
+	return m_pSoundMgr->StopSoundAll();
+}
 
+HRESULT CGameInstance::SetChannelVolume(_uint iChannel, _float fVolume)
+{
+	return m_pSoundMgr->SetChannelVolume(iChannel, fVolume);
+}
+
+HRESULT CGameInstance::CheckPlaySoundFile(const wstring& strSoundKey, _uint iChannel, _float fVolume)
+{
+	return m_pSoundMgr->CheckPlaySoundFile(strSoundKey, iChannel, fVolume);
+}
 
 
 

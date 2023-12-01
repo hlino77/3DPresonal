@@ -43,9 +43,11 @@ HRESULT CLevel_Lobby::Initialize()
 	if (FAILED(Ready_Layer_Effect(LAYER_TYPE::LAYER_EFFECT)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI)))
+	if (FAILED(Ready_Layer_UI(LAYER_TYPE::LAYER_UI))) 
 		return E_FAIL;
 
+
+	CGameInstance::GetInstance()->PlayBGM(L"MatchingLobbySound.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
 
 	return S_OK;
 }
@@ -75,6 +77,8 @@ HRESULT CLevel_Lobby::LateTick(_float fTimeDelta)
 HRESULT CLevel_Lobby::Exit()
 {
 	CGameInstance::GetInstance()->Reset_Lights();
+	CGameInstance::GetInstance()->StopSoundAll();
+	CGameInstance::GetInstance()->PlaySoundFile(L"UI_AllReady.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 	return S_OK;
 }
 
@@ -526,6 +530,8 @@ void CLevel_Lobby::Update_CharacterSelect()
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
 				Update_PlayerLobby();
 			}
+
+			CGameInstance::GetInstance()->PlaySoundFile(L"UI_CharacterSelect.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 		}
 
 
@@ -538,6 +544,8 @@ void CLevel_Lobby::Update_CharacterSelect()
 				m_CharacterSelect[m_iCharacterIndex]->Set_Selected(true);
 				Update_PlayerLobby();
 			}
+
+			CGameInstance::GetInstance()->PlaySoundFile(L"UI_CharacterSelect.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 		}
 
 

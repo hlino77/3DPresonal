@@ -33,7 +33,8 @@ HRESULT CLevel_Logo::Initialize()
 	{
 	}*/
 
-
+	CGameInstance::GetInstance()->PlayBGM(L"LoggoSound.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
+	
 	return S_OK;
 }
 
@@ -58,6 +59,14 @@ HRESULT CLevel_Logo::Tick(_float fTimeDelta)
 HRESULT CLevel_Logo::LateTick(_float fTimeDelta)
 {
 	
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Exit()
+{
+	CGameInstance::GetInstance()->StopSoundAll();
 
 
 	return S_OK;

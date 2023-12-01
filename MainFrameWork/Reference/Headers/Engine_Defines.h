@@ -52,7 +52,9 @@ using namespace DirectX;
 #include <process.h>
 
 
-
+#include "fmod.h"
+#include "fmod.hpp"
+#include <io.h>
 
 
 

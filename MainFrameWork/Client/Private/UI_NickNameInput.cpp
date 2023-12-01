@@ -76,13 +76,19 @@ void CUI_NickNameInput::UI_Tick(_float fTimeDelta)
 {
 	if(m_bNickName == false)
 	{
+		wstring szPrev = m_szNickName;
+
 		CGameInstance::GetInstance()->InputText(m_szNickName);
+
+		if (szPrev != m_szNickName)
+			CGameInstance::GetInstance()->PlaySoundFile(L"UI_Click.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 
 		if (KEY_TAP(KEY::ENTER))
 		{
 			if (!m_szNickName.empty())
 			{
 				CServerSessionManager::GetInstance()->Set_NickName(m_szNickName);
+				CGameInstance::GetInstance()->PlaySoundFile(L"UI_Select.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 				m_bNickName = true;
 			}
 		}

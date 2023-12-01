@@ -21,6 +21,9 @@
 #include "LockFree_Transform.h"
 #include "UseLock_Transform.h"
 
+
+_float g_fVolume;
+
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -28,8 +31,12 @@ CMainApp::CMainApp()
 }
 
 
+
 HRESULT CMainApp::Initialize()
 {
+	g_fVolume = 0.2f;
+
+
 	/* 1. 내 게임의 초기화를 수행할꺼야. */
 	/* 1-1. 그래픽장치를 초기화한다. */
 	/* 1-2. 사운드장치를 초기화한다. */

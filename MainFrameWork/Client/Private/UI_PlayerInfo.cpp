@@ -121,6 +121,8 @@ void CUI_PlayerInfo::Appear()
 {
 	m_bActive = true;
 	m_eState = UISTATE::APPEAR;
+
+	CGameInstance::GetInstance()->PlaySoundFile(L"MatchingLobbyStart.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
 }
 
 void CUI_PlayerInfo::Set_TextureIndex(const wstring& szCharacterName)
@@ -167,7 +169,17 @@ void CUI_PlayerInfo::UI_Tick(_float fTimeDelta)
 	CLevel_Lobby* pLevelLobby = dynamic_cast<CLevel_Lobby*>(CGameInstance::GetInstance()->Get_CurrLevel());
 
 	if (pLevelLobby)
-		m_bReady = pLevelLobby->Find_LobbyUser(m_szNickName)->Is_Ready();
+	{
+		if (pLevelLobby->Find_LobbyUser(m_szNickName)->Is_Ready())
+		{
+			if (m_bReady == false)
+			{
+				m_bReady = true;
+				CGameInstance::GetInstance()->PlaySoundFile(L"UI_Ready.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
+			}
+		}
+	}
+		
 }
 
 void CUI_PlayerInfo::UI_DisappearTick(_float fTimeDelta)
