@@ -86,6 +86,12 @@ HRESULT CLevel_Logo::Ready_SoundTrack()
 	pGameInstance->Add_SoundTrack(L"MoveSound", L"Move_2.wav");
 	pGameInstance->Add_SoundTrack(L"MoveSound", L"Move_3.wav");
 
+	pGameInstance->Add_SoundTrack(L"HitSound", L"Hit_1.wav");
+	pGameInstance->Add_SoundTrack(L"HitSound", L"Hit_2.wav");
+	pGameInstance->Add_SoundTrack(L"HitSound", L"Hit_3.wav");
+
+
+
 
 
 	Safe_Release(pGameInstance);

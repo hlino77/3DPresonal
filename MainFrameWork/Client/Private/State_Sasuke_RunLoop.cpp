@@ -21,11 +21,11 @@ CState_Sasuke_RunLoop::CState_Sasuke_RunLoop(const CState& rhs, class CStateMach
 
 HRESULT CState_Sasuke_RunLoop::Initialize()
 {
-	m_iRun_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.0f);
+	m_iRun_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.2f);
 	
 
 	m_fAccel = 10.0f;
-	m_fMaxSpeed = 6.0f;
+	m_fMaxSpeed = 8.0f;
 
 	if (m_iRun_Loop == -1)
 		return E_FAIL;
@@ -55,6 +55,8 @@ void CState_Sasuke_RunLoop::Enter_State()
 
 	if (m_pPlayer->Is_Wall())
 		m_pPlayer->Appear_FootTrail();
+
+
 }
 
 void CState_Sasuke_RunLoop::Tick_State(_float fTimeDelta)
@@ -88,6 +90,9 @@ void CState_Sasuke_RunLoop::Tick_State_Control(_float fTimeDelta)
 	}
 	else
 		m_pPlayer->Go_Straight(fCurrSpeed, fTimeDelta);
+
+
+	Update_MoveSound();
 
 	if (KEY_TAP(KEY::NUM_1))
 	{
@@ -151,6 +156,26 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+}
+
+void CState_Sasuke_RunLoop::Update_MoveSound()
+{
+	_uint iFrame = m_pPlayer->Get_ModelCom()->Get_Anim_Frame(m_iRun_Loop);
+
+	_uint iFirstFrame = 1;
+	_uint iSecondFrame = 6;
+
+	if (iFrame == iFirstFrame || iFrame == iFirstFrame + 1 || iFrame == iSecondFrame || iFrame == iSecondFrame + 1)
+	{
+		if (m_bMoveSound == false)
+		{
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Move_2.wav", g_fVolume * 0.2f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+			m_bMoveSound = true;
+		}
+
+	}
+	else
+		m_bMoveSound = false;
 }
 
 Vec3 CState_Sasuke_RunLoop::Make_MoveDir()

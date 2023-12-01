@@ -32,6 +32,8 @@ HRESULT CState_Naruto_RunEnd::Initialize()
 	else
 		m_TickFunc = &CState_Naruto_RunEnd::Tick_State_NoneControl;
 
+
+
 	return S_OK;
 }
 
@@ -56,6 +58,9 @@ void CState_Naruto_RunEnd::Enter_State()
 
 	if (m_pPlayer->Is_Wall())
 		m_pPlayer->DisAppear_FootTrail();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"MoveStop.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_Naruto_RunEnd::Tick_State(_float fTimeDelta)

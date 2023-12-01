@@ -21,7 +21,7 @@ public:
 	void	Tick_State_Control(_float fTimeDelta);
 	void	Tick_State_NoneControl(_float fTimeDelta);
 
-
+	void				Update_MoveSound();
 private:
 	Vec3	Make_MoveDir();
 	void	Set_TargetPos(Vec3 vDir);
@@ -39,7 +39,7 @@ private:
 	//Animation
 	_int m_iRun_Loop = -1;
 	
-
+	_bool m_bMoveSound = false;
 public:
 	virtual void Free() override;
 };

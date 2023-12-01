@@ -25,7 +25,7 @@ HRESULT CState_Naruto_RunLoop::Initialize()
 	
 
 	m_fAccel = 10.0f;
-	m_fMaxSpeed = 6.0f;
+	m_fMaxSpeed = 8.0f;
 
 	if (m_iRun_Loop == -1)
 		return E_FAIL;
@@ -166,7 +166,7 @@ void CState_Naruto_RunLoop::Update_MoveSound()
 	{
 		if (m_bMoveSound == false)
 		{
-			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Move_2.wav", g_fVolume * 0.3f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Move_2.wav", g_fVolume * 0.2f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 			m_bMoveSound = true;
 		}
 			
