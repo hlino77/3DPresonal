@@ -134,6 +134,7 @@ HRESULT CLevel_Arena::Exit()
 	CPhysXMgr::GetInstance()->Reset();
 	CNavigationMgr::GetInstance()->Reset_Navigation();
 	CGameInstance::GetInstance()->Reset_Lights();
+	CGameInstance::GetInstance()->StopSoundAll();
 	return S_OK;
 }
 

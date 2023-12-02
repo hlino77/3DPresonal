@@ -174,7 +174,7 @@ void CPlayer_Naruto::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 			if (m_bHitEffect == false)
 			{
 				Effect_Hit();
-				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.3f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 25.0f);
+				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.2f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 25.0f);
 				m_bHitEffect = true;
 			}
 		}
