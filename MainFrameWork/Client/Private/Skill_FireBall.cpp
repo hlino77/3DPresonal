@@ -246,6 +246,9 @@ void CSkill_FireBall::Explosion()
 	m_pTrail->DisAppear();
 
 	Effect_Explosion();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"FireBallBomb.wav", g_fVolume * 0.3f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CSkill_FireBall::Appear()
@@ -280,6 +283,8 @@ void CSkill_FireBall::Appear()
 	m_pTrail->Appear();
 
 	m_fCurrEffectTime = m_fEffectTime;
+	
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"FireBallStart.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 

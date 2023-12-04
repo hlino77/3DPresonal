@@ -232,6 +232,7 @@ void CMonster_C2Dragon_Server::Set_ToDeidara()
 void CMonster_C2Dragon_Server::Set_Die()
 {
 	m_pHiryu->Set_Die();
+	m_pHiryu->Set_Active(false);
 
 	Set_Active(false);
 }

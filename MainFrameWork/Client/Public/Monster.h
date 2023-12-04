@@ -27,6 +27,7 @@ public:
 		wstring strFileName;
 		_int	iObjectID;
 		_uint	iLayer;
+		Vec3	vPos;
 	}MODELDESC;
 
 public:

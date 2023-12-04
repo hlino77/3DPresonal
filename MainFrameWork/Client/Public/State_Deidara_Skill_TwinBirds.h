@@ -27,6 +27,7 @@ private:
 
 
 	_bool m_bTwinBirds = false;
+	_bool m_bSound = false;
 public:
 	virtual void Free() override;
 };

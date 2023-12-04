@@ -6,6 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
+#include "WireTrail.h"
 
 CState_Sasuke_HitMiddle::CState_Sasuke_HitMiddle(const wstring& strStateName, CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
@@ -38,6 +39,16 @@ void CState_Sasuke_HitMiddle::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 1, 0);
 	m_bKnockBack = false;
+
+	m_pPlayer->Get_WireTrail()->Set_Active(false);
+
+
+	if (m_pPlayer->Stop_VoiceSound() == true)
+	{
+		wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Sasuke_HitMiddle");
+		m_pPlayer->Set_VoiceSoundKey(SoundKey, 0.5f);
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+	}
 }
 
 void CState_Sasuke_HitMiddle::Tick_State(_float fTimeDelta)

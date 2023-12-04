@@ -43,7 +43,7 @@ private:
 
 	_bool m_bPickStart = false;
 	_bool m_bPicked = false;
-
+	_bool m_bPickSound = false;
 public:
 	virtual void Free() override;
 };

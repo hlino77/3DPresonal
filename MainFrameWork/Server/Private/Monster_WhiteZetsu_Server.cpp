@@ -82,7 +82,10 @@ void CMonster_WhiteZetsu_Server::OnCollisionEnter(const _uint iColLayer, CCollid
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
 			Set_SlowMotion(m_Coliders[iColLayer]->Get_SlowMotion());
+			Send_Collision(iColLayer, pOther, true);
+		}
 		return;
 	}
 
@@ -136,7 +139,10 @@ void CMonster_WhiteZetsu_Server::OnCollisionExit(const _uint iColLayer, CCollide
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_ATTACK && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_BODY)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::PLAYER)
+		{
 			Set_SlowMotion(false);
+			Send_Collision(iColLayer, pOther, false);
+		}
 		return;
 	}
 }

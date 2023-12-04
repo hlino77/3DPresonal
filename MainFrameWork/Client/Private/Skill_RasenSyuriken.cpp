@@ -268,6 +268,8 @@ void CSkill_RasenSyuriken::Explosion()
 	
 
 	Effect_Explosion();
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenSyurikenBomb.wav", g_fVolume * 0.13f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CSkill_RasenSyuriken::Appear()
@@ -293,7 +295,8 @@ void CSkill_RasenSyuriken::Appear()
 	Effect_SmokeRing(0.0f, 0.1f);
 	Effect_SmokeRing(0.0f, 0.1f);
 
-	
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenSyurikenStart.wav", g_fVolume * 0.15f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenSyurikenStart_2.wav", g_fVolume * 0.15f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CSkill_RasenSyuriken::Shoot()
@@ -311,9 +314,9 @@ void CSkill_RasenSyuriken::Shoot()
 	Send_ColliderState((_uint)LAYER_COLLIDER::LAYER_BODY);
 
 	m_bShoot = true;
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenSyurikenShoot.wav", g_fVolume * 0.15f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
-
-
 
 HRESULT CSkill_RasenSyuriken::Ready_Components()
 {

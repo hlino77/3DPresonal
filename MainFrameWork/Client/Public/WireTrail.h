@@ -41,6 +41,8 @@ public:
 
 
 	_bool		Is_Disappear() { return m_bDisappear; }
+
+	void		Set_PickTargetPos(Vec3 vPos);
 protected:
 	virtual HRESULT Ready_Components();
 
@@ -62,7 +64,9 @@ private:
 
 	_bool m_bEnd = false;
 	_bool m_bDisappear = false;
-	
+	_bool m_bSound = false;
+	_bool m_bPickedTarget = false;
+
 	ID3D11Buffer* m_pInstanceBuffer = nullptr;
 	Matrix matTrailData;
 

@@ -33,6 +33,8 @@ HRESULT CState_WhiteZetsu_DownToFloor::Initialize()
 void CState_WhiteZetsu_DownToFloor::Enter_State()
 {
 	m_pMonster->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"DownToFloor.wav", g_fVolume * 0.15f, m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_WhiteZetsu_DownToFloor::Tick_State(_float fTimeDelta)

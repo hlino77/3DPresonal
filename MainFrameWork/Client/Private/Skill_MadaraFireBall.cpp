@@ -178,6 +178,9 @@ void CSkill_MadaraFireBall::Explosion()
 	m_pTrail->DisAppear();
 
 	Effect_Explosion();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"FireBallBomb.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CSkill_MadaraFireBall::Appear()
@@ -204,6 +207,8 @@ void CSkill_MadaraFireBall::Appear()
 	m_pTrail->Appear();
 
 	m_fCurrEffectTime = m_fEffectTime;
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"FireBallStart.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 

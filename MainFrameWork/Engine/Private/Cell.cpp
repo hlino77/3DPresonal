@@ -121,7 +121,7 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 		vDir.Normalize();
 
 		_float fDot = vDir.Dot(m_vLineNormal[i]);
-		if (fDot > 0.0f)
+		if (fDot > 0.001f)
 		{
 			if (m_iNeighbor[i] == -1)
 			{
@@ -150,7 +150,7 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 			vDir.Normalize();
 
 			_float fDot = vDir.Dot(m_vLineNormal[i]);
-			if (fDot > 0.0f)
+			if (fDot > 0.001f)
 			{
 				pObject->Set_CurrCell(m_iNeighbor[i]);
 				if (iCount < 15)

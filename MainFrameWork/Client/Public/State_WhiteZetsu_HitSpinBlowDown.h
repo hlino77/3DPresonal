@@ -32,6 +32,7 @@ private:
 	Vec3 m_vHitPos;
 
 	_bool m_bKnockBack = false;
+	_bool m_bSound = false;
 public:
 	virtual void Free() override;
 };

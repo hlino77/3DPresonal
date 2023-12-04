@@ -1,5 +1,6 @@
 #include "Sound_Manager.h"
 #include "PipeLine.h"
+#include "AsUtils.h"
 
 
 IMPLEMENT_SINGLETON(CSound_Manager)
@@ -124,6 +125,26 @@ HRESULT CSound_Manager::PlaySound_Distance_LoopChannel(const wstring& strSoundKe
 	
 
 	return PlaySoundFile_LoopChannel(strSoundKey, fDistanceVolume);
+}
+
+HRESULT CSound_Manager::Find_Stop_Sound(const wstring& strSoundKey)
+{
+	string strSoundName = CAsUtils::ToString(strSoundKey);
+
+	for (auto& ChannelIndex : m_LoopChannelList)
+	{
+		FMOD_SOUND* pSound = nullptr;
+		if (FMOD_Channel_GetCurrentSound(m_pChannelArr[ChannelIndex], &pSound) == FMOD_OK)
+		{
+			char szName[MAX_PATH];
+			FMOD_Sound_GetName(pSound, szName, MAX_PATH);
+
+			if (strSoundName == szName)
+				FMOD_Channel_Stop(m_pChannelArr[ChannelIndex]);
+		}
+	}
+
+	return S_OK;
 }
 
 

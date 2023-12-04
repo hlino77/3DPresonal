@@ -37,7 +37,7 @@ void CState_Sasuke_Land::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iLand, 0.1f, 1, 0);
 
-	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"JumpGround.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Land.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_Sasuke_Land::Tick_State(_float fTimeDelta)

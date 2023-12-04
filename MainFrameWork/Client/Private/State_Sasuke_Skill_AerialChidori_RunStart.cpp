@@ -46,6 +46,8 @@ void CState_Sasuke_Skill_AerialChidori_RunStart::Enter_State()
 	m_pPlayer->Set_EnemyBodyHit(false);
 
 	m_pPlayer->Get_Chidori()->Set_ChidoriState(CSkill_Chidori::CHIDORISTATE::RUN);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Sasuke_Chidori.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Sasuke_Skill_AerialChidori_RunStart::Tick_State(_float fTimeDelta)

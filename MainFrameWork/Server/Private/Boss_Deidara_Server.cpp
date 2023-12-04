@@ -44,12 +44,12 @@ HRESULT CBoss_Deidara_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 100;
+	m_iHp = 10;
 	m_iMaxHp = 100;
 
 	m_fFollowDistance = 40.0f;
 
-	m_fAttackMoveSpeed = 8.0f;
+	m_fAttackMoveSpeed = 12.0f;
 	
 
 	SKILLINFO tC2Dragon;
@@ -231,7 +231,7 @@ void CBoss_Deidara_Server::Update_NearTarget(_float fTimeDelta)
 		{
 			_float fDistance = Get_NearTargetDistance();
 
-			if (fDistance <= 3.0f)
+			if (fDistance <= 2.0f)
 			{
 				Set_State(L"Attack_cmb01");
 			}

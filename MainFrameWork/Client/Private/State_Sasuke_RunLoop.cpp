@@ -21,7 +21,7 @@ CState_Sasuke_RunLoop::CState_Sasuke_RunLoop(const CState& rhs, class CStateMach
 
 HRESULT CState_Sasuke_RunLoop::Initialize()
 {
-	m_iRun_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.2f);
+	m_iRun_Loop = m_pPlayer->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.1f);
 	
 
 	m_fAccel = 10.0f;
@@ -156,6 +156,8 @@ void CState_Sasuke_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+
+	Update_MoveSound();
 }
 
 void CState_Sasuke_RunLoop::Update_MoveSound()

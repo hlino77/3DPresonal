@@ -89,6 +89,8 @@ void CClientEvent_KonohaStart::Enter_Event()
 	m_fLerp = 0.0f;
 
 	m_fCameraTime = 3.0f;
+
+	CGameInstance::GetInstance()->PlayBGM(L"Konoha.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.35f);
 }
 
 void CClientEvent_KonohaStart::Exit_Event()

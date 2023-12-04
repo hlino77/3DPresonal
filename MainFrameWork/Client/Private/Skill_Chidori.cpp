@@ -103,6 +103,10 @@ void CSkill_Chidori::Tick(_float fTimeDelta)
 
 			DisAppearTrail();
 
+
+			if(m_bAttackTime)
+				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriBombEnd.wav", g_fVolume * 0.3f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
+
 			Set_Active(false);
 		}
 	}
@@ -149,6 +153,9 @@ void CSkill_Chidori::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		m_bEffect = true;
 		m_bAttackTime = true;
 		m_eState = CHIDORISTATE::HITEXPLOSION;
+
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriBomb.wav", g_fVolume * 0.3f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriBomb_1.wav", g_fVolume * 0.2f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 	}
 	++m_iHitCount;
 }
@@ -225,6 +232,9 @@ void CSkill_Chidori::Explosion()
 	m_pChidoriCenter->DisAppear();
 
 	m_eState = CHIDORISTATE::EXPLOSION;
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriEnd.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CSkill_Chidori::Appear()
@@ -237,10 +247,16 @@ void CSkill_Chidori::Appear()
 	m_fEffectCurrTime = m_fEffectDelay;
 
 	m_pChidoriCenter->Appear();
+	Vec3 vPos = m_pChidoriCenter->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	m_eState = CHIDORISTATE::CHARGE;
 
 	m_iHitCount = 0;
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriStart.wav", g_fVolume * 0.15f, vPos, 40.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriStart_1.wav", g_fVolume * 0.08f, vPos, 40.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriStart_2.wav", g_fVolume * 0.15f, vPos, 40.0f);
 }
 
 void CSkill_Chidori::AppearTrail()
@@ -399,6 +415,8 @@ void CSkill_Chidori::Set_ChidoriState(CHIDORISTATE eState)
 	if (m_eState == CHIDORISTATE::RUN)
 	{
 		AppearTrail();
+		CGameInstance::GetInstance()->Find_Stop_Sound(L"ChidoriStart_2.wav");
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ChidoriRun.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 	}
 }
 

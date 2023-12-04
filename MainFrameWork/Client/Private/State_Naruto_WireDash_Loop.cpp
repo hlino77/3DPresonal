@@ -7,6 +7,9 @@
 #include "GameInstance.h"
 #include "Skill_Rasengun.h"
 #include "RigidBody.h"
+#include "WireTrail.h"
+
+
 
 CState_Naruto_WireDash_Loop::CState_Naruto_WireDash_Loop(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -38,8 +41,6 @@ HRESULT CState_Naruto_WireDash_Loop::Initialize()
 void CState_Naruto_WireDash_Loop::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
-
-	m_pPlayer->Set_Invincible(true);
 }
 
 void CState_Naruto_WireDash_Loop::Tick_State(_float fTimeDelta)
@@ -53,6 +54,8 @@ void CState_Naruto_WireDash_Loop::Exit_State()
 	m_pPlayer->Set_Gravity(true);
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 	m_pPlayer->Set_DefaultUp(true);
+
+
 }
 
 void CState_Naruto_WireDash_Loop::Tick_State_Control(_float fTimeDelta)

@@ -45,6 +45,8 @@ void CState_Naruto_Skill_AerialRasengun_RunStart::Enter_State()
 	m_pPlayer->Set_EnemyBodyHit(false);
 
 	m_pPlayer->Get_Rasengun()->Set_Run();
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Naruto_Rasengan.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Naruto_Skill_AerialRasengun_RunStart::Tick_State(_float fTimeDelta)

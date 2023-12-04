@@ -54,6 +54,10 @@ void CState_Sasuke_Jump::Enter_State()
 	m_pPlayer->Set_DoubleJump(false);
 	m_pPlayer->Set_Wall(false);
 	m_pPlayer->DisAppear_FootTrail();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Jump.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Sasuke_Jump"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Sasuke_Jump::Tick_State(_float fTimeDelta)

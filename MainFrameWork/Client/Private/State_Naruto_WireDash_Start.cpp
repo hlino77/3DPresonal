@@ -58,7 +58,7 @@ void CState_Naruto_WireDash_Start::Exit_State()
 }
 
 void CState_Naruto_WireDash_Start::Tick_State_Control(_float fTimeDelta)
-{
+{ 
 	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
 
 	if (pPlayerModel->Is_AnimationEnd(m_iAnimIndex))

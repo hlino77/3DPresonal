@@ -87,7 +87,7 @@ void CClientEvent_ArenaStart::Enter_Event()
 	m_fCameraTime = 3.0f;
 
 
-	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaStart.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.2f);
+	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaStart.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.1f);
 }
 
 void CClientEvent_ArenaStart::Exit_Event()
@@ -98,7 +98,7 @@ void CClientEvent_ArenaStart::Exit_Event()
 
 	m_pCamera->Set_Active(false);
 
-	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaPlayerStart.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.2f);
+	CGameInstance::GetInstance()->PlaySoundFile(L"ArenaPlayerStart.wav", CHANNELID::CHANNEL_UI, g_fVolume * 0.1f);
 
 	Safe_Release(pGameInstance);
 }

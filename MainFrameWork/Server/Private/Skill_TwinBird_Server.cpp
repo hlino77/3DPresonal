@@ -62,10 +62,10 @@ void CSkill_TwinBird_Server::Tick(_float fTimeDelta)
 
 
 	
-	if (m_fLookSpeed >= 2.0f)
-		m_fLookSpeed = 2.0f;
+	if (m_fLookSpeed >= 3.0f)
+		m_fLookSpeed = 3.0f;
 	else
-		m_fLookSpeed += 2.0f * fTimeDelta;
+		m_fLookSpeed += 3.0f * fTimeDelta;
 
 
 	Vec3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -76,9 +76,9 @@ void CSkill_TwinBird_Server::Tick(_float fTimeDelta)
 	vDir.Normalize();
 
 
-	m_pTransformCom->SetUp_Lerp(vDir, 2.0f, fTimeDelta);
+	m_pTransformCom->SetUp_Lerp(vDir, 3.0f, fTimeDelta);
 	m_pTransformCom->LookAt_Lerp_ForLand(vDir, m_fLookSpeed, fTimeDelta);
-	m_pTransformCom->Go_Straight(7.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(10.0f, fTimeDelta);
 
 }
 

@@ -78,6 +78,17 @@ void CWireTrail::Tick(_float fTimeDelta)
 		vPos = Vec3::Lerp(vPos, m_vTargetPos, 15.0f * fTimeDelta);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		Update_Point();
+
+
+		if (m_bSound == false && m_bPickedTarget)
+		{
+			_float fLength = (m_vTargetPos - vPos).Length();
+			if (fLength < 0.1f)
+			{
+				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"WirePick.wav", g_fVolume * 0.35f, m_vTargetPos, 30.0f);
+				m_bSound = true;
+			}
+		}
 	}
 }
 
@@ -153,6 +164,8 @@ void CWireTrail::Appear()
 	m_pTransformCom->LookAt(vPos + vDir);
 
 	m_vTargetPos = vPos + vDir * 20.0f;
+
+	m_bPickedTarget = false;
 }
 
 void CWireTrail::Disappear()
@@ -189,6 +202,13 @@ void CWireTrail::Update_Point()
 	matTrailData.Translation(vPrevLeftPos);
 }
 
+
+void CWireTrail::Set_PickTargetPos(Vec3 vPos)
+{
+	m_vTargetPos = vPos;
+	m_bSound = false;
+	m_bPickedTarget = true;
+}
 
 HRESULT CWireTrail::Ready_Components()
 {

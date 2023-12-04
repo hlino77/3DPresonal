@@ -40,6 +40,8 @@ void CState_Madara_Skill_Meteor::Enter_State()
 	m_pSusanoo->Appear(m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_LOOK));
 
 	m_pBoss->Set_Invincible(true);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Madara_Skill_Meteor::Tick_State(_float fTimeDelta)

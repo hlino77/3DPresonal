@@ -6,6 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
+#include "WireTrail.h"
 
 CState_Naruto_HitMiddle::CState_Naruto_HitMiddle(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -38,6 +39,17 @@ void CState_Naruto_HitMiddle::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 1, 0);
 	m_bKnockBack = false;
+
+
+	m_pPlayer->Get_WireTrail()->Set_Active(false);
+
+
+	if (m_pPlayer->Stop_VoiceSound() == true)
+	{
+		wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_HitMiddle");
+		m_pPlayer->Set_VoiceSoundKey(SoundKey, 0.5f);
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+	}	
 }
 
 void CState_Naruto_HitMiddle::Tick_State(_float fTimeDelta)

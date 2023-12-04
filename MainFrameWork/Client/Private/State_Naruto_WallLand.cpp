@@ -60,6 +60,7 @@ void CState_Naruto_WallLand::Tick_State(_float fTimeDelta)
 
 void CState_Naruto_WallLand::Exit_State()
 {
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Land.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 }
 
 void CState_Naruto_WallLand::Tick_State_Control(_float fTimeDelta)

@@ -54,6 +54,8 @@ void CState_Naruto_Attack_JumpDoubleKick::Enter_State()
 	if (m_pPlayer->Is_Control())
 		m_pPlayer->Set_TargetPos(m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
 
+
+	m_bSound = false;
 }
 
 void CState_Naruto_Attack_JumpDoubleKick::Tick_State(_float fTimeDelta)
@@ -105,6 +107,12 @@ void CState_Naruto_Attack_JumpDoubleKick::Tick_State_Control(_float fTimeDelta)
 		Follow_TargetPos(fTimeDelta);
 	}
 
+	if (m_bSound == false && iFrame > 22)
+	{
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_LargeAttack"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+		m_bSound = true;
+	}
+
 
 	if (iFrame < m_iColliderFrame2 - 2)
 		Update_Collider(fTimeDelta, m_iColliderFrame1, COLLIDER_ATTACK::MIDDLE);
@@ -119,7 +127,18 @@ void CState_Naruto_Attack_JumpDoubleKick::Tick_State_Control(_float fTimeDelta)
 
 void CState_Naruto_Attack_JumpDoubleKick::Tick_State_NoneControl(_float fTimeDelta)
 {
+	CModel* pPlayerModel = m_pPlayer->Get_ModelCom();
+	_uint iFrame = pPlayerModel->Get_Anim_Frame(m_iAnimIndex);
+
+
 	Follow_TargetPos(fTimeDelta);
+
+
+	if (m_bSound == false && iFrame > 22)
+	{
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_LargeAttack"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+		m_bSound = true;
+	}
 }
 
 void CState_Naruto_Attack_JumpDoubleKick::Update_Collider(_float fTimeDelta, _uint iColliderFrame, COLLIDER_ATTACK eAttackType)

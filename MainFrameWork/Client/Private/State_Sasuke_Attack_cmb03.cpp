@@ -53,6 +53,8 @@ void CState_Sasuke_Attack_cmb03::Enter_State()
 	if(m_pPlayer->Is_Control())
 		m_pPlayer->Set_TargetPos(m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
 
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Sasuke_NormalAttack"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Sasuke_Attack_cmb03::Tick_State(_float fTimeDelta)

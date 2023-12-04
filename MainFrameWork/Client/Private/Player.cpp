@@ -97,7 +97,10 @@ void CPlayer::Tick(_float fTimeDelta)
 		Set_State(L"Idle");
 	}
 
-
+	if (m_fVoiceSoundDelay > 0.0f)
+	{
+		m_fVoiceSoundDelay = max(m_fVoiceSoundDelay - fTimeDelta, 0.0f);
+	}
 
 	if(!m_bWall && m_bNavi)
 		CNavigationMgr::GetInstance()->SetUp_OnCell(this);
@@ -647,6 +650,17 @@ HRESULT CPlayer::Ready_WireTrail()
 
 
 	return S_OK;
+}
+
+_bool CPlayer::Stop_VoiceSound()
+{
+	if (m_fVoiceSoundDelay == 0.0f)
+	{
+		CGameInstance::GetInstance()->Find_Stop_Sound(m_VoiceSoundKey);
+		return true;
+	}
+
+	return false;
 }
 
 HRESULT CPlayer::Ready_Components()

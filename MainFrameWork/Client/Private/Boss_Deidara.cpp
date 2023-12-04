@@ -51,7 +51,7 @@ HRESULT CBoss_Deidara::Initialize(void* pArg)
 	Ready_State();
 
 
-	m_fAttackMoveSpeed = 8.0f;
+	m_fAttackMoveSpeed = 12.0f;
 
 	m_pTwinBird[0] = nullptr;
 	m_pTwinBird[1] = nullptr;
@@ -153,6 +153,9 @@ void CBoss_Deidara::Spawn_C2Dragon()
 	m_pC2Dragon->Get_TransformCom()->LookAt_ForLandObject(vPos + vLook);
 
 	m_pC2Dragon->Spawn();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Summoning.wav", g_fVolume * 0.3f, vPos, 40.0f);
 }
 
 void CBoss_Deidara::Shoot_TwinBirds()
@@ -180,6 +183,9 @@ void CBoss_Deidara::Shoot_TwinBirds()
 
 		m_pTwinBird[1]->Shoot_TwinBird(m_pNearTarget, vTargetPos, vTargetLook);
 	}
+
+	Vec3 vSoundPos = vPos + (vLook * 0.5f) + (vUp * 1.5f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Summoning.wav", g_fVolume * 0.3f, vSoundPos, 30.0f);
 }
 
 void CBoss_Deidara::Set_Die()
@@ -220,6 +226,8 @@ void CBoss_Deidara::Effect_Hit()
 			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
 		}
 	}
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.2f, vPos, 25.0f);
 }
 
 

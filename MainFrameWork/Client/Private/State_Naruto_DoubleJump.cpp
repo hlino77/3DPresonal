@@ -60,6 +60,10 @@ void CState_Naruto_DoubleJump::Enter_State()
 
 
 	m_pPlayer->Set_DoubleJump(true);
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"DoubleJump.wav", g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_Jump"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Naruto_DoubleJump::Tick_State(_float fTimeDelta)

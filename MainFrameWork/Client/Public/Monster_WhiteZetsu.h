@@ -10,12 +10,18 @@ private:
 	CMonster_WhiteZetsu(const CMonster_WhiteZetsu& rhs);
 	virtual ~CMonster_WhiteZetsu() = default;
 
+
+
 public:
 	virtual HRESULT		Initialize_Prototype();
 	virtual HRESULT		Initialize(void* pArg);
 	virtual void		Tick(_float fTimeDelta);
 	virtual void		LateTick(_float fTimeDelta);
 	virtual HRESULT		Render();
+
+
+	virtual	void	OnCollisionEnter(const _uint iColLayer, class CCollider* pOther) override;
+	virtual	void	OnCollisionExit(const _uint iColLayer, class CCollider* pOther) override;
 
 	void				Set_Colliders();
 
@@ -25,6 +31,8 @@ protected:
 
 private:
 	_float	m_fSendInfoTime = 0.0f;
+
+	_bool m_bHitSound = false;
 
 public:
 	static CMonster_WhiteZetsu* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

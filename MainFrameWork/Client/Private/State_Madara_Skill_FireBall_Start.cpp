@@ -30,6 +30,8 @@ void CState_Madara_Skill_FireBall_Start::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 	m_pBoss->Set_Invincible(true);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Madara_Skill_FireBall_Start::Tick_State(_float fTimeDelta)

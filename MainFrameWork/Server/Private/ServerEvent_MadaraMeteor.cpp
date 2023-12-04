@@ -17,6 +17,10 @@ HRESULT CServerEvent_MadaraMeteor::Initialize()
 
 void CServerEvent_MadaraMeteor::Enter_Event()
 {
+	m_pMadara->Set_Invincible(true);
+	m_pMadara->ResetSkill(CBoss_Madara_Server::MADARA_SKILL::FIREBALL);
+	m_pMadara->Set_TeleportAttackDelay(100.0f);
+
 	Reset_ClientEventState();
 
 	Send_State(EVENTSTATE::READY);
@@ -41,10 +45,6 @@ void CServerEvent_MadaraMeteor::Enter_Event()
 
 	
 	m_pMadara->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, m_vMadaraPos);
-	m_pMadara->Set_Invincible(true);
-
-	m_pMadara->ResetSkill(CBoss_Madara_Server::MADARA_SKILL::FIREBALL);
-	m_pMadara->Set_TeleportAttackDelay(100.0f);
 	m_pMadara->Set_State(L"Idle");
 
 	m_bSkill = false;

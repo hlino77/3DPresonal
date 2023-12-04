@@ -144,6 +144,8 @@ void CMonster_Susanoo_Madara::Appear(Vec3 vPos, Vec3 vLook)
 
 
 	Set_Active(true);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"MadaraSusanoo.wav", g_fVolume * 0.8f, vPos, 40.0f);
 }
 
 

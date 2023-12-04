@@ -240,7 +240,10 @@ void CPlayer_Sasuke::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 	if (iColLayer == (_uint)LAYER_COLLIDER::LAYER_BODY && pOther->Get_ColLayer() == (_uint)LAYER_COLLIDER::LAYER_ATTACK)
 	{
 		if (pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::BOSS || pOther->Get_Owner()->Get_ObjectType() == OBJ_TYPE::MONSTER)
-			Set_SlowMotion(false);
+		{
+			if (m_bInvincible == false)
+				Set_SlowMotion(false);
+		}
 		return;
 	}
 }
@@ -336,6 +339,8 @@ void CPlayer_Sasuke::Effect_Hit()
 			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
 		}
 	}
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.2f, vPos, 25.0f);
 }
 
 void CPlayer_Sasuke::Send_PlayerInfo()

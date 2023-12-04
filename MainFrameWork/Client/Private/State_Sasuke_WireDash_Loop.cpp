@@ -7,6 +7,7 @@
 #include "GameInstance.h"
 #include "Skill_Rasengun.h"
 #include "RigidBody.h"
+#include "WireTrail.h"
 
 CState_Sasuke_WireDash_Loop::CState_Sasuke_WireDash_Loop(const wstring& strStateName, CPlayer_Sasuke* pPlayer)
 	:CState(strStateName)
@@ -38,8 +39,6 @@ HRESULT CState_Sasuke_WireDash_Loop::Initialize()
 void CState_Sasuke_WireDash_Loop::Enter_State()
 {
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
-
-	m_pPlayer->Set_Invincible(true);
 }
 
 void CState_Sasuke_WireDash_Loop::Tick_State(_float fTimeDelta)

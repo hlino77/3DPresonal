@@ -164,6 +164,10 @@ public:
 	virtual HRESULT			Ready_WireTrail();
 
 
+	const wstring& Get_VoiceSoundKey() { return m_VoiceSoundKey; }
+	void			Set_VoiceSoundKey(const wstring& VoiceSound) { m_VoiceSoundKey = m_VoiceSoundKey; }
+	void			Set_VoiceSoundKey(const wstring& VoiceSound, _float fDelay) { m_VoiceSoundKey = m_VoiceSoundKey; m_fVoiceSoundDelay = fDelay; }
+	_bool			Stop_VoiceSound();
 
 protected:
 	virtual HRESULT Ready_Components();
@@ -218,7 +222,8 @@ protected: /* 해당 객체가 사용해야할 컴포넌트들을 저장하낟. */
 
 
 	wstring m_szNickName;
-
+	wstring m_VoiceSoundKey;
+	_float m_fVoiceSoundDelay;
 public:
 	virtual void Free();
 

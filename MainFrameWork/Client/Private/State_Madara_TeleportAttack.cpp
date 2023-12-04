@@ -37,7 +37,7 @@ void CState_Madara_TeleportAttack::Enter_State()
 	m_pBoss->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, vPos);
 
 	m_pBoss->Set_Invincible(true);
-	
+
 }
 
 void CState_Madara_TeleportAttack::Tick_State(_float fTimeDelta)

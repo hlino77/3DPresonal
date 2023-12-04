@@ -19,6 +19,9 @@ public:
 	virtual void Exit_State() override;
 
 private:
+	void				Update_MoveSound();
+	
+private:
 	class CBoss_Deidara* m_pBoss = nullptr;
 
 private:
@@ -27,7 +30,7 @@ private:
 
 	_float m_fMaxSpeed = 0.f;
 	_float m_fAccel = 0.f;
-
+	_bool m_bMoveSound = false;
 public:
 	virtual void Free() override;
 };

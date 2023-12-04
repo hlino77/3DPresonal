@@ -91,8 +91,58 @@ HRESULT CLevel_Logo::Ready_SoundTrack()
 	pGameInstance->Add_SoundTrack(L"HitSound", L"Hit_3.wav");
 
 
+	pGameInstance->Add_SoundTrack(L"BombSound", L"Bomb_1.wav");
+	pGameInstance->Add_SoundTrack(L"BombSound", L"Bomb_2.wav");
 
 
+	pGameInstance->Add_SoundTrack(L"Naruto_RasenganStart", L"Naruto_RasenganStart.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_RasenganStart", L"Naruto_RasenganStart_1.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_RasenganStart", L"Naruto_RasenganStart_2.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Naruto_NormalAttack", L"Naruto_NormalAttack_1.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_NormalAttack", L"Naruto_NormalAttack_2.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_NormalAttack", L"Naruto_NormalAttack_3.wav");
+
+	pGameInstance->Add_SoundTrack(L"Naruto_LargeAttack", L"Naruto_LargeAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_LargeAttack", L"Naruto_LargeAttack_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Naruto_Jump", L"Naruto_Jump.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_Jump", L"Naruto_Jump_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Naruto_SpinBlowUp", L"Naruto_SpinBlowUp.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_SpinBlowUp", L"Naruto_SpinBlowUp_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Naruto_HitMiddle", L"Naruto_HitMiddle.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_HitMiddle", L"Naruto_HitMiddle_1.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_HitMiddle", L"Naruto_HitMiddle_2.wav");
+	pGameInstance->Add_SoundTrack(L"Naruto_HitMiddle", L"Naruto_HitMiddle_3.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_ChidoriStart", L"Sasuke_ChidoriStart.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_ChidoriStart", L"Sasuke_ChidoriStart_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_Jump", L"Sasuke_Jump.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_Jump", L"Sasuke_Jump_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_NormalAttack", L"Sasuke_NormalAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_NormalAttack", L"Sasuke_NormalAttack_1.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_NormalAttack", L"Sasuke_NormalAttack_2.wav");
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_LargeAttack", L"Sasuke_LargeAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_LargeAttack", L"Sasuke_LargeAttack_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_SpinBlowUp", L"Sasuke_SpinBlowUp.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_SpinBlowUp", L"Sasuke_SpinBlowUp_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle_1.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle_2.wav");
+	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle_3.wav");
 
 	Safe_Release(pGameInstance);
 	return S_OK;

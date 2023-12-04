@@ -6,6 +6,7 @@
 #include "Key_Manager.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
+#include "WireTrail.h"
 
 CState_Naruto_HitSpinBlowUp::CState_Naruto_HitSpinBlowUp(const wstring& strStateName, CPlayer_Naruto* pPlayer)
 	:CState(strStateName)
@@ -46,6 +47,15 @@ void CState_Naruto_HitSpinBlowUp::Enter_State()
 	m_pPlayer->Get_RigidBody()->SetCompareGruond(true);
 	m_pPlayer->Set_Wall(false);
 	m_pPlayer->DisAppear_FootTrail();
+
+	m_pPlayer->Get_WireTrail()->Set_Active(false);
+
+
+
+	m_pPlayer->Stop_VoiceSound();
+	wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_SpinBlowUp");
+	m_pPlayer->Set_VoiceSoundKey(SoundKey);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Naruto_HitSpinBlowUp::Tick_State(_float fTimeDelta)
@@ -55,7 +65,7 @@ void CState_Naruto_HitSpinBlowUp::Tick_State(_float fTimeDelta)
 
 void CState_Naruto_HitSpinBlowUp::Exit_State()
 {
-
+	m_bSound = false;
 }
 
 void CState_Naruto_HitSpinBlowUp::Tick_State_Control(_float fTimeDelta)
@@ -77,6 +87,7 @@ void CState_Naruto_HitSpinBlowUp::Tick_State_NoneControl(_float fTimeDelta)
 
 	LookAt_HitObject(fTimeDelta);
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+
 }
 
 void CState_Naruto_HitSpinBlowUp::Knock_Back()

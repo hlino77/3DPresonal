@@ -82,6 +82,23 @@ HRESULT CMonster_WhiteZetsu::Render()
 	return S_OK;
 }
 
+void CMonster_WhiteZetsu::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
+{
+	if (m_bHitSound == false)
+	{
+		if (pOther->Get_Owner()->Is_Invincible() == false)
+		{
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.1f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 25.0f);
+			m_bHitSound = true;
+		}
+	}
+}
+
+void CMonster_WhiteZetsu::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
+{
+	m_bHitSound = false;
+}
+
 void CMonster_WhiteZetsu::Set_Colliders()
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Center();

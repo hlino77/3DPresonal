@@ -75,9 +75,9 @@ void CSkill_Hiryu::Tick(_float fTimeDelta)
 	vDir.Normalize();
 
 
-	m_pTransformCom->SetUp_Lerp(vDir, 2.0f, fTimeDelta);
+	m_pTransformCom->SetUp_Lerp(vDir, 3.0f, fTimeDelta);
 	m_pTransformCom->LookAt_Lerp_ForLand(vDir, 3.0f, fTimeDelta);
-	m_pTransformCom->Go_Straight(5.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(8.0f, fTimeDelta);
 
 	if (m_fCurrScale < 0.01f)
 	{
@@ -329,6 +329,8 @@ void CSkill_Hiryu::Effect_Explosion()
 	}
 
 	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.001f, 0.2f);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"BombSound"), g_fVolume * 0.25f, vPos, 40.0f);
 }
 
 void CSkill_Hiryu::Explosion()

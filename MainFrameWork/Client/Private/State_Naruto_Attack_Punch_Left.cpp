@@ -52,6 +52,8 @@ void CState_Naruto_Attack_Punch_Left::Enter_State()
 		m_pPlayer->Find_NearTarget();
 		Set_TargetPos();
 	}
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_NormalAttack"), g_fVolume * 0.4f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Naruto_Attack_Punch_Left::Tick_State(_float fTimeDelta)

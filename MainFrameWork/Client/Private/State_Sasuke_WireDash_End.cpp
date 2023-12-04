@@ -48,11 +48,11 @@ void CState_Sasuke_WireDash_End::Enter_State()
 	m_pPlayer->Get_RigidBody()->Set_Ground(true);
 	m_pPlayer->Get_RigidBody()->SetLinearVelocity(Vec3(0.0f, 0.0f, 0.0f));
 	m_pPlayer->Appear_FootTrail();
+	m_pPlayer->Get_WireTrail()->Disappear();
+
 
 
 	m_vPrevPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
-
-	m_pPlayer->Get_WireTrail()->Disappear();
 }
 
 void CState_Sasuke_WireDash_End::Tick_State(_float fTimeDelta)

@@ -111,6 +111,7 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 		Desc.strFileName = CAsUtils::ToWString(pkt.strname());
 		Desc.iObjectID = pkt.iobjectid();
 		Desc.iLayer = pkt.ilayer();
+		Desc.vPos = Vec3(pkt.vpos().data());
 
 		wstring szProtoName = L"Prototype_GameObject_Monster_" + Desc.strFileName;
 		CMonster* pMonster = dynamic_cast<CMonster*>(pGameInstance->Add_GameObject(pkt.ilevel(), pkt.ilayer(), szProtoName, &Desc));
@@ -119,7 +120,6 @@ bool Handel_S_CREATEOBJECT_Client(PacketSessionRef& session, Protocol::S_CREATE_
 			Safe_Release(pGameInstance);
 			return true;
 		}
-		pMonster->Get_TransformCom()->Set_State(CTransform::STATE::STATE_POSITION, Vec3(pkt.vpos().data()));
 		CNavigationMgr::GetInstance()->Find_FirstCell(pMonster);
 		break;
 	}

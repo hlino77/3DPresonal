@@ -156,11 +156,14 @@ void CMonster_C2Dragon::Shoot_Hiryu()
 	vLook.Normalize();
 
 	m_pHiryu->Shoot_Hiryu(m_pNearTarget, vPos, vLook);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"ShootHiryu.wav", g_fVolume * 0.4f, vPos, 40.0f);
 }
 
 void CMonster_C2Dragon::Set_Die()
 {
 	m_pHiryu->Set_Die();
+	m_pHiryu->Set_Active(false);
 	Set_Active(false);
 }
 
@@ -174,6 +177,8 @@ void CMonster_C2Dragon::Effect_Smoke()
 		CSmoke_24* pSmoke = CPool<CSmoke_24>::Get_Obj();
 		pSmoke->Appear(vPos, Vec4(1.0f, 1.0f, 1.0f, 0.85f), Vec2(2.0f, 2.0f), 0.0f, 0.05f, 0.00f);
 	}
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Summoning.wav", g_fVolume * 0.4f, vPos, 40.0f);
 }
 
 HRESULT CMonster_C2Dragon::Ready_Components()

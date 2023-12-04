@@ -162,6 +162,8 @@ void CBoss_Madara::Effect_Teleport()
 
 	CTeleport* pTeleport = CPool<CTeleport>::Get_Obj();
 	pTeleport->Appear(vPos, vUp);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Jump.wav", g_fVolume * 0.4f, vPos, 25.0f);
 }
 
 HRESULT CBoss_Madara::Ready_Components()
@@ -224,6 +226,8 @@ void CBoss_Madara::Effect_Hit()
 			pLineCircle->Appear(vPos, vColor, vBlurColor, 1.0f);
 		}
 	}
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.2f, vPos, 25.0f);
 }
 
 

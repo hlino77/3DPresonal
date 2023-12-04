@@ -18,7 +18,7 @@ CState_Deidara_ChasePlayer_Server::CState_Deidara_ChasePlayer_Server(const CStat
 }
 HRESULT CState_Deidara_ChasePlayer_Server::Initialize()
 {
-	m_iRun_Loop = m_pBoss->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.0f);
+	m_iRun_Loop = m_pBoss->Get_ModelCom()->Initailize_FindAnimation(L"Run_Loop", 1.2f);
 
 
 	if (m_iRun_Loop == -1)
@@ -26,7 +26,7 @@ HRESULT CState_Deidara_ChasePlayer_Server::Initialize()
 
 
 	m_fAccel = 10.0f;
-	m_fMaxSpeed = 6.0f;
+	m_fMaxSpeed = 8.0f;
 
 	return S_OK;
 }
@@ -60,7 +60,7 @@ void CState_Deidara_ChasePlayer_Server::Tick_State(_float fTimeDelta)
 
 	if (fDistance > m_pBoss->Get_FollowDistance())
 		m_pBoss->Set_State(L"Idle");
-	else if (fDistance <= 3.0f)
+	else if (fDistance <= 2.0f)
 	{	
 		if(m_pBoss->Get_CurrState() != L"Attack_cmb01")
 			m_pBoss->Set_State(L"Attack_cmb01");

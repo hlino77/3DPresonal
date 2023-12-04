@@ -529,6 +529,11 @@ HRESULT CGameInstance::PlaySound_Distance_LoopChannel(const wstring& strSoundKey
 	return m_pSoundMgr->PlaySound_Distance_LoopChannel(strSoundKey, fVolume, vPos, fRange);
 }
 
+HRESULT CGameInstance::Find_Stop_Sound(const wstring& strSoundKey)
+{
+	return m_pSoundMgr->Find_Stop_Sound(strSoundKey);
+}
+
 HRESULT CGameInstance::Add_SoundTrack(const wstring& strSoundTrack, const wstring& strSoundKey)
 {
 	return m_pSoundMgr->Add_SoundTrack(strSoundTrack, strSoundKey);

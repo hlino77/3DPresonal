@@ -119,7 +119,29 @@ HRESULT CUI_HP_Monster::Render()
 void CUI_HP_Monster::Appear()
 {
 	m_bActive = true;
-	m_eState = UISTATE::APPEAR;
+	m_eState = UISTATE::TICK;
+
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	Vec3 vPos = m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	vPos.y += 1.7f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+	Vec3 vCamPos = pGameInstance->Get_CamPosition();
+	Vec3 vDir = vCamPos - vPos;
+	_float fLength = vDir.Length();
+
+	if (fLength > 25.0f)
+		m_bRender = false;
+	else
+		m_bRender = true;
+
+
+	m_pTransformCom->LookAt(vPos - vDir);
+
+	Safe_Release(pGameInstance);
 }
 
 void CUI_HP_Monster::UI_AppearTick(_float fTimeDelta)
@@ -137,9 +159,6 @@ void CUI_HP_Monster::UI_Tick(_float fTimeDelta)
 	
 	Vec3 vPos = m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
 	vPos.y += 1.7f;
-
-
-
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	Vec3 vCamPos = pGameInstance->Get_CamPosition();

@@ -30,11 +30,20 @@ void CState_Deidara_Skill_TwinBirds::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 	m_bTwinBirds = false;
+	m_bSound = false;
 }
 
 void CState_Deidara_Skill_TwinBirds::Tick_State(_float fTimeDelta)
 {
 	_uint iFrame = m_pBoss->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
+
+
+	if (m_bSound == false && iFrame > 6)
+	{
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+		m_bSound = true;
+	}
+
 
 	if (iFrame >= 20 && iFrame < 37)
 	{
@@ -52,6 +61,9 @@ void CState_Deidara_Skill_TwinBirds::Tick_State(_float fTimeDelta)
 		m_pBoss->Shoot_TwinBirds();
 		m_bTwinBirds = true;
 	}
+
+	
+
 
 
 	m_pBoss->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);

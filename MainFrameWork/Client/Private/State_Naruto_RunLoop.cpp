@@ -153,6 +153,9 @@ void CState_Naruto_RunLoop::Tick_State_NoneControl(_float fTimeDelta)
 	m_pPlayer->Move_Dir(vDir, fCurrSpeed, fTimeDelta);
 
 	m_pPlayer->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+
+
+	Update_MoveSound();
 }
 
 void CState_Naruto_RunLoop::Update_MoveSound()

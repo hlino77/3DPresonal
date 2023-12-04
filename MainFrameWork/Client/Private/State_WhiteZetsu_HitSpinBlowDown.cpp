@@ -33,7 +33,7 @@ void CState_WhiteZetsu_HitSpinBlowDown::Enter_State()
 
 	m_fOriginDrag = m_pMonster->Get_RigidBody()->Get_GruondDrag();
 	m_bKnockBack = false;
-
+	m_bSound = false;
 }
 
 void CState_WhiteZetsu_HitSpinBlowDown::Tick_State(_float fTimeDelta)
@@ -44,6 +44,15 @@ void CState_WhiteZetsu_HitSpinBlowDown::Tick_State(_float fTimeDelta)
 	LookAt_HitObject(fTimeDelta);
 
 	m_pMonster->Follow_ServerPos(0.01f, 6.0f * fTimeDelta);
+
+
+	/*_uint iFrame = m_pMonster->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
+
+	if (m_bSound == false && iFrame > 7)
+	{
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"SpinBlowDown.wav", g_fVolume * 0.5f, m_pMonster->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 10.0f);
+		m_bSound = true;
+	}*/
 }
 
 void CState_WhiteZetsu_HitSpinBlowDown::Exit_State()

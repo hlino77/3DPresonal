@@ -70,9 +70,9 @@ void CSkill_Hiryu_Server::Tick(_float fTimeDelta)
 	vDir.Normalize();
 
 
-	m_pTransformCom->SetUp_Lerp(vDir, 2.0f, fTimeDelta);
+	m_pTransformCom->SetUp_Lerp(vDir, 3.0f, fTimeDelta);
 	m_pTransformCom->LookAt_Lerp_ForLand(vDir, 3.0f, fTimeDelta);
-	m_pTransformCom->Go_Straight(5.0f, fTimeDelta);
+	m_pTransformCom->Go_Straight(8.0f, fTimeDelta);
 
 	if (m_fCurrScale < 0.01f)
 	{

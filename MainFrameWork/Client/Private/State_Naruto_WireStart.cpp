@@ -66,6 +66,7 @@ void CState_Naruto_WireStart::Enter_State()
 
 	m_bPickStart = false;
 	m_bPicked = false;
+	m_bPickSound = false;
 }
 
 void CState_Naruto_WireStart::Tick_State(_float fTimeDelta)
@@ -96,6 +97,7 @@ void CState_Naruto_WireStart::Tick_State_Control(_float fTimeDelta)
 			m_WirePicking = std::async(&CState_Naruto_WireStart::WirePicking, this);
 			m_pPlayer->Get_WireTrail()->Appear();
 			m_bPickStart = true;
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"WireStart.wav", g_fVolume * 0.1f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 		}
 		else
 		{
@@ -104,8 +106,11 @@ void CState_Naruto_WireStart::Tick_State_Control(_float fTimeDelta)
 			Vec3 vDir = vTargetPos - vPos;
 			_float fLength = vDir.Length();
 
-			if (fLength < 21.0f)
-				m_pPlayer->Get_WireTrail()->Set_TargetPos(m_pPlayer->Get_TargetPos());
+			if (m_bPickSound == false && fLength < 20.5f)
+			{
+				m_pPlayer->Get_WireTrail()->Set_PickTargetPos(m_pPlayer->Get_TargetPos());
+				m_bPickSound = true;
+			}
 		}
 	}
 	else
@@ -155,6 +160,7 @@ void CState_Naruto_WireStart::Tick_State_NoneControl(_float fTimeDelta)
 		{
 			m_pPlayer->Get_WireTrail()->Appear();
 			m_bPickStart = true;
+			CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"WireStart.wav", g_fVolume * 0.1f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 		}
 		else
 		{
@@ -163,8 +169,11 @@ void CState_Naruto_WireStart::Tick_State_NoneControl(_float fTimeDelta)
 			Vec3 vDir = vTargetPos - vPos;
 			_float fLength = vDir.Length();
 
-			if (fLength < 21.0f)
-				m_pPlayer->Get_WireTrail()->Set_TargetPos(m_pPlayer->Get_TargetPos());
+			if (m_bPickSound == false && fLength < 20.5f)
+			{
+				m_pPlayer->Get_WireTrail()->Set_PickTargetPos(m_pPlayer->Get_TargetPos());
+				m_bPickSound = true;
+			}
 		}
 	}
 	else

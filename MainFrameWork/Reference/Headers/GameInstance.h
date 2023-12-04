@@ -132,7 +132,7 @@ public:
 	HRESULT	PlaySound_Distance(const wstring& strSoundKey, _uint iChannel, _float fVolume, Vec3 vPos, _float fRange);
 	HRESULT PlaySoundFile_LoopChannel(const wstring& strSoundKey, _float fVolume);
 	HRESULT	PlaySound_Distance_LoopChannel(const wstring& strSoundKey, _float fVolume, Vec3 vPos, _float fRange);
-
+	HRESULT Find_Stop_Sound(const wstring& strSoundKey);
 
 	HRESULT Add_SoundTrack(const wstring& strSoundTrack, const wstring& strSoundKey);
 	const wstring& Get_RandomSoundKey(const wstring& strSoundTrack);

@@ -43,7 +43,6 @@ void CState_Naruto_Skill_Rasengun_RunLoop::Enter_State()
 	m_pPlayer->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 
 	m_fRunTime = 0.7f;
-
 }
 
 void CState_Naruto_Skill_Rasengun_RunLoop::Tick_State(_float fTimeDelta)

@@ -83,7 +83,8 @@ void CSkill_Rasengun::Tick(_float fTimeDelta)
 					CamShake();
 			}
 				
-
+			if(m_bAttackTime)
+				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenganBomb.wav", g_fVolume * 0.25f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 			Set_Active(false);
 		}
 	}
@@ -135,6 +136,7 @@ void CSkill_Rasengun::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 		m_fCurrTime = m_fAttackTime;
 		m_bEffect = true;
 		m_bAttackTime = true;
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenganBomb_1.wav", g_fVolume * 0.25f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
 	}
 	++m_iHitCount;
 }
@@ -194,7 +196,8 @@ void CSkill_Rasengun::Send_SkillInfo()
 
 void CSkill_Rasengun::Explosion()
 {
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pRasengunCircle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
+	Vec3 vPos = m_pRasengunCircle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	if(m_pSkillOwner->Is_Control())
 		Send_Explosion();
@@ -212,13 +215,16 @@ void CSkill_Rasengun::Explosion()
 
 	Effect_SmokeRing(0.0f, m_fSmokeRingScale);
 	Effect_SmokeRing(0.0f, m_fSmokeRingScale);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenganEnd.wav", g_fVolume * 0.25f, vPos, 40.0f);
 }
 
 void CSkill_Rasengun::Appear()
 {
 	m_pRasengunCircle->Appear();
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pRasengunCircle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION));
+	Vec3 vPos = m_pRasengunCircle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	Effect_SmokeRing(0.0f, 0.1f);
 	Effect_SmokeRing(0.0f, 0.1f);
@@ -233,11 +239,17 @@ void CSkill_Rasengun::Appear()
 	m_fCurrHitTime = 0.0f;
 
 	m_iHitCount = 0;
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenganStart.wav", g_fVolume * 0.2f, vPos, 40.0f);
 }
 
 void CSkill_Rasengun::Set_Run()
 {
 	m_pRasengunCircle->RunSmoke();
+	CGameInstance::GetInstance()->Find_Stop_Sound(L"RasenganStart.wav");
+
+	Vec3 vPos = m_pRasengunCircle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"RasenganRun.wav", g_fVolume * 0.2f, vPos, 40.0f);
 }
 
 

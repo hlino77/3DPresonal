@@ -46,6 +46,8 @@ private:
 
 	_float	m_fCollierTime = 0.0f;
 	_float	m_fCurrTime = 0.0f;
+
+	_bool	m_bSound = false;
 public:
 	virtual void Free() override;
 };
