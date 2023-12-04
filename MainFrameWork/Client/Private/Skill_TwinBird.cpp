@@ -230,7 +230,7 @@ void CSkill_TwinBird::OnCollisionExit(const _uint iColLayer, CCollider* pOther)
 HRESULT CSkill_TwinBird::Ready_Coliders()
 {
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->SetActive(true);
-	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(1.0f);
+	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Radius(2.5f);
 	m_Coliders[(_uint)LAYER_COLLIDER::LAYER_BODY]->Set_Offset(Vec3(0.0f, 0.2f, 0.0f));
 
 
