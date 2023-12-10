@@ -38,6 +38,9 @@ void CState_Madara_TeleportAttack::Enter_State()
 
 	m_pBoss->Set_Invincible(true);
 
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"TeleportAttack.wav", g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Madara_TeleportAttack.wav", g_fVolume * 0.5f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Madara_TeleportAttack::Tick_State(_float fTimeDelta)

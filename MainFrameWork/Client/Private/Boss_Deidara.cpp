@@ -57,8 +57,8 @@ HRESULT CBoss_Deidara::Initialize(void* pArg)
 	m_pTwinBird[1] = nullptr;
 
 
-	m_iHp = 100;
-	m_iMaxHp = 100;
+	m_iHp = 150;
+	m_iMaxHp = 150;
 
 
 	if (FAILED(Ready_HP_UI(0)))

@@ -31,14 +31,16 @@ void CState_Madara_Skill_Meteor_Server::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 	m_pBoss->Set_Invincible(true);
+	m_bSkill = false;
 }
 
 void CState_Madara_Skill_Meteor_Server::Tick_State(_float fTimeDelta)
 {
 	_uint iFrame = m_pBoss->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
-	if (iFrame > 70)
+	if (m_bSkill == false && iFrame > 77)
 	{
 		m_pBoss->Get_Meteor()->Appear();
+		m_bSkill = true;
 	}
 
 

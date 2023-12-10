@@ -31,6 +31,8 @@ HRESULT CState_Deidara_Attack_cmb01::Initialize()
 void CState_Deidara_Attack_cmb01::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 2, 0);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Deidara_NormalAttack"), g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Deidara_Attack_cmb01::Tick_State(_float fTimeDelta)

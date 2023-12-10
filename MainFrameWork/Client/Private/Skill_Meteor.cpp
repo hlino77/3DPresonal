@@ -342,6 +342,10 @@ void CSkill_Meteor::Explosion()
 	pExplosionRing->Appear(m_vEffectPos, Vec3(80.0f, 80.0f, 0.0f));
 
 	CServerSessionManager::GetInstance()->Get_Player()->Get_Camera()->Cam_Shake(0.002f, 1.0f);
+
+
+	CGameInstance::GetInstance()->Find_Stop_Sound(L"Meteor_Down.wav");
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Meteor_Bomb.wav", g_fVolume * 0.6f, m_vEffectPos, 80.0f);
 }
 
 void CSkill_Meteor::Appear()
@@ -358,6 +362,9 @@ void CSkill_Meteor::Appear()
 	m_pBottom->Appear();
 	m_pSmoke->Appear();
 	m_pCylinder->Appear();
+
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Meteor_Down.wav", g_fVolume * 0.5f, m_vEffectPos, 60.0f);
 }
 
 

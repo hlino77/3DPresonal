@@ -41,6 +41,7 @@ void CState_Deidara_Skill_TwinBirds::Tick_State(_float fTimeDelta)
 	if (m_bSound == false && iFrame > 6)
 	{
 		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Deidara_Skill"), g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 		m_bSound = true;
 	}
 

@@ -144,6 +144,51 @@ HRESULT CLevel_Logo::Ready_SoundTrack()
 	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle_2.wav");
 	pGameInstance->Add_SoundTrack(L"Sasuke_HitMiddle", L"Sasuke_HitMiddle_3.wav");
 
+	pGameInstance->Add_SoundTrack(L"Deidara_HitMiddle", L"Deidara_HitMiddle.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_HitMiddle", L"Deidara_HitMiddle_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Deidara_LargeAttack", L"Deidara_LargeAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_LargeAttack", L"Deidara_LargeAttack_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Deidara_NormalAttack", L"Deidara_NormalAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_NormalAttack", L"Deidara_NormalAttack_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Deidara_Skill", L"Deidara_Skill.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_Skill", L"Deidara_Skill_1.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_Skill", L"Deidara_Skill_2.wav");
+
+	pGameInstance->Add_SoundTrack(L"Deidara_SpinBlowUp", L"Deidara_SpinBlowUp.wav");
+	pGameInstance->Add_SoundTrack(L"Deidara_SpinBlowUp", L"Deidara_SpinBlowUp_1.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Madara_FireBall", L"Madara_FireBall.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_FireBall", L"Madara_FireBall_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Madara_HitMiddle", L"Madara_HitMiddle.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_HitMiddle", L"Madara_HitMiddle_1.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_HitMiddle", L"Madara_HitMiddle_2.wav");
+
+	pGameInstance->Add_SoundTrack(L"Madara_LargeAttack", L"Madara_LargeAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_LargeAttack", L"Madara_LargeAttack_1.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_LargeAttack", L"Madara_LargeAttack_2.wav");
+
+
+	pGameInstance->Add_SoundTrack(L"Madara_Meteor", L"Madara_Meteor.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_Meteor", L"Madara_Meteor_1.wav");
+
+	pGameInstance->Add_SoundTrack(L"Madara_NormalAttack", L"Madara_NormalAttack.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_NormalAttack", L"Madara_NormalAttack_1.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_NormalAttack", L"Madara_NormalAttack_2.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_NormalAttack", L"Madara_NormalAttack_3.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_NormalAttack", L"Madara_NormalAttack_4.wav");
+
+	pGameInstance->Add_SoundTrack(L"Madara_SpinBlowUp", L"Madara_SpinBlowUp.wav");
+	pGameInstance->Add_SoundTrack(L"Madara_SpinBlowUp", L"Madara_SpinBlowUp_1.wav");
+
+
+
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -152,20 +197,11 @@ void CLevel_Logo::Tick_LOGO(_float fTimeDelta)
 {
 	_bool bKey = false;
 
-
-	for (_uint i = 0; i < (_uint)KEY::TYPE_END; ++i)
-	{
-		if (KEY_TAP((KEY)i))
-			bKey = true;
-	}
-
-
-	if (bKey)
+	if (KEY_TAP(KEY::ENTER))
 	{
 		m_pNickNameDialog->Appear();
 		m_eState = LOGOSTATE::NICKNAME;
 	}
-
 }
 
 void CLevel_Logo::Tick_NICKNAME(_float fTimeDelta)

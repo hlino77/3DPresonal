@@ -652,6 +652,7 @@ HRESULT CPlayer::Ready_WireTrail()
 	return S_OK;
 }
 
+
 _bool CPlayer::Stop_VoiceSound()
 {
 	if (m_fVoiceSoundDelay == 0.0f)

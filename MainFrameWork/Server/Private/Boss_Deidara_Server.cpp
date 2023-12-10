@@ -44,8 +44,8 @@ HRESULT CBoss_Deidara_Server::Initialize(void* pArg)
 
 	Ready_State();
 
-	m_iHp = 10;
-	m_iMaxHp = 100;
+	m_iHp = 150;
+	m_iMaxHp = 150;
 
 	m_fFollowDistance = 40.0f;
 

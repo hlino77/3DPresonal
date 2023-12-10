@@ -78,7 +78,7 @@ void CState_Naruto_Idle::Tick_State_Control(_float fTimeDelta)
 
 	if (KEY_TAP(KEY::P))
 	{
-		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.5f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
+		CGameInstance::GetInstance()->PlaySound_Distance(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Madara_Meteor"), CHANNELID::CHANNEL_LOOPSTART,g_fVolume * 0.5f, m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 25.0f);
 	}
 
 

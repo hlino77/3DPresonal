@@ -31,7 +31,14 @@ void CState_Madara_HitMiddle::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
 	m_bKnockBack = false;
-	
+
+
+	if (m_pBoss->Stop_VoiceSound() == true)
+	{
+		wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Madara_HitMiddle");
+		m_pBoss->Set_VoiceSoundKey(SoundKey, 0.5f);
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.5f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+	}
 }
 
 void CState_Madara_HitMiddle::Tick_State(_float fTimeDelta)

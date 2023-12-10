@@ -75,7 +75,7 @@ private:
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Font();
 
-
+	_bool m_bMouse = false;
 	
 
 public:

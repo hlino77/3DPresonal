@@ -185,7 +185,11 @@ void CUI_OtherPlayer::UI_Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 	
 	Vec3 vPos = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
-	vPos.y += 1.7f;
+	Vec3 vUp = m_pPlayer->Get_TransformCom()->Get_State(CTransform::STATE_UP);
+	vUp.Normalize();
+	vPos += vUp * 0.5f;
+
+	vPos.y += 1.2f;
 
 
 
@@ -204,13 +208,13 @@ void CUI_OtherPlayer::UI_Tick(_float fTimeDelta)
 	m_pTransformCom->LookAt(vPos - vDir);
 	m_pNickNameTransform->LookAt(vPos - vDir);
 
-
-	Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
-	vUp.Normalize();
-	vUp *= 0.07f;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos - vUp);
-	m_pNickNameTransform->Set_State(CTransform::STATE_POSITION, vPos + vUp);
-
+	{
+		Vec3 vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+		vUp.Normalize();
+		vUp *= 0.07f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos - vUp);
+		m_pNickNameTransform->Set_State(CTransform::STATE_POSITION, vPos + vUp);
+	}
 
 	Safe_Release(pGameInstance);
 

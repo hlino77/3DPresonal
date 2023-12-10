@@ -44,7 +44,8 @@ void CState_Deidara_DownToFloor::Tick_State(_float fTimeDelta)
 
 void CState_Deidara_DownToFloor::Exit_State()
 {
-
+	if(m_pBoss->Get_Hp() <= 0)
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Deidara_Die.wav", g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 

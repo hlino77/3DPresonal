@@ -114,6 +114,29 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 	Vec3 vPos = vPlayerPos;
 	vPos.y = 0.0f;
 
+
+	for (_int i = 0; i < LINE::LINE_END; ++i)
+	{
+		if (m_iNeighbor[i] != -1)
+		{
+			Vec3 vDir = vPos - m_Points[i];
+			vDir.Normalize();
+
+			_float fDot = vDir.Dot(m_vLineNormal[i]);
+			if (fDot > 0.001f)
+			{
+				pObject->Set_CurrCell(m_iNeighbor[i]);
+				if (iCount < 15)
+				{
+					m_pNavigation->Find_Cell(m_iNeighbor[i])->SetUp_OnCell(pObject, iCount + 1);
+					return;
+				}
+			}
+		}
+	}
+
+
+
 	
 	for (_int i = 0; i < LINE::LINE_END; ++i)
 	{
@@ -141,28 +164,6 @@ void CCell::SetUp_OnCell(CGameObject* pObject, _uint iCount)
 			}
 		}
 	}
-
-	for (_int i = 0; i < LINE::LINE_END; ++i)
-	{
-		if (m_iNeighbor[i] != -1)
-		{
-			Vec3 vDir = vPos - m_Points[i];
-			vDir.Normalize();
-
-			_float fDot = vDir.Dot(m_vLineNormal[i]);
-			if (fDot > 0.001f)
-			{
-				pObject->Set_CurrCell(m_iNeighbor[i]);
-				if (iCount < 15)
-				{
-					m_pNavigation->Find_Cell(m_iNeighbor[i])->SetUp_OnCell(pObject, iCount + 1);
-					return;
-				}
-			}
-		}
-	}
-
-
 
 
 

@@ -126,7 +126,12 @@ HRESULT CMonsterSpawner::Render()
 
 void CMonsterSpawner::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
-	m_bEnter = true;
+	if (m_bEnter == false)
+	{
+		m_bEnter = true;
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"MonsterSpawner.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
+	}
+
 }
 
 void CMonsterSpawner::OnCollisionStay(const _uint iColLayer, CCollider* pOther)

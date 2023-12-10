@@ -33,6 +33,12 @@ void CState_Deidara_HitSpinBlowUp::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 0, 0);
 	m_bKnockBack = false;
+
+
+	m_pBoss->Stop_VoiceSound();
+	wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Deidara_SpinBlowUp");
+	m_pBoss->Set_VoiceSoundKey(SoundKey);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Deidara_HitSpinBlowUp::Tick_State(_float fTimeDelta)

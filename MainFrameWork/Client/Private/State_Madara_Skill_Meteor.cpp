@@ -42,14 +42,18 @@ void CState_Madara_Skill_Meteor::Enter_State()
 	m_pBoss->Set_Invincible(true);
 
 	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"NinjutsuStart.wav", g_fVolume * 0.2f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Madara_Meteor"), g_fVolume * 0.7f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
+
+	m_bSkill = false;
 }
 
 void CState_Madara_Skill_Meteor::Tick_State(_float fTimeDelta)
 {
 	_uint iFrame = m_pBoss->Get_ModelCom()->Get_Anim_Frame(m_iAnimIndex);
-	if (iFrame > 70)
+	if (m_bSkill == false && iFrame > 77)
 	{
 		m_pBoss->Get_Meteor()->Appear();
+		m_bSkill = true;
 	}
 
 

@@ -29,7 +29,7 @@ private:
 
 	CMonster_Susanoo_Madara* m_pSusanoo = nullptr;
 
-
+	_bool m_bSkill = false;
 public:
 	virtual void Free() override;
 };

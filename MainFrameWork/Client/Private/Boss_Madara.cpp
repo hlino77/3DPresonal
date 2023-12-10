@@ -58,8 +58,6 @@ HRESULT CBoss_Madara::Initialize(void* pArg)
 
 	m_fAttackMoveSpeed = 12.0f;
 
-
-
 	m_iHp = 200;
 	m_iMaxHp = 200;
 

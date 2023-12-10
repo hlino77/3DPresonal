@@ -66,7 +66,7 @@ HRESULT CBoss_Madara_Server::Initialize(void* pArg)
 
 	SKILLINFO tMeteor;
 	tMeteor.m_bReady = false;
-	tMeteor.m_fCoolTime = 60.0f;
+	tMeteor.m_fCoolTime = 40.0f;
 	tMeteor.m_fCurrCoolTime = 0.0f;
 
 	m_SkillInfo.push_back(tMeteor);

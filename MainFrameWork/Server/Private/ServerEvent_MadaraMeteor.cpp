@@ -17,6 +17,12 @@ HRESULT CServerEvent_MadaraMeteor::Initialize()
 
 void CServerEvent_MadaraMeteor::Enter_Event()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	m_pMadara = dynamic_cast<CBoss_Madara_Server*>(pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, L"Madara"));
+	m_iAnimIndex = m_pMadara->Get_ModelCom()->Find_AnimIndex(L"Ninjutsu_ShatteredHeaven");
+
 	m_pMadara->Set_Invincible(true);
 	m_pMadara->ResetSkill(CBoss_Madara_Server::MADARA_SKILL::FIREBALL);
 	m_pMadara->Set_TeleportAttackDelay(100.0f);
@@ -25,11 +31,6 @@ void CServerEvent_MadaraMeteor::Enter_Event()
 
 	Send_State(EVENTSTATE::READY);
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	m_pMadara = dynamic_cast<CBoss_Madara_Server*>(pGameInstance->Find_GameObejct(pGameInstance->Get_CurrLevelIndex(), (_uint)LAYER_TYPE::LAYER_BOSS, L"Madara"));
-	m_iAnimIndex = m_pMadara->Get_ModelCom()->Find_AnimIndex(L"Ninjutsu_ShatteredHeaven");
 
 	Safe_Release(pGameInstance);
 

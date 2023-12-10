@@ -141,6 +141,9 @@ void CClientEvent_MadaraMeteor::Player_Active(_bool bActive)
 	for (auto& Player : Players)
 	{
 		Player->Set_Active(bActive);
+
+		if (bActive == true)
+			dynamic_cast<CPlayer*>(Player)->Reset_SlowMotion();
 	}
 
 

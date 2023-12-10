@@ -50,6 +50,11 @@ HRESULT CBoss::Initialize(void* pArg)
 
 void CBoss::Tick(_float fTimeDelta)
 {
+	if (m_fVoiceSoundDelay > 0.0f)
+	{
+		m_fVoiceSoundDelay = max(m_fVoiceSoundDelay - fTimeDelta, 0.0f);
+	}
+
 	CNavigationMgr::GetInstance()->SetUp_OnCell(this);
 
 	m_pRigidBody->Tick(fTimeDelta);
@@ -200,6 +205,17 @@ void CBoss::Move_Dir(Vec3 vDir, _float fSpeed, _float fTimeDelta)
 {
 	m_pTransformCom->LookAt_Lerp(vDir, 5.0f, fTimeDelta);
 	m_pTransformCom->Go_Straight(fSpeed, fTimeDelta);
+}
+
+_bool CBoss::Stop_VoiceSound()
+{
+	if (m_fVoiceSoundDelay == 0.0f)
+	{
+		CGameInstance::GetInstance()->Find_Stop_Sound(m_VoiceSoundKey);
+		return true;
+	}
+
+	return false;
 }
 
 void CBoss::Set_Die()

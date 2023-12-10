@@ -260,7 +260,6 @@ void CPlayer_Naruto::OnCollisionEnter_NoneControl(const _uint iColLayer, CCollid
 			if (m_bHitEffect == false)
 			{
 				Effect_Hit();
-				CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"HitSound"), g_fVolume * 0.5f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 25.0f);
 				m_bHitEffect = true;
 			}
 		}
@@ -464,14 +463,14 @@ HRESULT CPlayer_Naruto::Ready_SkillUI()
 
 	SKILLINFO tRasengan;
 	tRasengan.m_bReady = true;
-	tRasengan.m_fCoolTime = 1.0f;
+	tRasengan.m_fCoolTime = 5.0f;
 	tRasengan.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tRasengan);
 
 
 	SKILLINFO tRasenSyuriken;
 	tRasenSyuriken.m_bReady = true;
-	tRasenSyuriken.m_fCoolTime = 1.0f;
+	tRasenSyuriken.m_fCoolTime = 5.0f;
 	tRasenSyuriken.m_fCurrCoolTime = 0.0f;
 	m_SkillInfo.push_back(tRasenSyuriken);
 

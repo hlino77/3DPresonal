@@ -32,6 +32,12 @@ void CState_Madara_HitSpinBlowDown::Enter_State()
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.1f, 2, 0);
 	m_fOriginDrag = m_pBoss->Get_RigidBody()->Get_GruondDrag();
 	m_bKnockBack = false;
+
+
+	m_pBoss->Stop_VoiceSound();
+	wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Madara_SpinBlowUp");
+	m_pBoss->Set_VoiceSoundKey(SoundKey);
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(SoundKey, g_fVolume * 0.4f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Madara_HitSpinBlowDown::Tick_State(_float fTimeDelta)

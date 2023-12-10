@@ -43,8 +43,6 @@ HRESULT CSound_Manager::PlaySoundFile(const wstring& strSoundKey, _uint iChannel
 	if (iter == m_Sounds.end())
 		return E_FAIL;
 
-	FMOD_BOOL    bPlay = FALSE;
-
 	FMOD_Channel_Stop(m_pChannelArr[iChannel]);
 	FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[iChannel]);
 

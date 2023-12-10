@@ -51,7 +51,6 @@ void CState_Naruto_HitSpinBlowUp::Enter_State()
 	m_pPlayer->Get_WireTrail()->Set_Active(false);
 
 
-
 	m_pPlayer->Stop_VoiceSound();
 	wstring SoundKey = CGameInstance::GetInstance()->Get_RandomSoundKey(L"Naruto_SpinBlowUp");
 	m_pPlayer->Set_VoiceSoundKey(SoundKey);

@@ -165,10 +165,11 @@ public:
 
 
 	const wstring& Get_VoiceSoundKey() { return m_VoiceSoundKey; }
-	void			Set_VoiceSoundKey(const wstring& VoiceSound) { m_VoiceSoundKey = m_VoiceSoundKey; }
-	void			Set_VoiceSoundKey(const wstring& VoiceSound, _float fDelay) { m_VoiceSoundKey = m_VoiceSoundKey; m_fVoiceSoundDelay = fDelay; }
+	void			Set_VoiceSoundKey(const wstring& VoiceSound) { m_VoiceSoundKey = VoiceSound; }
+	void			Set_VoiceSoundKey(const wstring& VoiceSound, _float fDelay) { m_VoiceSoundKey = VoiceSound; m_fVoiceSoundDelay = fDelay; }
 	_bool			Stop_VoiceSound();
 
+	void			Reset_SlowMotion() { m_iSlowMotionCount = 0; Set_SlowMotion(false); }
 protected:
 	virtual HRESULT Ready_Components();
 	

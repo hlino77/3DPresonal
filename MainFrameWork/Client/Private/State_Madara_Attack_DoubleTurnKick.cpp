@@ -31,6 +31,8 @@ HRESULT CState_Madara_Attack_DoubleTurnKick::Initialize()
 void CState_Madara_Attack_DoubleTurnKick::Enter_State()
 {
 	m_pBoss->Reserve_Animation(m_iAnimIndex, 0.2f, 0, 0);
+
+	CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(CGameInstance::GetInstance()->Get_RandomSoundKey(L"Madara_LargeAttack"), g_fVolume * 0.5f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 40.0f);
 }
 
 void CState_Madara_Attack_DoubleTurnKick::Tick_State(_float fTimeDelta)

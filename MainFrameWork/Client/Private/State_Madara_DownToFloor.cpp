@@ -44,7 +44,8 @@ void CState_Madara_DownToFloor::Tick_State(_float fTimeDelta)
 
 void CState_Madara_DownToFloor::Exit_State()
 {
-
+	if(m_pBoss->Get_Hp() <= 0)
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"Madara_Die.wav", g_fVolume * 0.6f, m_pBoss->Get_TransformCom()->Get_State(CTransform::STATE_POSITION), 50.0f);
 }
 
 

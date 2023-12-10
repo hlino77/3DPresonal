@@ -72,7 +72,7 @@ HRESULT CMainApp::Initialize()
 
 
 	
-
+	m_bMouse = true;
 	//ShowCursor(false);
 
 	return S_OK;
@@ -80,7 +80,22 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_float fTimeDelta)
 {
-	Set_Mouse();
+	if (KEY_TAP(KEY::F1))
+	{
+		m_bMouse = !m_bMouse;
+
+		if (m_bMouse)
+		{
+			ShowCursor(true);
+		}
+		else
+		{
+			ShowCursor(false);
+		}
+	}
+
+	if(m_bMouse == false)
+		Set_Mouse();
 
 	CServerSessionManager::GetInstance()->Tick(fTimeDelta);
 
@@ -120,13 +135,13 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelID)
 
 void CMainApp::Set_Mouse()
 {
-	/*POINT MousePos;
+	POINT MousePos;
 
 	MousePos.x = g_iWinSizeX / 2;
 	MousePos.y = g_iWinSizeY / 2;
 
 	ClientToScreen(g_hWnd, &MousePos);
-	SetCursorPos(MousePos.x, MousePos.y);*/
+	SetCursorPos(MousePos.x, MousePos.y);
 }
 
 HRESULT CMainApp::Initialize_Client()

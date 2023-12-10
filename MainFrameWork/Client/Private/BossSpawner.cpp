@@ -127,7 +127,13 @@ HRESULT CBossSpawner::Render()
 
 void CBossSpawner::OnCollisionEnter(const _uint iColLayer, CCollider* pOther)
 {
-	m_bEnter = true;
+	if (m_bEnter == false)
+	{
+		m_bEnter = true;
+		CGameInstance::GetInstance()->PlaySound_Distance_LoopChannel(L"MonsterSpawner.wav", g_fVolume * 0.4f, m_pTransformCom->Get_State(CTransform::STATE_POSITION), 40.0f);
+		CGameInstance::GetInstance()->StopSound(CHANNELID::CHANNEL_BGM);
+		CGameInstance::GetInstance()->PlayBGM(L"KonohaBoss.wav", CHANNELID::CHANNEL_BGM, g_fVolume * 0.18f);
+	}
 }
 
 void CBossSpawner::OnCollisionStay(const _uint iColLayer, CCollider* pOther)
